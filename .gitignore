@@ -6,3 +6,5 @@ build.nx/
 *.nro
 *.nacp
 *.elf
+.vscode
+
