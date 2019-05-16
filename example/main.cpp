@@ -27,17 +27,17 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-	Application *app = new Application();
+    Application *app = new Application();
 
-	if (!app->init())
-	{
-		printf("Unable to init Borealis application");
-		delete app;
-		return EXIT_FAILURE;
-	}
+    if (!app->init())
+    {
+        printf("Unable to init Borealis application");
+        delete app;
+        return EXIT_FAILURE;
+    }
 
-	while (app->mainLoop());
+    while (app->mainLoop());
 
-	delete app;
-	return EXIT_SUCCESS;
+    delete app;
+    return EXIT_SUCCESS;
 }
