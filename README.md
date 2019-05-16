@@ -9,7 +9,7 @@ To build for Switch, a standard development environment must first be set up. In
 ```bash
 (sudo) (dkp-)pacman -S switch-glfw switch-mesa switch-glm
 make -j
-nxlink -s hybrid_app.nro
+nxlink -s borealis_example.nro
 ```
 
 ## Building the example for PC
@@ -26,7 +26,7 @@ Please refer to the usual sources of information for your particular operating s
 ```bash
 meson build
 ninja -C build
-./build/borealis
+./build/borealis_example
 ```
 
 Also, please note that the `resources` folder must be available in the working directory, otherwise the program will fail to find the shaders.
@@ -39,5 +39,5 @@ msys2 provides all packages needed to build this project:
 pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-meson mingw-w64-x86_64-ninja mingw-w64-x86_64-pkg-config mingw-w64-x86_64-glfw mingw-w64-x86_64-glm
 meson build
 ninja -C build
-./build/borealis
+./build/borealis_example
 ```
