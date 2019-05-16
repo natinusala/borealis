@@ -37,11 +37,11 @@ include $(DEVKITPRO)/libnx/switch_rules
 #   of a homebrew executable (.nro). This is intended to be used for sysmodules.
 #   NACP building is skipped as well.
 #---------------------------------------------------------------------------------
-TARGET		:=	borealis
+TARGET		:=	borealis_example
 BUILD		:=	build.nx
-SOURCES		:=	source
+SOURCES		:=	library library/nanovg example
 DATA		:=	data
-INCLUDES	:=	include
+INCLUDES	:=	include include/nanovg
 ROMFS		:=	resources
 
 APP_TITLE	:=	borealis example
@@ -56,7 +56,7 @@ ARCH	:=	-march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
 CFLAGS	:=	-g -Wall -O2 -ffunction-sections \
 			$(ARCH) $(DEFINES)
 
-CFLAGS	+=	$(INCLUDE) -D__SWITCH__
+CFLAGS	+=	$(INCLUDE) -D__SWITCH__ -DWINDOW_NAME="\"$(APP_TITLE)\""
 
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions
 

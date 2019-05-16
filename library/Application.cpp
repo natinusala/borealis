@@ -217,7 +217,7 @@ void Application::frame()
 
 	// GL Clear
 	glClearColor(0.922, 0.922, 0.922, 1.0f); //TODO: Use theme color here
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	// Hello world
 	//TODO: Draw actual stuff here
