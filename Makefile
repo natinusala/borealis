@@ -37,15 +37,15 @@ include $(DEVKITPRO)/libnx/switch_rules
 #   of a homebrew executable (.nro). This is intended to be used for sysmodules.
 #   NACP building is skipped as well.
 #---------------------------------------------------------------------------------
-TARGET		:=	hybrid_app
+TARGET		:=	borealis
 BUILD		:=	build.nx
 SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=	include
 ROMFS		:=	resources
 
-APP_TITLE	:=	Hybrid App
-APP_AUTHOR	:=	fincs
+APP_TITLE	:=	borealis example
+APP_AUTHOR	:=	natinusala
 APP_VERSION	:=	1.0
 
 #---------------------------------------------------------------------------------
