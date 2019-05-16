@@ -169,8 +169,12 @@ bool Application::mainLoop()
 			glfwPollEvents();
 		else
 			glfwWaitEvents();
+
 		if (glfwWindowShouldClose(this->window))
+		{
+			this->exit();
 			return false;
+		}
 	} while (!is_active);
 
 	// Gamepad
