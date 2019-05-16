@@ -8,8 +8,7 @@ dep_glfw3 = dependency('glfw3', version : '>=3.3')
 dep_glm   = dependency('glm', version : '>=0.9.8')
 
 example_files = files(
-	'example/main.cpp',
-	'example/lenny.c'
+	'example/main.cpp'
 )
 
 library_files = files(
