@@ -155,6 +155,9 @@ bool Application::init()
     // Load fonts
     this->fontStash.regular = nvgCreateFont(this->vg, "regular", ASSET("Inter-Regular.ttf")); //TODO: Load shared font on Switch
 
+    //TODO: Load symbols shared font as a fallback
+    //TODO: Font Awesome as fallback too?
+
     return true;
 }
 
