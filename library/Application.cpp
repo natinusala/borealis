@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <algorithm>
 
 #include <Borealis.hpp>
 
@@ -157,6 +158,13 @@ bool Application::init()
     //TODO: Load symbols shared font as a fallback
     //TODO: Font Awesome as fallback too?
 
+    // Init window size
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+
+    this->windowWidth   = viewport[2];
+    this->windowHeight  = viewport[3];
+
     return true;
 }
 
@@ -198,6 +206,20 @@ bool Application::mainLoop()
         return true;
     }
 
+    // Handle window size changes
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+
+    unsigned newWidth   = viewport[2];
+    unsigned newHeight  = viewport[3];
+
+    if (this->windowWidth != newWidth || this->windowHeight != newHeight)
+    {
+        this->windowWidth   = newWidth;
+        this->windowHeight  = newHeight;
+        this->onWindowSizeChanged();
+    }
+
     // Render
     this->frame();
     glfwSwapBuffers(window);
@@ -205,45 +227,38 @@ bool Application::mainLoop()
     return true;
 }
 
-void Application::getWindowSize(int *width, int *height)
-{
-    GLint viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
-
-    if (width)
-        *width = viewport[2];
-
-    if (height)
-        *height = viewport[3];
-}
-
 void Application::frame()
 {
     // Frame context
     FrameContext frameContext = FrameContext();
 
-    this->getWindowSize(&frameContext.windowWidth, &frameContext.windowHeight);
-
-    frameContext.pixelRatio     = (float)frameContext.windowWidth / (float)frameContext.windowHeight;
+    frameContext.pixelRatio     = (float)this->windowWidth / (float)this->windowHeight;
     frameContext.vg             = this->vg;
     frameContext.fontStash      = &this->fontStash;
 
-    nvgBeginFrame(this->vg, frameContext.windowWidth, frameContext.windowHeight, frameContext.pixelRatio);
+    nvgBeginFrame(this->vg, this->windowWidth, this->windowHeight, frameContext.pixelRatio);
 
     // GL Clear
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); //TODO: Use theme color here
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    vector<View*> viewsToDraw;
 
     // Draw all views in the stack
     // until we find one that's not translucent
     for (int i = this->viewStack.size()-1; i >= 0; i--)
     {
         View *view = this->viewStack[i];
-        view->frame(&frameContext);
+        viewsToDraw.push_back(view);
 
         if (!view->isTranslucent())
             break;
     }
+
+    reverse(viewsToDraw.begin(), viewsToDraw.end());
+
+    for (View *view : viewsToDraw)
+        view->frame(&frameContext);
 
     // End frame
     nvgEndFrame(this->vg);
@@ -257,15 +272,21 @@ void Application::exit()
     glfwTerminate();
 }
 
-// TODO: Replace this bad fullscreen by an actual layout (to trigger a re-layout on window resize)
-void Application::pushView(View *view, bool fullscreen)
+void Application::pushView(View *view)
 {
-    if (fullscreen)
-    {
-        int width, height;
-        this->getWindowSize(&width, &height);
-        view->setBoundaries(0, 0, width, height);
-    }
+    view->setBoundaries(0, 0, this->windowWidth, this->windowHeight);
+    view->layout();
 
     this->viewStack.push_back(view);
+}
+
+void Application::onWindowSizeChanged()
+{
+    printf("Layout triggered\n");
+
+    for (View *view : this->viewStack)
+    {
+        view->setBoundaries(0, 0, this->windowWidth, this->windowHeight);
+        view->layout();
+    }
 }

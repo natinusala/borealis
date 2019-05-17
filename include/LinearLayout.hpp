@@ -18,18 +18,30 @@
 
 #pragma once
 
-#include <nanovg.h>
+#include <View.hpp>
 
-class FontStash
-{
-    public:
-        int regular = 0;
-};
+#include <vector>
 
-class FrameContext
+using namespace std;
+
+// A linear (horizontal or vertical) layout
+
+typedef enum
 {
+    VERTICAL = 0,
+    HORIZONTAL
+} LinearLayoutOrientation;
+
+class LinearLayout : public View
+{
+    private:
+        LinearLayoutOrientation orientation;
+
+        vector<View*> children;
+
     public:
-        NVGcontext *vg          = nullptr;
-        float pixelRatio        = 0.0;
-        FontStash *fontStash    = nullptr;
+        LinearLayout(LinearLayoutOrientation orientation);
+
+        void frame(FrameContext *ctx) override;
+        void layout() override;
 };

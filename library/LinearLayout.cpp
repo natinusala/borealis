@@ -16,20 +16,21 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#include <LinearLayout.hpp>
 
-#include <nanovg.h>
+LinearLayout::LinearLayout(LinearLayoutOrientation orientation): orientation(orientation)
+{ }
 
-class FontStash
+void LinearLayout::frame(FrameContext *ctx)
 {
-    public:
-        int regular = 0;
-};
+    for (View *child : this->children)
+        child->frame(ctx);
+}
 
-class FrameContext
+void LinearLayout::layout()
 {
-    public:
-        NVGcontext *vg          = nullptr;
-        float pixelRatio        = 0.0;
-        FontStash *fontStash    = nullptr;
-};
+    // TODO: Layout ourselves (includes resizing all children)
+
+    for (View *child : this->children)
+        child->layout();
+}

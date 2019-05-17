@@ -18,15 +18,14 @@
 
 #include <SettingsFrame.hpp>
 
-void SettingsFrame::frame(FrameContext *ctx)
+SettingsFrame::SettingsFrame() : LinearLayout(VERTICAL)
 {
-    nvgFontSize(ctx->vg, 36.0f);
-    nvgFontFaceId(ctx->vg, ctx->fontStash->regular);
-    nvgTextAlign(ctx->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+    // TODO: Add our other views here
+}
 
-    nvgFontBlur(ctx->vg, 0);
-    nvgFillColor(ctx->vg, nvgRGB(255, 255, 255));
-    nvgText(ctx->vg, this->width/2, this->height/2, "Hello World from SettingsFrame!", nullptr);
+void SettingsFrame::setTitle(string title)
+{
+    this->title = title;
 }
 
 SettingsFrame::~SettingsFrame()

@@ -31,7 +31,18 @@ class View
     public:
         void setBoundaries(unsigned x, unsigned y, unsigned width, unsigned height);
 
+        /**
+         * Called each frame to
+         * draw the view
+         */
         virtual void frame(FrameContext *ctx) = 0;
+
+        /**
+         * Triggered when the view has been
+         * resized and needs to layout its
+         * children
+         */
+        virtual void layout() = 0;
 
         bool isTranslucent()
         {

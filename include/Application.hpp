@@ -39,9 +39,9 @@ class Application
         /**
          * Pushes a view on this applications's view stack
          * The view will automatically be resized to take
-         * the whole screen, unless fullscreen is set to false
+         * the whole screen and layout will be called
          */
-        void pushView(View *view, bool fullscreen = true);
+        void pushView(View *view);
 
     private:
         GLFWwindow* window  = nullptr;
@@ -51,7 +51,9 @@ class Application
 
         vector<View*> viewStack;
 
-        void getWindowSize(int *width, int *height);
+        unsigned windowWidth, windowHeight;
+
+        void onWindowSizeChanged();
 
         void frame();
         void exit();

@@ -36,8 +36,11 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    // Add the root view to the stack (will be fullscreen)
+    // Create a sample view
     SettingsFrame *rootFrame = new SettingsFrame();
+    rootFrame->setTitle("Borealis Example App");
+
+    // Add the root view to the stack
     app->pushView(rootFrame);
 
     // Run the app

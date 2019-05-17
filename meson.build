@@ -17,7 +17,8 @@ library_files = files(
 
     'library/Application.cpp',
     'library/View.cpp',
-    'library/SettingsFrame.cpp'
+    'library/SettingsFrame.cpp',
+    'library/LinearLayout.cpp'
 )
 
 borealis_example = executable(
