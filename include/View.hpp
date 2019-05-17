@@ -18,14 +18,25 @@
 
 #pragma once
 
-// Useful macros
-#ifndef __SWITCH__
-#define ASSET(_str) "./resources/" _str
-#else
-#define ASSET(_str) "romfs:/" _str
-#endif
+#include <FrameContext.hpp>
 
-// Library
-#include <Application.hpp>
-#include <View.hpp>
-#include <SettingsFrame.hpp>
+class View
+{
+    protected:
+        unsigned x;
+        unsigned y;
+        unsigned width;
+        unsigned height;
+
+    public:
+        void setBoundaries(unsigned x, unsigned y, unsigned width, unsigned height);
+
+        virtual void frame(FrameContext *ctx) = 0;
+
+        bool isTranslucent()
+        {
+            return false;
+        }
+
+        virtual ~View() {};
+};

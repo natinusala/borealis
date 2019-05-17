@@ -43,7 +43,6 @@ constexpr uint32_t WINDOW_WIDTH = 1280;
 constexpr uint32_t WINDOW_HEIGHT = 720;
 constexpr const char* WINDOW_TITLE = WINDOW_NAME;
 
-using namespace bo;
 using namespace std;
 
 // glfw code from the glfw hybrid app by fincs
@@ -206,40 +205,45 @@ bool Application::mainLoop()
     return true;
 }
 
-void Application::frame()
+void Application::getWindowSize(int *width, int *height)
 {
-    // Frame context
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
 
+    if (width)
+        *width = viewport[2];
+
+    if (height)
+        *height = viewport[3];
+}
+
+void Application::frame()
+{
+    // Frame context
     FrameContext frameContext = FrameContext();
 
-    frameContext.windowWidth 	= viewport[2];
-    frameContext.windowHeight 	= viewport[3];
-    frameContext.pixelRatio 	= (float)frameContext.windowWidth / (float)frameContext.windowHeight;
-    frameContext.vg 			= this->vg;
-    frameContext.fontStash		= &this->fontStash;
+    this->getWindowSize(&frameContext.windowWidth, &frameContext.windowHeight);
+
+    frameContext.pixelRatio     = (float)frameContext.windowWidth / (float)frameContext.windowHeight;
+    frameContext.vg             = this->vg;
+    frameContext.fontStash      = &this->fontStash;
 
     nvgBeginFrame(this->vg, frameContext.windowWidth, frameContext.windowHeight, frameContext.pixelRatio);
 
     // GL Clear
-    glClearColor(0.922, 0.922, 0.922, 1.0f); //TODO: Use theme color here
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); //TODO: Use theme color here
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    // Hello world
-    //TODO: Draw actual stuff here
+    // Draw all views in the stack
+    // until we find one that's not translucent
+    for (int i = this->viewStack.size()-1; i >= 0; i--)
+    {
+        View *view = this->viewStack[i];
+        view->frame(&frameContext);
 
-    nvgFontSize(this->vg, 36.0f);
-    nvgFontFaceId(this->vg, this->fontStash.regular);
-    nvgTextAlign(this->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-
-    nvgFontBlur(this->vg, 2);
-    nvgFillColor(this->vg, nvgRGBA(0, 0, 0, 128));
-    nvgText(this->vg, frameContext.windowWidth/2, frameContext.windowHeight/2 + 1, "Hello World!", NULL);
-
-    nvgFontBlur(this->vg, 0);
-    nvgFillColor(this->vg, nvgRGB(51, 51, 51));
-    nvgText(this->vg, frameContext.windowWidth/2, frameContext.windowHeight/2, "Hello World!", NULL);
+        if (!view->isTranslucent())
+            break;
+    }
 
     // End frame
     nvgEndFrame(this->vg);
@@ -251,4 +255,17 @@ void Application::exit()
         nvgDeleteGL3(this->vg);
 
     glfwTerminate();
+}
+
+// TODO: Replace this bad fullscreen by an actual layout (to trigger a re-layout on window resize)
+void Application::pushView(View *view, bool fullscreen)
+{
+    if (fullscreen)
+    {
+        int width, height;
+        this->getWindowSize(&width, &height);
+        view->setBoundaries(0, 0, width, height);
+    }
+
+    this->viewStack.push_back(view);
 }

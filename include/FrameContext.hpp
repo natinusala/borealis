@@ -18,14 +18,20 @@
 
 #pragma once
 
-// Useful macros
-#ifndef __SWITCH__
-#define ASSET(_str) "./resources/" _str
-#else
-#define ASSET(_str) "romfs:/" _str
-#endif
+#include <nanovg.h>
 
-// Library
-#include <Application.hpp>
-#include <View.hpp>
-#include <SettingsFrame.hpp>
+class FontStash
+{
+    public:
+        int regular = 0;
+};
+
+class FrameContext
+{
+    public:
+        NVGcontext *vg  = nullptr;
+        int windowWidth, windowHeight = 0;
+        float pixelRatio = 0.0;
+
+        FontStash *fontStash = nullptr;
+};

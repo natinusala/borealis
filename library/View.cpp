@@ -16,16 +16,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#pragma once
-
-// Useful macros
-#ifndef __SWITCH__
-#define ASSET(_str) "./resources/" _str
-#else
-#define ASSET(_str) "romfs:/" _str
-#endif
-
-// Library
-#include <Application.hpp>
 #include <View.hpp>
-#include <SettingsFrame.hpp>
+
+void View::setBoundaries(unsigned x, unsigned y, unsigned width, unsigned height)
+{
+    this->x         = x;
+    this->y         = y;
+    this->width     = width;
+    this->height    = height;
+}

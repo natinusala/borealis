@@ -18,14 +18,15 @@
 
 #pragma once
 
-// Useful macros
-#ifndef __SWITCH__
-#define ASSET(_str) "./resources/" _str
-#else
-#define ASSET(_str) "romfs:/" _str
-#endif
-
-// Library
-#include <Application.hpp>
 #include <View.hpp>
-#include <SettingsFrame.hpp>
+
+/*
+    A Horizon settings-like frame, with header and footer (no sidebar)
+*/
+
+class SettingsFrame : public View
+{
+    public:
+        void frame(FrameContext *ctx);
+        ~SettingsFrame();
+};

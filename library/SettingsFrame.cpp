@@ -16,16 +16,20 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#pragma once
-
-// Useful macros
-#ifndef __SWITCH__
-#define ASSET(_str) "./resources/" _str
-#else
-#define ASSET(_str) "romfs:/" _str
-#endif
-
-// Library
-#include <Application.hpp>
-#include <View.hpp>
 #include <SettingsFrame.hpp>
+
+void SettingsFrame::frame(FrameContext *ctx)
+{
+    nvgFontSize(ctx->vg, 36.0f);
+    nvgFontFaceId(ctx->vg, ctx->fontStash->regular);
+    nvgTextAlign(ctx->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+
+    nvgFontBlur(ctx->vg, 0);
+    nvgFillColor(ctx->vg, nvgRGB(255, 255, 255));
+    nvgText(ctx->vg, this->width/2, this->height/2, "Hello World from SettingsFrame!", nullptr);
+}
+
+SettingsFrame::~SettingsFrame()
+{
+
+}

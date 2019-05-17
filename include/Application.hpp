@@ -16,44 +16,44 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#pragma once
+
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #include <nanovg.h>
 
-#pragma once
+#include <vector>
 
-namespace bo
+#include <FrameContext.hpp>
+#include <View.hpp>
+
+using namespace std;
+
+class Application
 {
-    class FontStash
-    {
-        public:
-            int regular = 0;
-    };
+    public:
+        bool init();
+        bool mainLoop();
 
-    class Application
-    {
-        public:
-            bool init();
-            bool mainLoop();
+        /**
+         * Pushes a view on this applications's view stack
+         * The view will automatically be resized to take
+         * the whole screen, unless fullscreen is set to false
+         */
+        void pushView(View *view, bool fullscreen = true);
 
-        private:
-            GLFWwindow* window  = NULL;
-            NVGcontext *vg      = NULL;
+    private:
+        GLFWwindow* window  = nullptr;
+        NVGcontext *vg      = nullptr;
 
-            FontStash fontStash;
+        FontStash fontStash;
 
-            void frame();
-            void exit();
-    };
+        vector<View*> viewStack;
 
-    class FrameContext
-    {
-        public:
-            NVGcontext *vg  = NULL;
-            int windowWidth, windowHeight = 0;
-            float pixelRatio = 0.0;
+        void getWindowSize(int *width, int *height);
 
-            FontStash *fontStash = NULL;
-    };
+        void frame();
+        void exit();
 };
+

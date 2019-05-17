@@ -22,11 +22,11 @@
 
 #include <Borealis.hpp>
 
-using namespace bo;
 using namespace std;
 
 int main(int argc, char* argv[])
 {
+    // Create and init the app
     Application *app = new Application();
 
     if (!app->init())
@@ -36,8 +36,14 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
+    // Add the root view to the stack (will be fullscreen)
+    SettingsFrame *rootFrame = new SettingsFrame();
+    app->pushView(rootFrame);
+
+    // Run the app
     while (app->mainLoop());
 
+    // Exit
     delete app;
     return EXIT_SUCCESS;
 }
