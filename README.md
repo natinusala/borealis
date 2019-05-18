@@ -1,6 +1,6 @@
 # Borealis
 
-Nintendo Switch inspired UI library, for PC and Nintendo Switch. Powered by nanovg. Example project based on the [hybrid glfw app](https://github.com/fincs/hybrid_app) by fincs.
+Hardware accelerated, Nintendo Switch inspired UI library, for PC and Nintendo Switch. Powered by nanovg. Example project based on the [hybrid glfw app](https://github.com/fincs/hybrid_app) by fincs.
 
 ## Building the example for Switch
 

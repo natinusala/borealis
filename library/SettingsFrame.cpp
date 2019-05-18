@@ -52,12 +52,12 @@ void SettingsFrame::frame(FrameContext *ctx)
 
     // Header
     nvgBeginPath(ctx->vg);
-    nvgRect(ctx->vg, this->x + SEPARATOR_SPACING, this->y + HEADER_HEIGHT, this->width - SEPARATOR_SPACING * 2, 1);
+    nvgRect(ctx->vg, this->x + SEPARATOR_SPACING, this->y + HEADER_HEIGHT - 1, this->width - SEPARATOR_SPACING * 2, 1);
     nvgFill(ctx->vg);
 
     // Footer
     nvgBeginPath(ctx->vg);
-    nvgRect(ctx->vg, this->x + SEPARATOR_SPACING, this->height - FOOTER_HEIGHT, this->width - SEPARATOR_SPACING * 2, 1);
+    nvgRect(ctx->vg, this->x + SEPARATOR_SPACING, this->y + this->height - FOOTER_HEIGHT, this->width - SEPARATOR_SPACING * 2, 1);
     nvgFill(ctx->vg);
 
     // Content view

@@ -18,16 +18,19 @@
 
 #pragma once
 
-// Useful macros
-#ifndef __SWITCH__
-#define ASSET(_str) "./resources/" _str
-#else
-#define ASSET(_str) "romfs:/" _str
-#endif
-
-// Library
-#include <Application.hpp>
 #include <View.hpp>
-#include <SettingsFrame.hpp>
-#include <TabFrame.hpp>
-#include <Rectangle.hpp>
+#include <FrameContext.hpp>
+
+// A solid color rectangle
+class Rectangle : public View
+{
+    public:
+        void frame(FrameContext *ctx) override;
+        void layout() override;
+
+        void setColor(NVGcolor color);
+
+        ~Rectangle() { }
+    private:
+        NVGcolor color = nvgRGB(0, 0, 255);
+};

@@ -19,7 +19,8 @@ library_files = files(
     'library/View.cpp',
     'library/SettingsFrame.cpp',
     'library/Theme.cpp',
-    'library/TabFrame.cpp'
+    'library/TabFrame.cpp',
+    'library/Rectangle.cpp'
 )
 
 borealis_example = executable(

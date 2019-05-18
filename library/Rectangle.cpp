@@ -16,18 +16,28 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#pragma once
-
-// Useful macros
-#ifndef __SWITCH__
-#define ASSET(_str) "./resources/" _str
-#else
-#define ASSET(_str) "romfs:/" _str
-#endif
-
-// Library
-#include <Application.hpp>
-#include <View.hpp>
-#include <SettingsFrame.hpp>
-#include <TabFrame.hpp>
 #include <Rectangle.hpp>
+
+void Rectangle::frame(FrameContext *ctx)
+{
+    nvgSave(ctx->vg);
+    nvgReset(ctx->vg);
+
+    nvgFillColor(ctx->vg, this->color);
+
+    nvgBeginPath(ctx->vg);
+    nvgRect(ctx->vg, this->x, this->y, this->width, this->height);
+    nvgFill(ctx->vg);
+
+    nvgRestore(ctx->vg);
+}
+
+void Rectangle::setColor(NVGcolor color)
+{
+    this->color = color;
+}
+
+void Rectangle::layout()
+{
+    // Nothing to do
+}
