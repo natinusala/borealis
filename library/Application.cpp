@@ -40,6 +40,10 @@
 #define NANOVG_GL3_IMPLEMENTATION
 #include <nanovg_gl.h>
 
+#ifdef __SWITCH__
+#include <switch.h>
+#endif
+
 constexpr uint32_t WINDOW_WIDTH = 1280;
 constexpr uint32_t WINDOW_HEIGHT = 720;
 constexpr const char* WINDOW_TITLE = WINDOW_NAME;
@@ -153,10 +157,24 @@ bool Application::init()
     glfwSetTime(0.0);
 
     // Load fonts
-    this->fontStash.regular = nvgCreateFont(this->vg, "regular", ASSET("Inter-Regular.ttf")); //TODO: Load shared font on Switch
+    #ifdef __SWITCH__
+    {
+        PlFontData font;
+        Result rc = plGetSharedFontByType(&font, PlSharedFontType_Standard);
+        if(R_SUCCEEDED(rc))
+        {
+            printf("Using Switch shared font\n");
+            this->fontStash.regular = nvgCreateFontMem(this->vg, "regular", (unsigned char*)font.address, font.size, 0);
+            return true;
+        }
+    }
+    #else
+    this->fontStash.regular = nvgCreateFont(this->vg, "regular", ASSET("Inter-Regular.ttf"));
+    #endif
 
     //TODO: Load symbols shared font as a fallback
     //TODO: Font Awesome as fallback too?
+    //TODO: Backport wiggly font fix from RA
 
     // Init window size
     GLint viewport[4];

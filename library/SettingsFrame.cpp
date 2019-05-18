@@ -24,7 +24,8 @@
 
 #define SEPARATOR_SPACING 30
 
-#define TITLE_SIZE  35
+#define TITLE_SIZE  30
+// TODO: Don't center title, hardcode Y position
 #define TITLE_START 130
 
 // TODO: Add hints system
