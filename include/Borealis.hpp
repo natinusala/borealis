@@ -29,3 +29,4 @@
 #include <Application.hpp>
 #include <View.hpp>
 #include <SettingsFrame.hpp>
+#include <TabFrame.hpp>

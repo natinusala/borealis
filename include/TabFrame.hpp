@@ -16,37 +16,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string>
+#pragma once
 
-#include <Borealis.hpp>
+#include <SettingsFrame.hpp>
 
-using namespace std;
-
-int main(int argc, char* argv[])
+// A settings frame containing a sidebar on the left with multiple tabs
+class TabFrame : public SettingsFrame
 {
-    // Create and init the app
-    Application *app = new Application();
 
-    if (!app->init())
-    {
-        printf("Unable to init Borealis application");
-        delete app;
-        return EXIT_FAILURE;
-    }
-
-    // Create a sample view
-    TabFrame *rootFrame = new TabFrame();
-    rootFrame->setTitle("Borealis Example App");
-
-    // Add the root view to the stack
-    app->pushView(rootFrame);
-
-    // Run the app
-    while (app->mainLoop());
-
-    // Exit
-    delete app;
-    return EXIT_SUCCESS;
-}
+};
