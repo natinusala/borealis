@@ -27,6 +27,7 @@
 
 #include <FrameContext.hpp>
 #include <View.hpp>
+#include <Theme.hpp>
 
 using namespace std;
 
@@ -52,6 +53,9 @@ class Application
         vector<View*> viewStack;
 
         unsigned windowWidth, windowHeight;
+
+        // TODO: Get that from system settings
+        Theme *currentTheme = &themeLight;
 
         void onWindowSizeChanged();
 

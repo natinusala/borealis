@@ -235,11 +235,17 @@ void Application::frame()
     frameContext.pixelRatio     = (float)this->windowWidth / (float)this->windowHeight;
     frameContext.vg             = this->vg;
     frameContext.fontStash      = &this->fontStash;
+    frameContext.theme          = this->currentTheme;
 
     nvgBeginFrame(this->vg, this->windowWidth, this->windowHeight, frameContext.pixelRatio);
 
     // GL Clear
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(
+        this->currentTheme->backgroundColor[0],
+        this->currentTheme->backgroundColor[1],
+        this->currentTheme->backgroundColor[2],
+        1.0f);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     vector<View*> viewsToDraw;

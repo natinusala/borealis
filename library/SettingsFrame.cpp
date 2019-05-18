@@ -17,10 +17,68 @@
 */
 
 #include <SettingsFrame.hpp>
+#include <nanovg.h>
 
-SettingsFrame::SettingsFrame() : LinearLayout(VERTICAL)
+#define HEADER_HEIGHT 88
+#define FOOTER_HEIGHT 73
+
+#define SEPARATOR_SPACING 30
+
+#define TITLE_SIZE  35
+#define TITLE_START 130
+
+// TODO: Add hints system
+
+void SettingsFrame::frame(FrameContext *ctx)
 {
-    // TODO: Add our other views here
+    nvgSave(ctx->vg);
+    nvgReset(ctx->vg);
+
+    // Text
+    // Title
+    nvgFillColor(ctx->vg, ctx->theme->textColor);
+    nvgFontSize(ctx->vg, TITLE_SIZE);
+    nvgFontFaceId(ctx->vg, ctx->fontStash->regular);
+    nvgTextAlign(ctx->vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+    nvgText(ctx->vg, this->x + TITLE_START, this->y + HEADER_HEIGHT / 2, this->title.c_str(), nullptr);
+
+    // TODO: Footer
+
+    // TODO: Icon
+
+    // Separators
+    nvgFillColor(ctx->vg, ctx->theme->separatorColor);
+
+    // Header
+    nvgBeginPath(ctx->vg);
+    nvgRect(ctx->vg, this->x + SEPARATOR_SPACING, this->y + HEADER_HEIGHT, this->width - SEPARATOR_SPACING * 2, 1);
+    nvgFill(ctx->vg);
+
+    // Footer
+    nvgBeginPath(ctx->vg);
+    nvgRect(ctx->vg, this->x + SEPARATOR_SPACING, this->height - FOOTER_HEIGHT, this->width - SEPARATOR_SPACING * 2, 1);
+    nvgFill(ctx->vg);
+
+    // Content view
+    if (contentView)
+        contentView->frame(ctx);
+
+    nvgRestore(ctx->vg);
+}
+
+void SettingsFrame::layout()
+{
+    if (this->contentView)
+    {
+        this->contentView->setBoundaries(this->x, this->y + HEADER_HEIGHT, this->width, this->height - FOOTER_HEIGHT - HEADER_HEIGHT);
+        this->contentView->layout();
+    }
+}
+
+void SettingsFrame::setContentView(View *view)
+{
+    this->contentView = view;
+    this->layout();
 }
 
 void SettingsFrame::setTitle(string title)

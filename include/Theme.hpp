@@ -16,21 +16,16 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <LinearLayout.hpp>
+#pragma once
 
-LinearLayout::LinearLayout(LinearLayoutOrientation orientation): orientation(orientation)
-{ }
+#include <nanovg.h>
 
-void LinearLayout::frame(FrameContext *ctx)
+typedef struct
 {
-    for (View *child : this->children)
-        child->frame(ctx);
-}
+    float backgroundColor[3]; // gl color
+    NVGcolor textColor;
+    NVGcolor separatorColor;
+} Theme;
 
-void LinearLayout::layout()
-{
-    // TODO: Layout ourselves (includes resizing all children)
-
-    for (View *child : this->children)
-        child->layout();
-}
+extern Theme themeLight;
+// TODO: Dark theme

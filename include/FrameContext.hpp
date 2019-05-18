@@ -19,6 +19,7 @@
 #pragma once
 
 #include <nanovg.h>
+#include <Theme.hpp>
 
 class FontStash
 {
@@ -32,4 +33,5 @@ class FrameContext
         NVGcontext *vg          = nullptr;
         float pixelRatio        = 0.0;
         FontStash *fontStash    = nullptr;
+        Theme *theme            = nullptr;
 };

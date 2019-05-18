@@ -18,21 +18,27 @@
 
 #pragma once
 
-#include <LinearLayout.hpp>
-
 #include <string>
+
+#include <View.hpp>
+#include <FrameContext.hpp>
 
 using namespace std;
 
 // A Horizon settings-like frame, with header and footer (no sidebar)
-class SettingsFrame : public LinearLayout
+class SettingsFrame : public View
 {
     private:
         string title = "";
 
+        View *contentView = nullptr;
+
     public:
-        SettingsFrame();
+        void frame(FrameContext *ctx) override;
+        void layout() override;
 
         void setTitle(string title);
+        void setContentView(View *view);
+
         ~SettingsFrame();
 };

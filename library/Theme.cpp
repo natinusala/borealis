@@ -16,32 +16,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#include <Theme.hpp>
 
-#include <View.hpp>
-
-#include <vector>
-
-using namespace std;
-
-// A linear (horizontal or vertical) layout
-
-typedef enum
+Theme themeLight =
 {
-    VERTICAL = 0,
-    HORIZONTAL
-} LinearLayoutOrientation;
-
-class LinearLayout : public View
-{
-    private:
-        LinearLayoutOrientation orientation;
-
-        vector<View*> children;
-
-    public:
-        LinearLayout(LinearLayoutOrientation orientation);
-
-        void frame(FrameContext *ctx) override;
-        void layout() override;
+    .backgroundColor    = { 0.922f, 0.922f, 0.922f },
+    .textColor          = nvgRGB(51, 51, 51),
+    .separatorColor     = nvgRGB(45, 45, 45)
 };
