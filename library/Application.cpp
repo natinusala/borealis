@@ -157,7 +157,7 @@ bool Application::init()
     glfwSetTime(0.0);
 
     // Load fonts
-    #ifdef __SWITCH__
+#ifdef __SWITCH__
     {
         PlFontData font;
         Result rc = plGetSharedFontByType(&font, PlSharedFontType_Standard);
@@ -168,9 +168,9 @@ bool Application::init()
             return true;
         }
     }
-    #else
+#else
     this->fontStash.regular = nvgCreateFont(this->vg, "regular", ASSET("inter/Inter-Regular.ttf"));
-    #endif
+#endif
 
     //TODO: Load symbols shared font as a fallback
     //TODO: Font Awesome as fallback too?
