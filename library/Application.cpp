@@ -169,7 +169,7 @@ bool Application::init()
         }
     }
     #else
-    this->fontStash.regular = nvgCreateFont(this->vg, "regular", ASSET("Inter-Regular.ttf"));
+    this->fontStash.regular = nvgCreateFont(this->vg, "regular", ASSET("inter/Inter-Regular.ttf"));
     #endif
 
     //TODO: Load symbols shared font as a fallback
