@@ -51,11 +51,30 @@ class BoxLayout : public View
         vector<BoxLayoutChild*> children;
 
         BoxLayoutOrientation orientation;
+
+        unsigned spacing = 0;
+
+        unsigned marginTop      = 0;
+        unsigned marginRight    = 0;
+        unsigned marginBottom   = 0;
+        unsigned marginLeft     = 0;
     public:
         BoxLayout(BoxLayoutOrientation orientation);
 
         void frame(FrameContext *ctx) override;
         void layout() override;
+
+        /**
+         * Sets spacing between views
+         */
+        void setSpacing(unsigned spacing);
+
+        /**
+         * Sets margins around views
+         * Bottom (vertical) or right (horizontal) are
+         * only effective if the last child is set to fill
+         */
+        void setMargins(unsigned top, unsigned right, unsigned bottom, unsigned left);
 
         /**
          * Adds a view to this box layout

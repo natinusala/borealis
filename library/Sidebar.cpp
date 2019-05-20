@@ -18,11 +18,27 @@
 
 #include <Sidebar.hpp>
 
-#define SIDEBAR_WIDTH 410
+#define SIDEBAR_WIDTH   410
+#define SIDEBAR_SPACING 18
+
+#define SIDEBAR_MARGIN_LEFT     88
+#define SIDEBAR_MARGIN_RIGHT    30
+#define SIDEBAR_MARGIN_TOP      SIDEBAR_SPACING
+#define SIDEBAR_MARGIN_BOTTOM   SIDEBAR_SPACING
 
 Sidebar::Sidebar() : BoxLayout(BOXLAYOUT_VERTICAL)
 {
     this->setWidth(SIDEBAR_WIDTH);
+    this->setSpacing(SIDEBAR_SPACING);
+    this->setMargins(SIDEBAR_MARGIN_TOP, SIDEBAR_MARGIN_RIGHT, SIDEBAR_MARGIN_BOTTOM, SIDEBAR_MARGIN_LEFT);
+
+    // TODO: Remove this
+    for (int i = 0; i < 5; i++)
+    {
+        string label = "Item " + to_string(i + 1);
+        SidebarItem *item = new SidebarItem(label);
+        this->addView(item);
+    }
 }
 
 static NVGcolor transparent = nvgRGBA(0, 0, 0, 0);
@@ -60,4 +76,33 @@ void Sidebar::frame(FrameContext *ctx)
     BoxLayout::frame(ctx);
 
     nvgRestore(ctx->vg);
+}
+
+#define SIDEBARITEM_HEIGHT      52
+#define SIDEBARITEM_TEXT_SIZE   22
+
+#define SIDEBARITEM_TEXT_OFFSET_X 14
+
+SidebarItem::SidebarItem(string label) : label(label)
+{
+    this->setHeight(SIDEBARITEM_HEIGHT);
+}
+
+void SidebarItem::frame(FrameContext *ctx)
+{
+    nvgSave(ctx->vg);
+    nvgReset(ctx->vg);
+
+    // Label
+    nvgFillColor(ctx->vg, ctx->theme->textColor);
+    nvgFontSize(ctx->vg, SIDEBARITEM_TEXT_SIZE);
+    nvgTextAlign(ctx->vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+    nvgText(ctx->vg, this->x + SIDEBARITEM_TEXT_OFFSET_X, this->y + this->height / 2, this->label.c_str(), nullptr);
+
+    nvgRestore(ctx->vg);
+}
+
+void SidebarItem::layout()
+{
+
 }

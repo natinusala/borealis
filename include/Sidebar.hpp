@@ -20,11 +20,34 @@
 
 #include <BoxLayout.hpp>
 
+#include <vector>
+#include <string>
+
+using namespace std;
+
 // A sidebar with multiple tabs
 
+class SidebarItem : public View
+{
+    private:
+        string label;
+
+    public:
+        SidebarItem(string label);
+
+        void frame(FrameContext *ctx) override;
+        void layout() override;
+
+        ~SidebarItem() { }
+};
+
 // TODO: Add a style with icons, make it collapsible?
+// TODO: Add separator items
 class Sidebar : public BoxLayout
 {
+    private:
+        vector<SidebarItem*> items;
+
     public:
         Sidebar();
 

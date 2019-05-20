@@ -20,6 +20,9 @@
 
 #include <FrameContext.hpp>
 
+// TODO: Make a lazy layout trigger: only reset layout if it's "dirty" at the beginning of frame() to avoid setting layout 654 times at startup
+// also remove the calls to layout() when the view is added (never call layout() directly anymore)
+
 class View
 {
     protected:
