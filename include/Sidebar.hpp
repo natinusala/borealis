@@ -31,6 +31,7 @@ class SidebarItem : public View
 {
     private:
         string label;
+        bool active = false;
 
     public:
         SidebarItem(string label);
@@ -38,18 +39,20 @@ class SidebarItem : public View
         void frame(FrameContext *ctx) override;
         void layout() override;
 
+        void setActive(bool active);
+
         ~SidebarItem() { }
 };
 
 // TODO: Add a style with icons, make it collapsible?
 // TODO: Add separator items
+// TODO: Turn this into a List view with a sidebar style
 class Sidebar : public BoxLayout
 {
-    private:
-        vector<SidebarItem*> items;
-
     public:
         Sidebar();
 
         void frame(FrameContext *ctx) override;
+
+        void addItem(string label);
 };

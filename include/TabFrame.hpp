@@ -19,10 +19,23 @@
 #pragma once
 
 #include <SettingsFrame.hpp>
+#include <Sidebar.hpp>
+
+#include <vector>
+#include <string>
+
+using namespace std;
 
 // A settings frame containing a sidebar on the left with multiple tabs
 class TabFrame : public SettingsFrame
 {
     public:
         TabFrame();
+
+        void addTab(string label, View *view);
+
+        ~TabFrame();
+
+    private:
+        Sidebar *sidebar;
 };

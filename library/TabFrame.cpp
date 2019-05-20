@@ -24,11 +24,22 @@
 TabFrame::TabFrame()
 {
     //Create sidebar
-    Sidebar *sidebar = new Sidebar();
+    this->sidebar = new Sidebar();
 
     // Setup content view
     BoxLayout *layout = new BoxLayout(BOXLAYOUT_HORIZONTAL);
     layout->addView(sidebar);
 
     this->setContentView(layout);
+}
+
+void TabFrame::addTab(string label, View *view)
+{
+    this->sidebar->addItem(label);
+    // TODO: Do something with the view
+}
+
+TabFrame::~TabFrame()
+{
+    delete this->sidebar;
 }

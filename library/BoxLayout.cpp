@@ -113,3 +113,17 @@ void BoxLayout::addView(View *view, bool fill)
     this->children.push_back(child);
     this->layout();
 }
+
+bool BoxLayout::isEmpty()
+{
+    return this->children.size() == 0;
+}
+
+BoxLayout::~BoxLayout()
+{
+    for (BoxLayoutChild *child : this->children)
+    {
+        delete child->view;
+        delete child;
+    }
+}

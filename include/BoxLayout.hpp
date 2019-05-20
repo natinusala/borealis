@@ -83,5 +83,11 @@ class BoxLayout : public View
          */
         void addView(View *view, bool fill = false);
 
-        ~BoxLayout() { };
+        /**
+         * Returns true if this layout
+         * doesn't contain any views
+         */
+        bool isEmpty();
+
+        ~BoxLayout();
 };

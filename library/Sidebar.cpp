@@ -31,14 +31,6 @@ Sidebar::Sidebar() : BoxLayout(BOXLAYOUT_VERTICAL)
     this->setWidth(SIDEBAR_WIDTH);
     this->setSpacing(SIDEBAR_SPACING);
     this->setMargins(SIDEBAR_MARGIN_TOP, SIDEBAR_MARGIN_RIGHT, SIDEBAR_MARGIN_BOTTOM, SIDEBAR_MARGIN_LEFT);
-
-    // TODO: Remove this
-    for (int i = 0; i < 5; i++)
-    {
-        string label = "Item " + to_string(i + 1);
-        SidebarItem *item = new SidebarItem(label);
-        this->addView(item);
-    }
 }
 
 static NVGcolor transparent = nvgRGBA(0, 0, 0, 0);
@@ -78,6 +70,14 @@ void Sidebar::frame(FrameContext *ctx)
     nvgRestore(ctx->vg);
 }
 
+void Sidebar::addItem(string label)
+{
+    SidebarItem *item = new SidebarItem(label);
+    if (this->isEmpty())
+        item->setActive(true);
+    this->addView(item);
+}
+
 #define SIDEBARITEM_HEIGHT      52
 #define SIDEBARITEM_TEXT_SIZE   22
 
@@ -94,12 +94,26 @@ void SidebarItem::frame(FrameContext *ctx)
     nvgReset(ctx->vg);
 
     // Label
-    nvgFillColor(ctx->vg, ctx->theme->textColor);
+    nvgFillColor(ctx->vg, this->active ? ctx->theme->activeTabColor : ctx->theme->textColor);
     nvgFontSize(ctx->vg, SIDEBARITEM_TEXT_SIZE);
     nvgTextAlign(ctx->vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
     nvgText(ctx->vg, this->x + SIDEBARITEM_TEXT_OFFSET_X, this->y + this->height / 2, this->label.c_str(), nullptr);
 
+    // Active marker
+    if (this->active)
+    {
+        nvgFillColor(ctx->vg, ctx->theme->activeTabColor);
+        nvgBeginPath(ctx->vg);
+        nvgRect(ctx->vg, this->x, this->y, 4, SIDEBARITEM_HEIGHT);
+        nvgFill(ctx->vg);
+    }
+
     nvgRestore(ctx->vg);
+}
+
+void SidebarItem::setActive(bool active)
+{
+    this->active = active;
 }
 
 void SidebarItem::layout()

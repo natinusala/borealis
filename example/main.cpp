@@ -40,6 +40,13 @@ int main(int argc, char* argv[])
     TabFrame *rootFrame = new TabFrame();
     rootFrame->setTitle("Borealis Example App");
 
+    // TODO: Add separators
+    // TODO: Add actual views
+    rootFrame->addTab("First tab", nullptr);
+    rootFrame->addTab("Second tab", nullptr);
+    rootFrame->addTab("Third tab", nullptr);
+    rootFrame->addTab("Fourth tab", nullptr);
+
     // Add the root view to the stack
     app->pushView(rootFrame);
 
