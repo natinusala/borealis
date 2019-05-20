@@ -17,3 +17,18 @@
 */
 
 #include <TabFrame.hpp>
+#include <BoxLayout.hpp>
+#include <Rectangle.hpp>
+#include <Sidebar.hpp>
+
+TabFrame::TabFrame()
+{
+    //Create sidebar
+    Sidebar *sidebar = new Sidebar();
+
+    // Setup content view
+    BoxLayout *layout = new BoxLayout(BOXLAYOUT_HORIZONTAL);
+    layout->addView(sidebar);
+
+    this->setContentView(layout);
+}

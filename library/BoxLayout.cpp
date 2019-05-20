@@ -35,12 +35,12 @@ void BoxLayout::frame(FrameContext *ctx)
 void BoxLayout::layout()
 {
     // Vertical orientation
-    if (this->orientation == VERTICAL)
+    if (this->orientation == BOXLAYOUT_VERTICAL)
     {
         // TODO
     }
     // Horizontal orientation
-    else if (this->orientation == HORIZONTAL)
+    else if (this->orientation == BOXLAYOUT_HORIZONTAL)
     {
         unsigned xAdvance = this->x;
         for (BoxLayoutChild *child : this->children)

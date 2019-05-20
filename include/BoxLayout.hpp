@@ -31,8 +31,8 @@ using namespace std;
 
 typedef enum
 {
-    VERTICAL = 0,
-    HORIZONTAL
+    BOXLAYOUT_VERTICAL = 0,
+    BOXLAYOUT_HORIZONTAL
 } BoxLayoutOrientation;
 
 class BoxLayoutChild

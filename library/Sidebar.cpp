@@ -16,13 +16,19 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#include <Sidebar.hpp>
 
-#include <SettingsFrame.hpp>
+#define SIDEBAR_WIDTH 410
 
-// A settings frame containing a sidebar on the left with multiple tabs
-class TabFrame : public SettingsFrame
+Sidebar::Sidebar() : BoxLayout(BOXLAYOUT_VERTICAL)
 {
-    public:
-        TabFrame();
-};
+    this->setWidth(SIDEBAR_WIDTH);
+}
+
+void Sidebar::frame(FrameContext *ctx)
+{
+    // TODO: Draw background
+
+    // Draw items
+    BoxLayout::frame(ctx);
+}

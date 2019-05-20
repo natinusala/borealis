@@ -33,3 +33,4 @@
 #include <Rectangle.hpp>
 #include <BoxLayout.hpp>
 #include <Theme.hpp>
+#include <Sidebar.hpp>

@@ -18,11 +18,15 @@
 
 #pragma once
 
-#include <SettingsFrame.hpp>
+#include <BoxLayout.hpp>
 
-// A settings frame containing a sidebar on the left with multiple tabs
-class TabFrame : public SettingsFrame
+// A sidebar with multiple tabs
+
+// TODO: Add a style with icons, make it collapsible?
+class Sidebar : public BoxLayout
 {
     public:
-        TabFrame();
+        Sidebar();
+
+        void frame(FrameContext *ctx) override;
 };

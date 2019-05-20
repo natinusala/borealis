@@ -21,7 +21,8 @@ library_files = files(
     'library/Theme.cpp',
     'library/TabFrame.cpp',
     'library/Rectangle.cpp',
-    'library/BoxLayout.cpp'
+    'library/BoxLayout.cpp',
+    'library/Sidebar.cpp'
 )
 
 borealis_example = executable(
