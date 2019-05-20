@@ -76,6 +76,7 @@ void BoxLayout::layout()
         }
     }
     // Horizontal orientation
+    // TODO: Try spacing and margins
     else if (this->orientation == BOXLAYOUT_HORIZONTAL)
     {
         unsigned xAdvance = this->x + this->marginLeft;
