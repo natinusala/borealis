@@ -40,11 +40,6 @@ int main(int argc, char* argv[])
     TabFrame *rootFrame = new TabFrame();
     rootFrame->setTitle("Borealis Example App");
 
-    TabFrame *testFrame = new TabFrame();
-    testFrame->setTitle("Test");
-
-    rootFrame->setContentView(testFrame);
-
     // Add the root view to the stack
     app->pushView(rootFrame);
 

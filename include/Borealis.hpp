@@ -31,3 +31,5 @@
 #include <SettingsFrame.hpp>
 #include <TabFrame.hpp>
 #include <Rectangle.hpp>
+#include <BoxLayout.hpp>
+#include <Theme.hpp>

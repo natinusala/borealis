@@ -31,6 +31,14 @@ class View
     public:
         void setBoundaries(unsigned x, unsigned y, unsigned width, unsigned height);
 
+        void setWidth(unsigned width);
+        void setHeight(unsigned height);
+
+        unsigned getX();
+        unsigned getY();
+        unsigned getWidth();
+        unsigned getHeight();
+
         /**
          * Called each frame to
          * draw the view

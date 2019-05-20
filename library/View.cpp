@@ -25,3 +25,33 @@ void View::setBoundaries(unsigned x, unsigned y, unsigned width, unsigned height
     this->width     = width;
     this->height    = height;
 }
+
+void View::setWidth(unsigned width)
+{
+    this->width = width;
+}
+
+void View::setHeight(unsigned height)
+{
+    this->height = height;
+}
+
+unsigned View::getX()
+{
+    return this->x;
+}
+
+unsigned View::getY()
+{
+    return this->y;
+}
+
+unsigned View::getHeight()
+{
+    return this->height;
+}
+
+unsigned View::getWidth()
+{
+    return this->width;
+}
