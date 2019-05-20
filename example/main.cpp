@@ -44,6 +44,7 @@ int main(int argc, char* argv[])
     // TODO: Add actual views
     rootFrame->addTab("First tab", nullptr);
     rootFrame->addTab("Second tab", nullptr);
+    rootFrame->addSeparator();
     rootFrame->addTab("Third tab", nullptr);
     rootFrame->addTab("Fourth tab", nullptr);
 

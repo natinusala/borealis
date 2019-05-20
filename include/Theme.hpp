@@ -27,6 +27,7 @@ typedef struct
     NVGcolor separatorColor;
     NVGcolor sidebarColor;
     NVGcolor activeTabColor;
+    NVGcolor sidebarSeparatorColor;
 } Theme;
 
 extern Theme themeLight;

@@ -27,6 +27,13 @@ using namespace std;
 
 // A sidebar with multiple tabs
 
+class SidebarSeparator : public View
+{
+    public:
+        void frame(FrameContext *ctx) override;
+        void layout() override { };
+};
+
 class SidebarItem : public View
 {
     private:
@@ -37,7 +44,7 @@ class SidebarItem : public View
         SidebarItem(string label);
 
         void frame(FrameContext *ctx) override;
-        void layout() override;
+        void layout() override { };
 
         void setActive(bool active);
 
@@ -45,7 +52,6 @@ class SidebarItem : public View
 };
 
 // TODO: Add a style with icons, make it collapsible?
-// TODO: Add separator items
 // TODO: Turn this into a List view with a sidebar style
 class Sidebar : public BoxLayout
 {
@@ -55,4 +61,5 @@ class Sidebar : public BoxLayout
         void frame(FrameContext *ctx) override;
 
         void addItem(string label);
+        void addSeparator();
 };

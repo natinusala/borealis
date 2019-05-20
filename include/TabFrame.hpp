@@ -33,6 +33,7 @@ class TabFrame : public SettingsFrame
         TabFrame();
 
         void addTab(string label, View *view);
+        void addSeparator();
 
         ~TabFrame();
 

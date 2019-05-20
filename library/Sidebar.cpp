@@ -78,6 +78,12 @@ void Sidebar::addItem(string label)
     this->addView(item);
 }
 
+void Sidebar::addSeparator()
+{
+    SidebarSeparator *separator = new SidebarSeparator();
+    this->addView(separator);
+}
+
 #define SIDEBARITEM_HEIGHT      52
 #define SIDEBARITEM_TEXT_SIZE   22
 
@@ -116,7 +122,15 @@ void SidebarItem::setActive(bool active)
     this->active = active;
 }
 
-void SidebarItem::layout()
+void SidebarSeparator::frame(FrameContext *ctx)
 {
+    nvgSave(ctx->vg);
+    nvgReset(ctx->vg);
 
+    nvgFillColor(ctx->vg, ctx->theme->sidebarSeparatorColor);
+    nvgBeginPath(ctx->vg);
+    nvgRect(ctx->vg, this->x, this->y + this->height / 2, this->width, 1);
+    nvgFill(ctx->vg);
+
+    nvgRestore(ctx->vg);
 }

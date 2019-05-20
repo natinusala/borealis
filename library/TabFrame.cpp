@@ -39,6 +39,11 @@ void TabFrame::addTab(string label, View *view)
     // TODO: Do something with the view
 }
 
+void TabFrame::addSeparator()
+{
+    this->sidebar->addSeparator();
+}
+
 TabFrame::~TabFrame()
 {
     delete this->sidebar;
