@@ -25,6 +25,7 @@ typedef struct
     float backgroundColor[3]; // gl color
     NVGcolor textColor;
     NVGcolor separatorColor;
+    NVGcolor sidebarColor;
 } Theme;
 
 extern Theme themeLight;
