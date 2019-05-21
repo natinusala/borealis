@@ -20,16 +20,11 @@
 
 void Rectangle::draw(FrameContext *ctx)
 {
-    nvgSave(ctx->vg);
-    nvgReset(ctx->vg);
-
     nvgFillColor(ctx->vg, this->color);
 
     nvgBeginPath(ctx->vg);
     nvgRect(ctx->vg, this->x, this->y, this->width, this->height);
     nvgFill(ctx->vg);
-
-    nvgRestore(ctx->vg);
 }
 
 void Rectangle::setColor(NVGcolor color)

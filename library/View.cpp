@@ -20,17 +20,10 @@
 
 void View::frame(FrameContext *ctx)
 {
-    // Save NVG context
-    nvgSave(ctx->vg);
-    nvgReset(ctx->vg);
-
     // Draw the view
     this->draw(ctx);
 
     // TODO: Draw cursor
-
-    // Restore NVG context
-    nvgRestore(ctx->vg);
 }
 
 void View::setBoundaries(unsigned x, unsigned y, unsigned width, unsigned height)
