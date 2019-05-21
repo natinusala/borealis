@@ -45,6 +45,7 @@ class SidebarItem : public View
 
         void draw(FrameContext *ctx) override;
         void layout() override { };
+        View *requestFocus(FocusDirection direction) override;
 
         void setActive(bool active);
 

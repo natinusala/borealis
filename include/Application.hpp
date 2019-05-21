@@ -39,10 +39,15 @@ class Application
 
         /**
          * Pushes a view on this applications's view stack
+         *
          * The view will automatically be resized to take
-         * the whole screen and layout will be called
+         * the whole screen and layout() will be called
+         *
+         * The view will gain focus if applicable
          */
         void pushView(View *view);
+
+        void requestFocus(View *view);
 
     private:
         GLFWwindow* window  = nullptr;
@@ -53,6 +58,8 @@ class Application
         vector<View*> viewStack;
 
         unsigned windowWidth, windowHeight;
+
+        View* currentFocus = nullptr;
 
         // TODO: Get that from system settings
         Theme *currentTheme = &themeLight;

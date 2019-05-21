@@ -23,7 +23,15 @@ void View::frame(FrameContext *ctx)
     // Draw the view
     this->draw(ctx);
 
-    // TODO: Draw cursor
+    // Draw cursor
+    // TODO: Fancy cursor
+    if (this->focused)
+    {
+        nvgStrokeColor(ctx->vg, nvgRGB(255, 0, 0));
+        nvgBeginPath(ctx->vg);
+        nvgRect(ctx->vg, this->x - 5, this->y - 5, this->width + 10, this->height + 10);
+        nvgStroke(ctx->vg);
+    }
 }
 
 void View::setBoundaries(unsigned x, unsigned y, unsigned width, unsigned height)

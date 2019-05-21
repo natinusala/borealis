@@ -47,6 +47,23 @@ void BoxLayout::setMargins(unsigned top, unsigned right, unsigned bottom, unsign
     this->layout();
 }
 
+View* BoxLayout::requestFocus(FocusDirection direction)
+{
+    // Give focus to first focusable view by default
+    if (direction == FOCUSDIRECTION_NONE)
+    {
+        for (BoxLayoutChild *child : this->children)
+        {
+            View *newFocus = child->view->requestFocus(direction);
+            if (newFocus != nullptr)
+                return newFocus;
+        }
+    }
+
+    // TODO: Handle directions
+    return nullptr;
+}
+
 void BoxLayout::layout()
 {
     // Vertical orientation

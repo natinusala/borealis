@@ -23,6 +23,15 @@
 // TODO: Make a lazy layout trigger: only reset layout if it's "dirty" at the beginning of frame() to avoid setting layout 654 times at startup
 // also remove the calls to layout() when the view is added (never call layout() directly anymore)
 
+typedef enum
+{
+    FOCUSDIRECTION_NONE = 0,
+    FOCUSDIRECTION_UP,
+    FOCUSDIRECTION_DOWN,
+    FOCUSDIRECTION_LEFT,
+    FOCUSDIRECTION_RIGHT
+} FocusDirection;
+
 class View
 {
     protected:
@@ -30,6 +39,8 @@ class View
         unsigned y;
         unsigned width;
         unsigned height;
+
+        bool focused = false;
 
     public:
         void setBoundaries(unsigned x, unsigned y, unsigned width, unsigned height);
@@ -63,6 +74,43 @@ class View
         bool isTranslucent()
         {
             return false;
+        }
+
+        /**
+         * Used to change focus based on controller
+         * directions (up, down, left, right)
+         *
+         * Should return the view that is to be
+         * focused or nullptr if no focusable
+         * view exists in that direction
+         *
+         * Should return this to give focus
+         * to that one view, or traverse and
+         * return a pointer to a child view
+         *
+         * This method should not be called
+         * directly by the user, use
+         * Application::requestFocus(View*) instead
+         */
+        virtual View *requestFocus(FocusDirection direction)
+        {
+            return nullptr;
+        }
+
+        /**
+         * Fired when focus is gained
+         */
+        virtual void onFocusGained()
+        {
+            this->focused = true;
+        }
+
+        /**
+         * Fired when focus is lost
+         */
+        virtual void onFocusLost()
+        {
+            this->focused = false;
         }
 
         virtual ~View() {};

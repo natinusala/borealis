@@ -37,8 +37,11 @@ class TabFrame : public SettingsFrame
         void addTab(string label, View *view);
         void addSeparator();
 
+        View *requestFocus(FocusDirection direction) override;
+
         ~TabFrame();
 
     private:
         Sidebar *sidebar;
+        BoxLayout *layout;
 };

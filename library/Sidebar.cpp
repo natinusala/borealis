@@ -119,3 +119,8 @@ void SidebarSeparator::draw(FrameContext *ctx)
     nvgRect(ctx->vg, this->x, this->y + this->height / 2, this->width, 1);
     nvgFill(ctx->vg);
 }
+
+View* SidebarItem::requestFocus(FocusDirection direction)
+{
+    return this;
+}

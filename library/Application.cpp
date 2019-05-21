@@ -296,10 +296,22 @@ void Application::exit()
     glfwTerminate();
 }
 
+void Application::requestFocus(View *view)
+{
+    if (this->currentFocus)
+        this->currentFocus->onFocusLost();
+
+    this->currentFocus = view->requestFocus(FOCUSDIRECTION_NONE);
+
+    if (this->currentFocus)
+        this->currentFocus->onFocusGained();
+}
+
 void Application::pushView(View *view)
 {
     view->setBoundaries(0, 0, this->windowWidth, this->windowHeight);
     view->layout();
+    this->requestFocus(view);
 
     this->viewStack.push_back(view);
 }

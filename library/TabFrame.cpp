@@ -27,7 +27,7 @@ TabFrame::TabFrame()
     this->sidebar = new Sidebar();
 
     // Setup content view
-    BoxLayout *layout = new BoxLayout(BOXLAYOUT_HORIZONTAL);
+    this->layout = new BoxLayout(BOXLAYOUT_HORIZONTAL);
     layout->addView(sidebar);
 
     this->setContentView(layout);
@@ -42,6 +42,17 @@ void TabFrame::addTab(string label, View *view)
 void TabFrame::addSeparator()
 {
     this->sidebar->addSeparator();
+}
+
+View* TabFrame::requestFocus(FocusDirection direction)
+{
+    // Give focus to the sidebar by default
+    // TODO: Give focus to the right pane instead
+    if (direction == FOCUSDIRECTION_NONE)
+        return this->sidebar->requestFocus(direction);
+
+    // Let the layout do its thing
+    return this->layout->requestFocus(direction);
 }
 
 TabFrame::~TabFrame()
