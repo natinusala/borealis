@@ -50,11 +50,18 @@ void BoxLayout::setMargins(unsigned top, unsigned right, unsigned bottom, unsign
 View* BoxLayout::requestFocus(FocusDirection direction, bool fromUp)
 {
     // Give focus to first focusable view by default
-    if (direction == FOCUSDIRECTION_NONE)
+    // or if we are going up in the tree and it's not
+    // corresponding to our direction
+    if ((fromUp &&  (
+                        (this->orientation == BOXLAYOUT_VERTICAL && (direction == FOCUSDIRECTION_RIGHT || direction == FOCUSDIRECTION_LEFT)) ||
+                        (this->orientation == BOXLAYOUT_HORIZONTAL && (direction == FOCUSDIRECTION_DOWN || direction == FOCUSDIRECTION_UP))
+                    )
+        )
+        || direction == FOCUSDIRECTION_NONE)
     {
         for (BoxLayoutChild *child : this->children)
         {
-            View *newFocus = child->view->requestFocus(direction);
+            View *newFocus = child->view->requestFocus(FOCUSDIRECTION_NONE);
             if (newFocus != nullptr)
                 return newFocus;
         }
@@ -88,15 +95,22 @@ View* BoxLayout::requestFocus(FocusDirection direction, bool fromUp)
                     if (newFocus)
                         return newFocus;
                 }
+                return nullptr;
             }
-            else if (focusedIndex > 0)
+            else if ((this->orientation == BOXLAYOUT_HORIZONTAL && direction == FOCUSDIRECTION_LEFT) ||
+                        (this->orientation == BOXLAYOUT_VERTICAL && direction == FOCUSDIRECTION_UP))
             {
-                for (unsigned i = focusedIndex - 1; i >= 0; i--)
+                if (focusedIndex > 0)
                 {
-                    newFocus = this->children[i]->view->requestFocus(direction);
-                    if (newFocus)
-                        return newFocus;
+                    for (unsigned i = focusedIndex - 1; i >= 0; i--)
+                    {
+                        newFocus = this->children[i]->view->requestFocus(direction);
+                        if (newFocus)
+                            return newFocus;
+                    }
                 }
+
+                return nullptr;
             }
         }
     }

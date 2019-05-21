@@ -267,6 +267,14 @@ void Application::onGamepadButtonPressed(char button)
             if (this->currentFocus && this->currentFocus->getParent())
                 this->requestFocus(this->currentFocus->getParent(), FOCUSDIRECTION_UP);
             break;
+        case GLFW_GAMEPAD_BUTTON_DPAD_LEFT:
+            if (this->currentFocus && this->currentFocus->getParent())
+                this->requestFocus(this->currentFocus->getParent(), FOCUSDIRECTION_LEFT);
+            break;
+        case GLFW_GAMEPAD_BUTTON_DPAD_RIGHT:
+            if (this->currentFocus && this->currentFocus->getParent())
+                this->requestFocus(this->currentFocus->getParent(), FOCUSDIRECTION_RIGHT);
+            break;
         default:
             break;
     }
