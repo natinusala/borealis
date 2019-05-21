@@ -30,11 +30,8 @@
 
 // TODO: Add hints system
 
-void SettingsFrame::frame(FrameContext *ctx)
+void SettingsFrame::draw(FrameContext *ctx)
 {
-    nvgSave(ctx->vg);
-    nvgReset(ctx->vg);
-
     // Text
     // Title
     nvgFillColor(ctx->vg, ctx->theme->textColor);
@@ -63,8 +60,6 @@ void SettingsFrame::frame(FrameContext *ctx)
     // Content view
     if (contentView)
         contentView->frame(ctx);
-
-    nvgRestore(ctx->vg);
 }
 
 void SettingsFrame::layout()

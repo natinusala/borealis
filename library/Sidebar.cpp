@@ -35,11 +35,8 @@ Sidebar::Sidebar() : BoxLayout(BOXLAYOUT_VERTICAL)
 
 static NVGcolor transparent = nvgRGBA(0, 0, 0, 0);
 
-void Sidebar::frame(FrameContext *ctx)
+void Sidebar::draw(FrameContext *ctx)
 {
-    nvgSave(ctx->vg);
-    nvgReset(ctx->vg);
-
     // Draw background
     unsigned backdropHeight = this->height / 16;
 
@@ -65,9 +62,7 @@ void Sidebar::frame(FrameContext *ctx)
     nvgFill(ctx->vg);
 
     // Draw items
-    BoxLayout::frame(ctx);
-
-    nvgRestore(ctx->vg);
+    BoxLayout::draw(ctx);
 }
 
 void Sidebar::addItem(string label)
@@ -94,11 +89,8 @@ SidebarItem::SidebarItem(string label) : label(label)
     this->setHeight(SIDEBARITEM_HEIGHT);
 }
 
-void SidebarItem::frame(FrameContext *ctx)
+void SidebarItem::draw(FrameContext *ctx)
 {
-    nvgSave(ctx->vg);
-    nvgReset(ctx->vg);
-
     // Label
     nvgFillColor(ctx->vg, this->active ? ctx->theme->activeTabColor : ctx->theme->textColor);
     nvgFontSize(ctx->vg, SIDEBARITEM_TEXT_SIZE);
@@ -113,8 +105,6 @@ void SidebarItem::frame(FrameContext *ctx)
         nvgRect(ctx->vg, this->x, this->y, 4, SIDEBARITEM_HEIGHT);
         nvgFill(ctx->vg);
     }
-
-    nvgRestore(ctx->vg);
 }
 
 void SidebarItem::setActive(bool active)
@@ -122,15 +112,10 @@ void SidebarItem::setActive(bool active)
     this->active = active;
 }
 
-void SidebarSeparator::frame(FrameContext *ctx)
+void SidebarSeparator::draw(FrameContext *ctx)
 {
-    nvgSave(ctx->vg);
-    nvgReset(ctx->vg);
-
     nvgFillColor(ctx->vg, ctx->theme->sidebarSeparatorColor);
     nvgBeginPath(ctx->vg);
     nvgRect(ctx->vg, this->x, this->y + this->height / 2, this->width, 1);
     nvgFill(ctx->vg);
-
-    nvgRestore(ctx->vg);
 }

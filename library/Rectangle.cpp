@@ -18,7 +18,7 @@
 
 #include <Rectangle.hpp>
 
-void Rectangle::frame(FrameContext *ctx)
+void Rectangle::draw(FrameContext *ctx)
 {
     nvgSave(ctx->vg);
     nvgReset(ctx->vg);

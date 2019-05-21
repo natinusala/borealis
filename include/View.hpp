@@ -23,9 +23,6 @@
 // TODO: Make a lazy layout trigger: only reset layout if it's "dirty" at the beginning of frame() to avoid setting layout 654 times at startup
 // also remove the calls to layout() when the view is added (never call layout() directly anymore)
 
-// TODO: Separate frame in frame and draw - frame will setup nanovg stack, call draw, and draw highlight if necessary
-// frame shouldn't be overridden by subclasses, draw will be (and is pure virtual)
-
 class View
 {
     protected:
@@ -46,10 +43,15 @@ class View
         unsigned getHeight();
 
         /**
-         * Called each frame to
-         * draw the view
+         * Called each frame
          */
-        virtual void frame(FrameContext *ctx) = 0;
+        void frame(FrameContext *ctx);
+
+        /**
+         * Called by frame() to draw
+         * the view onscreen
+         */
+        virtual void draw(FrameContext *ctx) = 0;
 
         /**
          * Triggered when the view has been

@@ -61,7 +61,7 @@ class BoxLayout : public View
     public:
         BoxLayout(BoxLayoutOrientation orientation);
 
-        void frame(FrameContext *ctx) override;
+        void draw(FrameContext *ctx) override;
         void layout() override;
 
         /**

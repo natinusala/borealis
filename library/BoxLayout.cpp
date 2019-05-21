@@ -25,7 +25,7 @@ BoxLayout::BoxLayout(BoxLayoutOrientation orientation) : orientation(orientation
 
 }
 
-void BoxLayout::frame(FrameContext *ctx)
+void BoxLayout::draw(FrameContext *ctx)
 {
     // Draw children
     for (BoxLayoutChild *child : this->children)

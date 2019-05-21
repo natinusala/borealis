@@ -34,7 +34,7 @@ class SettingsFrame : public View
         View *contentView = nullptr;
 
     public:
-        void frame(FrameContext *ctx) override;
+        void draw(FrameContext *ctx) override;
         void layout() override;
 
         void setTitle(string title);
