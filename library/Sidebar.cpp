@@ -65,11 +65,37 @@ void Sidebar::draw(FrameContext *ctx)
     BoxLayout::draw(ctx);
 }
 
+View* Sidebar::defaultFocus()
+{
+    for (unsigned i = 0; i < this->children.size(); i++)
+    {
+        View *view = this->children[i]->view;
+        if (SidebarItem *item = dynamic_cast<SidebarItem*>(view))
+        {
+            if (item->isActive())
+            {
+                View *newFocus = this->children[i]->view->requestFocus(FOCUSDIRECTION_NONE);
+                if (newFocus)
+                {
+                    this->focusedIndex = i;
+                    return newFocus;
+                }
+                break;
+            }
+        }
+    }
+
+    return BoxLayout::defaultFocus();
+}
+
 void Sidebar::addItem(string label)
 {
-    SidebarItem *item = new SidebarItem(label);
+    SidebarItem *item = new SidebarItem(label, this);
     if (this->isEmpty())
-        item->setActive(true);
+    {
+        setActive(item);
+    }
+
     this->addView(item);
 }
 
@@ -79,12 +105,20 @@ void Sidebar::addSeparator()
     this->addView(separator);
 }
 
+void Sidebar::setActive(SidebarItem *active)
+{
+    if (currentActive)
+        currentActive->setActive(false);
+    currentActive = active;
+    active->setActive(true);
+}
+
 #define SIDEBARITEM_HEIGHT      52
 #define SIDEBARITEM_TEXT_SIZE   22
 
 #define SIDEBARITEM_TEXT_OFFSET_X 14
 
-SidebarItem::SidebarItem(string label) : label(label)
+SidebarItem::SidebarItem(string label, Sidebar *sidebar) : label(label), sidebar(sidebar)
 {
     this->setHeight(SIDEBARITEM_HEIGHT);
 }
@@ -123,4 +157,15 @@ void SidebarSeparator::draw(FrameContext *ctx)
 View* SidebarItem::requestFocus(FocusDirection direction, bool fromUp)
 {
     return this;
+}
+
+bool SidebarItem::isActive()
+{
+    return this->active;
+}
+
+void SidebarItem::onFocusGained()
+{
+    View::onFocusGained();
+    this->sidebar->setActive(this);
 }

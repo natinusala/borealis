@@ -39,20 +39,27 @@ class SidebarSeparator : public View
         }
 };
 
+class Sidebar;
+
 class SidebarItem : public View
 {
     private:
         string label;
         bool active = false;
 
+        Sidebar *sidebar;
+
     public:
-        SidebarItem(string label);
+        SidebarItem(string label, Sidebar *sidebar);
 
         void draw(FrameContext *ctx) override;
         void layout() override { };
         View *requestFocus(FocusDirection direction, bool fromUp = false) override;
 
         void setActive(bool active);
+        bool isActive();
+
+        void onFocusGained() override;
 
         ~SidebarItem() { }
 };
@@ -61,6 +68,12 @@ class SidebarItem : public View
 // TODO: Turn this into a List view with a sidebar style
 class Sidebar : public BoxLayout
 {
+    private:
+        SidebarItem *currentActive = nullptr;
+
+    protected:
+        virtual View* defaultFocus() override;
+
     public:
         Sidebar();
 
@@ -68,4 +81,6 @@ class Sidebar : public BoxLayout
 
         void addItem(string label);
         void addSeparator();
+
+        void setActive(SidebarItem *item);
 };

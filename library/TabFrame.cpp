@@ -30,6 +30,16 @@ TabFrame::TabFrame()
     this->layout = new BoxLayout(BOXLAYOUT_HORIZONTAL);
     layout->addView(sidebar);
 
+    // Dummy sidebar
+    // TODO: Remove it
+    Sidebar *dummy = new Sidebar();
+
+    dummy->addItem("Dummy 1");
+    dummy->addItem("Dummy 2");
+    dummy->addItem("Dummy 3");
+
+    layout->addView(dummy, true);
+
     this->setContentView(layout);
 }
 

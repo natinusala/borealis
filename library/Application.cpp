@@ -222,7 +222,7 @@ bool Application::mainLoop()
     // Trigger gamepad events
     // TODO: Translate axis events to dpad events here
     // TODO: Handle key repetition
-    for (int i = GLFW_GAMEPAD_BUTTON_A; i < GLFW_GAMEPAD_BUTTON_LAST; i++)
+    for (int i = GLFW_GAMEPAD_BUTTON_A; i <= GLFW_GAMEPAD_BUTTON_LAST; i++)
     {
         if (this->gamepad.buttons[i] == GLFW_PRESS && this->oldGamepad.buttons[i] != GLFW_PRESS)
             this->onGamepadButtonPressed(i);

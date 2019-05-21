@@ -47,6 +47,22 @@ void BoxLayout::setMargins(unsigned top, unsigned right, unsigned bottom, unsign
     this->layout();
 }
 
+View* BoxLayout::defaultFocus()
+{
+    for (unsigned i = 0; i < this->children.size(); i++)
+    {
+        View *newFocus = this->children[i]->view->requestFocus(FOCUSDIRECTION_NONE);
+        if (newFocus)
+        {
+            this->focusedIndex = i;
+            return newFocus;
+        }
+    }
+
+    return nullptr;
+}
+
+// TODO: Allow sub classes to override default focus (active tab on Sidebar for instance)
 View* BoxLayout::requestFocus(FocusDirection direction, bool fromUp)
 {
     // Give focus to first focusable view by default
@@ -59,62 +75,50 @@ View* BoxLayout::requestFocus(FocusDirection direction, bool fromUp)
         )
         || direction == FOCUSDIRECTION_NONE)
     {
-        for (BoxLayoutChild *child : this->children)
-        {
-            View *newFocus = child->view->requestFocus(FOCUSDIRECTION_NONE);
-            if (newFocus != nullptr)
-                return newFocus;
-        }
+        View *newFocus = this->defaultFocus();
+        if (newFocus)
+            return newFocus;
     }
     // Handle directions
     else
     {
-        // Find index of focused view
-        // TODO: Do it better
-        int focusedIndex = -1;
-
-        for (unsigned i = 0; i < this->children.size(); i++)
-        {
-            if (this->children[i]->view->isFocused())
-            {
-                focusedIndex = (int) i;
-                break;
-            }
-        }
-
         // Give focus to next focusable view
-        if (focusedIndex != -1)
+        View *newFocus = nullptr;
+        if ((this->orientation == BOXLAYOUT_HORIZONTAL && direction == FOCUSDIRECTION_RIGHT) ||
+            (this->orientation == BOXLAYOUT_VERTICAL && direction == FOCUSDIRECTION_DOWN))
         {
-            View *newFocus = nullptr;
-            if ((this->orientation == BOXLAYOUT_HORIZONTAL && direction == FOCUSDIRECTION_RIGHT) ||
-                (this->orientation == BOXLAYOUT_VERTICAL && direction == FOCUSDIRECTION_DOWN))
+            for (unsigned i = this->focusedIndex + 1; i < this->children.size(); i++)
             {
-                for (unsigned i = focusedIndex + 1; i < this->children.size(); i++)
+                newFocus = this->children[i]->view->requestFocus(FOCUSDIRECTION_NONE);
+                if (newFocus)
                 {
-                    newFocus = this->children[i]->view->requestFocus(direction);
-                    if (newFocus)
-                        return newFocus;
+                    this->focusedIndex = i;
+                    return newFocus;
                 }
-                return nullptr;
             }
-            else if ((this->orientation == BOXLAYOUT_HORIZONTAL && direction == FOCUSDIRECTION_LEFT) ||
-                        (this->orientation == BOXLAYOUT_VERTICAL && direction == FOCUSDIRECTION_UP))
+            return nullptr;
+        }
+        else if ((this->orientation == BOXLAYOUT_HORIZONTAL && direction == FOCUSDIRECTION_LEFT) ||
+                    (this->orientation == BOXLAYOUT_VERTICAL && direction == FOCUSDIRECTION_UP))
+        {
+            if (this->focusedIndex > 0)
             {
-                if (focusedIndex > 0)
+                for (unsigned i = this->focusedIndex - 1; i >= 0; i--)
                 {
-                    for (unsigned i = focusedIndex - 1; i >= 0; i--)
+                    newFocus = this->children[i]->view->requestFocus(FOCUSDIRECTION_NONE);
+                    if (newFocus)
                     {
-                        newFocus = this->children[i]->view->requestFocus(direction);
-                        if (newFocus)
-                            return newFocus;
+                        this->focusedIndex = i;
+                        return newFocus;
                     }
                 }
-
-                return nullptr;
             }
+
+            return nullptr;
         }
     }
 
+    // Fallback to parent
     return View::requestFocus(direction);
 }
 

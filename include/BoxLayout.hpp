@@ -48,8 +48,6 @@ class BoxLayoutChild
 class BoxLayout : public View
 {
     private:
-        vector<BoxLayoutChild*> children;
-
         BoxLayoutOrientation orientation;
 
         unsigned spacing = 0;
@@ -58,6 +56,14 @@ class BoxLayout : public View
         unsigned marginRight    = 0;
         unsigned marginBottom   = 0;
         unsigned marginLeft     = 0;
+
+    protected:
+        virtual View* defaultFocus();
+
+        vector<BoxLayoutChild*> children;
+
+        unsigned focusedIndex = 0;
+
     public:
         BoxLayout(BoxLayoutOrientation orientation);
 
