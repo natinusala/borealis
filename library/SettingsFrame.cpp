@@ -63,6 +63,15 @@ void SettingsFrame::draw(FrameContext *ctx)
         contentView->frame(ctx);
 }
 
+View* SettingsFrame::requestFocus(FocusDirection direction, bool fromUp)
+{
+    if (fromUp)
+        return View::requestFocus(direction);
+    else if (this->contentView)
+        return this->contentView->requestFocus(direction);
+    return nullptr;
+}
+
 void SettingsFrame::layout()
 {
     if (this->contentView)
@@ -75,6 +84,7 @@ void SettingsFrame::layout()
 void SettingsFrame::setContentView(View *view)
 {
     this->contentView = view;
+    this->contentView->setParent(this);
     this->layout();
 }
 

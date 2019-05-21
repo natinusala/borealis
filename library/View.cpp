@@ -42,6 +42,21 @@ void View::setBoundaries(unsigned x, unsigned y, unsigned width, unsigned height
     this->height    = height;
 }
 
+void View::setParent(View *parent)
+{
+    this->parent = parent;
+}
+
+bool View::isFocused()
+{
+    return this->focused;
+}
+
+View* View::getParent()
+{
+    return this->parent;
+}
+
 void View::setWidth(unsigned width)
 {
     this->width = width;

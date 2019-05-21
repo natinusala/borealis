@@ -44,15 +44,18 @@ void TabFrame::addSeparator()
     this->sidebar->addSeparator();
 }
 
-View* TabFrame::requestFocus(FocusDirection direction)
+View* TabFrame::requestFocus(FocusDirection direction, bool fromUp)
 {
+    if (fromUp)
+        return View::requestFocus(direction);
+
     // Give focus to the sidebar by default
     // TODO: Give focus to the right pane instead
     if (direction == FOCUSDIRECTION_NONE)
         return this->sidebar->requestFocus(direction);
 
     // Let the layout do its thing
-    return this->layout->requestFocus(direction);
+    return this->layout->requestFocus(direction, fromUp);
 }
 
 TabFrame::~TabFrame()

@@ -36,6 +36,7 @@ class SettingsFrame : public View
     public:
         void draw(FrameContext *ctx) override;
         void layout() override;
+        View* requestFocus(FocusDirection direction, bool fromUp = false) override;
 
         void setTitle(string title);
         void setContentView(View *view);

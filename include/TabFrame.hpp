@@ -37,7 +37,7 @@ class TabFrame : public SettingsFrame
         void addTab(string label, View *view);
         void addSeparator();
 
-        View *requestFocus(FocusDirection direction) override;
+        View *requestFocus(FocusDirection direction, bool fromUp = false) override;
 
         ~TabFrame();
 

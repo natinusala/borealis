@@ -47,7 +47,7 @@ class Application
          */
         void pushView(View *view);
 
-        void requestFocus(View *view);
+        void requestFocus(View *view, FocusDirection direction);
 
     private:
         GLFWwindow* window  = nullptr;
@@ -64,7 +64,12 @@ class Application
         // TODO: Get that from system settings
         Theme *currentTheme = &themeLight;
 
+        GLFWgamepadstate oldGamepad = {};
+        GLFWgamepadstate gamepad    = {};
+
         void onWindowSizeChanged();
+
+        void onGamepadButtonPressed(char button);
 
         void frame();
         void exit();

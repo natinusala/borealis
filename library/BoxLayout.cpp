@@ -47,7 +47,7 @@ void BoxLayout::setMargins(unsigned top, unsigned right, unsigned bottom, unsign
     this->layout();
 }
 
-View* BoxLayout::requestFocus(FocusDirection direction)
+View* BoxLayout::requestFocus(FocusDirection direction, bool fromUp)
 {
     // Give focus to first focusable view by default
     if (direction == FOCUSDIRECTION_NONE)
@@ -59,9 +59,49 @@ View* BoxLayout::requestFocus(FocusDirection direction)
                 return newFocus;
         }
     }
+    // Handle directions
+    else
+    {
+        // Find index of focused view
+        // TODO: Do it better
+        int focusedIndex = -1;
 
-    // TODO: Handle directions
-    return nullptr;
+        for (unsigned i = 0; i < this->children.size(); i++)
+        {
+            if (this->children[i]->view->isFocused())
+            {
+                focusedIndex = (int) i;
+                break;
+            }
+        }
+
+        // Give focus to next focusable view
+        if (focusedIndex != -1)
+        {
+            View *newFocus = nullptr;
+            if ((this->orientation == BOXLAYOUT_HORIZONTAL && direction == FOCUSDIRECTION_RIGHT) ||
+                (this->orientation == BOXLAYOUT_VERTICAL && direction == FOCUSDIRECTION_DOWN))
+            {
+                for (unsigned i = focusedIndex + 1; i < this->children.size(); i++)
+                {
+                    newFocus = this->children[i]->view->requestFocus(direction);
+                    if (newFocus)
+                        return newFocus;
+                }
+            }
+            else if (focusedIndex > 0)
+            {
+                for (unsigned i = focusedIndex - 1; i >= 0; i--)
+                {
+                    newFocus = this->children[i]->view->requestFocus(direction);
+                    if (newFocus)
+                        return newFocus;
+                }
+            }
+        }
+    }
+
+    return View::requestFocus(direction);
 }
 
 void BoxLayout::layout()
@@ -126,6 +166,8 @@ void BoxLayout::addView(View *view, bool fill)
     BoxLayoutChild *child = new BoxLayoutChild();
     child->view     = view;
     child->fill     = fill;
+
+    view->setParent(this);
 
     this->children.push_back(child);
     this->layout();

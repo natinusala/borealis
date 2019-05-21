@@ -76,26 +76,29 @@ static void joystickCallback(int jid, int event)
 
 static void windowKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    // Check for toggle-fullscreen combo
-    if (key == GLFW_KEY_ENTER && mods == GLFW_MOD_ALT && action == GLFW_PRESS)
+    if (action == GLFW_PRESS)
     {
-        static int saved_x, saved_y, saved_width, saved_height;
-
-        if (!glfwGetWindowMonitor(window))
+        // Check for toggle-fullscreen combo
+        if (key == GLFW_KEY_ENTER && mods == GLFW_MOD_ALT)
         {
-            // Back up window position/size
-            glfwGetWindowPos(window, &saved_x, &saved_y);
-            glfwGetWindowSize(window, &saved_width, &saved_height);
+            static int saved_x, saved_y, saved_width, saved_height;
 
-            // Switch to fullscreen mode
-            GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-            const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-            glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
-        }
-        else
-        {
-            // Switch back to windowed mode
-            glfwSetWindowMonitor(window, nullptr, saved_x, saved_y, saved_width, saved_height, GLFW_DONT_CARE);
+            if (!glfwGetWindowMonitor(window))
+            {
+                // Back up window position/size
+                glfwGetWindowPos(window, &saved_x, &saved_y);
+                glfwGetWindowSize(window, &saved_width, &saved_height);
+
+                // Switch to fullscreen mode
+                GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+                const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+                glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+            }
+            else
+            {
+                // Switch back to windowed mode
+                glfwSetWindowMonitor(window, nullptr, saved_x, saved_y, saved_width, saved_height, GLFW_DONT_CARE);
+            }
         }
     }
 }
@@ -206,23 +209,26 @@ bool Application::mainLoop()
     } while (!is_active);
 
     // Gamepad
-    GLFWgamepadstate gamepad = {};
-    if (!glfwGetGamepadState(GLFW_JOYSTICK_1, &gamepad))
+    if (!glfwGetGamepadState(GLFW_JOYSTICK_1, &this->gamepad))
     {
         // Gamepad not available, so let's fake it with keyboard
-        gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT]  = glfwGetKey(window, GLFW_KEY_LEFT);
-        gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT] = glfwGetKey(window, GLFW_KEY_RIGHT);
-        gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP]    = glfwGetKey(window, GLFW_KEY_UP);
-        gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN]  = glfwGetKey(window, GLFW_KEY_DOWN);
-        gamepad.buttons[GLFW_GAMEPAD_BUTTON_START]      = glfwGetKey(window, GLFW_KEY_ESCAPE);
+        this->gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT]  = glfwGetKey(window, GLFW_KEY_LEFT);
+        this->gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT] = glfwGetKey(window, GLFW_KEY_RIGHT);
+        this->gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP]    = glfwGetKey(window, GLFW_KEY_UP);
+        this->gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN]  = glfwGetKey(window, GLFW_KEY_DOWN);
+        this->gamepad.buttons[GLFW_GAMEPAD_BUTTON_START]      = glfwGetKey(window, GLFW_KEY_ESCAPE);
     }
 
-    // Exit by pressing Start (aka Plus)
-    if (gamepad.buttons[GLFW_GAMEPAD_BUTTON_START] == GLFW_PRESS)
+    // Trigger gamepad events
+    // TODO: Translate axis events to dpad events here
+    // TODO: Handle key repetition
+    for (int i = GLFW_GAMEPAD_BUTTON_A; i < GLFW_GAMEPAD_BUTTON_LAST; i++)
     {
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
-        return true;
+        if (this->gamepad.buttons[i] == GLFW_PRESS && this->oldGamepad.buttons[i] != GLFW_PRESS)
+            this->onGamepadButtonPressed(i);
     }
+
+    this->oldGamepad = this->gamepad;
 
     // Handle window size changes
     GLint viewport[4];
@@ -243,6 +249,27 @@ bool Application::mainLoop()
     glfwSwapBuffers(window);
 
     return true;
+}
+
+void Application::onGamepadButtonPressed(char button)
+{
+    switch (button)
+    {
+        // Exit by pressing Start (aka Plus)
+        case GLFW_GAMEPAD_BUTTON_START:
+            glfwSetWindowShouldClose(window, GLFW_TRUE);
+            break;
+        case GLFW_GAMEPAD_BUTTON_DPAD_DOWN:
+            if (this->currentFocus && this->currentFocus->getParent())
+                this->requestFocus(this->currentFocus->getParent(), FOCUSDIRECTION_DOWN);
+            break;
+        case GLFW_GAMEPAD_BUTTON_DPAD_UP:
+            if (this->currentFocus && this->currentFocus->getParent())
+                this->requestFocus(this->currentFocus->getParent(), FOCUSDIRECTION_UP);
+            break;
+        default:
+            break;
+    }
 }
 
 void Application::frame()
@@ -296,22 +323,26 @@ void Application::exit()
     glfwTerminate();
 }
 
-void Application::requestFocus(View *view)
+void Application::requestFocus(View *view, FocusDirection direction)
 {
-    if (this->currentFocus)
-        this->currentFocus->onFocusLost();
+    View *oldFocus = this->currentFocus;
+    View *newFocus = view->requestFocus(direction);
 
-    this->currentFocus = view->requestFocus(FOCUSDIRECTION_NONE);
+    if (oldFocus != newFocus && newFocus)
+    {
+        if (oldFocus)
+            oldFocus->onFocusLost();
+        newFocus->onFocusGained();
 
-    if (this->currentFocus)
-        this->currentFocus->onFocusGained();
+        this->currentFocus = newFocus;
+    }
 }
 
 void Application::pushView(View *view)
 {
     view->setBoundaries(0, 0, this->windowWidth, this->windowHeight);
     view->layout();
-    this->requestFocus(view);
+    this->requestFocus(view, FOCUSDIRECTION_NONE);
 
     this->viewStack.push_back(view);
 }

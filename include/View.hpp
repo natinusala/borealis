@@ -20,6 +20,11 @@
 
 #include <FrameContext.hpp>
 
+#include <stdio.h>
+#include <string>
+
+using namespace std;
+
 // TODO: Make a lazy layout trigger: only reset layout if it's "dirty" at the beginning of frame() to avoid setting layout 654 times at startup
 // also remove the calls to layout() when the view is added (never call layout() directly anymore)
 
@@ -42,6 +47,8 @@ class View
 
         bool focused = false;
 
+        View *parent = nullptr;
+
     public:
         void setBoundaries(unsigned x, unsigned y, unsigned width, unsigned height);
 
@@ -52,6 +59,11 @@ class View
         unsigned getY();
         unsigned getWidth();
         unsigned getHeight();
+
+        void setParent(View *parent);
+        View* getParent();
+
+        string name() const { return typeid(*this).name(); }
 
         /**
          * Called each frame
@@ -76,6 +88,8 @@ class View
             return false;
         }
 
+        bool isFocused();
+
         /**
          * Used to change focus based on controller
          * directions (up, down, left, right)
@@ -83,6 +97,7 @@ class View
          * Should return the view that is to be
          * focused or nullptr if no focusable
          * view exists in that direction
+         * or if the view itself isn't focusable
          *
          * Should return this to give focus
          * to that one view, or traverse and
@@ -92,8 +107,11 @@ class View
          * directly by the user, use
          * Application::requestFocus(View*) instead
          */
-        virtual View *requestFocus(FocusDirection direction)
+        virtual View *requestFocus(FocusDirection direction, bool fromUp = false)
         {
+            if (this->parent)
+                return this->parent->requestFocus(direction, true);
+
             return nullptr;
         }
 

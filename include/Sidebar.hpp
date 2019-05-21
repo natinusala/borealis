@@ -32,6 +32,11 @@ class SidebarSeparator : public View
     public:
         void draw(FrameContext *ctx) override;
         void layout() override { };
+
+        View *requestFocus(FocusDirection direction, bool fromUp = false) override
+        {
+            return nullptr;
+        }
 };
 
 class SidebarItem : public View
@@ -45,7 +50,7 @@ class SidebarItem : public View
 
         void draw(FrameContext *ctx) override;
         void layout() override { };
-        View *requestFocus(FocusDirection direction) override;
+        View *requestFocus(FocusDirection direction, bool fromUp = false) override;
 
         void setActive(bool active);
 

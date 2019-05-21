@@ -31,5 +31,5 @@ borealis_example = executable(
     dependencies : [ dep_glfw3, dep_glm ],
     install: true,
     include_directories: include_directories('include', 'include/nanovg'),
-    cpp_args: [ '-DWINDOW_NAME="Borealis example"' ]
+    cpp_args: [ '-DWINDOW_NAME="Borealis example"', '-g' ]
 )

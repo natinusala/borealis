@@ -120,7 +120,7 @@ void SidebarSeparator::draw(FrameContext *ctx)
     nvgFill(ctx->vg);
 }
 
-View* SidebarItem::requestFocus(FocusDirection direction)
+View* SidebarItem::requestFocus(FocusDirection direction, bool fromUp)
 {
     return this;
 }

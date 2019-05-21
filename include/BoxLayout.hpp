@@ -63,7 +63,7 @@ class BoxLayout : public View
 
         void draw(FrameContext *ctx) override;
         void layout() override;
-        View* requestFocus(FocusDirection direction) override;
+        View* requestFocus(FocusDirection direction, bool fromUp = false) override;
 
         /**
          * Sets spacing between views
