@@ -27,6 +27,8 @@
 using namespace std;
 
 // A settings frame containing a sidebar on the left with multiple tabs
+
+// TODO: Separate it from SettingsFrame to allow using tabs without the header and footer
 class TabFrame : public SettingsFrame
 {
     public:

@@ -26,6 +26,7 @@
 
 #define TITLE_SIZE  30
 // TODO: Don't center title, hardcode Y position
+// TODO: Resize title (fine tune on Switch)
 #define TITLE_START 130
 
 // TODO: Add hints system
