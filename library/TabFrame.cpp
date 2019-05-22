@@ -33,6 +33,7 @@ TabFrame::TabFrame()
     // Dummy sidebar
     // TODO: Remove it
     Sidebar *dummy = new Sidebar();
+    dummy->setBackground(BACKGROUND_NONE);
 
     dummy->addItem("Dummy 1");
     dummy->addItem("Dummy 2");
