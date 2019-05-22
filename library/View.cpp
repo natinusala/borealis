@@ -26,8 +26,8 @@ void View::frame(FrameContext *ctx)
     // Draw the view
     this->draw(ctx);
 
-    // Draw cursor
-    // TODO: Fancy cursor
+    // Draw highlight
+    // TODO: Fancy highlight
     if (this->focused)
     {
         nvgStrokeColor(ctx->vg, nvgRGB(255, 0, 0));

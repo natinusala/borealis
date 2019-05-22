@@ -25,11 +25,18 @@ BoxLayout::BoxLayout(BoxLayoutOrientation orientation) : orientation(orientation
 
 }
 
+// TODO: Only draw children that are onscreen (use highlight rect + some margins)
 void BoxLayout::draw(FrameContext *ctx)
 {
+    // Enable scissoring
+    nvgScissor(ctx->vg, this->x, this->y, this->width, this->height);
+
     // Draw children
     for (BoxLayoutChild *child : this->children)
         child->view->frame(ctx);
+
+    //Disable scissoring
+    nvgResetScissor(ctx->vg);
 }
 
 void BoxLayout::setSpacing(unsigned spacing)

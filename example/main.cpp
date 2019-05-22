@@ -47,6 +47,15 @@ int main(int argc, char* argv[])
     rootFrame->addSeparator();
     rootFrame->addTab("Third tab", nullptr);
     rootFrame->addTab("Fourth tab", nullptr);
+    rootFrame->addSeparator();
+    rootFrame->addTab("Tab 5", nullptr);
+    rootFrame->addTab("Tab 6", nullptr);
+    rootFrame->addSeparator();
+    rootFrame->addTab("Tab 7", nullptr);
+    rootFrame->addTab("Tab 8", nullptr);
+    rootFrame->addSeparator();
+    rootFrame->addTab("Tab 9", nullptr);
+    rootFrame->addTab("Tab 10", nullptr);
 
     // Add the root view to the stack
     app->pushView(rootFrame);
