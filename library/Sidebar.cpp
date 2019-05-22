@@ -31,36 +31,11 @@ Sidebar::Sidebar() : BoxLayout(BOXLAYOUT_VERTICAL)
     this->setWidth(SIDEBAR_WIDTH);
     this->setSpacing(SIDEBAR_SPACING);
     this->setMargins(SIDEBAR_MARGIN_TOP, SIDEBAR_MARGIN_RIGHT, SIDEBAR_MARGIN_BOTTOM, SIDEBAR_MARGIN_LEFT);
+    this->setBackground(BACKGROUND_SIDEBAR);
 }
-
-static NVGcolor transparent = nvgRGBA(0, 0, 0, 0);
 
 void Sidebar::draw(FrameContext *ctx)
 {
-    // Draw background
-    unsigned backdropHeight = this->height / 16;
-
-    // Solid color
-    nvgBeginPath(ctx->vg);
-    nvgFillColor(ctx->vg, ctx->theme->sidebarColor);
-    nvgRect(ctx->vg, this->x, this->y + backdropHeight, this->width, this->height - backdropHeight * 2);
-    nvgFill(ctx->vg);
-
-    //Borders gradient
-    // Top
-    NVGpaint topGradient = nvgLinearGradient(ctx->vg, this->x, this->y + backdropHeight, this->x, this->y, ctx->theme->sidebarColor, transparent);
-    nvgBeginPath(ctx->vg);
-    nvgFillPaint(ctx->vg, topGradient);
-    nvgRect(ctx->vg, this->x, this->y, this->width, backdropHeight);
-    nvgFill(ctx->vg);
-
-    // Bottom
-    NVGpaint bottomGradient = nvgLinearGradient(ctx->vg, this->x, this->y + this->height - backdropHeight, this->x, this->y + this->height, ctx->theme->sidebarColor, transparent);
-    nvgBeginPath(ctx->vg);
-    nvgFillPaint(ctx->vg, bottomGradient);
-    nvgRect(ctx->vg, this->x, this->y + this->height - backdropHeight, this->width, backdropHeight);
-    nvgFill(ctx->vg);
-
     // Draw items
     BoxLayout::draw(ctx);
 }

@@ -37,8 +37,18 @@ typedef enum
     FOCUSDIRECTION_RIGHT
 } FocusDirection;
 
+typedef enum
+{
+    BACKGROUND_NONE = 0,
+    BACKGROUND_SIDEBAR
+} Background;
+
 class View
 {
+    private:
+        Background background = BACKGROUND_NONE;
+
+        void drawBackground(FrameContext *ctx);
     protected:
         unsigned x;
         unsigned y;
@@ -51,6 +61,8 @@ class View
 
     public:
         void setBoundaries(unsigned x, unsigned y, unsigned width, unsigned height);
+
+        void setBackground(Background background);
 
         void setWidth(unsigned width);
         void setHeight(unsigned height);

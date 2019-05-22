@@ -20,6 +20,9 @@
 
 void View::frame(FrameContext *ctx)
 {
+    // Draw background
+    this->drawBackground(ctx);
+
     // Draw the view
     this->draw(ctx);
 
@@ -31,6 +34,48 @@ void View::frame(FrameContext *ctx)
         nvgBeginPath(ctx->vg);
         nvgRect(ctx->vg, this->x - 5, this->y - 5, this->width + 10, this->height + 10);
         nvgStroke(ctx->vg);
+    }
+}
+
+void View::setBackground(Background background)
+{
+    this->background = background;
+}
+
+static NVGcolor transparent = nvgRGBA(0, 0, 0, 0);
+
+void View::drawBackground(FrameContext *ctx)
+{
+    switch (this->background)
+    {
+        case BACKGROUND_SIDEBAR:
+        {
+            unsigned backdropHeight = this->height / 16;
+
+            // Solid color
+            nvgBeginPath(ctx->vg);
+            nvgFillColor(ctx->vg, ctx->theme->sidebarColor);
+            nvgRect(ctx->vg, this->x, this->y + backdropHeight, this->width, this->height - backdropHeight * 2);
+            nvgFill(ctx->vg);
+
+            //Borders gradient
+            // Top
+            NVGpaint topGradient = nvgLinearGradient(ctx->vg, this->x, this->y + backdropHeight, this->x, this->y, ctx->theme->sidebarColor, transparent);
+            nvgBeginPath(ctx->vg);
+            nvgFillPaint(ctx->vg, topGradient);
+            nvgRect(ctx->vg, this->x, this->y, this->width, backdropHeight);
+            nvgFill(ctx->vg);
+
+            // Bottom
+            NVGpaint bottomGradient = nvgLinearGradient(ctx->vg, this->x, this->y + this->height - backdropHeight, this->x, this->y + this->height, ctx->theme->sidebarColor, transparent);
+            nvgBeginPath(ctx->vg);
+            nvgFillPaint(ctx->vg, bottomGradient);
+            nvgRect(ctx->vg, this->x, this->y + this->height - backdropHeight, this->width, backdropHeight);
+            nvgFill(ctx->vg);
+            break;
+        }
+        default:
+            break;
     }
 }
 
