@@ -54,6 +54,8 @@ using namespace std;
 // glfw code from the glfw hybrid app by fincs
 // https://github.com/fincs/hybrid_app
 
+// TODO: Add a framerate counter
+
 static void windowFramebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
     if (!width || !height)

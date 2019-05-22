@@ -412,7 +412,14 @@ void menu_animation_push_delayed(unsigned delay, menu_animation_ctx_entry_t *ent
    menu_timer_ctx_entry_t timer_entry;
    menu_delayed_animation_t *delayed_animation  = (menu_delayed_animation_t*) malloc(sizeof(menu_delayed_animation_t));
 
-   memcpy(&delayed_animation->entry, entry, sizeof(menu_animation_ctx_entry_t));
+   delayed_animation->entry.cb            = entry->cb;
+   delayed_animation->entry.duration      = entry->duration;
+   delayed_animation->entry.easing_enum   = entry->easing_enum;
+   delayed_animation->entry.subject       = entry->subject;
+   delayed_animation->entry.tag           = entry->tag;
+   delayed_animation->entry.target_value  = entry->target_value;
+   delayed_animation->entry.tick          = entry->tick;
+   delayed_animation->entry.userdata      = entry->userdata;
 
    timer_entry.cb       = menu_delayed_animation_cb;
    timer_entry.tick     = NULL;
