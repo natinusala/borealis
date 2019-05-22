@@ -79,7 +79,7 @@ void View::drawBackground(FrameContext *ctx)
     }
 }
 
-void View::setBoundaries(unsigned x, unsigned y, unsigned width, unsigned height)
+void View::setBoundaries(int x, int y, unsigned width, unsigned height)
 {
     this->x         = x;
     this->y         = y;
@@ -112,12 +112,12 @@ void View::setHeight(unsigned height)
     this->height = height;
 }
 
-unsigned View::getX()
+int View::getX()
 {
     return this->x;
 }
 
-unsigned View::getY()
+int View::getY()
 {
     return this->y;
 }

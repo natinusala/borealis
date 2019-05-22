@@ -50,9 +50,10 @@ class View
 
         void drawBackground(FrameContext *ctx);
     protected:
-        unsigned x;
-        unsigned y;
+        int x;
+        int y;
         unsigned width;
+
         unsigned height;
 
         bool focused = false;
@@ -60,15 +61,15 @@ class View
         View *parent = nullptr;
 
     public:
-        void setBoundaries(unsigned x, unsigned y, unsigned width, unsigned height);
+        void setBoundaries(int x, int y, unsigned width, unsigned height);
 
         void setBackground(Background background);
 
         void setWidth(unsigned width);
         void setHeight(unsigned height);
 
-        unsigned getX();
-        unsigned getY();
+        int getX();
+        int getY();
         unsigned getWidth();
         unsigned getHeight();
 

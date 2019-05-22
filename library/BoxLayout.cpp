@@ -127,7 +127,7 @@ void BoxLayout::layout()
     // Vertical orientation
     if (this->orientation == BOXLAYOUT_VERTICAL)
     {
-        unsigned yAdvance = this->y + this->marginTop;
+        int yAdvance = this->y + this->marginTop;
         for (BoxLayoutChild *child : this->children)
         {
             unsigned childHeight = child->view->getHeight();
@@ -154,7 +154,7 @@ void BoxLayout::layout()
     // TODO: Try spacing and margins
     else if (this->orientation == BOXLAYOUT_HORIZONTAL)
     {
-        unsigned xAdvance = this->x + this->marginLeft;
+        int xAdvance = this->x + this->marginLeft;
         for (BoxLayoutChild *child : this->children)
         {
             unsigned childWidth = child->view->getWidth();
