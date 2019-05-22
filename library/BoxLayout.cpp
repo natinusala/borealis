@@ -131,6 +131,8 @@ View* BoxLayout::updateFocus(FocusDirection direction, bool fromUp)
     return View::requestFocus(direction);
 }
 
+#define BOXLAYOUT_SCROLL_ANIMATION 133
+
 void BoxLayout::updateScroll()
 {
     View *selectedView = this->children[this->focusedIndex]->view;
@@ -151,14 +153,14 @@ void BoxLayout::updateScroll()
     menu_animation_kill_by_tag(&tag);
 
     menu_animation_ctx_entry_t entry;
-    entry.cb = nullptr;
-    entry.duration = 100; // TODO: Define that
-    entry.easing_enum = EASING_OUT_QUAD;
-    entry.subject = &this->scrollY;
-    entry.tag = tag;
-    entry.target_value = newScroll;
-    entry.tick = [this](void *userdata) { this->scrollAnimationTick(); };
-    entry.userdata = nullptr;
+    entry.cb            = nullptr;
+    entry.duration      = BOXLAYOUT_SCROLL_ANIMATION;
+    entry.easing_enum   = EASING_OUT_QUAD;
+    entry.subject       = &this->scrollY;
+    entry.tag           = tag;
+    entry.target_value  = newScroll;
+    entry.tick          = [this](void *userdata) { this->scrollAnimationTick(); };
+    entry.userdata      = nullptr;
 
     menu_animation_push(&entry);
 
