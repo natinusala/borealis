@@ -146,12 +146,16 @@ void BoxLayout::updateScroll()
         newScroll = 0.0f;
 
     //Start animation
+    menu_animation_ctx_tag tag = (uintptr_t)this;
+
+    menu_animation_kill_by_tag(&tag);
+
     menu_animation_ctx_entry_t entry;
-    entry.cb = [this](void *userdata) { };
+    entry.cb = nullptr;
     entry.duration = 100; // TODO: Define that
     entry.easing_enum = EASING_OUT_QUAD;
     entry.subject = &this->scrollY;
-    entry.tag = (uintptr_t)this;
+    entry.tag = tag;
     entry.target_value = newScroll;
     entry.tick = [this](void *userdata) { this->scrollAnimationTick(); };
     entry.userdata = nullptr;
@@ -175,7 +179,6 @@ View* BoxLayout::requestFocus(FocusDirection direction, bool fromUp)
 
 void BoxLayout::scrollAnimationTick()
 {
-    printf("Ticking\n");
     this->layout();
 }
 
