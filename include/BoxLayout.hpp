@@ -66,6 +66,8 @@ class BoxLayout : public View
         View* updateFocus(FocusDirection direction, bool fromUp);
         void updateScroll();
 
+        void scrollAnimationTick();
+
     protected:
         virtual View* defaultFocus();
 

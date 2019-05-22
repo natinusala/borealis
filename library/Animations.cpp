@@ -45,6 +45,7 @@ struct tween
    uintptr_t   tag;
    easing_cb   easing;
    tween_cb    cb;
+   tween_cb    tick;
    void        *userdata;
    bool        deleted;
 };
@@ -414,6 +415,7 @@ void menu_animation_push_delayed(unsigned delay, menu_animation_ctx_entry_t *ent
    memcpy(&delayed_animation->entry, entry, sizeof(menu_animation_ctx_entry_t));
 
    timer_entry.cb       = menu_delayed_animation_cb;
+   timer_entry.tick     = NULL;
    timer_entry.duration = delay;
    timer_entry.userdata = delayed_animation;
 
@@ -431,6 +433,7 @@ bool menu_animation_push(menu_animation_ctx_entry_t *entry)
    t.subject            = entry->subject;
    t.tag                = entry->tag;
    t.cb                 = entry->cb;
+   t.tick               = entry->tick;
    t.userdata           = entry->userdata;
    t.easing             = NULL;
    t.deleted            = false;
@@ -620,6 +623,9 @@ bool menu_animation_update(void)
             tween->initial_value,
             tween->target_value - tween->initial_value,
             tween->duration);
+
+      if (tween->tick)
+         tween->tick(tween->userdata);
 
       if (tween->running_since >= tween->duration)
       {
@@ -890,6 +896,7 @@ void menu_timer_start(menu_timer_t *timer, menu_timer_ctx_entry_t *timer_entry)
    entry.target_value   = 1.0f;
    entry.subject        = timer;
    entry.cb             = timer_entry->cb;
+   entry.tick           = timer_entry->tick;
    entry.userdata       = timer_entry->userdata;
 
    menu_animation_push(&entry);

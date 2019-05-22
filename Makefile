@@ -59,9 +59,9 @@ ARCH	:=	-march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
 CFLAGS	:=	-g -Wall -O2 -ffunction-sections \
 			$(ARCH) $(DEFINES)
 
-CFLAGS	+=	$(INCLUDE) -D__SWITCH__ -DWINDOW_NAME="\"$(APP_TITLE)\""
+CFLAGS	+=	$(INCLUDE) -D__SWITCH__ -DWINDOW_NAME="\"$(APP_TITLE)\"" -O2
 
-CXXFLAGS	:= $(CFLAGS) -fno-exceptions -std=c++11
+CXXFLAGS	:= $(CFLAGS) -fno-exceptions -std=c++11 -O2
 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)

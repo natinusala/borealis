@@ -21,10 +21,15 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include <functional>
+
+using namespace std;
+using namespace std::placeholders;
+
 #define TICKER_SPACER_DEFAULT "   |   "
 
 typedef float (*easing_cb) (float, float, float, float);
-typedef void  (*tween_cb)  (void*);
+typedef function<void(void*)> tween_cb;
 
 enum menu_animation_ctl_state
 {
@@ -108,6 +113,7 @@ typedef struct menu_animation_ctx_entry
    float target_value;
    float *subject;
    tween_cb cb;
+   tween_cb tick;
    void *userdata;
 } menu_animation_ctx_entry_t;
 
@@ -128,6 +134,7 @@ typedef struct menu_timer_ctx_entry
 {
    float duration;
    tween_cb cb;
+   tween_cb tick;
    void *userdata;
 } menu_timer_ctx_entry_t;
 

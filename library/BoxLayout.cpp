@@ -17,6 +17,7 @@
 */
 
 #include <BoxLayout.hpp>
+#include <Animations.hpp>
 
 #include <stdio.h>
 #include <math.h>
@@ -144,9 +145,20 @@ void BoxLayout::updateScroll()
     if (newScroll > 0.0f)
         newScroll = 0.0f;
 
-    // TODO: Animate scrollY, call layout() each frame while the animation runs
+    //Start animation
+    menu_animation_ctx_entry_t entry;
+    entry.cb = [this](void *userdata) { };
+    entry.duration = 100; // TODO: Define that
+    entry.easing_enum = EASING_OUT_QUAD;
+    entry.subject = &this->scrollY;
+    entry.tag = (uintptr_t)this;
+    entry.target_value = newScroll;
+    entry.tick = [this](void *userdata) { this->scrollAnimationTick(); };
+    entry.userdata = nullptr;
 
-    this->scrollY = newScroll;
+    menu_animation_push(&entry);
+
+    //this->scrollY = newScroll;
 
     this->layout();
 }
@@ -159,6 +171,12 @@ View* BoxLayout::requestFocus(FocusDirection direction, bool fromUp)
         this->updateScroll();
 
     return newFocus;
+}
+
+void BoxLayout::scrollAnimationTick()
+{
+    printf("Ticking\n");
+    this->layout();
 }
 
 void BoxLayout::layout()

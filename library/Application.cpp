@@ -22,6 +22,7 @@
 #include <algorithm>
 
 #include <Borealis.hpp>
+#include <Animations.hpp>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -168,7 +169,6 @@ bool Application::init()
         {
             printf("Using Switch shared font\n");
             this->fontStash.regular = nvgCreateFontMem(this->vg, "regular", (unsigned char*)font.address, font.size, 0);
-            return true;
         }
     }
 #else
@@ -185,6 +185,9 @@ bool Application::init()
 
     this->windowWidth   = viewport[2];
     this->windowHeight  = viewport[3];
+
+    // Init animations engine
+    menu_animation_init();
 
     return true;
 }
@@ -243,6 +246,9 @@ bool Application::mainLoop()
         this->windowHeight  = newHeight;
         this->onWindowSizeChanged();
     }
+
+    // Animations
+    menu_animation_update();
 
     // Render
     this->frame();
@@ -329,6 +335,8 @@ void Application::exit()
         nvgDeleteGL3(this->vg);
 
     glfwTerminate();
+
+    menu_animation_free();
 }
 
 void Application::requestFocus(View *view, FocusDirection direction)
