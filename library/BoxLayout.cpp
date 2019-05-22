@@ -164,8 +164,6 @@ void BoxLayout::updateScroll()
 
     menu_animation_push(&entry);
 
-    //this->scrollY = newScroll;
-
     this->layout();
 }
 
