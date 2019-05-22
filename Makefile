@@ -39,9 +39,12 @@ include $(DEVKITPRO)/libnx/switch_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	borealis_example
 BUILD		:=	build.nx
-SOURCES		:=	library library/nanovg example
+
+LIBRETRO_COMMON := library/libretro-common/compat/compat_strl.c library/libretro-common/features/features_cpu.c library/libretro-common/encodings/encoding_utf.c
+SOURCES		:=	library library/nanovg $(LIBRETRO_COMMON) example
+
 DATA		:=	data
-INCLUDES	:=	include include/nanovg
+INCLUDES	:=	include include/nanovg include/libretro-common
 ROMFS		:=	resources
 
 APP_TITLE	:=	borealis example
