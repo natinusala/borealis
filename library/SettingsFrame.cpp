@@ -31,32 +31,32 @@
 
 // TODO: Add hints system
 
-void SettingsFrame::draw(FrameContext *ctx)
+void SettingsFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx)
 {
     // Text
     // Title
-    nvgFillColor(ctx->vg, ctx->theme->textColor);
-    nvgFontSize(ctx->vg, TITLE_SIZE);
-    nvgFontFaceId(ctx->vg, ctx->fontStash->regular);
-    nvgTextAlign(ctx->vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-    nvgText(ctx->vg, this->x + TITLE_START, this->y + HEADER_HEIGHT / 2, this->title.c_str(), nullptr);
+    nvgFillColor(vg, ctx->theme->textColor);
+    nvgFontSize(vg, TITLE_SIZE);
+    nvgFontFaceId(vg, ctx->fontStash->regular);
+    nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+    nvgText(vg, x + TITLE_START, y + HEADER_HEIGHT / 2, this->title.c_str(), nullptr);
 
     // TODO: Footer
 
     // TODO: Icon
 
     // Separators
-    nvgFillColor(ctx->vg, ctx->theme->separatorColor);
+    nvgFillColor(vg, ctx->theme->separatorColor);
 
     // Header
-    nvgBeginPath(ctx->vg);
-    nvgRect(ctx->vg, this->x + SEPARATOR_SPACING, this->y + HEADER_HEIGHT - 1, this->width - SEPARATOR_SPACING * 2, 1);
-    nvgFill(ctx->vg);
+    nvgBeginPath(vg);
+    nvgRect(vg, x + SEPARATOR_SPACING, y + HEADER_HEIGHT - 1, width - SEPARATOR_SPACING * 2, 1);
+    nvgFill(vg);
 
     // Footer
-    nvgBeginPath(ctx->vg);
-    nvgRect(ctx->vg, this->x + SEPARATOR_SPACING, this->y + this->height - FOOTER_HEIGHT, this->width - SEPARATOR_SPACING * 2, 1);
-    nvgFill(ctx->vg);
+    nvgBeginPath(vg);
+    nvgRect(vg, x + SEPARATOR_SPACING, y + height - FOOTER_HEIGHT, width - SEPARATOR_SPACING * 2, 1);
+    nvgFill(vg);
 
     // Content view
     if (contentView)

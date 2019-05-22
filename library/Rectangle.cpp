@@ -18,13 +18,13 @@
 
 #include <Rectangle.hpp>
 
-void Rectangle::draw(FrameContext *ctx)
+void Rectangle::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx)
 {
-    nvgFillColor(ctx->vg, this->color);
+    nvgFillColor(vg, this->color);
 
-    nvgBeginPath(ctx->vg);
-    nvgRect(ctx->vg, this->x, this->y, this->width, this->height);
-    nvgFill(ctx->vg);
+    nvgBeginPath(vg);
+    nvgRect(vg, x, y, width, height);
+    nvgFill(vg);
 }
 
 void Rectangle::setColor(NVGcolor color)

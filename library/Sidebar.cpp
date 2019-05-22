@@ -34,12 +34,6 @@ Sidebar::Sidebar() : BoxLayout(BOXLAYOUT_VERTICAL)
     this->setBackground(BACKGROUND_SIDEBAR);
 }
 
-void Sidebar::draw(FrameContext *ctx)
-{
-    // Draw items
-    BoxLayout::draw(ctx);
-}
-
 View* Sidebar::defaultFocus()
 {
     for (unsigned i = 0; i < this->children.size(); i++)
@@ -91,28 +85,29 @@ void Sidebar::setActive(SidebarItem *active)
 #define SIDEBARITEM_HEIGHT      52
 #define SIDEBARITEM_TEXT_SIZE   22
 
-#define SIDEBARITEM_TEXT_OFFSET_X 14
+#define SIDEBARITEM_TEXT_OFFSET_X   14
+#define SIDEBARITEM_ACTIVE_WIDTH    4
 
 SidebarItem::SidebarItem(string label, Sidebar *sidebar) : label(label), sidebar(sidebar)
 {
     this->setHeight(SIDEBARITEM_HEIGHT);
 }
 
-void SidebarItem::draw(FrameContext *ctx)
+void SidebarItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx)
 {
     // Label
-    nvgFillColor(ctx->vg, this->active ? ctx->theme->activeTabColor : ctx->theme->textColor);
-    nvgFontSize(ctx->vg, SIDEBARITEM_TEXT_SIZE);
-    nvgTextAlign(ctx->vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-    nvgText(ctx->vg, this->x + SIDEBARITEM_TEXT_OFFSET_X, this->y + this->height / 2, this->label.c_str(), nullptr);
+    nvgFillColor(vg, this->active ? ctx->theme->activeTabColor : ctx->theme->textColor);
+    nvgFontSize(vg, SIDEBARITEM_TEXT_SIZE);
+    nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+    nvgText(vg, x + SIDEBARITEM_TEXT_OFFSET_X, y + height / 2, this->label.c_str(), nullptr);
 
     // Active marker
     if (this->active)
     {
-        nvgFillColor(ctx->vg, ctx->theme->activeTabColor);
-        nvgBeginPath(ctx->vg);
-        nvgRect(ctx->vg, this->x, this->y, 4, SIDEBARITEM_HEIGHT);
-        nvgFill(ctx->vg);
+        nvgFillColor(vg, ctx->theme->activeTabColor);
+        nvgBeginPath(vg);
+        nvgRect(vg, x, y, SIDEBARITEM_ACTIVE_WIDTH, SIDEBARITEM_HEIGHT);
+        nvgFill(vg);
     }
 }
 
@@ -121,12 +116,12 @@ void SidebarItem::setActive(bool active)
     this->active = active;
 }
 
-void SidebarSeparator::draw(FrameContext *ctx)
+void SidebarSeparator::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx)
 {
-    nvgFillColor(ctx->vg, ctx->theme->sidebarSeparatorColor);
-    nvgBeginPath(ctx->vg);
-    nvgRect(ctx->vg, this->x, this->y + this->height / 2, this->width, 1);
-    nvgFill(ctx->vg);
+    nvgFillColor(vg, ctx->theme->sidebarSeparatorColor);
+    nvgBeginPath(vg);
+    nvgRect(vg, x, y + height / 2, width, 1);
+    nvgFill(vg);
 }
 
 View* SidebarItem::requestFocus(FocusDirection direction, bool fromUp)

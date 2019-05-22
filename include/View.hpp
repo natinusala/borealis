@@ -48,7 +48,8 @@ class View
     private:
         Background background = BACKGROUND_NONE;
 
-        void drawBackground(FrameContext *ctx);
+        void drawBackground(NVGcontext* vg, FrameContext *ctx);
+
     protected:
         int x;
         int y;
@@ -87,7 +88,7 @@ class View
          * Called by frame() to draw
          * the view onscreen
          */
-        virtual void draw(FrameContext *ctx) = 0;
+        virtual void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx) = 0;
 
         /**
          * Triggered when the view has been

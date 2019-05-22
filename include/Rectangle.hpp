@@ -25,7 +25,7 @@
 class Rectangle : public View
 {
     public:
-        void draw(FrameContext *ctx) override;
+        void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx) override;
         void layout() override;
 
         void setColor(NVGcolor color);

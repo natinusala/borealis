@@ -34,7 +34,7 @@ class SettingsFrame : public View
         View *contentView = nullptr;
 
     public:
-        void draw(FrameContext *ctx) override;
+        void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx) override;
         void layout() override;
         View* requestFocus(FocusDirection direction, bool fromUp = false) override;
 

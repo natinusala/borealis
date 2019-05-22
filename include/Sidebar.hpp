@@ -30,7 +30,7 @@ using namespace std;
 class SidebarSeparator : public View
 {
     public:
-        void draw(FrameContext *ctx) override;
+        void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx) override;
         void layout() override { };
 
         View *requestFocus(FocusDirection direction, bool fromUp = false) override
@@ -52,7 +52,7 @@ class SidebarItem : public View
     public:
         SidebarItem(string label, Sidebar *sidebar);
 
-        void draw(FrameContext *ctx) override;
+        void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx) override;
         void layout() override { };
         View *requestFocus(FocusDirection direction, bool fromUp = false) override;
 
@@ -76,8 +76,6 @@ class Sidebar : public BoxLayout
 
     public:
         Sidebar();
-
-        void draw(FrameContext *ctx) override;
 
         void addItem(string label);
         void addSeparator();

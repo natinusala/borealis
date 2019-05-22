@@ -19,6 +19,7 @@
 #include <BoxLayout.hpp>
 
 #include <stdio.h>
+#include <math.h>
 
 BoxLayout::BoxLayout(BoxLayoutOrientation orientation) : orientation(orientation)
 {
@@ -26,17 +27,17 @@ BoxLayout::BoxLayout(BoxLayoutOrientation orientation) : orientation(orientation
 }
 
 // TODO: Only draw children that are onscreen (use highlight rect + some margins)
-void BoxLayout::draw(FrameContext *ctx)
+void BoxLayout::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx)
 {
     // Enable scissoring
-    nvgScissor(ctx->vg, this->x, this->y, this->width, this->height);
+    nvgScissor(vg, x, y, this->width, this->height);
 
     // Draw children
     for (BoxLayoutChild *child : this->children)
         child->view->frame(ctx);
 
     //Disable scissoring
-    nvgResetScissor(ctx->vg);
+    nvgResetScissor(vg);
 }
 
 void BoxLayout::setSpacing(unsigned spacing)
@@ -69,12 +70,12 @@ View* BoxLayout::defaultFocus()
     return nullptr;
 }
 
-// TODO: Allow sub classes to override default focus (active tab on Sidebar for instance)
-View* BoxLayout::requestFocus(FocusDirection direction, bool fromUp)
+View* BoxLayout::updateFocus(FocusDirection direction, bool fromUp)
 {
     // Give focus to first focusable view by default
     // or if we are going up in the tree and it's not
     // corresponding to our direction
+    // TODO: Is this huge condition still necessary? direction == FOCUSDIRECTION_NONE should be enough
     if ((fromUp &&  (
                         (this->orientation == BOXLAYOUT_VERTICAL && (direction == FOCUSDIRECTION_RIGHT || direction == FOCUSDIRECTION_LEFT)) ||
                         (this->orientation == BOXLAYOUT_HORIZONTAL && (direction == FOCUSDIRECTION_DOWN || direction == FOCUSDIRECTION_UP))
@@ -129,8 +130,44 @@ View* BoxLayout::requestFocus(FocusDirection direction, bool fromUp)
     return View::requestFocus(direction);
 }
 
+void BoxLayout::updateScroll()
+{
+    View *selectedView = this->children[this->focusedIndex]->view;
+    int currentSelectionMiddleOnScreen = selectedView->getY() + selectedView->getHeight() / 2;
+    float newScroll = this->scrollY - ((float)currentSelectionMiddleOnScreen - (float)this->middleY);
+
+    // Bottom boundary
+    if ((float)this->y + newScroll + (float)this->entriesHeight < (float)this->bottomY)
+        newScroll = (float)this->height - (float)this->entriesHeight + (float)this->spacing - (float)this->marginTop - (float)this->marginBottom;
+
+    // Top boundary
+    if (newScroll > 0.0f)
+        newScroll = 0.0f;
+
+    // TODO: Animate scrollY, call layout() each frame while the animation runs
+
+    this->scrollY = newScroll;
+
+    this->layout();
+}
+
+View* BoxLayout::requestFocus(FocusDirection direction, bool fromUp)
+{
+    View *newFocus = this->updateFocus(direction, fromUp);
+
+    if (newFocus != nullptr)
+        this->updateScroll();
+
+    return newFocus;
+}
+
 void BoxLayout::layout()
 {
+    // Prebake values for scrolling
+    this->middleY       = this->y + this->height/2;
+    this->bottomY       = this->y + this->height;
+    this->entriesHeight = 0.0f;
+
     // Vertical orientation
     if (this->orientation == BOXLAYOUT_VERTICAL)
     {
@@ -141,20 +178,21 @@ void BoxLayout::layout()
 
             if (child->fill)
                 child->view->setBoundaries(this->x + this->marginLeft,
-                    yAdvance,
+                    yAdvance + roundf(this->scrollY),
                     this->width - this->marginLeft - this->marginRight,
                     this->height - yAdvance - this->marginBottom
                 );
             else
                 child->view->setBoundaries(this->x + this->marginLeft,
-                    yAdvance,
+                    yAdvance + roundf(this->scrollY),
                     this->width - this->marginLeft - this->marginRight,
                     childHeight
                 );
 
             child->view->layout();
 
-            yAdvance += this->spacing + childHeight;
+            this->entriesHeight += this->spacing + childHeight;
+            yAdvance            += this->spacing + childHeight;
         }
     }
     // Horizontal orientation

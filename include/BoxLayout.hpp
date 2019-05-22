@@ -57,6 +57,15 @@ class BoxLayout : public View
         unsigned marginBottom   = 0;
         unsigned marginLeft     = 0;
 
+        unsigned middleY        = 0; // y + height/2
+        unsigned bottomY        = 0; // y + height
+        unsigned entriesHeight  = 0; // sum of all entries heights (with spacing) + bottom margin
+
+        float scrollY = 0.0f; // all childrens are offset by this value
+
+        View* updateFocus(FocusDirection direction, bool fromUp);
+        void updateScroll();
+
     protected:
         virtual View* defaultFocus();
 
@@ -67,7 +76,7 @@ class BoxLayout : public View
     public:
         BoxLayout(BoxLayoutOrientation orientation);
 
-        void draw(FrameContext *ctx) override;
+        void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx) override;
         void layout() override;
         View* requestFocus(FocusDirection direction, bool fromUp = false) override;
 
