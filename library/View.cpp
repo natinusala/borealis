@@ -29,14 +29,47 @@ void View::frame(FrameContext *ctx)
     this->draw(ctx->vg, this->x, this->y, this->width, this->height, ctx);
 
     // Draw highlight
-    // TODO: Fancy highlight
     if (this->focused)
-    {
-        nvgStrokeColor(ctx->vg, nvgRGB(255, 0, 0));
-        nvgBeginPath(ctx->vg);
-        nvgRect(ctx->vg, this->x - 5, this->y - 5, this->width + 10, this->height + 10);
-        nvgStroke(ctx->vg);
-    }
+        this->drawHighlight(ctx->vg, ctx->theme);
+}
+
+#define HIGHLIGHT_STROKE_WIDTH      5
+#define HIGHLIGHT_CORNER_RADIUS     0.5f
+
+#define HIGHLIGHT_SHADOW_WIDTH      2
+#define HIGHLIGHT_SHADOW_OFFSET     10
+#define HIGHLIGHT_SHADOW_FEATHER    10
+#define HIGHLIGHT_SHADOW_OPACITY    128
+
+void View::drawHighlight(NVGcontext *vg, Theme *theme)
+{
+    unsigned inset  = this->getHighlightInset();
+    unsigned x      = this->x - inset - HIGHLIGHT_STROKE_WIDTH/2;
+    unsigned y      = this->y - inset - HIGHLIGHT_STROKE_WIDTH/2;
+    unsigned width  = this->width   + inset * 2 + HIGHLIGHT_STROKE_WIDTH;
+    unsigned height = this->height  + inset * 2 + HIGHLIGHT_STROKE_WIDTH;
+
+    // Shadow
+    NVGpaint shadowPaint = nvgBoxGradient(vg,
+        x, y + HIGHLIGHT_SHADOW_WIDTH,
+        width, height,
+        HIGHLIGHT_CORNER_RADIUS*2, HIGHLIGHT_SHADOW_FEATHER,
+        nvgRGBA(0, 0, 0, HIGHLIGHT_SHADOW_OPACITY), nvgRGBA(0, 0, 0, 0));
+
+    nvgBeginPath(vg);
+    nvgRect(vg, x - HIGHLIGHT_SHADOW_OFFSET, y - HIGHLIGHT_SHADOW_OFFSET,
+        width + HIGHLIGHT_SHADOW_OFFSET*2, height + HIGHLIGHT_SHADOW_OFFSET*3);
+    nvgRoundedRect(vg, x,y, width,height, HIGHLIGHT_CORNER_RADIUS);
+    nvgPathWinding(vg, NVG_HOLE);
+    nvgFillPaint(vg, shadowPaint);
+    nvgFill(vg);
+
+    // Border
+    nvgBeginPath(vg);
+    nvgStrokeColor(vg, theme->highlightColor1);
+    nvgStrokeWidth(vg, HIGHLIGHT_STROKE_WIDTH);
+    nvgRoundedRect(vg, x, y, width, height, HIGHLIGHT_CORNER_RADIUS);
+    nvgStroke(vg);
 }
 
 void View::setBackground(Background background)

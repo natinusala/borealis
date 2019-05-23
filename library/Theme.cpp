@@ -25,5 +25,8 @@ Theme themeLight =
     .separatorColor         = nvgRGB(45, 45, 45),
     .sidebarColor           = nvgRGB(240, 240, 240),
     .activeTabColor         = nvgRGB(49, 79, 235),
-    .sidebarSeparatorColor  = nvgRGB(208, 208, 208)
+    .sidebarSeparatorColor  = nvgRGB(208, 208, 208),
+
+    .highlightColor1        = nvgRGB(13, 182, 213),
+    .highlightColor2        = nvgRGB(80, 239, 217)
 };

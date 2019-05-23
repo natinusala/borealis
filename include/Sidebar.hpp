@@ -30,6 +30,8 @@ using namespace std;
 class SidebarSeparator : public View
 {
     public:
+        SidebarSeparator();
+
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx) override;
         void layout() override { };
 
@@ -44,6 +46,9 @@ class Sidebar;
 // TODO: Use a Label view with integrated ticker
 class SidebarItem : public View
 {
+    protected:
+        unsigned getHighlightInset() override;
+
     private:
         string label;
         bool active = false;

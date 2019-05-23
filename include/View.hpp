@@ -49,6 +49,7 @@ class View
         Background background = BACKGROUND_NONE;
 
         void drawBackground(NVGcontext* vg, FrameContext *ctx);
+        void drawHighlight(NVGcontext *vg, Theme *theme);
 
     protected:
         int x;
@@ -60,6 +61,11 @@ class View
         bool focused = false;
 
         View *parent = nullptr;
+
+        virtual unsigned getHighlightInset()
+        {
+            return 0;
+        }
 
     public:
         void setBoundaries(int x, int y, unsigned width, unsigned height);
