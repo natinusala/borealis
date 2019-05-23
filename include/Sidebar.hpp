@@ -41,6 +41,7 @@ class SidebarSeparator : public View
 
 class Sidebar;
 
+// TODO: Use a Label view with integrated ticker
 class SidebarItem : public View
 {
     private:

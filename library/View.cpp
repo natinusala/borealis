@@ -46,13 +46,15 @@ void View::setBackground(Background background)
 
 static NVGcolor transparent = nvgRGBA(0, 0, 0, 0);
 
+#define BACKGROUND_SIDEBAR_BACKDROP_HEIGHT 16
+
 void View::drawBackground(NVGcontext* vg, FrameContext *ctx)
 {
     switch (this->background)
     {
         case BACKGROUND_SIDEBAR:
         {
-            unsigned backdropHeight = this->height / 16;
+            unsigned backdropHeight = BACKGROUND_SIDEBAR_BACKDROP_HEIGHT;
 
             // Solid color
             nvgBeginPath(vg);
