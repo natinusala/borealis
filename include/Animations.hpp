@@ -173,3 +173,5 @@ bool menu_animation_ctl(enum menu_animation_ctl_state state, void *data);
 uint64_t menu_animation_get_ticker_idx(void);
 
 uint64_t menu_animation_get_ticker_slow_idx(void);
+
+void menu_animation_get_highlight(float *gradient_x, float *gradient_y, float *color);

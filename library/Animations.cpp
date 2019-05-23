@@ -74,6 +74,10 @@ static float delta_time         = 0.0f;
 static bool animation_is_active = false;
 static bool ticker_is_active    = false;
 
+static float highlight_gradient_x = 0.0f;
+static float highlight_gradient_y = 0.0f;
+static float highlight_color      = 0.0f;
+
 /* from https://github.com/kikito/tween.lua/blob/master/tween.lua */
 
 static float easing_linear(float t, float b, float c, float d)
@@ -570,6 +574,20 @@ bool menu_animation_push(menu_animation_ctx_entry_t *entry)
    return true;
 }
 
+void menu_animation_get_highlight(float *gradient_x, float *gradient_y, float *color)
+{
+   if (gradient_x)
+      *gradient_x = highlight_gradient_x;
+
+   if (gradient_y)
+      *gradient_y = highlight_gradient_y;
+
+   if (color)
+      *color = highlight_color;
+}
+
+#define HIGHLIGHT_SPEED 350.0f
+
 static void menu_animation_update_time(bool timedate_enable)
 {
    static retro_time_t
@@ -588,6 +606,10 @@ static void menu_animation_update_time(bool timedate_enable)
    delta_time               = old_time == 0 ? 0 : cur_time - old_time;
 
    old_time                 = cur_time;
+
+   highlight_gradient_x = (cos((float)cur_time/HIGHLIGHT_SPEED/3.0f)+1.0f)/2.0f;
+   highlight_gradient_y = (sin((float)cur_time/HIGHLIGHT_SPEED/3.0f)+1.0f)/2.0f;
+   highlight_color      = (sin((float)cur_time/HIGHLIGHT_SPEED*2.0f)+1.0f)/2.0f;
 
    if (((cur_time - last_clock_update) > 1000)
          && timedate_enable)

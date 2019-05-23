@@ -17,6 +17,7 @@
 */
 
 #include <View.hpp>
+#include <Animations.hpp>
 
 #include <math.h>
 
@@ -59,14 +60,46 @@ void View::drawHighlight(NVGcontext *vg, Theme *theme)
     nvgBeginPath(vg);
     nvgRect(vg, x - HIGHLIGHT_SHADOW_OFFSET, y - HIGHLIGHT_SHADOW_OFFSET,
         width + HIGHLIGHT_SHADOW_OFFSET*2, height + HIGHLIGHT_SHADOW_OFFSET*3);
-    nvgRoundedRect(vg, x,y, width,height, HIGHLIGHT_CORNER_RADIUS);
+    nvgRoundedRect(vg, x, y, width, height, HIGHLIGHT_CORNER_RADIUS);
     nvgPathWinding(vg, NVG_HOLE);
     nvgFillPaint(vg, shadowPaint);
     nvgFill(vg);
 
     // Border
+    float gradientX, gradientY, color;
+    menu_animation_get_highlight(&gradientX, &gradientY, &color);
+
+    NVGcolor pulsationColor = nvgRGBf((color * theme->highlightColor1.r) + (1-color) * theme->highlightColor2.r,
+        (color * theme->highlightColor1.g) + (1-color) * theme->highlightColor2.g,
+        (color * theme->highlightColor1.b) + (1-color) * theme->highlightColor2.b);
+
+    NVGcolor borderColor = theme->highlightColor2;
+    borderColor.a = 0.5f;
+
+    NVGpaint border1Paint = nvgRadialGradient(vg,
+        x + gradientX * width, y + gradientY * height,
+        HIGHLIGHT_STROKE_WIDTH*10, HIGHLIGHT_STROKE_WIDTH*40,
+        borderColor, nvgRGBA(0, 0, 0, 0));
+
+    NVGpaint border2Paint = nvgRadialGradient(vg,
+        x + (1-gradientX) * width, y + (1-gradientY) * height,
+        HIGHLIGHT_STROKE_WIDTH*10, HIGHLIGHT_STROKE_WIDTH*40,
+        borderColor, nvgRGBA(0, 0, 0, 0));
+
     nvgBeginPath(vg);
-    nvgStrokeColor(vg, theme->highlightColor1);
+    nvgStrokeColor(vg, pulsationColor);
+    nvgStrokeWidth(vg, HIGHLIGHT_STROKE_WIDTH);
+    nvgRoundedRect(vg, x, y, width, height, HIGHLIGHT_CORNER_RADIUS);
+    nvgStroke(vg);
+
+    nvgBeginPath(vg);
+    nvgStrokePaint(vg, border1Paint);
+    nvgStrokeWidth(vg, HIGHLIGHT_STROKE_WIDTH);
+    nvgRoundedRect(vg, x, y, width, height, HIGHLIGHT_CORNER_RADIUS);
+    nvgStroke(vg);
+
+    nvgBeginPath(vg);
+    nvgStrokePaint(vg, border2Paint);
     nvgStrokeWidth(vg, HIGHLIGHT_STROKE_WIDTH);
     nvgRoundedRect(vg, x, y, width, height, HIGHLIGHT_CORNER_RADIUS);
     nvgStroke(vg);
