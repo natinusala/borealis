@@ -30,3 +30,16 @@ Theme themeLight =
     .highlightColor1        = nvgRGB(13, 182, 213),
     .highlightColor2        = nvgRGB(80, 239, 217)
 };
+
+Theme themeDark =
+{
+    .backgroundColor        = { 0.176f, 0.176f, 0.176f },
+    .textColor              = nvgRGB(255, 255, 255),
+    .separatorColor         = nvgRGB(255, 255, 255),
+    .sidebarColor           = nvgRGB(50, 50, 50),
+    .activeTabColor         = nvgRGB(0, 255, 204),
+    .sidebarSeparatorColor  = nvgRGB(81, 81, 81),
+
+    .highlightColor1        = nvgRGB(25, 138, 198),
+    .highlightColor2        = nvgRGB(137, 241, 242)
+};

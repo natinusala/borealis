@@ -34,4 +34,4 @@ typedef struct
 } Theme;
 
 extern Theme themeLight;
-// TODO: Dark theme :shrek:
+extern Theme themeDark;
