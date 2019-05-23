@@ -61,8 +61,7 @@ class Application
 
         View* currentFocus = nullptr;
 
-        // TODO: Get that from system settings
-        Theme *currentTheme = &themeLight;
+        Theme *currentTheme;
 
         GLFWgamepadstate oldGamepad = {};
         GLFWgamepadstate gamepad    = {};

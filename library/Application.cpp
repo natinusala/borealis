@@ -183,6 +183,19 @@ bool Application::init()
     //TODO: Font Awesome as fallback too?
     //TODO: Backport wiggly font fix from RA
 
+    // Load theme
+#ifdef __SWITCH__
+    ColorSetId theme;
+    setsysGetColorSetId(&theme);
+
+    if (theme == ColorSetId_Light)
+        this->currentTheme = &themeLight;
+    else
+        this->currentTheme = &themeDark;
+#else
+    this->currentTheme = &themeLight; // fight me
+#endif
+
     // Init window size
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);

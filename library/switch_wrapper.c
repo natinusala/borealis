@@ -9,6 +9,7 @@ void userAppInit()
     socketInitializeDefault();
     nxlink_sock = nxlinkStdio();
     plInitialize();
+    setsysInitialize();
 }
 
 void userAppExit()
@@ -18,4 +19,5 @@ void userAppExit()
     socketExit();
     romfsExit();
     plExit();
+    setsysExit();
 }
