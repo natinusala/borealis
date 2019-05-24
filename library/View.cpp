@@ -66,6 +66,7 @@ void View::drawHighlight(NVGcontext *vg, Theme *theme)
     nvgFill(vg);
 
     // Border
+    // TODO: Fix it on Switch
     float gradientX, gradientY, color;
     menu_animation_get_highlight(&gradientX, &gradientY, &color);
 
