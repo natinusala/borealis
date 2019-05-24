@@ -30,8 +30,8 @@ void View::frame(FrameContext *ctx)
     this->draw(ctx->vg, this->x, this->y, this->width, this->height, ctx);
 
     // Draw highlight
-    if (this->focused)
-        this->drawHighlight(ctx->vg, ctx->theme);
+    if (this->highlightAlpha > 0.0f)
+        this->drawHighlight(ctx->vg, ctx->theme, this->highlightAlpha);
 }
 
 #define HIGHLIGHT_STROKE_WIDTH      5
@@ -42,7 +42,7 @@ void View::frame(FrameContext *ctx)
 #define HIGHLIGHT_SHADOW_FEATHER    10
 #define HIGHLIGHT_SHADOW_OPACITY    128
 
-void View::drawHighlight(NVGcontext *vg, Theme *theme)
+void View::drawHighlight(NVGcontext *vg, Theme *theme, float alpha)
 {
     unsigned inset  = this->getHighlightInset();
     unsigned x      = this->x - inset - HIGHLIGHT_STROKE_WIDTH/2;
@@ -55,7 +55,7 @@ void View::drawHighlight(NVGcontext *vg, Theme *theme)
         x, y + HIGHLIGHT_SHADOW_WIDTH,
         width, height,
         HIGHLIGHT_CORNER_RADIUS*2, HIGHLIGHT_SHADOW_FEATHER,
-        nvgRGBA(0, 0, 0, HIGHLIGHT_SHADOW_OPACITY), nvgRGBA(0, 0, 0, 0));
+        nvgRGBA(0, 0, 0, HIGHLIGHT_SHADOW_OPACITY * alpha), nvgRGBA(0, 0, 0, 0));
 
     nvgBeginPath(vg);
     nvgRect(vg, x - HIGHLIGHT_SHADOW_OFFSET, y - HIGHLIGHT_SHADOW_OFFSET,
@@ -70,12 +70,13 @@ void View::drawHighlight(NVGcontext *vg, Theme *theme)
     float gradientX, gradientY, color;
     menu_animation_get_highlight(&gradientX, &gradientY, &color);
 
-    NVGcolor pulsationColor = nvgRGBf((color * theme->highlightColor1.r) + (1-color) * theme->highlightColor2.r,
+    NVGcolor pulsationColor = nvgRGBAf((color * theme->highlightColor1.r) + (1-color) * theme->highlightColor2.r,
         (color * theme->highlightColor1.g) + (1-color) * theme->highlightColor2.g,
-        (color * theme->highlightColor1.b) + (1-color) * theme->highlightColor2.b);
+        (color * theme->highlightColor1.b) + (1-color) * theme->highlightColor2.b,
+        alpha);
 
     NVGcolor borderColor = theme->highlightColor2;
-    borderColor.a = 0.5f;
+    borderColor.a = 0.5f * alpha;
 
     NVGpaint border1Paint = nvgRadialGradient(vg,
         x + gradientX * width, y + gradientY * height,
@@ -201,4 +202,45 @@ unsigned View::getHeight()
 unsigned View::getWidth()
 {
     return this->width;
+}
+
+void View::onFocusGained()
+{
+    this->focused = true;
+
+    menu_animation_ctx_tag tag = (uintptr_t) this->highlightAlpha;
+
+    menu_animation_ctx_entry_t entry;
+    entry.cb            = nullptr;
+    entry.duration      = VIEW_HIGHLIGHT_ANIMATION_DURATION;
+    entry.easing_enum   = EASING_OUT_QUAD;
+    entry.subject       = &this->highlightAlpha;
+    entry.tag           = tag;
+    entry.target_value  = 1.0f;
+    entry.tick          = nullptr;
+    entry.userdata      = nullptr;
+
+    menu_animation_push(&entry);
+}
+
+/**
+ * Fired when focus is lost
+ */
+void View::onFocusLost()
+{
+    this->focused = false;
+
+    menu_animation_ctx_tag tag = (uintptr_t) this->highlightAlpha;
+
+    menu_animation_ctx_entry_t entry;
+    entry.cb            = nullptr;
+    entry.duration      = VIEW_HIGHLIGHT_ANIMATION_DURATION;
+    entry.easing_enum   = EASING_OUT_QUAD;
+    entry.subject       = &this->highlightAlpha;
+    entry.tag           = tag;
+    entry.target_value  = 0.0f;
+    entry.tick          = nullptr;
+    entry.userdata      = nullptr;
+
+    menu_animation_push(&entry);
 }

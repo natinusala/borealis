@@ -43,13 +43,17 @@ typedef enum
     BACKGROUND_SIDEBAR
 } Background;
 
+#define VIEW_HIGHLIGHT_ANIMATION_DURATION 133 // TODO: Fine tune this value (from HOS Settings)
+
 class View
 {
     private:
         Background background = BACKGROUND_NONE;
 
         void drawBackground(NVGcontext* vg, FrameContext *ctx);
-        void drawHighlight(NVGcontext *vg, Theme *theme);
+        void drawHighlight(NVGcontext *vg, Theme *theme, float alpha);
+
+        float highlightAlpha = 0.0f;
 
     protected:
         int x;
@@ -138,18 +142,12 @@ class View
         /**
          * Fired when focus is gained
          */
-        virtual void onFocusGained()
-        {
-            this->focused = true;
-        }
+        virtual void onFocusGained();
 
         /**
          * Fired when focus is lost
          */
-        virtual void onFocusLost()
-        {
-            this->focused = false;
-        }
+        virtual void onFocusLost();
 
         virtual ~View() {};
 };
