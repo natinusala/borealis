@@ -43,7 +43,7 @@ typedef enum
     BACKGROUND_SIDEBAR
 } Background;
 
-#define VIEW_HIGHLIGHT_ANIMATION_DURATION 133 // TODO: Fine tune this value (from HOS Settings)
+#define VIEW_HIGHLIGHT_ANIMATION_DURATION 100
 
 class View
 {
