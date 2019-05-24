@@ -148,7 +148,7 @@ void BoxLayout::updateScroll()
         newScroll = 0.0f;
 
     //Start animation
-    menu_animation_ctx_tag tag = (uintptr_t)this;
+    menu_animation_ctx_tag tag = (uintptr_t)&this->scrollY;
 
     menu_animation_kill_by_tag(&tag);
 
