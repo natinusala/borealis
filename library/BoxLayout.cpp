@@ -238,7 +238,7 @@ void BoxLayout::layout(Style *style)
         }
     }
     // Horizontal orientation
-    // TODO: Try spacing and margins
+    // TODO: Make sure that spacing and margins work with horizontal
     else if (this->orientation == BOXLAYOUT_HORIZONTAL)
     {
         int xAdvance = this->x + this->marginLeft;

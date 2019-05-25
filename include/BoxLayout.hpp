@@ -43,7 +43,6 @@ class BoxLayoutChild
 };
 
 // TODO: Allow disabling scrolling
-// TODO: Add margins, pspacing
 // TODO: Add alignment or stretching parameters to children
 class BoxLayout : public View
 {

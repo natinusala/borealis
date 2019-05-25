@@ -73,7 +73,6 @@ class SidebarItem : public View
 };
 
 // TODO: Add a style with icons, make it collapsible?
-// TODO: Turn this into a List view with a sidebar style
 class Sidebar : public BoxLayout
 {
     private:
