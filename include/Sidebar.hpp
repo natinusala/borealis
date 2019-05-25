@@ -46,9 +46,6 @@ class Sidebar;
 // TODO: Use a Label view with integrated ticker
 class SidebarItem : public View
 {
-    protected:
-        unsigned getHighlightInset() override;
-
     private:
         string label;
         bool active = false;

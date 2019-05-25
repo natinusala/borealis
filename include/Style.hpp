@@ -50,6 +50,35 @@ typedef struct
     {
         unsigned sidebarBorderHeight;
     } Background;
+
+    // Sidebar
+    struct
+    {
+        unsigned width;
+        unsigned spacing;
+
+        unsigned marginLeft;
+        unsigned marginRight;
+        unsigned marginTop;
+        unsigned marginBottom;
+
+        struct
+        {
+            unsigned height;
+            unsigned textSize;
+            unsigned padding;
+
+            unsigned textOffsetX;
+            unsigned activeMarkerWidth;
+
+            unsigned highlight;
+        } Item;
+
+        struct
+        {
+            unsigned height;
+        } Separator;
+    } Sidebar;
 } Style;
 
 // TODO: Make a condensed style

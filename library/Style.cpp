@@ -41,6 +41,29 @@ static Style styleAccurate = {
 
     .Background = {
         .sidebarBorderHeight = 16
+    },
+
+    .Sidebar = {
+        .width      = 410,
+        .spacing    = 0,
+
+        .marginLeft     = 88,
+        .marginRight    = 30,
+        .marginTop      = 40,
+        .marginBottom   = 40,
+
+        .Item = {
+            .height     = 70,
+            .textSize   = 22,
+            .padding    = 9,
+
+            .textOffsetX        = 14,
+            .activeMarkerWidth  = 4,
+        },
+
+        .Separator = {
+            .height = 28
+        }
     }
 };
 
