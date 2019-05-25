@@ -24,9 +24,11 @@
 // A solid color rectangle
 class Rectangle : public View
 {
+    protected:
+        void layout(Style *style) override;
+
     public:
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
-        void layout(Style *style) override;
 
         void setColor(NVGcolor color);
 

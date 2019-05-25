@@ -25,6 +25,13 @@ void View::frame(FrameContext *ctx)
 {
     Style *style = getStyle();
 
+    // Layout if needed
+    if (this->dirty)
+    {
+        this->layout(style);
+        this->dirty = false;
+    }
+
     // Draw background
     this->drawBackground(ctx->vg, ctx, style);
 

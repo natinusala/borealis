@@ -67,9 +67,11 @@ class BoxLayout : public View
         void updateScroll();
 
         void scrollAnimationTick();
+        void prebakeScrolling();
 
     protected:
         virtual View* defaultFocus();
+        void layout(Style *style) override;
 
         vector<BoxLayoutChild*> children;
 
@@ -79,7 +81,6 @@ class BoxLayout : public View
         BoxLayout(BoxLayoutOrientation orientation);
 
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
-        void layout(Style *style) override;
         View* requestFocus(FocusDirection direction, bool fromUp = false) override;
         void willAppear() override;
         void willDisappear() override;

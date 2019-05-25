@@ -25,9 +25,6 @@
 
 using namespace std;
 
-// TODO: Make a lazy layout trigger: only reset layout if it's "dirty" at the beginning of frame() to avoid setting layout 654 times at startup
-// also remove the calls to layout() when the view is added (never call layout() directly anymore)
-
 typedef enum
 {
     FOCUSDIRECTION_NONE = 0,
@@ -64,6 +61,8 @@ class View
 
         float highlightAlpha = 0.0f;
 
+        bool dirty = false;
+
     protected:
         int x;
         int y;
@@ -78,6 +77,16 @@ class View
         virtual unsigned getHighlightInset()
         {
             return 0;
+        }
+
+        /**
+         * Triggered when the view has been
+         * resized and needs to layout its
+         * children
+         */
+        virtual void layout(Style *style)
+        {
+            // Nothing to do
         }
 
     public:
@@ -110,18 +119,8 @@ class View
         virtual void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) = 0;
 
         /**
-         * Triggered when the view has been
-         * resized and needs to layout its
-         * children
-         */
-        virtual void layout(Style *style)
-        {
-            // Nothing to do
-        }
-
-        /**
          * Called when the view will appear
-         * on screen, after layout()
+         * on screen, before or after layout()
          *
          * Can be called if the view has
          * already appeared, so be careful
@@ -141,6 +140,14 @@ class View
         virtual void willDisappear()
         {
             // Nothing to do
+        }
+
+        /**
+         * Calls layout() on next frame
+         */
+        void invalidate()
+        {
+            this->dirty = true;
         }
 
         bool isTranslucent()

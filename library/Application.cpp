@@ -378,7 +378,6 @@ void Application::requestFocus(View *view, FocusDirection direction)
 void Application::pushView(View *view)
 {
     view->setBoundaries(0, 0, this->windowWidth, this->windowHeight);
-    view->layout(getStyle());
     view->willAppear();
     this->requestFocus(view, FOCUSDIRECTION_NONE);
 
@@ -392,7 +391,7 @@ void Application::onWindowSizeChanged()
     for (View *view : this->viewStack)
     {
         view->setBoundaries(0, 0, this->windowWidth, this->windowHeight);
-        view->layout(getStyle());
+        view->invalidate();
     }
 }
 

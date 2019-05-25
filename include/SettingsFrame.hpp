@@ -33,9 +33,11 @@ class SettingsFrame : public View
 
         View *contentView = nullptr;
 
+    protected:
+        void layout(Style *style) override;
+
     public:
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
-        void layout(Style *style) override;
         View* requestFocus(FocusDirection direction, bool fromUp = false) override;
         void willAppear() override;
         void willDisappear() override;

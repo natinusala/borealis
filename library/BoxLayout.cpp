@@ -44,7 +44,7 @@ void BoxLayout::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heig
 void BoxLayout::setSpacing(unsigned spacing)
 {
     this->spacing = spacing;
-    this->layout(getStyle());
+    this->invalidate();
 }
 
 void BoxLayout::setMargins(unsigned top, unsigned right, unsigned bottom, unsigned left)
@@ -53,7 +53,7 @@ void BoxLayout::setMargins(unsigned top, unsigned right, unsigned bottom, unsign
     this->marginLeft    = left;
     this->marginRight   = right;
     this->marginTop     = top;
-    this->layout(getStyle());
+    this->invalidate();
 }
 
 View* BoxLayout::defaultFocus()
@@ -133,6 +133,10 @@ View* BoxLayout::updateFocus(FocusDirection direction, bool fromUp)
 
 void BoxLayout::updateScroll()
 {
+    // Don't scroll if layout hasn't been called yet
+    if (this->entriesHeight == 0.0f)
+        return;
+
     View *selectedView = this->children[this->focusedIndex]->view;
     int currentSelectionMiddleOnScreen = selectedView->getY() + selectedView->getHeight() / 2;
     float newScroll = this->scrollY - ((float)currentSelectionMiddleOnScreen - (float)this->middleY);
@@ -162,7 +166,7 @@ void BoxLayout::updateScroll()
 
     menu_animation_push(&entry);
 
-    this->layout(getStyle());
+    this->invalidate();
 }
 
 View* BoxLayout::requestFocus(FocusDirection direction, bool fromUp)
@@ -177,15 +181,20 @@ View* BoxLayout::requestFocus(FocusDirection direction, bool fromUp)
 
 void BoxLayout::scrollAnimationTick()
 {
-    this->layout(getStyle());
+    this->invalidate();
 }
 
-void BoxLayout::layout(Style *style)
+void BoxLayout::prebakeScrolling()
 {
     // Prebake values for scrolling
     this->middleY       = this->y + this->height/2;
     this->bottomY       = this->y + this->height;
     this->entriesHeight = 0.0f;
+}
+
+void BoxLayout::layout(Style *style)
+{
+    this->prebakeScrolling();
 
     // Vertical orientation
     if (this->orientation == BOXLAYOUT_VERTICAL)
@@ -208,7 +217,7 @@ void BoxLayout::layout(Style *style)
                     childHeight
                 );
 
-            child->view->layout(style);
+            child->view->invalidate();
 
             this->entriesHeight += this->spacing + childHeight;
             yAdvance            += this->spacing + childHeight;
@@ -236,7 +245,7 @@ void BoxLayout::layout(Style *style)
                     this->height - this->marginTop - this->marginBottom
                 );
 
-            child->view->layout(style);
+            child->view->invalidate();
 
             xAdvance += this->spacing + childWidth;
         }
@@ -254,7 +263,7 @@ void BoxLayout::addView(View *view, bool fill)
     this->children.push_back(child);
 
     view->willAppear();
-    this->layout(getStyle());
+    this->invalidate();
 }
 
 bool BoxLayout::isEmpty()
@@ -275,6 +284,7 @@ BoxLayout::~BoxLayout()
 
 void BoxLayout::willAppear()
 {
+    this->prebakeScrolling();
     for (BoxLayoutChild *child : this->children)
     {
         child->view->willAppear();

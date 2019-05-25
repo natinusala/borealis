@@ -70,7 +70,7 @@ void SettingsFrame::layout(Style *style)
     if (this->contentView)
     {
         this->contentView->setBoundaries(this->x, this->y + style->SettingsFrame.headerHeight, this->width, this->height - style->SettingsFrame.footerHeight - style->SettingsFrame.headerHeight);
-        this->contentView->layout(style);
+        this->contentView->invalidate();
     }
 }
 
@@ -79,7 +79,7 @@ void SettingsFrame::setContentView(View *view)
     this->contentView = view;
     this->contentView->setParent(this);
     this->contentView->willAppear();
-    this->layout(getStyle());
+    this->invalidate();
 }
 
 void SettingsFrame::setTitle(string title)
