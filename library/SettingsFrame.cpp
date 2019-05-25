@@ -19,27 +19,20 @@
 #include <SettingsFrame.hpp>
 #include <nanovg.h>
 
-#define HEADER_HEIGHT 88
-#define FOOTER_HEIGHT 73
-
-#define SEPARATOR_SPACING 30
-
-#define TITLE_SIZE  30
 // TODO: Don't center title, hardcode Y position
 // TODO: Resize title (fine tune on Switch)
-#define TITLE_START 130
 
 // TODO: Add hints system
 
-void SettingsFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx)
+void SettingsFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
     // Text
     // Title
     nvgFillColor(vg, ctx->theme->textColor);
-    nvgFontSize(vg, TITLE_SIZE);
+    nvgFontSize(vg, style->settingsFrameTitleSize);
     nvgFontFaceId(vg, ctx->fontStash->regular);
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-    nvgText(vg, x + TITLE_START, y + HEADER_HEIGHT / 2, this->title.c_str(), nullptr);
+    nvgText(vg, x + style->settingsFrameTitleStart, y + style->settingsFrameHeaderHeight / 2, this->title.c_str(), nullptr);
 
     // TODO: Footer
 
@@ -50,12 +43,12 @@ void SettingsFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned 
 
     // Header
     nvgBeginPath(vg);
-    nvgRect(vg, x + SEPARATOR_SPACING, y + HEADER_HEIGHT - 1, width - SEPARATOR_SPACING * 2, 1);
+    nvgRect(vg, x + style->settingsFrameSeparatorSpacing, y + style->settingsFrameHeaderHeight - 1, width - style->settingsFrameSeparatorSpacing * 2, 1);
     nvgFill(vg);
 
     // Footer
     nvgBeginPath(vg);
-    nvgRect(vg, x + SEPARATOR_SPACING, y + height - FOOTER_HEIGHT, width - SEPARATOR_SPACING * 2, 1);
+    nvgRect(vg, x + style->settingsFrameSeparatorSpacing, y + height - style->settingsFrameFooterHeight, width - style->settingsFrameSeparatorSpacing * 2, 1);
     nvgFill(vg);
 
     // Content view
@@ -72,12 +65,12 @@ View* SettingsFrame::requestFocus(FocusDirection direction, bool fromUp)
     return nullptr;
 }
 
-void SettingsFrame::layout()
+void SettingsFrame::layout(Style *style)
 {
     if (this->contentView)
     {
-        this->contentView->setBoundaries(this->x, this->y + HEADER_HEIGHT, this->width, this->height - FOOTER_HEIGHT - HEADER_HEIGHT);
-        this->contentView->layout();
+        this->contentView->setBoundaries(this->x, this->y + style->settingsFrameHeaderHeight, this->width, this->height - style->settingsFrameFooterHeight - style->settingsFrameHeaderHeight);
+        this->contentView->layout(style);
     }
 }
 
@@ -85,7 +78,7 @@ void SettingsFrame::setContentView(View *view)
 {
     this->contentView = view;
     this->contentView->setParent(this);
-    this->layout();
+    this->layout(getStyle());
 }
 
 void SettingsFrame::setTitle(string title)

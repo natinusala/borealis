@@ -16,30 +16,30 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#include <Style.hpp>
 
-#include <string>
+static Style styleAccurate = {
+    .settingsFrameHeaderHeight      = 88,
+    .settingsFrameFooterHeight      = 73,
 
-#include <View.hpp>
-#include <FrameContext.hpp>
+    .settingsFrameSeparatorSpacing  = 30,
 
-using namespace std;
-
-// A Horizon settings-like frame, with header and footer (no sidebar)
-class SettingsFrame : public View
-{
-    private:
-        string title = "";
-
-        View *contentView = nullptr;
-
-    public:
-        void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
-        void layout(Style *style) override;
-        View* requestFocus(FocusDirection direction, bool fromUp = false) override;
-
-        void setTitle(string title);
-        void setContentView(View *view);
-
-        ~SettingsFrame();
+    .settingsFrameTitleSize         = 30,
+    .settingsFrameTitleStart        = 130
 };
+
+static Style *currentStyle = &styleAccurate;
+
+void setStyle(StyleEnum style)
+{
+    switch (style)
+    {
+        case STYLE_ACCURATE:
+            currentStyle = &styleAccurate;
+    }
+}
+
+Style *getStyle()
+{
+    return currentStyle;
+}

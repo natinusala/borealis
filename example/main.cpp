@@ -27,7 +27,7 @@ using namespace std;
 int main(int argc, char* argv[])
 {
     // Create and init the app
-    Application *app = new Application();
+    Application *app = new Application(STYLE_ACCURATE);
 
     if (!app->init())
     {

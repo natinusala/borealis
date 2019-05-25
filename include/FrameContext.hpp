@@ -20,6 +20,7 @@
 
 #include <nanovg.h>
 #include <Theme.hpp>
+#include <Style.hpp>
 
 class FontStash
 {

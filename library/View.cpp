@@ -27,7 +27,7 @@ void View::frame(FrameContext *ctx)
     this->drawBackground(ctx->vg, ctx);
 
     // Draw the view
-    this->draw(ctx->vg, this->x, this->y, this->width, this->height, ctx);
+    this->draw(ctx->vg, this->x, this->y, this->width, this->height, getStyle(), ctx);
 
     // Draw highlight
     if (this->highlightAlpha > 0.0f)

@@ -28,12 +28,15 @@
 #include <FrameContext.hpp>
 #include <View.hpp>
 #include <Theme.hpp>
+#include <Style.hpp>
 
 using namespace std;
 
 class Application
 {
     public:
+        Application(StyleEnum style);
+
         bool init();
         bool mainLoop();
 

@@ -78,8 +78,8 @@ class BoxLayout : public View
     public:
         BoxLayout(BoxLayoutOrientation orientation);
 
-        void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx) override;
-        void layout() override;
+        void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
+        void layout(Style *style) override;
         View* requestFocus(FocusDirection direction, bool fromUp = false) override;
 
         /**

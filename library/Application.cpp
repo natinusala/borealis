@@ -106,6 +106,11 @@ static void windowKeyCallback(GLFWwindow* window, int key, int scancode, int act
     }
 }
 
+Application::Application(StyleEnum style)
+{
+    setStyle(style);
+}
+
 bool Application::init()
 {
     // Init glfw
@@ -373,7 +378,7 @@ void Application::requestFocus(View *view, FocusDirection direction)
 void Application::pushView(View *view)
 {
     view->setBoundaries(0, 0, this->windowWidth, this->windowHeight);
-    view->layout();
+    view->layout(getStyle());
     this->requestFocus(view, FOCUSDIRECTION_NONE);
 
     this->viewStack.push_back(view);
@@ -386,6 +391,6 @@ void Application::onWindowSizeChanged()
     for (View *view : this->viewStack)
     {
         view->setBoundaries(0, 0, this->windowWidth, this->windowHeight);
-        view->layout();
+        view->layout(getStyle());
     }
 }

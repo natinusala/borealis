@@ -98,14 +98,14 @@ class View
          * Called by frame() to draw
          * the view onscreen
          */
-        virtual void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx) = 0;
+        virtual void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) = 0;
 
         /**
          * Triggered when the view has been
          * resized and needs to layout its
          * children
          */
-        virtual void layout() = 0;
+        virtual void layout(Style *style) = 0;
 
         bool isTranslucent()
         {

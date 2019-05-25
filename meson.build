@@ -29,7 +29,8 @@ library_files = files(
     'library/Rectangle.cpp',
     'library/BoxLayout.cpp',
     'library/Sidebar.cpp',
-    'library/Animations.cpp'
+    'library/Animations.cpp',
+    'library/Style.cpp'
 )
 
 borealis_example = executable(

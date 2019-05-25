@@ -28,7 +28,7 @@ BoxLayout::BoxLayout(BoxLayoutOrientation orientation) : orientation(orientation
 }
 
 // TODO: Only draw children that are onscreen (use highlight rect + some margins)
-void BoxLayout::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx)
+void BoxLayout::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
     // Enable scissoring
     nvgScissor(vg, x, y, this->width, this->height);
@@ -44,7 +44,7 @@ void BoxLayout::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heig
 void BoxLayout::setSpacing(unsigned spacing)
 {
     this->spacing = spacing;
-    this->layout();
+    this->layout(getStyle());
 }
 
 void BoxLayout::setMargins(unsigned top, unsigned right, unsigned bottom, unsigned left)
@@ -53,7 +53,7 @@ void BoxLayout::setMargins(unsigned top, unsigned right, unsigned bottom, unsign
     this->marginLeft    = left;
     this->marginRight   = right;
     this->marginTop     = top;
-    this->layout();
+    this->layout(getStyle());
 }
 
 View* BoxLayout::defaultFocus()
@@ -162,7 +162,7 @@ void BoxLayout::updateScroll()
 
     menu_animation_push(&entry);
 
-    this->layout();
+    this->layout(getStyle());
 }
 
 View* BoxLayout::requestFocus(FocusDirection direction, bool fromUp)
@@ -177,10 +177,10 @@ View* BoxLayout::requestFocus(FocusDirection direction, bool fromUp)
 
 void BoxLayout::scrollAnimationTick()
 {
-    this->layout();
+    this->layout(getStyle());
 }
 
-void BoxLayout::layout()
+void BoxLayout::layout(Style *style)
 {
     // Prebake values for scrolling
     this->middleY       = this->y + this->height/2;
@@ -208,7 +208,7 @@ void BoxLayout::layout()
                     childHeight
                 );
 
-            child->view->layout();
+            child->view->layout(style);
 
             this->entriesHeight += this->spacing + childHeight;
             yAdvance            += this->spacing + childHeight;
@@ -236,7 +236,7 @@ void BoxLayout::layout()
                     this->height - this->marginTop - this->marginBottom
                 );
 
-            child->view->layout();
+            child->view->layout(style);
 
             xAdvance += this->spacing + childWidth;
         }
@@ -252,7 +252,7 @@ void BoxLayout::addView(View *view, bool fill)
     view->setParent(this);
 
     this->children.push_back(child);
-    this->layout();
+    this->layout(getStyle());
 }
 
 bool BoxLayout::isEmpty()

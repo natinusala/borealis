@@ -18,28 +18,32 @@
 
 #pragma once
 
-#include <string>
-
-#include <View.hpp>
-#include <FrameContext.hpp>
-
-using namespace std;
-
-// A Horizon settings-like frame, with header and footer (no sidebar)
-class SettingsFrame : public View
+typedef struct
 {
-    private:
-        string title = "";
+    // SettingsFrame
+    unsigned settingsFrameHeaderHeight;
+    unsigned settingsFrameFooterHeight;
 
-        View *contentView = nullptr;
+    unsigned settingsFrameSeparatorSpacing;
 
-    public:
-        void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
-        void layout(Style *style) override;
-        View* requestFocus(FocusDirection direction, bool fromUp = false) override;
+    unsigned settingsFrameTitleSize;
+    unsigned settingsFrameTitleStart;
+} Style;
 
-        void setTitle(string title);
-        void setContentView(View *view);
+// TODO: Make a condensed style
+typedef enum
+{
+    STYLE_ACCURATE = 0 // as close to HOS as possible
+} StyleEnum;
 
-        ~SettingsFrame();
-};
+/**
+ * Sets the global style
+ * Must be called before initializing the application
+ * Currently cannot be hot swapped
+ */
+void setStyle(StyleEnum style);
+
+/**
+ * Gets the global style
+ */
+Style *getStyle();

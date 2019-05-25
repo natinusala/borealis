@@ -34,3 +34,4 @@
 #include <BoxLayout.hpp>
 #include <Theme.hpp>
 #include <Sidebar.hpp>
+#include <Style.hpp>

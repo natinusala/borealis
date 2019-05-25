@@ -96,7 +96,7 @@ SidebarItem::SidebarItem(string label, Sidebar *sidebar) : label(label), sidebar
     this->setHeight(SIDEBARITEM_HEIGHT);
 }
 
-void SidebarItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx)
+void SidebarItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
     // Label
     nvgFillColor(vg, this->active ? ctx->theme->activeTabColor : ctx->theme->textColor);
@@ -126,7 +126,7 @@ SidebarSeparator::SidebarSeparator()
     this->setHeight(SIDEBARSEPARATOR_HEIGHT);
 }
 
-void SidebarSeparator::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx)
+void SidebarSeparator::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
     nvgFillColor(vg, ctx->theme->sidebarSeparatorColor);
     nvgBeginPath(vg);

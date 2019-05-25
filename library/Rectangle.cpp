@@ -18,7 +18,7 @@
 
 #include <Rectangle.hpp>
 
-void Rectangle::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx)
+void Rectangle::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
     nvgFillColor(vg, this->color);
 
@@ -32,7 +32,7 @@ void Rectangle::setColor(NVGcolor color)
     this->color = color;
 }
 
-void Rectangle::layout()
+void Rectangle::layout(Style *style)
 {
     // Nothing to do
 }

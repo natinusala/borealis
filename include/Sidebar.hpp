@@ -32,8 +32,8 @@ class SidebarSeparator : public View
     public:
         SidebarSeparator();
 
-        void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx) override;
-        void layout() override { };
+        void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
+        void layout(Style *style) override { };
 
         View *requestFocus(FocusDirection direction, bool fromUp = false) override
         {
@@ -58,8 +58,8 @@ class SidebarItem : public View
     public:
         SidebarItem(string label, Sidebar *sidebar);
 
-        void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, FrameContext *ctx) override;
-        void layout() override { };
+        void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
+        void layout(Style *style) override { };
         View *requestFocus(FocusDirection direction, bool fromUp = false) override;
 
         void setActive(bool active);
