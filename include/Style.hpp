@@ -44,6 +44,12 @@ typedef struct
         unsigned shadowFeather;
         unsigned shadowOpacity;
     } Highlight;
+
+    // Background
+    struct
+    {
+        unsigned sidebarBorderHeight;
+    } Background;
 } Style;
 
 // TODO: Make a condensed style

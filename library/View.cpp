@@ -26,7 +26,7 @@ void View::frame(FrameContext *ctx)
     Style *style = getStyle();
 
     // Draw background
-    this->drawBackground(ctx->vg, ctx);
+    this->drawBackground(ctx->vg, ctx, style);
 
     // Draw the view
     this->draw(ctx->vg, this->x, this->y, this->width, this->height, style, ctx);
@@ -108,15 +108,13 @@ void View::setBackground(Background background)
 
 static NVGcolor transparent = nvgRGBA(0, 0, 0, 0);
 
-#define BACKGROUND_SIDEBAR_BACKDROP_HEIGHT 16
-
-void View::drawBackground(NVGcontext* vg, FrameContext *ctx)
+void View::drawBackground(NVGcontext* vg, FrameContext *ctx, Style *style)
 {
     switch (this->background)
     {
         case BACKGROUND_SIDEBAR:
         {
-            unsigned backdropHeight = BACKGROUND_SIDEBAR_BACKDROP_HEIGHT;
+            unsigned backdropHeight = style->Background.sidebarBorderHeight;
 
             // Solid color
             nvgBeginPath(vg);

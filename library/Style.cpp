@@ -37,6 +37,10 @@ static Style styleAccurate = {
         .shadowOffset   = 10,
         .shadowFeather  = 10,
         .shadowOpacity  = 128
+    },
+
+    .Background = {
+        .sidebarBorderHeight = 16
     }
 };
 
