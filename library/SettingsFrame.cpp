@@ -29,10 +29,10 @@ void SettingsFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned 
     // Text
     // Title
     nvgFillColor(vg, ctx->theme->textColor);
-    nvgFontSize(vg, style->settingsFrameTitleSize);
+    nvgFontSize(vg, style->SettingsFrame.titleSize);
     nvgFontFaceId(vg, ctx->fontStash->regular);
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-    nvgText(vg, x + style->settingsFrameTitleStart, y + style->settingsFrameHeaderHeight / 2, this->title.c_str(), nullptr);
+    nvgText(vg, x + style->SettingsFrame.titleStart, y + style->SettingsFrame.headerHeight / 2, this->title.c_str(), nullptr);
 
     // TODO: Footer
 
@@ -43,12 +43,12 @@ void SettingsFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned 
 
     // Header
     nvgBeginPath(vg);
-    nvgRect(vg, x + style->settingsFrameSeparatorSpacing, y + style->settingsFrameHeaderHeight - 1, width - style->settingsFrameSeparatorSpacing * 2, 1);
+    nvgRect(vg, x + style->SettingsFrame.separatorSpacing, y + style->SettingsFrame.headerHeight - 1, width - style->SettingsFrame.separatorSpacing * 2, 1);
     nvgFill(vg);
 
     // Footer
     nvgBeginPath(vg);
-    nvgRect(vg, x + style->settingsFrameSeparatorSpacing, y + height - style->settingsFrameFooterHeight, width - style->settingsFrameSeparatorSpacing * 2, 1);
+    nvgRect(vg, x + style->SettingsFrame.separatorSpacing, y + height - style->SettingsFrame.footerHeight, width - style->SettingsFrame.separatorSpacing * 2, 1);
     nvgFill(vg);
 
     // Content view
@@ -69,7 +69,7 @@ void SettingsFrame::layout(Style *style)
 {
     if (this->contentView)
     {
-        this->contentView->setBoundaries(this->x, this->y + style->settingsFrameHeaderHeight, this->width, this->height - style->settingsFrameFooterHeight - style->settingsFrameHeaderHeight);
+        this->contentView->setBoundaries(this->x, this->y + style->SettingsFrame.headerHeight, this->width, this->height - style->SettingsFrame.footerHeight - style->SettingsFrame.headerHeight);
         this->contentView->layout(style);
     }
 }

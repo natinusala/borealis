@@ -23,44 +23,38 @@
 
 void View::frame(FrameContext *ctx)
 {
+    Style *style = getStyle();
+
     // Draw background
     this->drawBackground(ctx->vg, ctx);
 
     // Draw the view
-    this->draw(ctx->vg, this->x, this->y, this->width, this->height, getStyle(), ctx);
+    this->draw(ctx->vg, this->x, this->y, this->width, this->height, style, ctx);
 
     // Draw highlight
     if (this->highlightAlpha > 0.0f)
-        this->drawHighlight(ctx->vg, ctx->theme, this->highlightAlpha);
+        this->drawHighlight(ctx->vg, ctx->theme, this->highlightAlpha, style);
 }
 
-#define HIGHLIGHT_STROKE_WIDTH      5
-#define HIGHLIGHT_CORNER_RADIUS     0.5f
-
-#define HIGHLIGHT_SHADOW_WIDTH      2
-#define HIGHLIGHT_SHADOW_OFFSET     10
-#define HIGHLIGHT_SHADOW_FEATHER    10
-#define HIGHLIGHT_SHADOW_OPACITY    128
-
-void View::drawHighlight(NVGcontext *vg, Theme *theme, float alpha)
+void View::drawHighlight(NVGcontext *vg, Theme *theme, float alpha, Style *style)
 {
     unsigned inset  = this->getHighlightInset();
-    unsigned x      = this->x - inset - HIGHLIGHT_STROKE_WIDTH/2;
-    unsigned y      = this->y - inset - HIGHLIGHT_STROKE_WIDTH/2;
-    unsigned width  = this->width   + inset * 2 + HIGHLIGHT_STROKE_WIDTH;
-    unsigned height = this->height  + inset * 2 + HIGHLIGHT_STROKE_WIDTH;
+    unsigned x      = this->x - inset - style->Highlight.strokeWidth/2;
+    unsigned y      = this->y - inset - style->Highlight.strokeWidth/2;
+    unsigned width  = this->width   + inset * 2 + style->Highlight.strokeWidth;
+    unsigned height = this->height  + inset * 2 + style->Highlight.strokeWidth;
 
     // Shadow
     NVGpaint shadowPaint = nvgBoxGradient(vg,
-        x, y + HIGHLIGHT_SHADOW_WIDTH,
+        x, y + style->Highlight.shadowWidth,
         width, height,
-        HIGHLIGHT_CORNER_RADIUS*2, HIGHLIGHT_SHADOW_FEATHER,
-        nvgRGBA(0, 0, 0, HIGHLIGHT_SHADOW_OPACITY * alpha), nvgRGBA(0, 0, 0, 0));
+        style->Highlight.cornerRadius*2, style->Highlight.shadowFeather,
+        nvgRGBA(0, 0, 0, style->Highlight.shadowOpacity * alpha), nvgRGBA(0, 0, 0, 0));
 
     nvgBeginPath(vg);
-    nvgRect(vg, x - HIGHLIGHT_SHADOW_OFFSET, y - HIGHLIGHT_SHADOW_OFFSET,
-        width + HIGHLIGHT_SHADOW_OFFSET*2, height + HIGHLIGHT_SHADOW_OFFSET*3);
-    nvgRoundedRect(vg, x, y, width, height, HIGHLIGHT_CORNER_RADIUS);
+    nvgRect(vg, x - style->Highlight.shadowOffset, y - style->Highlight.shadowOffset,
+        width + style->Highlight.shadowOffset*2, height + style->Highlight.shadowOffset*3);
+    nvgRoundedRect(vg, x, y, width, height, style->Highlight.cornerRadius);
     nvgPathWinding(vg, NVG_HOLE);
     nvgFillPaint(vg, shadowPaint);
     nvgFill(vg);
@@ -80,30 +74,30 @@ void View::drawHighlight(NVGcontext *vg, Theme *theme, float alpha)
 
     NVGpaint border1Paint = nvgRadialGradient(vg,
         x + gradientX * width, y + gradientY * height,
-        HIGHLIGHT_STROKE_WIDTH*10, HIGHLIGHT_STROKE_WIDTH*40,
+        style->Highlight.strokeWidth*10, style->Highlight.strokeWidth*40,
         borderColor, nvgRGBA(0, 0, 0, 0));
 
     NVGpaint border2Paint = nvgRadialGradient(vg,
         x + (1-gradientX) * width, y + (1-gradientY) * height,
-        HIGHLIGHT_STROKE_WIDTH*10, HIGHLIGHT_STROKE_WIDTH*40,
+        style->Highlight.strokeWidth*10, style->Highlight.strokeWidth*40,
         borderColor, nvgRGBA(0, 0, 0, 0));
 
     nvgBeginPath(vg);
     nvgStrokeColor(vg, pulsationColor);
-    nvgStrokeWidth(vg, HIGHLIGHT_STROKE_WIDTH);
-    nvgRoundedRect(vg, x, y, width, height, HIGHLIGHT_CORNER_RADIUS);
+    nvgStrokeWidth(vg, style->Highlight.strokeWidth);
+    nvgRoundedRect(vg, x, y, width, height, style->Highlight.cornerRadius);
     nvgStroke(vg);
 
     nvgBeginPath(vg);
     nvgStrokePaint(vg, border1Paint);
-    nvgStrokeWidth(vg, HIGHLIGHT_STROKE_WIDTH);
-    nvgRoundedRect(vg, x, y, width, height, HIGHLIGHT_CORNER_RADIUS);
+    nvgStrokeWidth(vg, style->Highlight.strokeWidth);
+    nvgRoundedRect(vg, x, y, width, height, style->Highlight.cornerRadius);
     nvgStroke(vg);
 
     nvgBeginPath(vg);
     nvgStrokePaint(vg, border2Paint);
-    nvgStrokeWidth(vg, HIGHLIGHT_STROKE_WIDTH);
-    nvgRoundedRect(vg, x, y, width, height, HIGHLIGHT_CORNER_RADIUS);
+    nvgStrokeWidth(vg, style->Highlight.strokeWidth);
+    nvgRoundedRect(vg, x, y, width, height, style->Highlight.cornerRadius);
     nvgStroke(vg);
 }
 

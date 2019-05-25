@@ -51,7 +51,7 @@ class View
         Background background = BACKGROUND_NONE;
 
         void drawBackground(NVGcontext* vg, FrameContext *ctx);
-        void drawHighlight(NVGcontext *vg, Theme *theme, float alpha);
+        void drawHighlight(NVGcontext *vg, Theme *theme, float alpha, Style *style);
 
         float highlightAlpha = 0.0f;
 

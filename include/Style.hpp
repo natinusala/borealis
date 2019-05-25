@@ -21,13 +21,29 @@
 typedef struct
 {
     // SettingsFrame
-    unsigned settingsFrameHeaderHeight;
-    unsigned settingsFrameFooterHeight;
+    struct
+    {
+        unsigned headerHeight;
+        unsigned footerHeight;
 
-    unsigned settingsFrameSeparatorSpacing;
+        unsigned separatorSpacing;
 
-    unsigned settingsFrameTitleSize;
-    unsigned settingsFrameTitleStart;
+        unsigned titleSize;
+        unsigned titleStart;
+    } SettingsFrame;
+
+
+    // Highlight
+    struct
+    {
+        unsigned strokeWidth;
+        float cornerRadius;
+
+        unsigned shadowWidth;
+        unsigned shadowOffset;
+        unsigned shadowFeather;
+        unsigned shadowOpacity;
+    } Highlight;
 } Style;
 
 // TODO: Make a condensed style

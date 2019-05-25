@@ -19,13 +19,25 @@
 #include <Style.hpp>
 
 static Style styleAccurate = {
-    .settingsFrameHeaderHeight      = 88,
-    .settingsFrameFooterHeight      = 73,
+    .SettingsFrame = {
+        .headerHeight      = 88,
+        .footerHeight      = 73,
 
-    .settingsFrameSeparatorSpacing  = 30,
+        .separatorSpacing  = 30,
 
-    .settingsFrameTitleSize         = 30,
-    .settingsFrameTitleStart        = 130
+        .titleSize         = 30,
+        .titleStart        = 130
+    },
+
+    .Highlight = {
+        .strokeWidth    = 5,
+        .cornerRadius   = 0.5f,
+
+        .shadowWidth    = 2,
+        .shadowOffset   = 10,
+        .shadowFeather  = 10,
+        .shadowOpacity  = 128
+    }
 };
 
 static Style *currentStyle = &styleAccurate;
