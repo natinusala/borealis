@@ -71,5 +71,6 @@ View* TabFrame::requestFocus(FocusDirection direction, bool fromUp)
 
 TabFrame::~TabFrame()
 {
-    delete this->sidebar;
+    this->layout->willDisappear();
+    delete this->layout;
 }

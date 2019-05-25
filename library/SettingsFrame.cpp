@@ -78,6 +78,7 @@ void SettingsFrame::setContentView(View *view)
 {
     this->contentView = view;
     this->contentView->setParent(this);
+    this->contentView->willAppear();
     this->layout(getStyle());
 }
 
@@ -88,5 +89,21 @@ void SettingsFrame::setTitle(string title)
 
 SettingsFrame::~SettingsFrame()
 {
+    if (this->contentView)
+    {
+        this->contentView->willDisappear();
+        delete this->contentView;
+    }
+}
 
+void SettingsFrame::willAppear()
+{
+    if (this->contentView)
+        this->contentView->willAppear();
+}
+
+void SettingsFrame::willDisappear()
+{
+    if (this->contentView)
+        this->contentView->willDisappear();
 }

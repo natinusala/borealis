@@ -379,6 +379,7 @@ void Application::pushView(View *view)
 {
     view->setBoundaries(0, 0, this->windowWidth, this->windowHeight);
     view->layout(getStyle());
+    view->willAppear();
     this->requestFocus(view, FOCUSDIRECTION_NONE);
 
     this->viewStack.push_back(view);
@@ -393,4 +394,15 @@ void Application::onWindowSizeChanged()
         view->setBoundaries(0, 0, this->windowWidth, this->windowHeight);
         view->layout(getStyle());
     }
+}
+
+Application::~Application()
+{
+    for (View *view : this->viewStack)
+    {
+        view->willDisappear();
+        delete view;
+    }
+
+    this->viewStack.clear();
 }

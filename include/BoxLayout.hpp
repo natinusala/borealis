@@ -81,6 +81,8 @@ class BoxLayout : public View
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
         void layout(Style *style) override;
         View* requestFocus(FocusDirection direction, bool fromUp = false) override;
+        void willAppear() override;
+        void willDisappear() override;
 
         /**
          * Sets spacing between views

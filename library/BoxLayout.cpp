@@ -252,6 +252,8 @@ void BoxLayout::addView(View *view, bool fill)
     view->setParent(this);
 
     this->children.push_back(child);
+
+    view->willAppear();
     this->layout(getStyle());
 }
 
@@ -264,7 +266,23 @@ BoxLayout::~BoxLayout()
 {
     for (BoxLayoutChild *child : this->children)
     {
+        child->view->willDisappear();
         delete child->view;
         delete child;
     }
+    this->children.clear();
+}
+
+void BoxLayout::willAppear()
+{
+    for (BoxLayoutChild *child : this->children)
+    {
+        child->view->willAppear();
+    }
+}
+
+void BoxLayout::willDisappear()
+{
+    for (BoxLayoutChild *child : this->children)
+        child-> view->willDisappear();
 }

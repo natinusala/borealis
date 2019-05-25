@@ -45,6 +45,15 @@ typedef enum
 
 #define VIEW_HIGHLIGHT_ANIMATION_DURATION 100
 
+// Superclass for all the other views
+// Lifecycle of a view is :
+//   new -> [willAppear -> willDisappear] -> delete
+//
+// Users have do to the new, the rest of the lifecycle is taken
+// care of by the library
+//
+// willAppear and willDisappear can be called zero or multiple times
+// before deletion (in case of a TabLayout for instance)
 class View
 {
     private:
@@ -105,7 +114,34 @@ class View
          * resized and needs to layout its
          * children
          */
-        virtual void layout(Style *style) = 0;
+        virtual void layout(Style *style)
+        {
+            // Nothing to do
+        }
+
+        /**
+         * Called when the view will appear
+         * on screen, after layout()
+         *
+         * Can be called if the view has
+         * already appeared, so be careful
+         */
+        virtual void willAppear()
+        {
+            // Nothing to do
+        }
+
+        /**
+         * Called when the view will disappear
+         * from the screen
+         *
+         * Can be called if the view has
+         * already disappeared, so be careful
+         */
+        virtual void willDisappear()
+        {
+            // Nothing to do
+        }
 
         bool isTranslucent()
         {

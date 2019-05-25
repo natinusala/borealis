@@ -36,6 +36,7 @@ class Application
 {
     public:
         Application(StyleEnum style);
+        ~Application();
 
         bool init();
         bool mainLoop();
