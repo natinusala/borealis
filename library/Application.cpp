@@ -183,9 +183,9 @@ bool Application::init()
     this->fontStash.regular = nvgCreateFont(this->vg, "regular", ASSET("inter/Inter-Regular.ttf"));
 #endif
 
-    //TODO: Load symbols shared font as a fallback
-    //TODO: Font Awesome as fallback too?
-    //TODO: Backport wiggly font fix from RA
+    // TODO: Load symbols shared font as a fallback
+    // TODO: Font Awesome as fallback too?
+    // TODO: Backport wiggly font fix from RA
 
     // Load theme
 #ifdef __SWITCH__
