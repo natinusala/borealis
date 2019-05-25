@@ -363,7 +363,7 @@ void Application::exit()
 void Application::requestFocus(View *view, FocusDirection direction)
 {
     View *oldFocus = this->currentFocus;
-    View *newFocus = view->requestFocus(direction);
+    View *newFocus = view->requestFocus(direction, oldFocus);
 
     if (oldFocus != newFocus && newFocus)
     {

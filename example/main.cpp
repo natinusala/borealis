@@ -40,13 +40,21 @@ int main(int argc, char* argv[])
     TabFrame *rootFrame = new TabFrame();
     rootFrame->setTitle("Borealis Example App");
 
-    // TODO: Add separators
-    // TODO: Add actual views
-    rootFrame->addTab("First tab", nullptr);
-    rootFrame->addTab("Second tab", nullptr);
+    Sidebar *testSidebar = new Sidebar();
+    testSidebar->addItem("Dummy 1", nullptr);
+    testSidebar->addItem("Dummy 2", nullptr);
+    testSidebar->addItem("Dummy 3", nullptr);
+
+    Sidebar *testSidebar2 = new Sidebar();
+    testSidebar2->addItem("Sans", nullptr);
+    testSidebar2->addItem("Papyrus", nullptr);
+    testSidebar2->addItem("Undyne", nullptr);
+
+    rootFrame->addTab("First tab", testSidebar);
+    rootFrame->addTab("Second tab", testSidebar2);
     rootFrame->addSeparator();
-    rootFrame->addTab("Third tab", nullptr);
-    rootFrame->addTab("Fourth tab", nullptr);
+    rootFrame->addTab("Third tab", new Rectangle(nvgRGB(255, 0, 0)));
+    rootFrame->addTab("Fourth tab",new Rectangle(nvgRGB(0, 255, 0)));
     rootFrame->addSeparator();
     rootFrame->addTab("Tab 5", nullptr);
     rootFrame->addTab("Tab 6", nullptr);

@@ -56,11 +56,16 @@ void BoxLayout::setMargins(unsigned top, unsigned right, unsigned bottom, unsign
     this->invalidate();
 }
 
-View* BoxLayout::defaultFocus()
+size_t BoxLayout::getViewsCount()
+{
+    return this->children.size();
+}
+
+View* BoxLayout::defaultFocus(View *oldFocus)
 {
     for (unsigned i = 0; i < this->children.size(); i++)
     {
-        View *newFocus = this->children[i]->view->requestFocus(FOCUSDIRECTION_NONE);
+        View *newFocus = this->children[i]->view->requestFocus(FOCUSDIRECTION_NONE, oldFocus);
         if (newFocus)
         {
             this->focusedIndex = i;
@@ -71,20 +76,14 @@ View* BoxLayout::defaultFocus()
     return nullptr;
 }
 
-View* BoxLayout::updateFocus(FocusDirection direction, bool fromUp)
+View* BoxLayout::updateFocus(FocusDirection direction, View *oldFocus, bool fromUp)
 {
     // Give focus to first focusable view by default
     // or if we are going up in the tree and it's not
     // corresponding to our direction
-    // TODO: Is this huge condition still necessary? direction == FOCUSDIRECTION_NONE should be enough
-    if ((fromUp &&  (
-                        (this->orientation == BOXLAYOUT_VERTICAL && (direction == FOCUSDIRECTION_RIGHT || direction == FOCUSDIRECTION_LEFT)) ||
-                        (this->orientation == BOXLAYOUT_HORIZONTAL && (direction == FOCUSDIRECTION_DOWN || direction == FOCUSDIRECTION_UP))
-                    )
-        )
-        || direction == FOCUSDIRECTION_NONE)
+    if (direction == FOCUSDIRECTION_NONE)
     {
-        View *newFocus = this->defaultFocus();
+        View *newFocus = this->defaultFocus(oldFocus);
         if (newFocus)
             return newFocus;
     }
@@ -98,8 +97,8 @@ View* BoxLayout::updateFocus(FocusDirection direction, bool fromUp)
         {
             for (unsigned i = this->focusedIndex + 1; i < this->children.size(); i++)
             {
-                newFocus = this->children[i]->view->requestFocus(FOCUSDIRECTION_NONE);
-                if (newFocus)
+                newFocus = this->children[i]->view->requestFocus(FOCUSDIRECTION_NONE, oldFocus);
+                if (newFocus && newFocus != oldFocus)
                 {
                     this->focusedIndex = i;
                     return newFocus;
@@ -114,8 +113,8 @@ View* BoxLayout::updateFocus(FocusDirection direction, bool fromUp)
             {
                 for (unsigned i = this->focusedIndex - 1; i >= 0; i--)
                 {
-                    newFocus = this->children[i]->view->requestFocus(FOCUSDIRECTION_NONE);
-                    if (newFocus)
+                    newFocus = this->children[i]->view->requestFocus(FOCUSDIRECTION_NONE, oldFocus);
+                    if (newFocus && newFocus != oldFocus)
                     {
                         this->focusedIndex = i;
                         return newFocus;
@@ -128,7 +127,22 @@ View* BoxLayout::updateFocus(FocusDirection direction, bool fromUp)
     }
 
     // Fallback to parent
-    return View::requestFocus(direction);
+    return View::requestFocus(direction, oldFocus);
+}
+
+void BoxLayout::setFocusedIndex(unsigned index)
+{
+    this->focusedIndex = index;
+}
+
+void BoxLayout::removeView(int index, bool free)
+{
+    BoxLayoutChild *toRemove = this->children[index];
+    toRemove->view->willDisappear();
+    if (free)
+        delete toRemove->view;
+    delete toRemove;
+    this->children.erase(this->children.begin() + index);
 }
 
 void BoxLayout::updateScroll()
@@ -169,9 +183,9 @@ void BoxLayout::updateScroll()
     this->invalidate();
 }
 
-View* BoxLayout::requestFocus(FocusDirection direction, bool fromUp)
+View* BoxLayout::requestFocus(FocusDirection direction, View *oldFocus, bool fromUp)
 {
-    View *newFocus = this->updateFocus(direction, fromUp);
+    View *newFocus = this->updateFocus(direction, oldFocus,  fromUp);
 
     if (newFocus != nullptr)
         this->updateScroll();

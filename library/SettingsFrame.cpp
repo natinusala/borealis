@@ -56,12 +56,12 @@ void SettingsFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned 
         contentView->frame(ctx);
 }
 
-View* SettingsFrame::requestFocus(FocusDirection direction, bool fromUp)
+View* SettingsFrame::requestFocus(FocusDirection direction, View *oldFocus, bool fromUp)
 {
     if (fromUp)
-        return View::requestFocus(direction);
+        return View::requestFocus(direction, oldFocus);
     else if (this->contentView)
-        return this->contentView->requestFocus(direction);
+        return this->contentView->requestFocus(direction, oldFocus);
     return nullptr;
 }
 

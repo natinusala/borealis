@@ -174,10 +174,10 @@ class View
          * directly by the user, use
          * Application::requestFocus(View*) instead
          */
-        virtual View *requestFocus(FocusDirection direction, bool fromUp = false)
+        virtual View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false)
         {
             if (this->parent)
-                return this->parent->requestFocus(direction, true);
+                return this->parent->requestFocus(direction, oldFocus, true);
 
             return nullptr;
         }

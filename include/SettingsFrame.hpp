@@ -38,7 +38,7 @@ class SettingsFrame : public View
 
     public:
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
-        View* requestFocus(FocusDirection direction, bool fromUp = false) override;
+        View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override;
         void willAppear() override;
         void willDisappear() override;
 

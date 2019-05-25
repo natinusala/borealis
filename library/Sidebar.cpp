@@ -28,7 +28,7 @@ Sidebar::Sidebar() : BoxLayout(BOXLAYOUT_VERTICAL)
     this->setBackground(BACKGROUND_SIDEBAR);
 }
 
-View* Sidebar::defaultFocus()
+View* Sidebar::defaultFocus(View *oldFocus)
 {
     for (unsigned i = 0; i < this->children.size(); i++)
     {
@@ -37,7 +37,7 @@ View* Sidebar::defaultFocus()
         {
             if (item->isActive())
             {
-                View *newFocus = this->children[i]->view->requestFocus(FOCUSDIRECTION_NONE);
+                View *newFocus = this->children[i]->view->requestFocus(FOCUSDIRECTION_NONE, oldFocus);
                 if (newFocus)
                 {
                     this->focusedIndex = i;
@@ -48,18 +48,21 @@ View* Sidebar::defaultFocus()
         }
     }
 
-    return BoxLayout::defaultFocus();
+    return BoxLayout::defaultFocus(oldFocus);
 }
 
-void Sidebar::addItem(string label)
+SidebarItem* Sidebar::addItem(string label, View *view)
 {
     SidebarItem *item = new SidebarItem(label, this);
+    item->setAssociatedView(view);
     if (this->isEmpty())
     {
         setActive(item);
     }
 
     this->addView(item);
+
+    return item;
 }
 
 void Sidebar::addSeparator()
@@ -119,9 +122,19 @@ void SidebarSeparator::draw(NVGcontext *vg, int x, int y, unsigned width, unsign
     nvgFill(vg);
 }
 
-View* SidebarItem::requestFocus(FocusDirection direction, bool fromUp)
+View* SidebarItem::requestFocus(FocusDirection direction, View *oldFocus, bool fromUp)
 {
     return this;
+}
+
+void SidebarItem::setFocusListener(function<void(View*)> listener)
+{
+    this->focusListener = listener;
+}
+
+void SidebarItem::setAssociatedView(View *view)
+{
+    this->associatedView = view;
 }
 
 bool SidebarItem::isActive()
@@ -133,4 +146,7 @@ void SidebarItem::onFocusGained()
 {
     View::onFocusGained();
     this->sidebar->setActive(this);
+
+    if (this->focusListener)
+        this->focusListener(this->associatedView);
 }

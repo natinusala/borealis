@@ -30,24 +30,29 @@ TabFrame::TabFrame()
     this->layout = new BoxLayout(BOXLAYOUT_HORIZONTAL);
     layout->addView(sidebar);
 
-    // Dummy sidebar
-    // TODO: Remove it
-    Sidebar *dummy = new Sidebar();
-    dummy->setBackground(BACKGROUND_NONE);
-
-    dummy->addItem("Dummy 1");
-    dummy->addItem("Dummy 2");
-    dummy->addItem("Dummy 3");
-
-    layout->addView(dummy, true);
-
     this->setContentView(layout);
+}
+
+void TabFrame::switchToView(View *view)
+{
+    if (this->layout->getViewsCount() > 1)
+        this->layout->removeView(1, false);
+
+    if (view != nullptr)
+    {
+        this->layout->addView(view, true);
+        this->rightPane = view;
+    }
 }
 
 void TabFrame::addTab(string label, View *view)
 {
-    this->sidebar->addItem(label);
-    // TODO: Do something with the view
+    SidebarItem *item = this->sidebar->addItem(label, view);
+    item->setFocusListener([this](View *associatedView) { this->switchToView(associatedView); });
+
+    // Switch to first tab
+    if (view != nullptr && this->layout->getViewsCount() == 1)
+        this->switchToView(view);
 }
 
 void TabFrame::addSeparator()
@@ -55,18 +60,24 @@ void TabFrame::addSeparator()
     this->sidebar->addSeparator();
 }
 
-View* TabFrame::requestFocus(FocusDirection direction, bool fromUp)
+View* TabFrame::requestFocus(FocusDirection direction, View *oldFocus, bool fromUp)
 {
     if (fromUp)
-        return View::requestFocus(direction);
+        return View::requestFocus(direction, oldFocus);
 
-    // Give focus to the sidebar by default
-    // TODO: Give focus to the right pane instead
-    if (direction == FOCUSDIRECTION_NONE)
-        return this->sidebar->requestFocus(direction);
+    // Give focus to the right panel
+    if (direction == FOCUSDIRECTION_NONE && this->layout->getViewsCount() > 1)
+    {
+        View *newFocus = this->rightPane->requestFocus(direction, oldFocus);
+        if (newFocus)
+        {
+            this->layout->setFocusedIndex(1);
+            return newFocus;
+        }
+    }
 
     // Let the layout do its thing
-    return this->layout->requestFocus(direction, fromUp);
+    return this->layout->requestFocus(direction, oldFocus, fromUp);
 }
 
 TabFrame::~TabFrame()

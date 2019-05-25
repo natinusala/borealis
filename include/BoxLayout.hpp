@@ -63,14 +63,14 @@ class BoxLayout : public View
 
         float scrollY = 0.0f; // all childrens are offset by this value
 
-        View* updateFocus(FocusDirection direction, bool fromUp);
+        View* updateFocus(FocusDirection direction, View *oldFocus, bool fromUp);
         void updateScroll();
 
         void scrollAnimationTick();
         void prebakeScrolling();
 
     protected:
-        virtual View* defaultFocus();
+        virtual View* defaultFocus(View *oldFocus);
         void layout(Style *style) override;
 
         vector<BoxLayoutChild*> children;
@@ -81,7 +81,7 @@ class BoxLayout : public View
         BoxLayout(BoxLayoutOrientation orientation);
 
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
-        View* requestFocus(FocusDirection direction, bool fromUp = false) override;
+        View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override;
         void willAppear() override;
         void willDisappear() override;
 
@@ -105,10 +105,20 @@ class BoxLayout : public View
         void addView(View *view, bool fill = false);
 
         /**
+         * Removes the view at specified 
+         * The view will be freed if free
+         * is set to true (defaults to true)
+         */
+        void removeView(int index, bool free = true);
+
+        /**
          * Returns true if this layout
          * doesn't contain any views
          */
         bool isEmpty();
+
+        void setFocusedIndex(unsigned index);
+        size_t getViewsCount();
 
         ~BoxLayout();
 };

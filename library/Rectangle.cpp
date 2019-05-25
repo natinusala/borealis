@@ -18,6 +18,11 @@
 
 #include <Rectangle.hpp>
 
+Rectangle::Rectangle(NVGcolor color)
+{
+    this->setColor(color);
+}
+
 void Rectangle::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
     nvgFillColor(vg, this->color);

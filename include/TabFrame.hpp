@@ -34,14 +34,23 @@ class TabFrame : public SettingsFrame
     public:
         TabFrame();
 
+        /**
+         * Adds a tab with given label and view
+         * All tabs and separators must be added
+         * before the TabFrame is itself added to
+         * the view hierarchy
+         */
         void addTab(string label, View *view);
         void addSeparator();
 
-        View *requestFocus(FocusDirection direction, bool fromUp = false) override;
+        View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override;
 
         ~TabFrame();
 
     private:
         Sidebar *sidebar;
         BoxLayout *layout;
+        View *rightPane;
+
+        void switchToView(View *view);
 };

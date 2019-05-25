@@ -22,6 +22,7 @@
 
 #include <vector>
 #include <string>
+#include <functional>
 
 using namespace std;
 
@@ -34,7 +35,7 @@ class SidebarSeparator : public View
 
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
 
-        View *requestFocus(FocusDirection direction, bool fromUp = false) override
+        View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override
         {
             return nullptr;
         }
@@ -49,18 +50,24 @@ class SidebarItem : public View
         string label;
         bool active = false;
 
-        Sidebar *sidebar;
+        Sidebar *sidebar        = nullptr;
+        View *associatedView    = nullptr;
+
+        function<void(View*)> focusListener = nullptr;
 
     public:
         SidebarItem(string label, Sidebar *sidebar);
 
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
-        View *requestFocus(FocusDirection direction, bool fromUp = false) override;
+        View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override;
 
         void setActive(bool active);
         bool isActive();
 
         void onFocusGained() override;
+
+        void setFocusListener(function<void(View*)> listener);
+        void setAssociatedView(View *view);
 
         ~SidebarItem() { }
 };
@@ -73,12 +80,12 @@ class Sidebar : public BoxLayout
         SidebarItem *currentActive = nullptr;
 
     protected:
-        virtual View* defaultFocus() override;
+        virtual View* defaultFocus(View *oldFocus) override;
 
     public:
         Sidebar();
 
-        void addItem(string label);
+        SidebarItem* addItem(string label, View *view);
         void addSeparator();
 
         void setActive(SidebarItem *item);
