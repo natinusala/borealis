@@ -71,6 +71,5 @@ View* TabFrame::requestFocus(FocusDirection direction, bool fromUp)
 
 TabFrame::~TabFrame()
 {
-    this->layout->willDisappear();
-    delete this->layout;
+    // Content view is freed by ~SettingsFrame()
 }
