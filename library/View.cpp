@@ -220,6 +220,15 @@ void View::onFocusGained()
     entry.userdata      = nullptr;
 
     menu_animation_push(&entry);
+
+    if (this->focusListener)
+        this->focusListener(this);
+}
+
+
+void View::setFocusListener(function<void(View*)> listener)
+{
+    this->focusListener = listener;
 }
 
 /**

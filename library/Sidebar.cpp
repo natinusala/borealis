@@ -127,11 +127,6 @@ View* SidebarItem::requestFocus(FocusDirection direction, View *oldFocus, bool f
     return this;
 }
 
-void SidebarItem::setFocusListener(function<void(View*)> listener)
-{
-    this->focusListener = listener;
-}
-
 void SidebarItem::setAssociatedView(View *view)
 {
     this->associatedView = view;
@@ -146,9 +141,11 @@ void SidebarItem::onFocusGained()
 {
     View::onFocusGained();
     this->sidebar->setActive(this);
+}
 
-    if (this->focusListener)
-        this->focusListener(this->associatedView);
+View* SidebarItem::getAssociatedView()
+{
+    return this->associatedView;
 }
 
 SidebarItem::~SidebarItem()

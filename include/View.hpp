@@ -22,6 +22,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <functional>
 
 using namespace std;
 
@@ -73,6 +74,8 @@ class View
         bool focused = false;
 
         View *parent = nullptr;
+
+        function<void(View*)> focusListener = nullptr;
 
         virtual unsigned getHighlightInset()
         {
@@ -191,6 +194,8 @@ class View
          * Fired when focus is lost
          */
         virtual void onFocusLost();
+
+        void setFocusListener(function<void(View*)> listener);
 
         virtual ~View() {};
 };

@@ -52,7 +52,10 @@ void TabFrame::switchToView(View *view)
 void TabFrame::addTab(string label, View *view)
 {
     SidebarItem *item = this->sidebar->addItem(label, view);
-    item->setFocusListener([this](View *associatedView) { this->switchToView(associatedView); });
+    item->setFocusListener([this](View *view) {
+        if (SidebarItem *item = dynamic_cast<SidebarItem*>(view))
+            this->switchToView(item->getAssociatedView());
+    });
 
     // Switch to first tab
     if (view != nullptr && this->layout->getViewsCount() == 1)

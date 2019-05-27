@@ -22,7 +22,6 @@
 
 #include <vector>
 #include <string>
-#include <functional>
 
 using namespace std;
 
@@ -53,8 +52,6 @@ class SidebarItem : public View
         Sidebar *sidebar        = nullptr;
         View *associatedView    = nullptr;
 
-        function<void(View*)> focusListener = nullptr;
-
     public:
         SidebarItem(string label, Sidebar *sidebar);
 
@@ -66,8 +63,8 @@ class SidebarItem : public View
 
         void onFocusGained() override;
 
-        void setFocusListener(function<void(View*)> listener);
         void setAssociatedView(View *view);
+        View* getAssociatedView();
 
         ~SidebarItem();
 };
