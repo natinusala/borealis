@@ -150,3 +150,9 @@ void SidebarItem::onFocusGained()
     if (this->focusListener)
         this->focusListener(this->associatedView);
 }
+
+SidebarItem::~SidebarItem()
+{
+    if (this->associatedView)
+        delete this->associatedView;
+}

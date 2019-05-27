@@ -36,7 +36,11 @@ TabFrame::TabFrame()
 void TabFrame::switchToView(View *view)
 {
     if (this->layout->getViewsCount() > 1)
+    {
+        if (this->rightPane)
+            this->rightPane->willDisappear();
         this->layout->removeView(1, false);
+    }
 
     if (view != nullptr)
     {
@@ -82,5 +86,7 @@ View* TabFrame::requestFocus(FocusDirection direction, View *oldFocus, bool from
 
 TabFrame::~TabFrame()
 {
+    switchToView(nullptr);
+
     // Content view is freed by ~SettingsFrame()
 }

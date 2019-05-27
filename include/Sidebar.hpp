@@ -69,7 +69,7 @@ class SidebarItem : public View
         void setFocusListener(function<void(View*)> listener);
         void setAssociatedView(View *view);
 
-        ~SidebarItem() { }
+        ~SidebarItem();
 };
 
 // TODO: Add a style with icons, make it collapsible?
