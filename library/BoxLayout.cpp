@@ -214,8 +214,9 @@ void BoxLayout::layout(Style *style)
     if (this->orientation == BOXLAYOUT_VERTICAL)
     {
         int yAdvance = this->y + this->marginTop;
-        for (BoxLayoutChild *child : this->children)
+        for (size_t i = 0; i < this->children.size(); i++)
         {
+            BoxLayoutChild *child = this->children[i];
             unsigned childHeight = child->view->getHeight();
 
             if (child->fill)
@@ -233,8 +234,13 @@ void BoxLayout::layout(Style *style)
 
             child->view->invalidate();
 
-            this->entriesHeight += this->spacing + childHeight;
-            yAdvance            += this->spacing + childHeight;
+            int spacing = (int) this->spacing;
+            View *next= i <= this->children.size()-2 ? this->children[i+1]->view : nullptr;
+
+            this->customSpacing(child->view, next, &spacing);
+
+            this->entriesHeight += spacing + childHeight;
+            yAdvance            += spacing + childHeight;
         }
     }
     // Horizontal orientation
@@ -242,8 +248,9 @@ void BoxLayout::layout(Style *style)
     else if (this->orientation == BOXLAYOUT_HORIZONTAL)
     {
         int xAdvance = this->x + this->marginLeft;
-        for (BoxLayoutChild *child : this->children)
+        for (size_t i = 0; i < this->children.size(); i++)
         {
+            BoxLayoutChild *child = this->children[i];
             unsigned childWidth = child->view->getWidth();
 
             if (child->fill)
@@ -261,7 +268,12 @@ void BoxLayout::layout(Style *style)
 
             child->view->invalidate();
 
-            xAdvance += this->spacing + childWidth;
+            int spacing = (int) this->spacing;
+            View *next= i <= this->children.size()-2 ? this->children[i+1]->view : nullptr;
+
+            this->customSpacing(child->view, next, &spacing);
+
+            xAdvance += spacing + childWidth;
         }
     }
 }

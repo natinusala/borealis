@@ -30,7 +30,8 @@ library_files = files(
     'library/BoxLayout.cpp',
     'library/Sidebar.cpp',
     'library/Animations.cpp',
-    'library/Style.cpp'
+    'library/Style.cpp',
+    'library/List.cpp'
 )
 
 borealis_example = executable(

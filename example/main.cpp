@@ -40,21 +40,15 @@ int main(int argc, char* argv[])
     TabFrame *rootFrame = new TabFrame();
     rootFrame->setTitle("Borealis Example App");
 
-    Sidebar *testSidebar = new Sidebar();
-    testSidebar->addItem("Dummy 1", nullptr);
-    testSidebar->addItem("Dummy 2", nullptr);
-    testSidebar->addItem("Dummy 3", nullptr);
+    List *testList = new List();
+    testList->addView(new ListItem("Item 1"));
+    testList->addView(new ListItem("Item 2"));
 
-    Sidebar *testSidebar2 = new Sidebar();
-    testSidebar2->addItem("Sans", nullptr);
-    testSidebar2->addItem("Papyrus", nullptr);
-    testSidebar2->addItem("Undyne", nullptr);
-
-    rootFrame->addTab("First tab", testSidebar);
-    rootFrame->addTab("Second tab", testSidebar2);
+    rootFrame->addTab("First tab", testList);
+    rootFrame->addTab("Second tab", new Rectangle(nvgRGB(0, 0, 255)));
     rootFrame->addSeparator();
     rootFrame->addTab("Third tab", new Rectangle(nvgRGB(255, 0, 0)));
-    rootFrame->addTab("Fourth tab",new Rectangle(nvgRGB(0, 255, 0)));
+    rootFrame->addTab("Fourth tab", new Rectangle(nvgRGB(0, 255, 0)));
     rootFrame->addSeparator();
     rootFrame->addTab("Tab 5", nullptr);
     rootFrame->addTab("Tab 6", nullptr);

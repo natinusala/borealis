@@ -76,6 +76,12 @@ class BoxLayout : public View
 
         unsigned focusedIndex = 0;
 
+        /**
+         * Should the BoxLayout apply spacing after
+         * this view?
+         */
+        virtual void customSpacing(View *current, View *next, int *spacing) { }
+
     public:
         BoxLayout(BoxLayoutOrientation orientation);
 

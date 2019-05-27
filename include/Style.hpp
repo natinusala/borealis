@@ -79,6 +79,22 @@ typedef struct
             unsigned height;
         } Separator;
     } Sidebar;
+
+    // List
+    struct
+    {
+        unsigned marginLeft;
+        unsigned marginRight;
+        unsigned marginTopBottom;
+        unsigned spacing;
+
+        struct
+        {
+            unsigned height;
+            unsigned textSize;
+            unsigned textStartX;
+        } Item;
+    } List;
 } Style;
 
 // TODO: Make a condensed style

@@ -43,6 +43,7 @@ void View::frame(FrameContext *ctx)
         this->drawHighlight(ctx->vg, ctx->theme, this->highlightAlpha, style);
 }
 
+// TODO: Slight glow all around
 void View::drawHighlight(NVGcontext *vg, Theme *theme, float alpha, Style *style)
 {
     unsigned inset  = this->getHighlightInset();

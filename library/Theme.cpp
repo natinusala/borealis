@@ -28,7 +28,9 @@ Theme themeLight =
     .sidebarSeparatorColor  = nvgRGB(208, 208, 208),
 
     .highlightColor1        = nvgRGB(13, 182, 213),
-    .highlightColor2        = nvgRGB(80, 239, 217)
+    .highlightColor2        = nvgRGB(80, 239, 217),
+
+    .listItemSeparatorColor = nvgRGB(207, 207, 207)
 };
 
 Theme themeDark =
@@ -41,5 +43,7 @@ Theme themeDark =
     .sidebarSeparatorColor  = nvgRGB(81, 81, 81),
 
     .highlightColor1        = nvgRGB(25, 138, 198),
-    .highlightColor2        = nvgRGB(137, 241, 242)
+    .highlightColor2        = nvgRGB(137, 241, 242),
+
+    .listItemSeparatorColor = nvgRGB(78, 78, 78)
 };

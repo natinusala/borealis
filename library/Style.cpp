@@ -64,6 +64,19 @@ static Style styleAccurate = {
         .Separator = {
             .height = 28
         }
+    },
+
+    .List = {
+        .marginLeft         = 60,
+        .marginRight        = 90,
+        .marginTopBottom    = 42,
+        .spacing            = 55,
+
+        .Item = {
+            .height     = 69, // offset by 1 to have the highlight hide the separator
+            .textSize   = 24,
+            .textStartX = 15
+        }
     }
 };
 
