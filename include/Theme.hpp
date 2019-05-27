@@ -29,6 +29,7 @@ typedef struct
     NVGcolor activeTabColor;
     NVGcolor sidebarSeparatorColor;
 
+    NVGcolor highlightBackgroundColor;
     NVGcolor highlightColor1;
     NVGcolor highlightColor2;
 

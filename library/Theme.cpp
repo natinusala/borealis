@@ -27,8 +27,9 @@ Theme themeLight =
     .activeTabColor         = nvgRGB(49, 79, 235),
     .sidebarSeparatorColor  = nvgRGB(208, 208, 208),
 
-    .highlightColor1        = nvgRGB(13, 182, 213),
-    .highlightColor2        = nvgRGB(80, 239, 217),
+    .highlightBackgroundColor   = nvgRGB(252, 255, 248),
+    .highlightColor1            = nvgRGB(13, 182, 213),
+    .highlightColor2            = nvgRGB(80, 239, 217),
 
     .listItemSeparatorColor = nvgRGB(207, 207, 207),
     .listItemValueColor     = nvgRGB(43, 81, 226)
@@ -43,8 +44,9 @@ Theme themeDark =
     .activeTabColor         = nvgRGB(0, 255, 204),
     .sidebarSeparatorColor  = nvgRGB(81, 81, 81),
 
-    .highlightColor1        = nvgRGB(25, 138, 198),
-    .highlightColor2        = nvgRGB(137, 241, 242),
+    .highlightBackgroundColor   = nvgRGB(31, 34, 39),
+    .highlightColor1            = nvgRGB(25, 138, 198),
+    .highlightColor2            = nvgRGB(137, 241, 242),
 
     .listItemSeparatorColor = nvgRGB(78, 78, 78),
     .listItemValueColor     = nvgRGB(88, 195, 169)
