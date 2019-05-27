@@ -30,7 +30,8 @@ Theme themeLight =
     .highlightColor1        = nvgRGB(13, 182, 213),
     .highlightColor2        = nvgRGB(80, 239, 217),
 
-    .listItemSeparatorColor = nvgRGB(207, 207, 207)
+    .listItemSeparatorColor = nvgRGB(207, 207, 207),
+    .listItemValueColor     = nvgRGB(43, 81, 226)
 };
 
 Theme themeDark =
@@ -45,5 +46,6 @@ Theme themeDark =
     .highlightColor1        = nvgRGB(25, 138, 198),
     .highlightColor2        = nvgRGB(137, 241, 242),
 
-    .listItemSeparatorColor = nvgRGB(78, 78, 78)
+    .listItemSeparatorColor = nvgRGB(78, 78, 78),
+    .listItemValueColor     = nvgRGB(88, 195, 169)
 };

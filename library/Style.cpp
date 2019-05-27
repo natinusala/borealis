@@ -75,7 +75,7 @@ static Style styleAccurate = {
         .Item = {
             .height     = 69, // offset by 1 to have the highlight hide the separator
             .textSize   = 24,
-            .textStartX = 15
+            .padding    = 15
         }
     }
 };

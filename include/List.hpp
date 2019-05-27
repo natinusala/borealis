@@ -27,6 +27,7 @@ class ListItem : public View
     private:
         string label;
         string sublabel;
+        string value;
 
         bool drawTopSeparator = true;
 
@@ -38,6 +39,8 @@ class ListItem : public View
 
         bool hasSubLabel();
         void setDrawTopSeparator(bool draw);
+
+        void setValue(string value);
 };
 
 // A vertical list of various widgets, with proper margins and spacing

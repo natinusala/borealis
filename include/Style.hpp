@@ -92,7 +92,7 @@ typedef struct
         {
             unsigned height;
             unsigned textSize;
-            unsigned textStartX;
+            unsigned padding;
         } Item;
     } List;
 } Style;

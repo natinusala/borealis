@@ -41,8 +41,14 @@ int main(int argc, char* argv[])
     rootFrame->setTitle("Borealis Example App");
 
     List *testList = new List();
-    testList->addView(new ListItem("Item 1"));
-    testList->addView(new ListItem("Item 2"));
+    ListItem *themeItem = new ListItem("Theme");
+    themeItem->setValue("Basic White");
+
+    ListItem *jankItem = new ListItem("User Interface Jank");
+    jankItem->setValue("Minimal");
+
+    testList->addView(themeItem);
+    testList->addView(jankItem);
 
     rootFrame->addTab("First tab", testList);
     rootFrame->addTab("Second tab", new Rectangle(nvgRGB(0, 0, 255)));

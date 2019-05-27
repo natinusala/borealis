@@ -46,6 +46,11 @@ void List::customSpacing(View *current, View *next, int *spacing)
     }
 }
 
+void ListItem::setValue(string value)
+{
+    this->value = value;
+}
+
 void ListItem::setDrawTopSeparator(bool draw)
 {
     this->drawTopSeparator = draw;
@@ -64,15 +69,22 @@ View* ListItem::requestFocus(FocusDirection direction, View *oldFocus, bool from
     return this;
 }
 
+// TODO: Adjust font size
 void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
-    // TODO: Value, sublabel
+    // TODO: Word wrapped sublabel
+
+    // Value
+    nvgFillColor(vg, ctx->theme->listItemValueColor);
+    nvgFontSize(vg, style->List.Item.textSize);
+    nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
+    nvgText(vg, x + width - style->List.Item.padding, y + height/2, this->value.c_str(), nullptr);
 
     // Label
     nvgFillColor(vg, ctx->theme->textColor);
     nvgFontSize(vg, style->List.Item.textSize);
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-    nvgText(vg, x + style->List.Item.textStartX, y + height/2, this->label.c_str(), nullptr);
+    nvgText(vg, x + style->List.Item.padding, y + height/2, this->label.c_str(), nullptr);
 
     // Separators
     // Offset by one to be hidden by highlight
