@@ -19,7 +19,7 @@
 #include <List.hpp>
 
 // TODO: Scrollbar
-// TODO: Spacing item (to have make groups of items)
+// TODO: Spacing item (defaults to 60px) (to have make groups of items)
 
 List::List() : BoxLayout(BOXLAYOUT_VERTICAL)
 {
