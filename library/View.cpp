@@ -28,7 +28,7 @@ void View::frame(FrameContext *ctx)
     // Layout if needed
     if (this->dirty)
     {
-        this->layout(style);
+        this->layout(ctx->vg, style);
         this->dirty = false;
     }
 
@@ -50,11 +50,13 @@ void View::frame(FrameContext *ctx)
 // TODO: Slight glow all around
 void View::drawHighlight(NVGcontext *vg, Theme *theme, float alpha, Style *style, bool background)
 {
-    unsigned inset  = this->getHighlightInset();
-    unsigned x      = this->x - inset - style->Highlight.strokeWidth/2;
-    unsigned y      = this->y - inset - style->Highlight.strokeWidth/2;
-    unsigned width  = this->width   + inset * 2 + style->Highlight.strokeWidth;
-    unsigned height = this->height  + inset * 2 + style->Highlight.strokeWidth;
+    unsigned insetTop, insetRight, insetBottom, insetLeft;
+    this->getHighlightInsets(&insetTop, &insetRight, &insetBottom, &insetLeft);
+
+    unsigned x      = this->x - insetLeft   - style->Highlight.strokeWidth/2;
+    unsigned y      = this->y - insetTop    - style->Highlight.strokeWidth/2;
+    unsigned width  = this->width   + insetLeft + insetRight  + style->Highlight.strokeWidth;
+    unsigned height = this->height  + insetTop  + insetBottom + style->Highlight.strokeWidth;
 
     if (background)
     {
@@ -158,6 +160,14 @@ void View::drawBackground(NVGcontext* vg, FrameContext *ctx, Style *style)
             nvgBeginPath(vg);
             nvgFillPaint(vg, bottomGradient);
             nvgRect(vg, this->x, this->y + this->height - backdropHeight, this->width, backdropHeight);
+            nvgFill(vg);
+            break;
+        }
+        case BACKGROUND_DEBUG:
+        {
+            nvgFillColor(vg, nvgRGB(255, 0, 0));
+            nvgBeginPath(vg);
+            nvgRect(vg, this->x, this->y, this->width, this->height);
             nvgFill(vg);
             break;
         }

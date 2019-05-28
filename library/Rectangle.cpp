@@ -37,7 +37,7 @@ void Rectangle::setColor(NVGcolor color)
     this->color = color;
 }
 
-void Rectangle::layout(Style *style)
+void Rectangle::layout(NVGcontext* vg, Style *style)
 {
     // Nothing to do
 }

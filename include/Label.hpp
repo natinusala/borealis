@@ -20,13 +20,27 @@
 
 #include <View.hpp>
 
+// TODO: setText, which calls getParent()->invalidate()
+
+typedef enum
+{
+    LABELSTYLE_REGULAR,
+    LABELSTYLE_SUBLABEL
+} LabelStyle;
+
 // A Label, multiline or with a ticker
 class Label : public View
 {
     private:
         string text;
+
         bool multiline;
+        unsigned fontSize;
+        LabelStyle labelStyle;
 
     public:
-        Label(string text, bool multiline = false);
+        Label(LabelStyle labelStyle, string text, bool multiline = false);
+
+        void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
+        void layout(NVGcontext* vg, Style *style) override;
 };

@@ -72,10 +72,17 @@ static Style styleAccurate = {
         .spacing            = 55,
 
         .Item = {
-            .height     = 69, // offset by 1 to have the highlight hide the separator
-            .textSize   = 24,
-            .padding    = 15
+            .height             = 69, // offset by 1 to have the highlight hide the separator
+            .textSize           = 24,
+            .padding            = 15,
+            .sublabelIndent     = 20,
+            .sublabelSpacing    = 16
         }
+    },
+
+    .Label = { // TODO: Fine tune those metrics
+        .regularFontSize    = 22,
+        .sublabelFontSize   = 20
     }
 };
 

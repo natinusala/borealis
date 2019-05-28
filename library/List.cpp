@@ -46,6 +46,33 @@ void List::customSpacing(View *current, View *next, int *spacing)
     }
 }
 
+ListItem::ListItem(string label, string sublabel) : label(label)
+{
+    Style *style = getStyle();
+    this->setHeight(style->List.Item.height);
+
+    if (sublabel != "")
+        this->sublabelView = new Label(LABELSTYLE_SUBLABEL, sublabel, true);
+}
+
+void ListItem::layout(NVGcontext *vg, Style *style)
+{
+    if (this->sublabelView)
+    {
+        this->setHeight(style->List.Item.height);
+        this->sublabelView->setBoundaries(this->x + style->List.Item.sublabelIndent, this->y + this->height + style->List.Item.sublabelSpacing, this->width - style->List.Item.sublabelIndent*2, 0);
+        this->sublabelView->layout(vg, style); // we must call layout directly
+        this->height += this->sublabelView->getHeight();
+    }
+}
+
+void ListItem::getHighlightInsets(unsigned *top, unsigned *right, unsigned *bottom, unsigned *left)
+{
+    View::getHighlightInsets(top, right, bottom, left);
+    if (sublabelView)
+        *bottom = -(sublabelView->getHeight());
+}
+
 void ListItem::setValue(string value)
 {
     this->value = value;
@@ -56,14 +83,6 @@ void ListItem::setDrawTopSeparator(bool draw)
     this->drawTopSeparator = draw;
 }
 
-ListItem::ListItem(string label, string sublabel) : label(label), sublabel(sublabel)
-{
-    Style *style = getStyle();
-    this->setHeight(style->List.Item.height);
-
-    // TODO: Change height if there is a sublabel
-}
-
 View* ListItem::requestFocus(FocusDirection direction, View *oldFocus, bool fromUp)
 {
     return this;
@@ -72,19 +91,23 @@ View* ListItem::requestFocus(FocusDirection direction, View *oldFocus, bool from
 // TODO: Adjust font size
 void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
-    // TODO: Word wrapped sublabel
+    unsigned baseHeight = style->List.Item.height;
+
+    // Sublabel
+    if (this->sublabelView)
+        this->sublabelView->frame(ctx);
 
     // Value
     nvgFillColor(vg, ctx->theme->listItemValueColor);
     nvgFontSize(vg, style->List.Item.textSize);
     nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
-    nvgText(vg, x + width - style->List.Item.padding, y + height/2, this->value.c_str(), nullptr);
+    nvgText(vg, x + width - style->List.Item.padding, y + baseHeight/2, this->value.c_str(), nullptr);
 
     // Label
     nvgFillColor(vg, ctx->theme->textColor);
     nvgFontSize(vg, style->List.Item.textSize);
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-    nvgText(vg, x + style->List.Item.padding, y + height/2, this->label.c_str(), nullptr);
+    nvgText(vg, x + style->List.Item.padding, y + baseHeight/2, this->label.c_str(), nullptr);
 
     // Separators
     // Offset by one to be hidden by highlight
@@ -100,11 +123,17 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
 
     // Bottom
     nvgBeginPath(vg);
-    nvgRect(vg, x, y + 1 + height, width, 1);
+    nvgRect(vg, x, y + 1 + baseHeight, width, 1);
     nvgFill(vg);
 }
 
 bool ListItem::hasSubLabel()
 {
-    return this->sublabel != "";
+    return this->sublabelView;
+}
+
+ListItem::~ListItem()
+{
+    if (this->sublabelView)
+        delete this->sublabelView;
 }

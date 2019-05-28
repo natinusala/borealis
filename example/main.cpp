@@ -44,26 +44,20 @@ int main(int argc, char* argv[])
     ListItem *themeItem = new ListItem("Theme");
     themeItem->setValue("Basic White");
 
-    ListItem *jankItem = new ListItem("User Interface Jank");
+    ListItem *jankItem = new ListItem("User Interface Jank", "Some people believe homebrews to have a jank user interface. Set to Minimal to have a native look and feel, set to Maximal to have a SX OS look and feel.");
     jankItem->setValue("Minimal");
 
     testList->addView(themeItem);
     testList->addView(jankItem);
+
+    Label *testLabel = new Label(LABELSTYLE_REGULAR, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.", true);
+    testList->addView(testLabel);
 
     rootFrame->addTab("First tab", testList);
     rootFrame->addTab("Second tab", new Rectangle(nvgRGB(0, 0, 255)));
     rootFrame->addSeparator();
     rootFrame->addTab("Third tab", new Rectangle(nvgRGB(255, 0, 0)));
     rootFrame->addTab("Fourth tab", new Rectangle(nvgRGB(0, 255, 0)));
-    rootFrame->addSeparator();
-    rootFrame->addTab("Tab 5", nullptr);
-    rootFrame->addTab("Tab 6", nullptr);
-    rootFrame->addSeparator();
-    rootFrame->addTab("Tab 7", nullptr);
-    rootFrame->addTab("Tab 8", nullptr);
-    rootFrame->addSeparator();
-    rootFrame->addTab("Tab 9", nullptr);
-    rootFrame->addTab("Tab 10", nullptr);
 
     // Add the root view to the stack
     app->pushView(rootFrame);

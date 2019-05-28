@@ -42,7 +42,7 @@ class SidebarSeparator : public View
 
 class Sidebar;
 
-// TODO: Use a Label view with integrated ticker
+// TODO: Use a Label view with integrated ticker for label and sublabel
 // TODO: Have the label always tick when active
 class SidebarItem : public View
 {

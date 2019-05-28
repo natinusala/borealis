@@ -19,6 +19,7 @@
 #pragma once
 
 #include <BoxLayout.hpp>
+#include <Label.hpp>
 
 // A list item
 // TODO: Use a Label with integrated ticker
@@ -26,21 +27,26 @@ class ListItem : public View
 {
     private:
         string label;
-        string sublabel;
         string value;
 
         bool drawTopSeparator = true;
+
+        Label *sublabelView = nullptr;
 
     public:
         ListItem(string label, string sublabel = "");
 
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
         View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp) override;
+        void layout(NVGcontext *vg, Style *style) override;
+        void getHighlightInsets(unsigned *top, unsigned *right, unsigned *bottom, unsigned *left) override;
 
         bool hasSubLabel();
         void setDrawTopSeparator(bool draw);
 
         void setValue(string value);
+
+        ~ListItem();
 };
 
 // A vertical list of various widgets, with proper margins and spacing

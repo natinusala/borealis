@@ -37,7 +37,7 @@ class SettingsFrame : public View
         unsigned rightPadding   = 0;
 
     protected:
-        void layout(Style *style) override;
+        void layout(NVGcontext* vg, Style *style) override;
 
     public:
         SettingsFrame(bool padLeft, bool padRight);

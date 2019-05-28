@@ -23,8 +23,12 @@
 typedef struct
 {
     float backgroundColor[3]; // gl color
+
     NVGcolor textColor;
+    NVGcolor sublabelColor;
+
     NVGcolor separatorColor;
+
     NVGcolor sidebarColor;
     NVGcolor activeTabColor;
     NVGcolor sidebarSeparatorColor;

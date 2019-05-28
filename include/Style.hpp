@@ -92,8 +92,18 @@ typedef struct
             unsigned height;
             unsigned textSize;
             unsigned padding;
+            unsigned sublabelIndent;
+            unsigned sublabelSpacing;
         } Item;
     } List;
+
+    // Label
+    struct
+    {
+        unsigned regularFontSize;
+        unsigned sublabelFontSize;
+    } Label;
+    
 } Style;
 
 // TODO: Make a condensed style

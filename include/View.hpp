@@ -38,7 +38,8 @@ typedef enum
 typedef enum
 {
     BACKGROUND_NONE = 0,
-    BACKGROUND_SIDEBAR
+    BACKGROUND_SIDEBAR,
+    BACKGROUND_DEBUG
 } Background;
 
 #define VIEW_HIGHLIGHT_ANIMATION_DURATION 100
@@ -77,19 +78,12 @@ class View
 
         function<void(View*)> focusListener = nullptr;
 
-        virtual unsigned getHighlightInset()
+        virtual void getHighlightInsets(unsigned *top, unsigned *right, unsigned *bottom, unsigned *left)
         {
-            return 0;
-        }
-
-        /**
-         * Triggered when the view has been
-         * resized and needs to layout its
-         * children
-         */
-        virtual void layout(Style *style)
-        {
-            // Nothing to do
+            *top    = 0;
+            *right  = 0;
+            *bottom = 0;
+            *left   = 0;
         }
 
     public:
@@ -120,6 +114,16 @@ class View
          * the view onscreen
          */
         virtual void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) = 0;
+
+        /**
+         * Triggered when the view has been
+         * resized and needs to layout its
+         * children
+         */
+        virtual void layout(NVGcontext* vg, Style *style)
+        {
+            // Nothing to do
+        }
 
         /**
          * Called when the view will appear

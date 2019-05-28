@@ -76,7 +76,7 @@ View* SettingsFrame::requestFocus(FocusDirection direction, View *oldFocus, bool
     return nullptr;
 }
 
-void SettingsFrame::layout(Style *style)
+void SettingsFrame::layout(NVGcontext* vg, Style *style)
 {
     if (this->contentView)
     {
