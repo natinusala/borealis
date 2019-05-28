@@ -45,7 +45,7 @@ SOURCES		:=	library library/nanovg example $(LIBRETRO_COMMON)
 
 DATA		:=	data
 INCLUDES	:=	include include/nanovg include/libretro-common
-ROMFS		:=	resources
+# ROMFS		:=	resources
 
 APP_TITLE	:=	borealis example
 APP_AUTHOR	:=	natinusala
