@@ -48,6 +48,7 @@ void View::frame(FrameContext *ctx)
 }
 
 // TODO: Slight glow all around
+// TODO: Shake animation when highlight doesn't move
 void View::drawHighlight(NVGcontext *vg, Theme *theme, float alpha, Style *style, bool background)
 {
     unsigned insetTop, insetRight, insetBottom, insetLeft;
