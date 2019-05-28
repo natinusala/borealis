@@ -33,10 +33,15 @@ class SettingsFrame : public View
 
         View *contentView = nullptr;
 
+        unsigned leftPadding    = 0;
+        unsigned rightPadding   = 0;
+
     protected:
         void layout(Style *style) override;
 
     public:
+        SettingsFrame(bool padLeft, bool padRight);
+
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
         View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override;
         void willAppear() override;

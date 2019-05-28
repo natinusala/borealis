@@ -24,7 +24,7 @@
 List::List() : BoxLayout(BOXLAYOUT_VERTICAL)
 {
     Style *style = getStyle();
-    this->setMargins(style->List.marginTopBottom, style->List.marginRight, style->List.marginTopBottom, style->List.marginLeft);
+    this->setMargins(style->List.marginTopBottom, style->List.marginLeftRight, style->List.marginTopBottom, style->List.marginLeftRight);
     this->setSpacing(style->List.spacing);
 }
 

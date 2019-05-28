@@ -83,8 +83,7 @@ typedef struct
     // List
     struct
     {
-        unsigned marginLeft;
-        unsigned marginRight;
+        unsigned marginLeftRight;
         unsigned marginTopBottom;
         unsigned spacing;
 

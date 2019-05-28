@@ -21,7 +21,7 @@
 #include <Rectangle.hpp>
 #include <Sidebar.hpp>
 
-TabFrame::TabFrame()
+TabFrame::TabFrame() : SettingsFrame(false, true)
 {
     //Create sidebar
     this->sidebar = new Sidebar();

@@ -67,8 +67,7 @@ static Style styleAccurate = {
     },
 
     .List = {
-        .marginLeft         = 60,
-        .marginRight        = 90,
+        .marginLeftRight    = 60,
         .marginTopBottom    = 42,
         .spacing            = 55,
 

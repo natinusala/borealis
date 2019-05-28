@@ -24,6 +24,17 @@
 
 // TODO: Add hints system
 
+SettingsFrame::SettingsFrame(bool padLeft, bool padRight)
+{
+    Style *style = getStyle();
+
+    if (padLeft)
+        this->leftPadding = style->SettingsFrame.separatorSpacing;
+
+    if (padRight)
+        this->rightPadding = style->SettingsFrame.separatorSpacing;
+}
+
 void SettingsFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
     // Text
@@ -69,7 +80,7 @@ void SettingsFrame::layout(Style *style)
 {
     if (this->contentView)
     {
-        this->contentView->setBoundaries(this->x, this->y + style->SettingsFrame.headerHeight, this->width, this->height - style->SettingsFrame.footerHeight - style->SettingsFrame.headerHeight);
+        this->contentView->setBoundaries(this->x + leftPadding, this->y + style->SettingsFrame.headerHeight, this->width - this->leftPadding - this->rightPadding, this->height - style->SettingsFrame.footerHeight - style->SettingsFrame.headerHeight);
         this->contentView->invalidate();
     }
 }
