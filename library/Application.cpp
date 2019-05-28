@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <string>
 #include <algorithm>
+#include <unistd.h>
 
 #include <Borealis.hpp>
 #include <Animations.hpp>
@@ -180,7 +181,11 @@ bool Application::init()
         }
     }
 #else
-    this->fontStash.regular = nvgCreateFont(this->vg, "regular", ASSET("inter/Inter-Regular.ttf"));
+    // Use illegal font if available
+    if (access(ASSET("Illegal-Font.ttf"), F_OK) != -1)
+        this->fontStash.regular = nvgCreateFont(this->vg, "regular", ASSET("Illegal-Font.ttf"));
+    else
+        this->fontStash.regular = nvgCreateFont(this->vg, "regular", ASSET("inter/Inter-Regular.ttf"));
 #endif
 
     // TODO: Load symbols shared font as a fallback
