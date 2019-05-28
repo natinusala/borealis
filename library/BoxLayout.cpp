@@ -163,6 +163,9 @@ void BoxLayout::updateScroll()
     if (newScroll > 0.0f)
         newScroll = 0.0f;
 
+    if (newScroll == this->scrollY)
+        return;
+
     //Start animation
     menu_animation_ctx_tag tag = (uintptr_t)&this->scrollY;
 

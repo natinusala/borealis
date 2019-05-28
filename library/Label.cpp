@@ -38,6 +38,7 @@ void Label::layout(NVGcontext* vg, Style *style)
     if (this->multiline)
     {
         float bounds[4];
+        nvgFontSize(vg, this->fontSize);
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
         nvgTextBoxBounds(vg, this->x, this->y, this->width, this->text.c_str(), nullptr, bounds);
         this->height = bounds[3] - bounds[1]; // ymax - ymin

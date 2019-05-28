@@ -59,7 +59,7 @@ void ListItem::layout(NVGcontext *vg, Style *style)
 {
     if (this->sublabelView)
     {
-        this->setHeight(style->List.Item.height);
+        this->height = style->List.Item.height;
         this->sublabelView->setBoundaries(this->x + style->List.Item.sublabelIndent, this->y + this->height + style->List.Item.sublabelSpacing, this->width - style->List.Item.sublabelIndent*2, 0);
         this->sublabelView->layout(vg, style); // we must call layout directly
         this->height += this->sublabelView->getHeight() + style->List.Item.sublabelSpacing;
