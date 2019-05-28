@@ -5,7 +5,7 @@ static int nxlink_sock = -1;
 
 void userAppInit()
 {
-    romfsInit();
+    // romfsInit();
     socketInitializeDefault();
     nxlink_sock = nxlinkStdio();
     plInitialize();
@@ -17,7 +17,7 @@ void userAppExit()
     if (nxlink_sock != -1)
         close(nxlink_sock);
     socketExit();
-    romfsExit();
+    // romfsExit();
     plExit();
     setsysExit();
 }
