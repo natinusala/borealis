@@ -62,15 +62,16 @@ void ListItem::layout(NVGcontext *vg, Style *style)
         this->setHeight(style->List.Item.height);
         this->sublabelView->setBoundaries(this->x + style->List.Item.sublabelIndent, this->y + this->height + style->List.Item.sublabelSpacing, this->width - style->List.Item.sublabelIndent*2, 0);
         this->sublabelView->layout(vg, style); // we must call layout directly
-        this->height += this->sublabelView->getHeight();
+        this->height += this->sublabelView->getHeight() + style->List.Item.sublabelSpacing;
     }
 }
 
 void ListItem::getHighlightInsets(unsigned *top, unsigned *right, unsigned *bottom, unsigned *left)
 {
+    Style *style = getStyle();
     View::getHighlightInsets(top, right, bottom, left);
     if (sublabelView)
-        *bottom = -(sublabelView->getHeight());
+        *bottom = -(sublabelView->getHeight() + style->List.Item.sublabelSpacing);
 }
 
 void ListItem::setValue(string value)
