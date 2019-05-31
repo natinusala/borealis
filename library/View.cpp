@@ -25,6 +25,8 @@ void View::frame(FrameContext *ctx)
 {
     Style *style = getStyle();
 
+    nvgSave(ctx->vg);
+
     // Layout if needed
     if (this->dirty)
     {
@@ -45,6 +47,8 @@ void View::frame(FrameContext *ctx)
     // Draw highlight
     if (this->highlightAlpha > 0.0f)
         this->drawHighlight(ctx->vg, ctx->theme, this->highlightAlpha, style, false);
+
+    nvgRestore(ctx->vg);
 }
 
 // TODO: Slight glow all around

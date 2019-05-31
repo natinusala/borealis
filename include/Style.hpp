@@ -104,6 +104,7 @@ typedef struct
     {
         unsigned regularFontSize;
         unsigned sublabelFontSize;
+        float lineHeight;
     } Label;
     
 } Style;

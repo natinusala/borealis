@@ -41,6 +41,7 @@ void Label::layout(NVGcontext* vg, Style *style)
         nvgFontSize(vg, this->fontSize);
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
         nvgTextBoxBounds(vg, this->x, this->y, this->width, this->text.c_str(), nullptr, bounds);
+        nvgTextLineHeight(vg, style->Label.lineHeight);
         this->height = bounds[3] - bounds[1]; // ymax - ymin
     }
 }
@@ -61,11 +62,13 @@ void Label::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, 
 
     if (this->multiline)
     {
+        nvgTextLineHeight(vg, style->Label.lineHeight);
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
         nvgTextBox(vg, x, y, width, this->text.c_str(), nullptr);
     }
     else
     {
+        nvgTextLineHeight(vg, 1.0f);
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_CENTER);
         nvgText(vg, x, y + height / 2, this->text.c_str(), nullptr); // TODO: Ticker
     }

@@ -84,7 +84,8 @@ static Style styleAccurate = {
 
     .Label = {
         .regularFontSize    = 20,
-        .sublabelFontSize   = 16
+        .sublabelFontSize   = 16,
+        .lineHeight         = 1.65f
     }
 };
 
