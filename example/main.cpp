@@ -41,8 +41,8 @@ int main(int argc, char* argv[])
     rootFrame->setTitle("Borealis Example App");
 
     List *testList = new List();
-    ListItem *themeItem = new ListItem("Theme");
-    themeItem->setValue("Basic White");
+    ListItem *themeItem = new ListItem("TV Resolution");
+    themeItem->setValue("Automatic");
 
     ListItem *jankItem = new ListItem("User Interface Jank", "Some people believe homebrews to have a jank user interface. Set to Minimal to have a native look and feel, set to Maximal to have a SX OS look and feel.");
     jankItem->setValue("Minimal");
@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
     testList->addView(themeItem);
     testList->addView(jankItem);
 
-    Label *testLabel = new Label(LABELSTYLE_REGULAR, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.", true);
+    Label *testLabel = new Label(LABELSTYLE_REGULAR, "For more information about how to use Nintendo Switch and its features, please refer to the Nintendo Support Website on your smart device or PC.", true);
     testList->addView(testLabel);
 
     rootFrame->addTab("First tab", testList);

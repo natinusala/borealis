@@ -25,8 +25,9 @@ static Style styleAccurate = {
 
         .separatorSpacing  = 30,
 
-        .titleSize         = 30,
-        .titleStart        = 130
+        .titleSize      = 28,
+        .titleStart     = 130,
+        .titleOffset    = 5
     },
 
     .Highlight = {
@@ -74,15 +75,16 @@ static Style styleAccurate = {
         .Item = {
             .height             = 69, // offset by 1 to have the highlight hide the separator
             .textSize           = 24,
+            .valueSize          = 20,
             .padding            = 15,
             .sublabelIndent     = 20,
             .sublabelSpacing    = 16
         }
     },
 
-    .Label = { // TODO: Fine tune those metrics
-        .regularFontSize    = 22,
-        .sublabelFontSize   = 20
+    .Label = {
+        .regularFontSize    = 20,
+        .sublabelFontSize   = 16
     }
 };
 

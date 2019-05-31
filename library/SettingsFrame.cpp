@@ -19,9 +19,6 @@
 #include <SettingsFrame.hpp>
 #include <nanovg.h>
 
-// TODO: Don't center title, hardcode Y position
-// TODO: Resize title (fine tune on Switch)
-
 // TODO: Add hints system
 
 SettingsFrame::SettingsFrame(bool padLeft, bool padRight)
@@ -43,7 +40,7 @@ void SettingsFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned 
     nvgFontSize(vg, style->SettingsFrame.titleSize);
     nvgFontFaceId(vg, ctx->fontStash->regular);
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-    nvgText(vg, x + style->SettingsFrame.titleStart, y + style->SettingsFrame.headerHeight / 2, this->title.c_str(), nullptr);
+    nvgText(vg, x + style->SettingsFrame.titleStart, y + style->SettingsFrame.headerHeight / 2 + style->SettingsFrame.titleOffset, this->title.c_str(), nullptr);
 
     // TODO: Footer
 

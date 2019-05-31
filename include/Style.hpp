@@ -30,6 +30,7 @@ typedef struct
 
         unsigned titleSize;
         unsigned titleStart;
+        unsigned titleOffset;
     } SettingsFrame;
 
 
@@ -91,6 +92,7 @@ typedef struct
         {
             unsigned height;
             unsigned textSize;
+            unsigned valueSize;
             unsigned padding;
             unsigned sublabelIndent;
             unsigned sublabelSpacing;

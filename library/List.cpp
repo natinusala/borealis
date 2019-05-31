@@ -100,7 +100,7 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
 
     // Value
     nvgFillColor(vg, ctx->theme->listItemValueColor);
-    nvgFontSize(vg, style->List.Item.textSize);
+    nvgFontSize(vg, style->List.Item.valueSize);
     nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
     nvgText(vg, x + width - style->List.Item.padding, y + baseHeight/2, this->value.c_str(), nullptr);
 
