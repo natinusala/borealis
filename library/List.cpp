@@ -21,7 +21,7 @@
 // TODO: Scrollbar
 // TODO: Spacing item (defaults to 60px) (to have make groups of items)
 
-List::List() : BoxLayout(BOXLAYOUT_VERTICAL)
+List::List() : BoxLayout(BoxLayoutOrientation::VERTICAL)
 {
     Style *style = getStyle();
     this->setMargins(style->List.marginTopBottom, style->List.marginLeftRight, style->List.marginTopBottom, style->List.marginLeftRight);
@@ -52,7 +52,7 @@ ListItem::ListItem(string label, string sublabel) : label(label)
     this->setHeight(style->List.Item.height);
 
     if (sublabel != "")
-        this->sublabelView = new Label(LABELSTYLE_SUBLABEL, sublabel, true);
+        this->sublabelView = new Label(LabelStyle::SUBLABEL, sublabel, true);
 }
 
 void ListItem::layout(NVGcontext *vg, Style *style)

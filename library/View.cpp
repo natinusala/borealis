@@ -142,7 +142,7 @@ void View::drawBackground(NVGcontext* vg, FrameContext *ctx, Style *style)
 {
     switch (this->background)
     {
-        case BACKGROUND_SIDEBAR:
+        case Background::SIDEBAR:
         {
             unsigned backdropHeight = style->Background.sidebarBorderHeight;
 
@@ -168,7 +168,7 @@ void View::drawBackground(NVGcontext* vg, FrameContext *ctx, Style *style)
             nvgFill(vg);
             break;
         }
-        case BACKGROUND_DEBUG:
+        case Background::DEBUG:
         {
             nvgFillColor(vg, nvgRGB(255, 0, 0));
             nvgBeginPath(vg);

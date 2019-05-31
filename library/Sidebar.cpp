@@ -18,14 +18,14 @@
 
 #include <Sidebar.hpp>
 
-Sidebar::Sidebar() : BoxLayout(BOXLAYOUT_VERTICAL)
+Sidebar::Sidebar() : BoxLayout(BoxLayoutOrientation::VERTICAL)
 {
     Style *style = getStyle();
 
     this->setWidth(style->Sidebar.width);
     this->setSpacing(style->Sidebar.spacing);
     this->setMargins(style->Sidebar.marginTop, style->Sidebar.marginRight, style->Sidebar.marginBottom, style->Sidebar.marginLeft);
-    this->setBackground(BACKGROUND_SIDEBAR);
+    this->setBackground(Background::SIDEBAR);
 }
 
 View* Sidebar::defaultFocus(View *oldFocus)
@@ -37,7 +37,7 @@ View* Sidebar::defaultFocus(View *oldFocus)
         {
             if (item->isActive())
             {
-                View *newFocus = this->children[i]->view->requestFocus(FOCUSDIRECTION_NONE, oldFocus);
+                View *newFocus = this->children[i]->view->requestFocus(FocusDirection::NONE, oldFocus);
                 if (newFocus)
                 {
                     this->focusedIndex = i;

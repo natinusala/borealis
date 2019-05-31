@@ -26,21 +26,21 @@
 
 using namespace std;
 
-typedef enum
+enum class FocusDirection
 {
-    FOCUSDIRECTION_NONE = 0,
-    FOCUSDIRECTION_UP,
-    FOCUSDIRECTION_DOWN,
-    FOCUSDIRECTION_LEFT,
-    FOCUSDIRECTION_RIGHT
-} FocusDirection;
+    NONE = 0,
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+};
 
-typedef enum
+enum class Background
 {
-    BACKGROUND_NONE = 0,
-    BACKGROUND_SIDEBAR,
-    BACKGROUND_DEBUG
-} Background;
+    NONE = 0,
+    SIDEBAR,
+    DEBUG
+};
 
 #define VIEW_HIGHLIGHT_ANIMATION_DURATION 100
 
@@ -56,7 +56,7 @@ typedef enum
 class View
 {
     private:
-        Background background = BACKGROUND_NONE;
+        Background background = Background::NONE;
 
         void drawBackground(NVGcontext* vg, FrameContext *ctx, Style *style);
         void drawHighlight(NVGcontext *vg, Theme *theme, float alpha, Style *style, bool background);

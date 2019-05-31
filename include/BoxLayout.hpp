@@ -29,11 +29,11 @@ using namespace std;
 // - Only works with children with fixed width (horizontal) or height (vertical)
 // - Handles vertical scrolling only
 
-typedef enum
+enum class BoxLayoutOrientation
 {
-    BOXLAYOUT_VERTICAL = 0,
-    BOXLAYOUT_HORIZONTAL
-} BoxLayoutOrientation;
+    VERTICAL = 0,
+    HORIZONTAL
+};
 
 class BoxLayoutChild
 {

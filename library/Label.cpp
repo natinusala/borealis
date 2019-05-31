@@ -23,10 +23,10 @@ Label::Label(LabelStyle labelStyle, string text, bool multiline) : text(text), m
     Style *style = getStyle();
     switch (labelStyle)
     {
-        case LABELSTYLE_REGULAR:
+        case LabelStyle::REGULAR:
             this->fontSize = style->Label.regularFontSize;
             break;
-        case LABELSTYLE_SUBLABEL:
+        case LabelStyle::SUBLABEL:
             this->fontSize = style->Label.sublabelFontSize;
             break;
     }
@@ -50,10 +50,10 @@ void Label::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, 
 {
     switch (this->labelStyle)
     {
-        case LABELSTYLE_REGULAR:
+        case LabelStyle::REGULAR:
             nvgFillColor(vg, ctx->theme->textColor);
             break;
-        case LABELSTYLE_SUBLABEL:
+        case LabelStyle::SUBLABEL:
             nvgFillColor(vg, ctx->theme->sublabelColor);
             break;
     }

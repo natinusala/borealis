@@ -27,7 +27,7 @@ using namespace std;
 int main(int argc, char* argv[])
 {
     // Create and init the app
-    Application *app = new Application(STYLE_ACCURATE);
+    Application *app = new Application(StyleEnum::ACCURATE);
 
     if (!app->init())
     {
@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
     testList->addView(themeItem);
     testList->addView(jankItem);
 
-    Label *testLabel = new Label(LABELSTYLE_REGULAR, "For more information about how to use Nintendo Switch and its features, please refer to the Nintendo Support Website on your smart device or PC.", true);
+    Label *testLabel = new Label(LabelStyle::REGULAR, "For more information about how to use Nintendo Switch and its features, please refer to the Nintendo Support Website on your smart device or PC.", true);
     testList->addView(testLabel);
 
     rootFrame->addTab("First tab", testList);

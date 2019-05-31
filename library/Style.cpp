@@ -95,7 +95,7 @@ void setStyle(StyleEnum style)
 {
     switch (style)
     {
-        case STYLE_ACCURATE:
+        case StyleEnum::ACCURATE:
             currentStyle = &styleAccurate;
     }
 }

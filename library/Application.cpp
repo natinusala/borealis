@@ -293,19 +293,19 @@ void Application::onGamepadButtonPressed(char button)
             break;
         case GLFW_GAMEPAD_BUTTON_DPAD_DOWN:
             if (this->currentFocus && this->currentFocus->getParent())
-                this->requestFocus(this->currentFocus->getParent(), FOCUSDIRECTION_DOWN);
+                this->requestFocus(this->currentFocus->getParent(), FocusDirection::DOWN);
             break;
         case GLFW_GAMEPAD_BUTTON_DPAD_UP:
             if (this->currentFocus && this->currentFocus->getParent())
-                this->requestFocus(this->currentFocus->getParent(), FOCUSDIRECTION_UP);
+                this->requestFocus(this->currentFocus->getParent(), FocusDirection::UP);
             break;
         case GLFW_GAMEPAD_BUTTON_DPAD_LEFT:
             if (this->currentFocus && this->currentFocus->getParent())
-                this->requestFocus(this->currentFocus->getParent(), FOCUSDIRECTION_LEFT);
+                this->requestFocus(this->currentFocus->getParent(), FocusDirection::LEFT);
             break;
         case GLFW_GAMEPAD_BUTTON_DPAD_RIGHT:
             if (this->currentFocus && this->currentFocus->getParent())
-                this->requestFocus(this->currentFocus->getParent(), FOCUSDIRECTION_RIGHT);
+                this->requestFocus(this->currentFocus->getParent(), FocusDirection::RIGHT);
             break;
         default:
             break;
@@ -385,7 +385,7 @@ void Application::pushView(View *view)
 {
     view->setBoundaries(0, 0, this->windowWidth, this->windowHeight);
     view->willAppear();
-    this->requestFocus(view, FOCUSDIRECTION_NONE);
+    this->requestFocus(view, FocusDirection::NONE);
 
     this->viewStack.push_back(view);
 }

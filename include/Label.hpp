@@ -22,11 +22,11 @@
 
 // TODO: setText, which calls getParent()->invalidate()
 
-typedef enum
+enum class LabelStyle
 {
-    LABELSTYLE_REGULAR,
-    LABELSTYLE_SUBLABEL
-} LabelStyle;
+    REGULAR = 0,
+    SUBLABEL
+};
 
 // A Label, multiline or with a ticker
 class Label : public View

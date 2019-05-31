@@ -843,14 +843,14 @@ STBTT_DEF void stbtt_Rasterize(stbtt__bitmap *result,        // 1-channel bitmap
 
 STBTT_DEF int stbtt_FindMatchingFont(const unsigned char *fontdata, const char *name, int flags);
 // returns the offset (not index) of the font that matches, or -1 if none
-//   if you use STBTT_MACSTYLE_DONTCARE, use a font name like "Arial Bold".
+//   if you use STBTT_MACStyle::DONTCARE, use a font name like "Arial Bold".
 //   if you use any other flag, use a font name like "Arial"; this checks
 //     the 'macStyle' header field; i don't know if fonts set this consistently
-#define STBTT_MACSTYLE_DONTCARE     0
-#define STBTT_MACSTYLE_BOLD         1
-#define STBTT_MACSTYLE_ITALIC       2
-#define STBTT_MACSTYLE_UNDERSCORE   4
-#define STBTT_MACSTYLE_NONE         8   // <= not same as 0, this makes us check the bitfield is 0
+#define STBTT_MACStyle::DONTCARE     0
+#define STBTT_MACStyle::BOLD         1
+#define STBTT_MACStyle::ITALIC       2
+#define STBTT_MACStyle::UNDERSCORE   4
+#define STBTT_MACStyle::NONE         8   // <= not same as 0, this makes us check the bitfield is 0
 
 STBTT_DEF int stbtt_CompareUTF8toUTF16_bigendian(const char *s1, int len1, const char *s2, int len2);
 // returns 1/0 whether the first string interpreted as utf8 is identical to

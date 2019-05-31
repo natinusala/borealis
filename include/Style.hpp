@@ -110,10 +110,10 @@ typedef struct
 } Style;
 
 // TODO: Make a condensed style
-typedef enum
+enum class StyleEnum
 {
-    STYLE_ACCURATE = 0 // as close to HOS as possible
-} StyleEnum;
+    ACCURATE = 0 // as close to HOS as possible
+};
 
 /**
  * Sets the global style

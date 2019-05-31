@@ -27,7 +27,7 @@ TabFrame::TabFrame() : SettingsFrame(false, true)
     this->sidebar = new Sidebar();
 
     // Setup content view
-    this->layout = new BoxLayout(BOXLAYOUT_HORIZONTAL);
+    this->layout = new BoxLayout(BoxLayoutOrientation::HORIZONTAL);
     layout->addView(sidebar);
 
     this->setContentView(layout);
@@ -73,7 +73,7 @@ View* TabFrame::requestFocus(FocusDirection direction, View *oldFocus, bool from
         return View::requestFocus(direction, oldFocus);
 
     // Give focus to the right panel
-    if (direction == FOCUSDIRECTION_NONE && this->layout->getViewsCount() > 1)
+    if (direction == FocusDirection::NONE && this->layout->getViewsCount() > 1)
     {
         View *newFocus = this->rightPane->requestFocus(direction, oldFocus);
         if (newFocus)

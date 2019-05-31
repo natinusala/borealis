@@ -65,7 +65,7 @@ View* BoxLayout::defaultFocus(View *oldFocus)
 {
     for (unsigned i = 0; i < this->children.size(); i++)
     {
-        View *newFocus = this->children[i]->view->requestFocus(FOCUSDIRECTION_NONE, oldFocus);
+        View *newFocus = this->children[i]->view->requestFocus(FocusDirection::NONE, oldFocus);
         if (newFocus)
         {
             this->focusedIndex = i;
@@ -81,7 +81,7 @@ View* BoxLayout::updateFocus(FocusDirection direction, View *oldFocus, bool from
     // Give focus to first focusable view by default
     // or if we are going up in the tree and it's not
     // corresponding to our direction
-    if (direction == FOCUSDIRECTION_NONE)
+    if (direction == FocusDirection::NONE)
     {
         View *newFocus = this->defaultFocus(oldFocus);
         if (newFocus)
@@ -92,12 +92,12 @@ View* BoxLayout::updateFocus(FocusDirection direction, View *oldFocus, bool from
     {
         // Give focus to next focusable view
         View *newFocus = nullptr;
-        if ((this->orientation == BOXLAYOUT_HORIZONTAL && direction == FOCUSDIRECTION_RIGHT) ||
-            (this->orientation == BOXLAYOUT_VERTICAL && direction == FOCUSDIRECTION_DOWN))
+        if ((this->orientation == BoxLayoutOrientation::HORIZONTAL && direction == FocusDirection::RIGHT) ||
+            (this->orientation == BoxLayoutOrientation::VERTICAL && direction == FocusDirection::DOWN))
         {
             for (unsigned i = this->focusedIndex + 1; i < this->children.size(); i++)
             {
-                newFocus = this->children[i]->view->requestFocus(FOCUSDIRECTION_NONE, oldFocus);
+                newFocus = this->children[i]->view->requestFocus(FocusDirection::NONE, oldFocus);
                 if (newFocus && newFocus != oldFocus)
                 {
                     this->focusedIndex = i;
@@ -106,14 +106,14 @@ View* BoxLayout::updateFocus(FocusDirection direction, View *oldFocus, bool from
             }
             return nullptr;
         }
-        else if ((this->orientation == BOXLAYOUT_HORIZONTAL && direction == FOCUSDIRECTION_LEFT) ||
-                    (this->orientation == BOXLAYOUT_VERTICAL && direction == FOCUSDIRECTION_UP))
+        else if ((this->orientation == BoxLayoutOrientation::HORIZONTAL && direction == FocusDirection::LEFT) ||
+                    (this->orientation == BoxLayoutOrientation::VERTICAL && direction == FocusDirection::UP))
         {
             if (this->focusedIndex > 0)
             {
                 for (unsigned i = this->focusedIndex - 1; i >= 0; i--)
                 {
-                    newFocus = this->children[i]->view->requestFocus(FOCUSDIRECTION_NONE, oldFocus);
+                    newFocus = this->children[i]->view->requestFocus(FocusDirection::NONE, oldFocus);
                     if (newFocus && newFocus != oldFocus)
                     {
                         this->focusedIndex = i;
@@ -214,7 +214,7 @@ void BoxLayout::layout(NVGcontext* vg, Style *style)
     this->prebakeScrolling();
 
     // Vertical orientation
-    if (this->orientation == BOXLAYOUT_VERTICAL)
+    if (this->orientation == BoxLayoutOrientation::VERTICAL)
     {
         int yAdvance = this->y + this->marginTop;
         for (size_t i = 0; i < this->children.size(); i++)
@@ -249,7 +249,7 @@ void BoxLayout::layout(NVGcontext* vg, Style *style)
     }
     // Horizontal orientation
     // TODO: Make sure that spacing and margins work with horizontal
-    else if (this->orientation == BOXLAYOUT_HORIZONTAL)
+    else if (this->orientation == BoxLayoutOrientation::HORIZONTAL)
     {
         int xAdvance = this->x + this->marginLeft;
         for (size_t i = 0; i < this->children.size(); i++)
