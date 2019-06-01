@@ -379,6 +379,8 @@ void Application::requestFocus(View *view, FocusDirection direction)
 
         this->currentFocus = newFocus;
     }
+    else if (oldFocus)
+        oldFocus->shakeHighlight(direction);
 }
 
 void Application::pushView(View *view)

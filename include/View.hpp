@@ -24,6 +24,8 @@
 #include <string>
 #include <functional>
 
+#include <features/features_cpu.h>
+
 using namespace std;
 
 enum class FocusDirection
@@ -65,6 +67,10 @@ class View
 
         bool dirty = false;
 
+        bool highlightShaking = false;
+        retro_time_t highlightShakeStart;
+        FocusDirection highlightShakeDirection;
+
     protected:
         int x;
         int y;
@@ -93,6 +99,8 @@ class View
 
         void setWidth(unsigned width);
         void setHeight(unsigned height);
+
+        void shakeHighlight(FocusDirection direction);
 
         int getX();
         int getY();

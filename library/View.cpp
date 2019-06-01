@@ -21,6 +21,23 @@
 
 #include <math.h>
 
+#define SHAKE_ANIMATION_DURATION 15
+
+static float shakeAnimation(float t)
+{
+    float a = 15.0f;
+    float w = 0.8f;
+    float c = 0.35f;
+    return a * exp(-(c * t)) * sin(w * t);
+}
+
+void View::shakeHighlight(FocusDirection direction)
+{
+    this->highlightShaking          = true;
+    this->highlightShakeStart       = cpu_features_get_time_usec() / 1000;
+    this->highlightShakeDirection   = direction;
+}
+
 void View::frame(FrameContext *ctx)
 {
     Style *style = getStyle();
@@ -52,7 +69,6 @@ void View::frame(FrameContext *ctx)
 }
 
 // TODO: Slight glow all around
-// TODO: Shake animation when highlight doesn't move
 void View::drawHighlight(NVGcontext *vg, Theme *theme, float alpha, Style *style, bool background)
 {
     unsigned insetTop, insetRight, insetBottom, insetLeft;
@@ -63,6 +79,40 @@ void View::drawHighlight(NVGcontext *vg, Theme *theme, float alpha, Style *style
     unsigned width  = this->width   + insetLeft + insetRight  + style->Highlight.strokeWidth;
     unsigned height = this->height  + insetTop  + insetBottom + style->Highlight.strokeWidth;
 
+    // Shake animation
+    if (this->highlightShaking)
+    {
+        retro_time_t curTime = cpu_features_get_time_usec() / 1000;
+        retro_time_t t = (curTime - highlightShakeStart) / 10;
+
+        if (t >= SHAKE_ANIMATION_DURATION) 
+        {
+            this->highlightShaking = false;
+        }
+        else
+        {
+            switch (this->highlightShakeDirection)
+            {
+                case FocusDirection::RIGHT:
+                    x += shakeAnimation(t);
+                    break;
+                case FocusDirection::LEFT:
+                    x -= shakeAnimation(t);
+                    break;
+                case FocusDirection::DOWN:
+                    y += shakeAnimation(t);
+                    break;
+                case FocusDirection::UP:
+                    y -= shakeAnimation(t);
+                    break;
+                default:
+                    break;
+            }
+        }
+            
+    }
+
+    // Draw
     if (background)
     {
         // Background
