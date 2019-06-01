@@ -77,7 +77,7 @@ class Sidebar : public BoxLayout
         SidebarItem *currentActive = nullptr;
 
     protected:
-        virtual View* defaultFocus(View *oldFocus) override;
+        View* defaultFocus(View *oldFocus) override;
 
     public:
         Sidebar();

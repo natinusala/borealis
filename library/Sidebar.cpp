@@ -30,22 +30,11 @@ Sidebar::Sidebar() : BoxLayout(BoxLayoutOrientation::VERTICAL)
 
 View* Sidebar::defaultFocus(View *oldFocus)
 {
-    for (unsigned i = 0; i < this->children.size(); i++)
+    if (this->focusedIndex >= 0 && this->focusedIndex < this->children.size())
     {
-        View *view = this->children[i]->view;
-        if (SidebarItem *item = dynamic_cast<SidebarItem*>(view))
-        {
-            if (item->isActive())
-            {
-                View *newFocus = this->children[i]->view->requestFocus(FocusDirection::NONE, oldFocus);
-                if (newFocus)
-                {
-                    this->focusedIndex = i;
-                    return newFocus;
-                }
-                break;
-            }
-        }
+        View *newFocus = this->children[this->focusedIndex]->view->requestFocus(FocusDirection::NONE, oldFocus);
+        if (newFocus)
+            return newFocus;
     }
 
     return BoxLayout::defaultFocus(oldFocus);

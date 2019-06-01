@@ -315,6 +315,7 @@ BoxLayout::~BoxLayout()
 
 void BoxLayout::willAppear()
 {
+    this->focusedIndex = 0;
     this->prebakeScrolling();
     for (BoxLayoutChild *child : this->children)
     {

@@ -56,6 +56,8 @@ class List : public BoxLayout
     public:
         List();
 
+        View* defaultFocus(View *oldFocus) override;
+
     protected:
         void customSpacing(View *current, View *next, int *spacing) override;
 };

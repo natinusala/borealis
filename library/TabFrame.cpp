@@ -35,6 +35,9 @@ TabFrame::TabFrame() : SettingsFrame(false, true)
 
 void TabFrame::switchToView(View *view)
 {
+    if (this->rightPane == view)
+        return;
+
     if (this->layout->getViewsCount() > 1)
     {
         if (this->rightPane)

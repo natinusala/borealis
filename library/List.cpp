@@ -46,6 +46,19 @@ void List::customSpacing(View *current, View *next, int *spacing)
     }
 }
 
+
+View* List::defaultFocus(View *oldFocus)
+{
+    if (this->focusedIndex >= 0 && this->focusedIndex < this->children.size())
+    {
+        View *newFocus = this->children[this->focusedIndex]->view->requestFocus(FocusDirection::NONE, oldFocus);
+        if (newFocus)
+            return newFocus;
+    }
+
+    return BoxLayout::defaultFocus(oldFocus);
+}
+
 ListItem::ListItem(string label, string sublabel) : label(label)
 {
     Style *style = getStyle();
