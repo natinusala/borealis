@@ -72,7 +72,7 @@ void Label::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, 
     else
     {
         nvgTextLineHeight(vg, 1.0f);
-        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_CENTER);
+        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
         nvgText(vg, x, y + height / 2, this->text.c_str(), nullptr); // TODO: Ticker
     }
 }
