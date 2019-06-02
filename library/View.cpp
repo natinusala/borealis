@@ -23,12 +23,12 @@
 
 #define SHAKE_ANIMATION_DURATION 15
 
-static float shakeAnimation(float t)
+static int shakeAnimation(float t, float a) // a = amplitude
 {
-    float a = 15.0f;
-    float w = 0.8f;
-    float c = 0.35f;
-    return a * exp(-(c * t)) * sin(w * t);
+    // Damped sine wave
+    float w = 0.8f;     // period
+    float c = 0.35f;    // damp factor
+    return roundf(a * exp(-(c * t)) * sin(w * t));
 }
 
 void View::shakeHighlight(FocusDirection direction)
@@ -36,6 +36,7 @@ void View::shakeHighlight(FocusDirection direction)
     this->highlightShaking          = true;
     this->highlightShakeStart       = cpu_features_get_time_usec() / 1000;
     this->highlightShakeDirection   = direction;
+    this->highlightShakeAmplitude   = rand() % 15 + 10;
 }
 
 void View::frame(FrameContext *ctx)
@@ -85,7 +86,7 @@ void View::drawHighlight(NVGcontext *vg, Theme *theme, float alpha, Style *style
         retro_time_t curTime = cpu_features_get_time_usec() / 1000;
         retro_time_t t = (curTime - highlightShakeStart) / 10;
 
-        if (t >= SHAKE_ANIMATION_DURATION) 
+        if (t >= SHAKE_ANIMATION_DURATION)
         {
             this->highlightShaking = false;
         }
@@ -94,16 +95,16 @@ void View::drawHighlight(NVGcontext *vg, Theme *theme, float alpha, Style *style
             switch (this->highlightShakeDirection)
             {
                 case FocusDirection::RIGHT:
-                    x += shakeAnimation(t);
+                    x += shakeAnimation(t, this->highlightShakeAmplitude);
                     break;
                 case FocusDirection::LEFT:
-                    x -= shakeAnimation(t);
+                    x -= shakeAnimation(t, this->highlightShakeAmplitude);
                     break;
                 case FocusDirection::DOWN:
-                    y += shakeAnimation(t);
+                    y += shakeAnimation(t, this->highlightShakeAmplitude);
                     break;
                 case FocusDirection::UP:
-                    y -= shakeAnimation(t);
+                    y -= shakeAnimation(t, this->highlightShakeAmplitude);
                     break;
                 default:
                     break;

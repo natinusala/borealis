@@ -70,6 +70,7 @@ class View
         bool highlightShaking = false;
         retro_time_t highlightShakeStart;
         FocusDirection highlightShakeDirection;
+        float highlightShakeAmplitude;
 
     protected:
         int x;
