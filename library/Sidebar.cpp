@@ -17,10 +17,11 @@
 */
 
 #include <Sidebar.hpp>
+#include <Application.hpp>
 
 Sidebar::Sidebar() : BoxLayout(BoxLayoutOrientation::VERTICAL)
 {
-    Style *style = getStyle();
+    Style *style = Application::getStyle();
 
     this->setWidth(style->Sidebar.width);
     this->setSpacing(style->Sidebar.spacing);
@@ -70,7 +71,7 @@ void Sidebar::setActive(SidebarItem *active)
 
 SidebarItem::SidebarItem(string label, Sidebar *sidebar) : label(label), sidebar(sidebar)
 {
-    Style *style = getStyle();
+    Style *style = Application::getStyle();
     this->setHeight(style->Sidebar.Item.height);
 }
 
@@ -99,7 +100,7 @@ void SidebarItem::setActive(bool active)
 
 SidebarSeparator::SidebarSeparator()
 {
-    Style *style = getStyle();
+    Style *style = Application::getStyle();
     this->setHeight(style->Sidebar.Separator.height);
 }
 

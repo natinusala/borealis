@@ -35,11 +35,8 @@ using namespace std;
 class Application
 {
     public:
-        Application(StyleEnum style);
-        ~Application();
-
-        bool init();
-        bool mainLoop();
+        static bool init(StyleEnum style);
+        static bool mainLoop();
 
         /**
          * Pushes a view on this applications's view stack
@@ -49,32 +46,39 @@ class Application
          *
          * The view will gain focus if applicable
          */
-        void pushView(View *view);
+        static void pushView(View *view);
 
-        void requestFocus(View *view, FocusDirection direction);
+        static void requestFocus(View *view, FocusDirection direction);
+
+        static Style* getStyle();
 
     private:
-        GLFWwindow* window  = nullptr;
-        NVGcontext *vg      = nullptr;
+        inline static GLFWwindow* window;
+        inline static NVGcontext *vg;
 
-        FontStash fontStash;
+        inline static FontStash fontStash;
 
-        vector<View*> viewStack;
+        inline static vector<View*> viewStack;
 
-        unsigned windowWidth, windowHeight;
+        inline static unsigned windowWidth, windowHeight;
 
-        View* currentFocus = nullptr;
+        inline static View* currentFocus;
 
-        Theme *currentTheme;
+        inline static Theme *currentTheme;
 
-        GLFWgamepadstate oldGamepad = {};
-        GLFWgamepadstate gamepad    = {};
+        inline static GLFWgamepadstate oldGamepad;
+        inline static GLFWgamepadstate gamepad;
 
-        void onWindowSizeChanged();
+        inline static Style *currentStyle;
 
-        void onGamepadButtonPressed(char button);
+        static void onWindowSizeChanged();
 
-        void frame();
-        void exit();
+        static void onGamepadButtonPressed(char button);
+
+        static void setStyle(StyleEnum style);
+
+        static void frame();
+        static void clear();
+        static void exit();
 };
 

@@ -18,7 +18,7 @@
 
 #include <Style.hpp>
 
-static Style styleAccurate = {
+Style styleAccurate = {
     .SettingsFrame = {
         .headerHeight      = 88,
         .footerHeight      = 73,
@@ -88,19 +88,3 @@ static Style styleAccurate = {
         .lineHeight         = 1.65f
     }
 };
-
-static Style *currentStyle = &styleAccurate;
-
-void setStyle(StyleEnum style)
-{
-    switch (style)
-    {
-        case StyleEnum::ACCURATE:
-            currentStyle = &styleAccurate;
-    }
-}
-
-Style *getStyle()
-{
-    return currentStyle;
-}

@@ -17,13 +17,14 @@
 */
 
 #include <List.hpp>
+#include <Application.hpp>
 
 // TODO: Scrollbar
 // TODO: Spacing item (defaults to 60px) (to have make groups of items)
 
 List::List() : BoxLayout(BoxLayoutOrientation::VERTICAL)
 {
-    Style *style = getStyle();
+    Style *style = Application::getStyle();
     this->setMargins(style->List.marginTopBottom, style->List.marginLeftRight, style->List.marginTopBottom, style->List.marginLeftRight);
     this->setSpacing(style->List.spacing);
 }
@@ -61,7 +62,7 @@ View* List::defaultFocus(View *oldFocus)
 
 ListItem::ListItem(string label, string sublabel) : label(label)
 {
-    Style *style = getStyle();
+    Style *style = Application::getStyle();
     this->setHeight(style->List.Item.height);
 
     if (sublabel != "")
@@ -81,7 +82,7 @@ void ListItem::layout(NVGcontext *vg, Style *style)
 
 void ListItem::getHighlightInsets(unsigned *top, unsigned *right, unsigned *bottom, unsigned *left)
 {
-    Style *style = getStyle();
+    Style *style = Application::getStyle();
     View::getHighlightInsets(top, right, bottom, left);
     if (sublabelView)
         *bottom = -(sublabelView->getHeight() + style->List.Item.sublabelSpacing);

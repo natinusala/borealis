@@ -107,13 +107,14 @@ static void windowKeyCallback(GLFWwindow* window, int key, int scancode, int act
     }
 }
 
-Application::Application(StyleEnum style)
+bool Application::init(StyleEnum style)
 {
+    // Init static variables
     setStyle(style);
-}
+    Application::currentFocus   = nullptr;
+    Application::oldGamepad     = {};
+    Application::gamepad        = {};
 
-bool Application::init()
-{
     // Init glfw
     glfwInitHint(GLFW_JOYSTICK_HAT_BUTTONS, GLFW_FALSE);
     if (!glfwInit())
@@ -127,7 +128,7 @@ bool Application::init()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    this->window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, nullptr, nullptr);
+    Application::window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, nullptr, nullptr);
     if (!window)
     {
         printf("glfw: failed to create window");
@@ -158,7 +159,7 @@ bool Application::init()
     }
 
     // Initialize the scene
-    this->vg = nvgCreateGL3(NVG_STENCIL_STROKES | NVG_ANTIALIAS);
+    Application::vg = nvgCreateGL3(NVG_STENCIL_STROKES | NVG_ANTIALIAS);
     if (!vg)
     {
         printf("Unable to init nanovg\n");
@@ -177,15 +178,15 @@ bool Application::init()
         if(R_SUCCEEDED(rc))
         {
             printf("Using Switch shared font\n");
-            this->fontStash.regular = nvgCreateFontMem(this->vg, "regular", (unsigned char*)font.address, font.size, 0);
+            Application::fontStash.regular = nvgCreateFontMem(Application::vg, "regular", (unsigned char*)font.address, font.size, 0);
         }
     }
 #else
     // Use illegal font if available
     if (access(ASSET("Illegal-Font.ttf"), F_OK) != -1)
-        this->fontStash.regular = nvgCreateFont(this->vg, "regular", ASSET("Illegal-Font.ttf"));
+        Application::fontStash.regular = nvgCreateFont(Application::vg, "regular", ASSET("Illegal-Font.ttf"));
     else
-        this->fontStash.regular = nvgCreateFont(this->vg, "regular", ASSET("inter/Inter-Switch.ttf"));
+        Application::fontStash.regular = nvgCreateFont(Application::vg, "regular", ASSET("inter/Inter-Switch.ttf"));
 #endif
 
     // TODO: Load symbols shared font as a fallback
@@ -198,19 +199,19 @@ bool Application::init()
     setsysGetColorSetId(&theme);
 
     if (theme == ColorSetId_Light)
-        this->currentTheme = &themeLight;
+        Application::currentTheme = &themeLight;
     else
-        this->currentTheme = &themeDark;
+        Application::currentTheme = &themeDark;
 #else
-    this->currentTheme = &themeLight; // fight me
+    Application::currentTheme = &themeLight; // fight me
 #endif
 
     // Init window size
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
 
-    this->windowWidth   = viewport[2];
-    this->windowHeight  = viewport[3];
+    Application::windowWidth   = viewport[2];
+    Application::windowHeight  = viewport[3];
 
     // Init animations engine
     menu_animation_init();
@@ -224,28 +225,28 @@ bool Application::mainLoop()
     bool is_active;
     do
     {
-        is_active = !glfwGetWindowAttrib(this->window, GLFW_ICONIFIED);
+        is_active = !glfwGetWindowAttrib(Application::window, GLFW_ICONIFIED);
         if (is_active)
             glfwPollEvents();
         else
             glfwWaitEvents();
 
-        if (glfwWindowShouldClose(this->window))
+        if (glfwWindowShouldClose(Application::window))
         {
-            this->exit();
+            Application::exit();
             return false;
         }
     } while (!is_active);
 
     // Gamepad
-    if (!glfwGetGamepadState(GLFW_JOYSTICK_1, &this->gamepad))
+    if (!glfwGetGamepadState(GLFW_JOYSTICK_1, &Application::gamepad))
     {
         // Gamepad not available, so let's fake it with keyboard
-        this->gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT]  = glfwGetKey(window, GLFW_KEY_LEFT);
-        this->gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT] = glfwGetKey(window, GLFW_KEY_RIGHT);
-        this->gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP]    = glfwGetKey(window, GLFW_KEY_UP);
-        this->gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN]  = glfwGetKey(window, GLFW_KEY_DOWN);
-        this->gamepad.buttons[GLFW_GAMEPAD_BUTTON_START]      = glfwGetKey(window, GLFW_KEY_ESCAPE);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT]  = glfwGetKey(window, GLFW_KEY_LEFT);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT] = glfwGetKey(window, GLFW_KEY_RIGHT);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP]    = glfwGetKey(window, GLFW_KEY_UP);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN]  = glfwGetKey(window, GLFW_KEY_DOWN);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_START]      = glfwGetKey(window, GLFW_KEY_ESCAPE);
     }
 
     // Trigger gamepad events
@@ -253,11 +254,11 @@ bool Application::mainLoop()
     // TODO: Handle key repetition
     for (int i = GLFW_GAMEPAD_BUTTON_A; i <= GLFW_GAMEPAD_BUTTON_LAST; i++)
     {
-        if (this->gamepad.buttons[i] == GLFW_PRESS && this->oldGamepad.buttons[i] != GLFW_PRESS)
-            this->onGamepadButtonPressed(i);
+        if (Application::gamepad.buttons[i] == GLFW_PRESS && Application::oldGamepad.buttons[i] != GLFW_PRESS)
+            Application::onGamepadButtonPressed(i);
     }
 
-    this->oldGamepad = this->gamepad;
+    Application::oldGamepad = Application::gamepad;
 
     // Handle window size changes
     GLint viewport[4];
@@ -266,18 +267,18 @@ bool Application::mainLoop()
     unsigned newWidth   = viewport[2];
     unsigned newHeight  = viewport[3];
 
-    if (this->windowWidth != newWidth || this->windowHeight != newHeight)
+    if (Application::windowWidth != newWidth || Application::windowHeight != newHeight)
     {
-        this->windowWidth   = newWidth;
-        this->windowHeight  = newHeight;
-        this->onWindowSizeChanged();
+        Application::windowWidth   = newWidth;
+        Application::windowHeight  = newHeight;
+        Application::onWindowSizeChanged();
     }
 
     // Animations
     menu_animation_update();
 
     // Render
-    this->frame();
+    Application::frame();
     glfwSwapBuffers(window);
 
     return true;
@@ -292,20 +293,20 @@ void Application::onGamepadButtonPressed(char button)
             glfwSetWindowShouldClose(window, GLFW_TRUE);
             break;
         case GLFW_GAMEPAD_BUTTON_DPAD_DOWN:
-            if (this->currentFocus && this->currentFocus->getParent())
-                this->requestFocus(this->currentFocus->getParent(), FocusDirection::DOWN);
+            if (Application::currentFocus && Application::currentFocus->getParent())
+                Application::requestFocus(Application::currentFocus->getParent(), FocusDirection::DOWN);
             break;
         case GLFW_GAMEPAD_BUTTON_DPAD_UP:
-            if (this->currentFocus && this->currentFocus->getParent())
-                this->requestFocus(this->currentFocus->getParent(), FocusDirection::UP);
+            if (Application::currentFocus && Application::currentFocus->getParent())
+                Application::requestFocus(Application::currentFocus->getParent(), FocusDirection::UP);
             break;
         case GLFW_GAMEPAD_BUTTON_DPAD_LEFT:
-            if (this->currentFocus && this->currentFocus->getParent())
-                this->requestFocus(this->currentFocus->getParent(), FocusDirection::LEFT);
+            if (Application::currentFocus && Application::currentFocus->getParent())
+                Application::requestFocus(Application::currentFocus->getParent(), FocusDirection::LEFT);
             break;
         case GLFW_GAMEPAD_BUTTON_DPAD_RIGHT:
-            if (this->currentFocus && this->currentFocus->getParent())
-                this->requestFocus(this->currentFocus->getParent(), FocusDirection::RIGHT);
+            if (Application::currentFocus && Application::currentFocus->getParent())
+                Application::requestFocus(Application::currentFocus->getParent(), FocusDirection::RIGHT);
             break;
         default:
             break;
@@ -318,18 +319,18 @@ void Application::frame()
     // Frame context
     FrameContext frameContext = FrameContext();
 
-    frameContext.pixelRatio     = (float)this->windowWidth / (float)this->windowHeight;
-    frameContext.vg             = this->vg;
-    frameContext.fontStash      = &this->fontStash;
-    frameContext.theme          = this->currentTheme;
+    frameContext.pixelRatio     = (float)Application::windowWidth / (float)Application::windowHeight;
+    frameContext.vg             = Application::vg;
+    frameContext.fontStash      = &Application::fontStash;
+    frameContext.theme          = Application::currentTheme;
 
-    nvgBeginFrame(this->vg, this->windowWidth, this->windowHeight, frameContext.pixelRatio);
+    nvgBeginFrame(Application::vg, Application::windowWidth, Application::windowHeight, frameContext.pixelRatio);
 
     // GL Clear
     glClearColor(
-        this->currentTheme->backgroundColor[0],
-        this->currentTheme->backgroundColor[1],
-        this->currentTheme->backgroundColor[2],
+        Application::currentTheme->backgroundColor[0],
+        Application::currentTheme->backgroundColor[1],
+        Application::currentTheme->backgroundColor[2],
         1.0f);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -338,9 +339,9 @@ void Application::frame()
 
     // Draw all views in the stack
     // until we find one that's not translucent
-    for (int i = this->viewStack.size()-1; i >= 0; i--)
+    for (int i = Application::viewStack.size()-1; i >= 0; i--)
     {
-        View *view = this->viewStack[i];
+        View *view = Application::viewStack[i];
         viewsToDraw.push_back(view);
 
         if (!view->isTranslucent())
@@ -353,13 +354,15 @@ void Application::frame()
         view->frame(&frameContext);
 
     // End frame
-    nvgEndFrame(this->vg);
+    nvgEndFrame(Application::vg);
 }
 
 void Application::exit()
 {
-    if (this->vg)
-        nvgDeleteGL3(this->vg);
+    Application::clear();
+
+    if (Application::vg)
+        nvgDeleteGL3(Application::vg);
 
     glfwTerminate();
 
@@ -368,7 +371,7 @@ void Application::exit()
 
 void Application::requestFocus(View *view, FocusDirection direction)
 {
-    View *oldFocus = this->currentFocus;
+    View *oldFocus = Application::currentFocus;
     View *newFocus = view->requestFocus(direction, oldFocus);
 
     if (oldFocus != newFocus && newFocus)
@@ -377,7 +380,7 @@ void Application::requestFocus(View *view, FocusDirection direction)
             oldFocus->onFocusLost();
         newFocus->onFocusGained();
 
-        this->currentFocus = newFocus;
+        Application::currentFocus = newFocus;
     }
     else if (oldFocus)
         oldFocus->shakeHighlight(direction);
@@ -385,31 +388,46 @@ void Application::requestFocus(View *view, FocusDirection direction)
 
 void Application::pushView(View *view)
 {
-    view->setBoundaries(0, 0, this->windowWidth, this->windowHeight);
+    view->setBoundaries(0, 0, Application::windowWidth, Application::windowHeight);
     view->willAppear();
-    this->requestFocus(view, FocusDirection::NONE);
+    Application::requestFocus(view, FocusDirection::NONE);
 
-    this->viewStack.push_back(view);
+    Application::viewStack.push_back(view);
 }
 
 void Application::onWindowSizeChanged()
 {
     printf("Layout triggered\n");
 
-    for (View *view : this->viewStack)
+    for (View *view : Application::viewStack)
     {
-        view->setBoundaries(0, 0, this->windowWidth, this->windowHeight);
+        view->setBoundaries(0, 0, Application::windowWidth, Application::windowHeight);
         view->invalidate();
     }
 }
 
-Application::~Application()
+void Application::clear()
 {
-    for (View *view : this->viewStack)
+    for (View *view : Application::viewStack)
     {
         view->willDisappear();
         delete view;
     }
 
-    this->viewStack.clear();
+    Application::viewStack.clear();
+}
+
+
+void Application::setStyle(StyleEnum style)
+{
+    switch (style)
+    {
+        case StyleEnum::ACCURATE:
+            Application::currentStyle = &styleAccurate;
+    }
+}
+
+Style* Application::getStyle()
+{
+    return Application::currentStyle;
 }

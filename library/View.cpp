@@ -18,6 +18,7 @@
 
 #include <View.hpp>
 #include <Animations.hpp>
+#include <Application.hpp>
 
 #include <math.h>
 
@@ -41,7 +42,7 @@ void View::shakeHighlight(FocusDirection direction)
 
 void View::frame(FrameContext *ctx)
 {
-    Style *style = getStyle();
+    Style *style = Application::getStyle();
 
     nvgSave(ctx->vg);
 

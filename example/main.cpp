@@ -26,13 +26,10 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-    // Create and init the app
-    Application *app = new Application(StyleEnum::ACCURATE);
-
-    if (!app->init())
+    // Init the app
+    if (!Application::init(StyleEnum::ACCURATE))
     {
         printf("Unable to init Borealis application");
-        delete app;
         return EXIT_FAILURE;
     }
 
@@ -60,12 +57,11 @@ int main(int argc, char* argv[])
     rootFrame->addTab("Fourth tab", new Rectangle(nvgRGB(0, 255, 0)));
 
     // Add the root view to the stack
-    app->pushView(rootFrame);
+    Application::pushView(rootFrame);
 
     // Run the app
-    while (app->mainLoop());
+    while (Application::mainLoop());
 
     // Exit
-    delete app;
     return EXIT_SUCCESS;
 }

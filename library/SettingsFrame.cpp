@@ -17,13 +17,13 @@
 */
 
 #include <SettingsFrame.hpp>
-#include <nanovg.h>
+#include <Application.hpp>
 
 // TODO: Add hints system
 
 SettingsFrame::SettingsFrame(bool padLeft, bool padRight)
 {
-    Style *style = getStyle();
+    Style *style = Application::getStyle();
 
     if (padLeft)
         this->leftPadding = style->SettingsFrame.separatorSpacing;

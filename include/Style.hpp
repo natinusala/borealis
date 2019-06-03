@@ -115,6 +115,8 @@ enum class StyleEnum
     ACCURATE = 0 // as close to HOS as possible
 };
 
+extern Style styleAccurate;
+
 /**
  * Sets the global style
  * Must be called before initializing the application

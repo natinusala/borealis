@@ -17,10 +17,11 @@
 */
 
 #include <Label.hpp>
+#include <Application.hpp>
 
 Label::Label(LabelStyle labelStyle, string text, bool multiline) : text(text), multiline(multiline), labelStyle(labelStyle)
 {
-    Style *style = getStyle();
+    Style *style = Application::getStyle();
     switch (labelStyle)
     {
         case LabelStyle::REGULAR:
