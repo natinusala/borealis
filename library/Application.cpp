@@ -57,6 +57,7 @@ using namespace std;
 
 // TODO: Add a framerate counter
 
+// TODO: Use this instead of a glViewport each frame
 static void windowFramebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
     if (!width || !height)

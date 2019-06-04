@@ -36,7 +36,7 @@ void SettingsFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned 
 {
     // Text
     // Title
-    nvgFillColor(vg, ctx->theme->textColor);
+    nvgFillColor(vg, a(ctx->theme->textColor));
     nvgFontSize(vg, style->SettingsFrame.titleSize);
     nvgFontFaceId(vg, ctx->fontStash->regular);
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
@@ -47,7 +47,7 @@ void SettingsFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned 
     // TODO: Icon
 
     // Separators
-    nvgFillColor(vg, ctx->theme->separatorColor);
+    nvgFillColor(vg, a(ctx->theme->separatorColor));
 
     // Header
     nvgBeginPath(vg);

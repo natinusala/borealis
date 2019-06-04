@@ -55,10 +55,10 @@ void Label::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, 
     switch (this->labelStyle)
     {
         case LabelStyle::REGULAR:
-            nvgFillColor(vg, ctx->theme->textColor);
+            nvgFillColor(vg, a(ctx->theme->textColor));
             break;
         case LabelStyle::SUBLABEL:
-            nvgFillColor(vg, ctx->theme->sublabelColor);
+            nvgFillColor(vg, a(ctx->theme->sublabelColor));
             break;
     }
 

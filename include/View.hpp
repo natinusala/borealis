@@ -46,6 +46,8 @@ enum class Background
 
 #define VIEW_HIGHLIGHT_ANIMATION_DURATION 100
 
+extern NVGcolor transparent;
+
 // Superclass for all the other views
 // Lifecycle of a view is :
 //   new -> [willAppear -> willDisappear] -> delete
@@ -91,6 +93,29 @@ class View
             *right  = 0;
             *bottom = 0;
             *left   = 0;
+        }
+
+        // Helper functions to apply this view's alpha to a color
+        NVGcolor a(NVGcolor color);
+
+        NVGcolor RGB(unsigned r, unsigned g, unsigned b)
+        {
+            return this->a(nvgRGB(r, g, b));
+        }
+
+        NVGcolor RGBA(unsigned r, unsigned g, unsigned b, unsigned a)
+        {
+            return this->a(nvgRGBA(r, g, b, a));
+        }
+
+        NVGcolor RGBf(float r, float g, float b)
+        {
+            return this->a(nvgRGBf(r, g, b));
+        }
+
+        NVGcolor RGBAf(float r, float g, float b, float a)
+        {
+            return this->a(nvgRGBAf(r, g, b, a));
         }
 
     public:
@@ -209,6 +234,10 @@ class View
         virtual void onFocusLost();
 
         void setFocusListener(function<void(View*)> listener);
+
+        float alpha = 1.0f;
+
+        float getAlpha();
 
         virtual ~View() {};
 };

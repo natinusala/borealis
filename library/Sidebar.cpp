@@ -78,7 +78,7 @@ SidebarItem::SidebarItem(string label, Sidebar *sidebar) : label(label), sidebar
 void SidebarItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
     // Label
-    nvgFillColor(vg, this->active ? ctx->theme->activeTabColor : ctx->theme->textColor);
+    nvgFillColor(vg, a(this->active ? ctx->theme->activeTabColor : ctx->theme->textColor));
     nvgFontSize(vg, style->Sidebar.Item.textSize);
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
     nvgText(vg, x + style->Sidebar.Item.textOffsetX + style->Sidebar.Item.padding, y + height / 2, this->label.c_str(), nullptr);
@@ -86,7 +86,7 @@ void SidebarItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned he
     // Active marker
     if (this->active)
     {
-        nvgFillColor(vg, ctx->theme->activeTabColor);
+        nvgFillColor(vg, a(ctx->theme->activeTabColor));
         nvgBeginPath(vg);
         nvgRect(vg, x + style->Sidebar.Item.padding, y + style->Sidebar.Item.padding, style->Sidebar.Item.activeMarkerWidth, style->Sidebar.Item.height - style->Sidebar.Item.padding*2);
         nvgFill(vg);
@@ -106,7 +106,7 @@ SidebarSeparator::SidebarSeparator()
 
 void SidebarSeparator::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
-    nvgFillColor(vg, ctx->theme->sidebarSeparatorColor);
+    nvgFillColor(vg, a(ctx->theme->sidebarSeparatorColor));
     nvgBeginPath(vg);
     nvgRect(vg, x, y + height / 2, width, 1);
     nvgFill(vg);

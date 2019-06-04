@@ -25,7 +25,7 @@ Rectangle::Rectangle(NVGcolor color)
 
 void Rectangle::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
-    nvgFillColor(vg, this->color);
+    nvgFillColor(vg, a(this->color));
 
     nvgBeginPath(vg);
     nvgRect(vg, x, y, width, height);
