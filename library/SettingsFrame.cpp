@@ -40,6 +40,8 @@ void SettingsFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned 
     nvgFontSize(vg, style->SettingsFrame.titleSize);
     nvgFontFaceId(vg, ctx->fontStash->regular);
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+    nvgFontFaceId(vg, ctx->fontStash->regular);
+    nvgBeginPath(vg);
     nvgText(vg, x + style->SettingsFrame.titleStart, y + style->SettingsFrame.headerHeight / 2 + style->SettingsFrame.titleOffset, this->title.c_str(), nullptr);
 
     // TODO: Footer
@@ -73,7 +75,7 @@ View* SettingsFrame::requestFocus(FocusDirection direction, View *oldFocus, bool
     return nullptr;
 }
 
-void SettingsFrame::layout(NVGcontext* vg, Style *style)
+void SettingsFrame::layout(NVGcontext* vg, Style *style, FontStash *stash)
 {
     if (this->contentView)
     {

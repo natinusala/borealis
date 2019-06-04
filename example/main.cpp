@@ -44,8 +44,12 @@ int main(int argc, char* argv[])
     ListItem *jankItem = new ListItem("User Interface Jank", "Some people believe homebrews to have a jank user interface. Set to Minimal to have a native look and feel, set to Maximal to have a SX OS look and feel.");
     jankItem->setValue("Minimal");
 
+    ListItem *crashItem = new ListItem("Divide by 0", "Can the Switch do it?");
+    crashItem->setOnClickListener([](View *view){ Application::crash("The software was closed because an error occured:\nSIGABRT (signal 6)"); });
+
     testList->addView(themeItem);
     testList->addView(jankItem);
+    testList->addView(crashItem);
 
     Label *testLabel = new Label(LabelStyle::REGULAR, "For more information about how to use Nintendo Switch and its features, please refer to the Nintendo Support Website on your smart device or PC.", true);
     testList->addView(testLabel);

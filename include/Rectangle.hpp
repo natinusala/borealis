@@ -25,7 +25,7 @@
 class Rectangle : public View
 {
     protected:
-        void layout(NVGcontext* vg, Style *style) override;
+        void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
 
     public:
         Rectangle(NVGcolor color);

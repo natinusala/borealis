@@ -27,7 +27,10 @@ Style styleAccurate = {
 
         .titleSize      = 28,
         .titleStart     = 130,
-        .titleOffset    = 5
+        .titleOffset    = 5,
+
+        .footerTextSize     = 20,
+        .footerTextSpacing  = 30
     },
 
     .Highlight = {
@@ -85,6 +88,14 @@ Style styleAccurate = {
     .Label = {
         .regularFontSize    = 20,
         .sublabelFontSize   = 16,
+        .crashFontSize      = 24,
         .lineHeight         = 1.65f
+    },
+
+    .CrashFrame = {
+        .labelWidth     = 0.60f,
+        .boxStrokeWidth = 5,
+        .boxSize        = 64,
+        .boxSpacing     = 90
     }
 };

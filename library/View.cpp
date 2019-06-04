@@ -63,7 +63,7 @@ void View::frame(FrameContext *ctx)
     // Layout if needed
     if (this->dirty)
     {
-        this->layout(ctx->vg, style);
+        this->layout(ctx->vg, style, ctx->fontStash);
         this->dirty = false;
     }
 
@@ -364,7 +364,10 @@ void View::show()
     this->fadeIn    = true;
 
     menu_animation_ctx_entry_t entry;
-    entry.cb            = [this](void *userdata) { this->fadeIn = false; };
+    entry.cb            = [this](void *userdata) {
+        this->fadeIn = false; 
+        this->onShowAnimationEnded(); 
+    };
     entry.duration      = VIEW_SHOW_ANIMATION_DURATION;
     entry.easing_enum   = EASING_OUT_QUAD;
     entry.subject       = &this->alpha;

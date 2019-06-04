@@ -467,3 +467,9 @@ Style* Application::getStyle()
 {
     return Application::currentStyle;
 }
+
+void Application::crash(string text)
+{
+    CrashFrame *crashFrame = new CrashFrame(text);
+    Application::pushView(crashFrame);
+}

@@ -31,6 +31,9 @@ typedef struct
         unsigned titleSize;
         unsigned titleStart;
         unsigned titleOffset;
+
+        unsigned footerTextSize;
+        unsigned footerTextSpacing;
     } SettingsFrame;
 
 
@@ -104,9 +107,18 @@ typedef struct
     {
         unsigned regularFontSize;
         unsigned sublabelFontSize;
+        unsigned crashFontSize;
         float lineHeight;
     } Label;
-    
+
+    // CrashFrame
+    struct
+    {
+        float labelWidth; // proportional to frame width, from 0 to 1
+        unsigned boxStrokeWidth;
+        unsigned boxSize;
+        unsigned boxSpacing;
+    } CrashFrame;
 } Style;
 
 // TODO: Make a condensed style

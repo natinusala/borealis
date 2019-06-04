@@ -45,7 +45,7 @@ enum class Background
 };
 
 #define VIEW_HIGHLIGHT_ANIMATION_DURATION   100
-#define VIEW_SHOW_ANIMATION_DURATION        250
+#define VIEW_SHOW_ANIMATION_DURATION        150
 
 extern NVGcolor transparent;
 
@@ -68,7 +68,7 @@ class View
 
         float highlightAlpha = 0.0f;
 
-        bool dirty = false;
+        bool dirty = true;
 
         bool highlightShaking = false;
         retro_time_t highlightShakeStart;
@@ -79,11 +79,11 @@ class View
         bool forceTranslucent   = false;
 
     protected:
-        int x;
-        int y;
-        unsigned width;
+        int x = 0;
+        int y = 0;
 
-        unsigned height;
+        unsigned width  = 0;
+        unsigned height = 0;
 
         bool focused = false;
 
@@ -160,7 +160,7 @@ class View
          * resized and needs to layout its
          * children
          */
-        virtual void layout(NVGcontext* vg, Style *style)
+        virtual void layout(NVGcontext* vg, Style *style, FontStash *stash)
         {
             // Nothing to do
         }
@@ -188,6 +188,12 @@ class View
         {
             // Nothing to do
         }
+
+        /**
+         * Called when the show() animation (fade in)
+         * ends
+         */
+        virtual void onShowAnimationEnded() { };
 
         /**
          * Shows the view (fade in animation)
@@ -224,7 +230,7 @@ class View
          * <value> || View::isTranslucent()
          * to keep the fadeIn transition
          */
-        bool isTranslucent()
+        virtual bool isTranslucent()
         {
             return fadeIn || forceTranslucent;
         }

@@ -32,7 +32,8 @@ library_files = files(
     'library/Animations.cpp',
     'library/Style.cpp',
     'library/List.cpp',
-    'library/Label.cpp'
+    'library/Label.cpp',
+    'library/CrashFrame.cpp'
 )
 
 borealis_example = executable(

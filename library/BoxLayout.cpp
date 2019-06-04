@@ -209,7 +209,7 @@ void BoxLayout::prebakeScrolling()
     this->entriesHeight = 0.0f;
 }
 
-void BoxLayout::layout(NVGcontext* vg, Style *style)
+void BoxLayout::layout(NVGcontext* vg, Style *style, FontStash *stash)
 {
     this->prebakeScrolling();
 
@@ -235,7 +235,7 @@ void BoxLayout::layout(NVGcontext* vg, Style *style)
                     childHeight
                 );
 
-            child->view->layout(vg, style); // call layout directly in case height is updated
+            child->view->layout(vg, style, stash); // call layout directly in case height is updated
             childHeight = child->view->getHeight();
 
             int spacing = (int) this->spacing;
@@ -270,7 +270,7 @@ void BoxLayout::layout(NVGcontext* vg, Style *style)
                     this->height - this->marginTop - this->marginBottom
                 );
 
-            child->view->layout(vg, style); // call layout directly in case width is updated
+            child->view->layout(vg, style, stash); // call layout directly in case width is updated
             childWidth = child->view->getWidth();
 
             int spacing = (int) this->spacing;

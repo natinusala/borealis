@@ -76,13 +76,27 @@ void ListItem::setParent(View *parent)
         this->sublabelView->setParent(parent);
 }
 
-void ListItem::layout(NVGcontext *vg, Style *style)
+bool ListItem::onClick()
+{
+    if (this->onClickListener == nullptr)
+        return false;
+
+    this->onClickListener(this);
+    return true;
+}
+
+void ListItem::setOnClickListener(function<void(View*)> listener)
+{
+    this->onClickListener = listener;
+}
+
+void ListItem::layout(NVGcontext *vg, Style *style, FontStash *stash)
 {
     if (this->sublabelView)
     {
         this->height = style->List.Item.height;
         this->sublabelView->setBoundaries(this->x + style->List.Item.sublabelIndent, this->y + this->height + style->List.Item.sublabelSpacing, this->width - style->List.Item.sublabelIndent*2, 0);
-        this->sublabelView->layout(vg, style); // we must call layout directly
+        this->sublabelView->layout(vg, style, stash); // we must call layout directly
         this->height += this->sublabelView->getHeight() + style->List.Item.sublabelSpacing;
     }
 }
@@ -123,12 +137,16 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
     nvgFillColor(vg, a(ctx->theme->listItemValueColor));
     nvgFontSize(vg, style->List.Item.valueSize);
     nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
+    nvgFontFaceId(vg, ctx->fontStash->regular);
+    nvgBeginPath(vg);
     nvgText(vg, x + width - style->List.Item.padding, y + baseHeight/2, this->value.c_str(), nullptr);
 
     // Label
     nvgFillColor(vg, a(ctx->theme->textColor));
     nvgFontSize(vg, style->List.Item.textSize);
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+    nvgFontFaceId(vg, ctx->fontStash->regular);
+    nvgBeginPath(vg);
     nvgText(vg, x + style->List.Item.padding, y + baseHeight/2, this->label.c_str(), nullptr);
 
     // Separators

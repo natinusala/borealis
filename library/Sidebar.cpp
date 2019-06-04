@@ -91,6 +91,8 @@ void SidebarItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned he
     nvgFillColor(vg, a(this->active ? ctx->theme->activeTabColor : ctx->theme->textColor));
     nvgFontSize(vg, style->Sidebar.Item.textSize);
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+    nvgFontFaceId(vg, ctx->fontStash->regular);
+    nvgBeginPath(vg);
     nvgText(vg, x + style->Sidebar.Item.textOffsetX + style->Sidebar.Item.padding, y + height / 2, this->label.c_str(), nullptr);
 
     // Active marker

@@ -25,7 +25,8 @@
 enum class LabelStyle
 {
     REGULAR = 0,
-    SUBLABEL
+    SUBLABEL,
+    CRASH
 };
 
 // A Label, multiline or with a ticker
@@ -38,14 +39,18 @@ class Label : public View
         unsigned fontSize;
         LabelStyle labelStyle;
 
+        NVGalign horizontalAlign = NVG_ALIGN_LEFT;
+
     public:
         Label(LabelStyle labelStyle, string text, bool multiline = false);
 
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
-        void layout(NVGcontext* vg, Style *style) override;
+        void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
 
         View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override
         {
             return nullptr;
         }
+
+        void setHorizontalAlign(NVGalign align);
 };

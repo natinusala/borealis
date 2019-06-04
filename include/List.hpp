@@ -33,19 +33,24 @@ class ListItem : public View
 
         Label *sublabelView = nullptr;
 
+        function<void(View*)> onClickListener;
+
     public:
         ListItem(string label, string sublabel = "");
 
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
         View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp) override;
-        void layout(NVGcontext *vg, Style *style) override;
+        void layout(NVGcontext *vg, Style *style, FontStash *stash) override;
         void getHighlightInsets(unsigned *top, unsigned *right, unsigned *bottom, unsigned *left) override;
         void setParent(View *parent) override;
+        bool onClick() override;
 
         bool hasSubLabel();
         void setDrawTopSeparator(bool draw);
 
         void setValue(string value);
+
+        void setOnClickListener(function<void(View*)> listener);
 
         ~ListItem();
 };

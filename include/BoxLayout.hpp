@@ -70,7 +70,7 @@ class BoxLayout : public View
 
     protected:
         virtual View* defaultFocus(View *oldFocus);
-        void layout(NVGcontext* vg, Style *style) override;
+        void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
 
         vector<BoxLayoutChild*> children;
 

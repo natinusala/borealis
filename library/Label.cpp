@@ -30,22 +30,34 @@ Label::Label(LabelStyle labelStyle, string text, bool multiline) : text(text), m
         case LabelStyle::SUBLABEL:
             this->fontSize = style->Label.sublabelFontSize;
             break;
+        case LabelStyle::CRASH:
+            this->fontSize = style->Label.crashFontSize;
+            break;
     }
 }
 
-void Label::layout(NVGcontext* vg, Style *style)
+void Label::setHorizontalAlign(NVGalign align)
+{
+    this->horizontalAlign = align;
+}
+
+void Label::layout(NVGcontext* vg, Style *style, FontStash *stash)
 {
     // Update height if needed
     if (this->multiline)
     {
         nvgSave(vg);
         nvgReset(vg);
+
         float bounds[4];
         nvgFontSize(vg, this->fontSize);
-        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-        nvgTextBoxBounds(vg, this->x, this->y, this->width, this->text.c_str(), nullptr, bounds);
+        nvgTextAlign(vg, this->horizontalAlign | NVG_ALIGN_TOP);
+        nvgFontFaceId(vg, stash->regular);
         nvgTextLineHeight(vg, style->Label.lineHeight);
+        nvgTextBoxBounds(vg, this->x, this->y, this->width, this->text.c_str(), nullptr, bounds);
+
         this->height = bounds[3] - bounds[1]; // ymax - ymin
+
         nvgRestore(vg);
     }
 }
@@ -60,6 +72,9 @@ void Label::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, 
         case LabelStyle::SUBLABEL:
             nvgFillColor(vg, a(ctx->theme->sublabelColor));
             break;
+        case LabelStyle::CRASH:
+            nvgFillColor(vg, RGB(255, 255, 255));
+            break;
     }
 
     nvgFontSize(vg, this->fontSize);
@@ -67,13 +82,17 @@ void Label::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, 
     if (this->multiline)
     {
         nvgTextLineHeight(vg, style->Label.lineHeight);
-        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+        nvgTextAlign(vg, this->horizontalAlign | NVG_ALIGN_TOP);
+        nvgFontFaceId(vg, ctx->fontStash->regular);
+        nvgBeginPath(vg);
         nvgTextBox(vg, x, y, width, this->text.c_str(), nullptr);
     }
     else
     {
         nvgTextLineHeight(vg, 1.0f);
-        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+        nvgTextAlign(vg, this->horizontalAlign | NVG_ALIGN_MIDDLE);
+        nvgFontFaceId(vg, ctx->fontStash->regular);
+        nvgBeginPath(vg);
         nvgText(vg, x, y + height / 2, this->text.c_str(), nullptr); // TODO: Ticker
     }
 }

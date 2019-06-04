@@ -18,23 +18,28 @@
 
 #pragma once
 
-// Useful macros
-#ifndef __SWITCH__
-#define ASSET(_str) "./resources/" _str
-#else
-#define ASSET(_str) "romfs:/" _str
-#endif
-
-// Library
-#include <Application.hpp>
 #include <View.hpp>
-#include <SettingsFrame.hpp>
-#include <TabFrame.hpp>
-#include <Rectangle.hpp>
-#include <BoxLayout.hpp>
-#include <Theme.hpp>
-#include <Sidebar.hpp>
-#include <Style.hpp>
-#include <List.hpp>
 #include <Label.hpp>
-#include <CrashFrame.hpp>
+
+// A screen similar to the "The software has closed" dialog
+// pressing OK will exit the app
+
+class CrashFrame : public View
+{
+    private:
+        Label *label;
+
+    public:
+        CrashFrame(string text);
+
+        void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
+        void setParent(View *parent) override;
+        void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
+
+        bool isTranslucent() override
+        {
+            return true; // have it always translucent to disable fade out animation
+        }
+
+        ~CrashFrame();
+};

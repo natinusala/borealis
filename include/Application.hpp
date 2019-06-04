@@ -54,6 +54,11 @@ class Application
 
         static void onGamepadButtonPressed(char button);
 
+        /**
+         * "Crashes" the app (displays a fullscreen CrashFrame)
+         */
+        static void crash(string text);
+
     private:
         inline static GLFWwindow* window;
         inline static NVGcontext *vg;
