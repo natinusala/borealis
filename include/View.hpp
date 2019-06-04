@@ -44,7 +44,8 @@ enum class Background
     DEBUG
 };
 
-#define VIEW_HIGHLIGHT_ANIMATION_DURATION 100
+#define VIEW_HIGHLIGHT_ANIMATION_DURATION   100
+#define VIEW_SHOW_ANIMATION_DURATION        250
 
 extern NVGcolor transparent;
 
@@ -73,6 +74,9 @@ class View
         retro_time_t highlightShakeStart;
         FocusDirection highlightShakeDirection;
         float highlightShakeAmplitude;
+
+        bool fadeIn             = false; // is the fade in animation running?
+        bool forceTranslucent   = false;
 
     protected:
         int x;
@@ -133,7 +137,9 @@ class View
         unsigned getWidth();
         unsigned getHeight();
 
-        void setParent(View *parent);
+        void setForceTranslucent(bool translucent);
+
+        virtual void setParent(View *parent);
         View* getParent();
 
         string name() const { return typeid(*this).name(); }
@@ -184,6 +190,26 @@ class View
         }
 
         /**
+         * Shows the view (fade in animation)
+         *
+         * Called once when the view is
+         * pushed to the view stack
+         *
+         * Not recursive
+         */
+        void show();
+
+        /**
+         * Hides the view (fade out animation)
+         *
+         * Called if another view is pushed
+         * on top of this one
+         *
+         * Not recursive
+         */
+        void hide(function<void(void*)> cb);
+
+        /**
          * Calls layout() on next frame
          */
         void invalidate()
@@ -191,9 +217,16 @@ class View
             this->dirty = true;
         }
 
+        /**
+         * Is this view translucent?
+         *
+         * If you override it please return
+         * <value> || View::isTranslucent()
+         * to keep the fadeIn transition
+         */
         bool isTranslucent()
         {
-            return false;
+            return fadeIn || forceTranslucent;
         }
 
         bool isFocused();
@@ -239,5 +272,5 @@ class View
 
         float getAlpha();
 
-        virtual ~View() {};
+        virtual ~View();
 };

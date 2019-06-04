@@ -349,3 +349,59 @@ void View::onFocusLost()
 
     menu_animation_push(&entry);
 }
+
+void View::setForceTranslucent(bool translucent)
+{
+    this->forceTranslucent = translucent;
+}
+
+void View::show()
+{
+    menu_animation_ctx_tag tag = (uintptr_t) &this->alpha;
+    menu_animation_kill_by_tag(&tag);
+
+    this->alpha     = 0.0f;
+    this->fadeIn    = true;
+
+    menu_animation_ctx_entry_t entry;
+    entry.cb            = [this](void *userdata) { this->fadeIn = false; };
+    entry.duration      = VIEW_SHOW_ANIMATION_DURATION;
+    entry.easing_enum   = EASING_OUT_QUAD;
+    entry.subject       = &this->alpha;
+    entry.tag           = tag;
+    entry.target_value  = 1.0f;
+    entry.tick          = nullptr;
+    entry.userdata      = nullptr;
+
+    menu_animation_push(&entry);
+}
+
+void View::hide(function<void(void*)> cb)
+{
+    menu_animation_ctx_tag tag = (uintptr_t) &this->alpha;
+    menu_animation_kill_by_tag(&tag);
+
+    this->fadeIn    = false;
+    this->alpha     = 1.0f;
+
+    menu_animation_ctx_entry_t entry;
+    entry.cb            = cb;
+    entry.duration      = VIEW_SHOW_ANIMATION_DURATION;
+    entry.easing_enum   = EASING_OUT_QUAD;
+    entry.subject       = &this->alpha;
+    entry.tag           = tag;
+    entry.target_value  = 0.0f;
+    entry.tick          = nullptr;
+    entry.userdata      = nullptr;
+
+    menu_animation_push(&entry);
+}
+
+View::~View()
+{
+    menu_animation_ctx_tag alphaTag = (uintptr_t) &this->alpha;
+    menu_animation_kill_by_tag(&alphaTag);
+
+    menu_animation_ctx_tag highlightTag = (uintptr_t) &this->highlightAlpha;
+    menu_animation_kill_by_tag(&highlightTag);
+}

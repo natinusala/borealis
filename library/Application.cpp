@@ -340,9 +340,9 @@ void Application::frame()
 
     // Draw all views in the stack
     // until we find one that's not translucent
-    for (int i = Application::viewStack.size()-1; i >= 0; i--)
+    for (size_t i = 0; i < Application::viewStack.size(); i++)
     {
-        View *view = Application::viewStack[i];
+        View *view = Application::viewStack[Application::viewStack.size()-1-i];
         viewsToDraw.push_back(view);
 
         if (!view->isTranslucent())
@@ -387,9 +387,34 @@ void Application::requestFocus(View *view, FocusDirection direction)
         oldFocus->shakeHighlight(direction);
 }
 
+// TODO: Block inputs while this happens
 void Application::pushView(View *view)
 {
+    // Call hide() on the previous view in the stack if no
+    // views are translucent, then call show() once the animation ends
+    View* last = nullptr;
+    if (Application::viewStack.size() > 0)
+        last = Application::viewStack[Application::viewStack.size()-1];
+
+    bool fadeOutAnimation = last && !last->isTranslucent() && !view->isTranslucent();
+
+    if (fadeOutAnimation)
+    {
+        view->setForceTranslucent(true); // set the new view translucent until the fade out animation is done playing
+        last->hide([](void *userdata) {
+            View *newLast = Application::viewStack[Application::viewStack.size()-1];
+            newLast->setForceTranslucent(false);
+            newLast->show();
+        });
+    }
+
     view->setBoundaries(0, 0, Application::windowWidth, Application::windowHeight);
+
+    if (!fadeOutAnimation)
+        view->show();
+    else
+        view->alpha = 0.0f;
+
     view->willAppear();
     Application::requestFocus(view, FocusDirection::NONE);
 

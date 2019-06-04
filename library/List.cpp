@@ -69,6 +69,13 @@ ListItem::ListItem(string label, string sublabel) : label(label)
         this->sublabelView = new Label(LabelStyle::SUBLABEL, sublabel, true);
 }
 
+void ListItem::setParent(View *parent)
+{
+    View::setParent(parent);
+    if (this->sublabelView)
+        this->sublabelView->setParent(parent);
+}
+
 void ListItem::layout(NVGcontext *vg, Style *style)
 {
     if (this->sublabelView)

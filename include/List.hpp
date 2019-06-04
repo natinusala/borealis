@@ -40,6 +40,7 @@ class ListItem : public View
         View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp) override;
         void layout(NVGcontext *vg, Style *style) override;
         void getHighlightInsets(unsigned *top, unsigned *right, unsigned *bottom, unsigned *left) override;
+        void setParent(View *parent) override;
 
         bool hasSubLabel();
         void setDrawTopSeparator(bool draw);
