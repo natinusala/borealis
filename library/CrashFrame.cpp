@@ -17,6 +17,7 @@
 */
 
 #include <CrashFrame.hpp>
+#include <Animations.hpp>
 
 #include <math.h>
 
@@ -25,7 +26,8 @@
 CrashFrame::CrashFrame(string text)
 {
     this->label = new Label(LabelStyle::CRASH, text, true);
-    label->setHorizontalAlign(NVG_ALIGN_CENTER);
+    this->label->setHorizontalAlign(NVG_ALIGN_CENTER);
+    this->label->setParent(this);
 }
 
 void CrashFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
@@ -35,6 +37,11 @@ void CrashFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned hei
     nvgBeginPath(vg);
     nvgRect(vg, x, y, width, height);
     nvgFill(vg);
+
+    // Scale
+    float scale = (this->alpha + 2.0f) / 3.0f;
+    nvgTranslate(vg, (1.0f-scale) * width * 0.5f, (1.0f-scale) * height * 0.5f);
+    nvgScale(vg, scale, scale);
 
     // Label
     this->label->frame(ctx);
@@ -55,6 +62,9 @@ void CrashFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned hei
     nvgText(vg, x + width / 2, y + style->CrashFrame.boxSpacing + boxSize/2, "!", nullptr);
     nvgFill(vg);
 
+    // End scale
+    nvgResetTransform(vg);
+
     // Footer
     nvgBeginPath(vg);
     nvgRect(vg, x + style->SettingsFrame.separatorSpacing, y + height - style->SettingsFrame.footerHeight, width - style->SettingsFrame.separatorSpacing * 2, 1);
@@ -66,6 +76,7 @@ void CrashFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned hei
     nvgText(vg, x + style->SettingsFrame.separatorSpacing + style->SettingsFrame.footerTextSpacing, y + height - style->SettingsFrame.footerHeight/2, WINDOW_NAME, nullptr);
 
     //TODO: Button
+    //TODO: Hint
 }
 
 void CrashFrame::layout(NVGcontext* vg, Style *style, FontStash *stash)
@@ -79,12 +90,6 @@ void CrashFrame::layout(NVGcontext* vg, Style *style, FontStash *stash)
         this->label->getWidth(),
         this->label->getHeight()
     );
-}
-
-void CrashFrame::setParent(View *parent)
-{
-    View::setParent(parent);
-    this->label->setParent(this);
 }
 
 CrashFrame::~CrashFrame()

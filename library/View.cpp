@@ -42,9 +42,9 @@ void View::shakeHighlight(FocusDirection direction)
     this->highlightShakeAmplitude   = rand() % 15 + 10;
 }
 
-float View::getAlpha()
+float View::getAlpha(bool child)
 {
-    return this->alpha * (this->parent ? this->parent->getAlpha() : 1.0f);
+    return this->alpha * (this->parent ? this->parent->getAlpha(true) : 1.0f);
 }
 
 NVGcolor View::a(NVGcolor color)
@@ -366,7 +366,7 @@ void View::show()
     menu_animation_ctx_entry_t entry;
     entry.cb            = [this](void *userdata) {
         this->fadeIn = false; 
-        this->onShowAnimationEnded(); 
+        this->onShowAnimationEnd(); 
     };
     entry.duration      = VIEW_SHOW_ANIMATION_DURATION;
     entry.easing_enum   = EASING_OUT_QUAD;

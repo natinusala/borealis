@@ -45,7 +45,7 @@ enum class Background
 };
 
 #define VIEW_HIGHLIGHT_ANIMATION_DURATION   100
-#define VIEW_SHOW_ANIMATION_DURATION        150
+#define VIEW_SHOW_ANIMATION_DURATION        250
 
 extern NVGcolor transparent;
 
@@ -193,7 +193,7 @@ class View
          * Called when the show() animation (fade in)
          * ends
          */
-        virtual void onShowAnimationEnded() { };
+        virtual void onShowAnimationEnd() { };
 
         /**
          * Shows the view (fade in animation)
@@ -276,7 +276,7 @@ class View
 
         float alpha = 1.0f;
 
-        float getAlpha();
+        virtual float getAlpha(bool child = false);
 
         /**
          * Fires when the user "clicks" on the view
