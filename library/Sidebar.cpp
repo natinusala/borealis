@@ -61,6 +61,16 @@ void Sidebar::addSeparator()
     this->addView(separator);
 }
 
+bool Sidebar::onCancel()
+{
+    if (this->isEmpty())
+        return false;
+
+    Application::requestFocus(this->children[0]->view, FocusDirection::NONE);
+    this->focusedIndex = 0;
+    return true;
+}
+
 void Sidebar::setActive(SidebarItem *active)
 {
     if (currentActive)
@@ -91,6 +101,12 @@ void SidebarItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned he
         nvgRect(vg, x + style->Sidebar.Item.padding, y + style->Sidebar.Item.padding, style->Sidebar.Item.activeMarkerWidth, style->Sidebar.Item.height - style->Sidebar.Item.padding*2);
         nvgFill(vg);
     }
+}
+
+bool SidebarItem::onClick()
+{
+    Application::onGamepadButtonPressed(GLFW_GAMEPAD_BUTTON_DPAD_RIGHT);
+    return true;
 }
 
 void SidebarItem::setActive(bool active)

@@ -397,6 +397,18 @@ void View::hide(function<void(void*)> cb)
     menu_animation_push(&entry);
 }
 
+void View::click()
+{
+    if (!this->onClick() && this->getParent())
+        this->getParent()->click();
+}
+
+void View::cancel()
+{
+    if (!this->onCancel() && this->getParent())
+        this->getParent()->cancel();
+}
+
 View::~View()
 {
     menu_animation_ctx_tag alphaTag = (uintptr_t) &this->alpha;

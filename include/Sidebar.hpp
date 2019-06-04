@@ -59,6 +59,8 @@ class SidebarItem : public View
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
         View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override;
 
+        bool onClick() override;
+
         void setActive(bool active);
         bool isActive();
 
@@ -86,4 +88,6 @@ class Sidebar : public BoxLayout
         void addSeparator();
 
         void setActive(SidebarItem *item);
+
+        bool onCancel() override;
 };

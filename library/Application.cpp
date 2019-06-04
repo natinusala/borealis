@@ -248,6 +248,8 @@ bool Application::mainLoop()
         Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP]    = glfwGetKey(window, GLFW_KEY_UP);
         Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN]  = glfwGetKey(window, GLFW_KEY_DOWN);
         Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_START]      = glfwGetKey(window, GLFW_KEY_ESCAPE);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_A]          = glfwGetKey(window, GLFW_KEY_ENTER);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_B]          = glfwGetKey(window, GLFW_KEY_BACKSPACE);
     }
 
     // Trigger gamepad events
@@ -308,6 +310,14 @@ void Application::onGamepadButtonPressed(char button)
         case GLFW_GAMEPAD_BUTTON_DPAD_RIGHT:
             if (Application::currentFocus && Application::currentFocus->getParent())
                 Application::requestFocus(Application::currentFocus->getParent(), FocusDirection::RIGHT);
+            break;
+        case GLFW_GAMEPAD_BUTTON_A:
+            if (Application::currentFocus)
+                Application::currentFocus->click();
+            break;
+        case GLFW_GAMEPAD_BUTTON_B:
+            if (Application::currentFocus)
+                Application::currentFocus->cancel();
             break;
         default:
             break;

@@ -45,6 +45,8 @@ class TabFrame : public SettingsFrame
 
         View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override;
 
+        bool onCancel() override;
+
         ~TabFrame();
 
     private:

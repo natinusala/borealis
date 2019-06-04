@@ -52,6 +52,8 @@ class Application
 
         static Style* getStyle();
 
+        static void onGamepadButtonPressed(char button);
+
     private:
         inline static GLFWwindow* window;
         inline static NVGcontext *vg;
@@ -72,8 +74,6 @@ class Application
         inline static Style *currentStyle;
 
         static void onWindowSizeChanged();
-
-        static void onGamepadButtonPressed(char button);
 
         static void setStyle(StyleEnum style);
 

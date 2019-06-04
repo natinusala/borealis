@@ -272,5 +272,27 @@ class View
 
         float getAlpha();
 
+        /**
+         * Fires when the user "clicks" on the view
+         * either via touch or pressing A
+         *
+         * Should return true if the event
+         * was consumed, false otherwise
+         */
+        virtual bool onClick() { return false; };
+
+        /**
+         * Fires when the user presses "Back" on the view
+         * either via touch (on hint) or pressing B
+         *
+         * Should return true if the event
+         * was consumed, false otherwise
+         */
+        virtual bool onCancel() { return false; };
+
+        //TODO: Play click animation here
+        void click();
+        void cancel();
+
         virtual ~View();
 };
