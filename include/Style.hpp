@@ -118,6 +118,9 @@ typedef struct
         unsigned boxStrokeWidth;
         unsigned boxSize;
         unsigned boxSpacing;
+        unsigned buttonWidth;
+        unsigned buttonHeight;
+        unsigned buttonSpacing;
     } CrashFrame;
 } Style;
 

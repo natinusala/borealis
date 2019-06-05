@@ -20,6 +20,7 @@
 
 #include <View.hpp>
 #include <Label.hpp>
+#include <Button.hpp>
 
 // A screen similar to the "The software has closed" dialog
 // pressing OK will exit the app
@@ -28,12 +29,15 @@ class CrashFrame : public View
 {
     private:
         Label *label;
+        Button *button;
 
     public:
         CrashFrame(string text);
 
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
         void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
+        void onShowAnimationEnd() override;
+        View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override;
 
         bool isTranslucent() override
         {

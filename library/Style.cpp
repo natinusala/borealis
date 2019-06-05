@@ -19,83 +19,86 @@
 #include <Style.hpp>
 
 Style styleAccurate = {
-    .SettingsFrame = {
-        .headerHeight      = 88,
-        .footerHeight      = 73,
+    SettingsFrame : {
+        headerHeight      : 88,
+        footerHeight      : 73,
 
-        .separatorSpacing  = 30,
+        separatorSpacing  : 30,
 
-        .titleSize      = 28,
-        .titleStart     = 130,
-        .titleOffset    = 5,
+        titleSize      : 28,
+        titleStart     : 130,
+        titleOffset    : 5,
 
-        .footerTextSize     = 20,
-        .footerTextSpacing  = 30
+        footerTextSize     : 20,
+        footerTextSpacing  : 30
     },
 
-    .Highlight = {
-        .strokeWidth    = 5,
-        .cornerRadius   = 0.5f,
+    Highlight : {
+        strokeWidth    : 5,
+        cornerRadius   : 0.5f,
 
-        .shadowWidth    = 2,
-        .shadowOffset   = 10,
-        .shadowFeather  = 10,
-        .shadowOpacity  = 128
+        shadowWidth    : 2,
+        shadowOffset   : 10,
+        shadowFeather  : 10,
+        shadowOpacity  : 128
     },
 
-    .Background = {
-        .sidebarBorderHeight = 16
+    Background : {
+        sidebarBorderHeight : 16
     },
 
-    .Sidebar = {
-        .width      = 410,
-        .spacing    = 0,
+    Sidebar : {
+        width      : 410,
+        spacing    : 0,
 
-        .marginLeft     = 88,
-        .marginRight    = 30,
-        .marginTop      = 40,
-        .marginBottom   = 40,
+        marginLeft     : 88,
+        marginRight    : 30,
+        marginTop      : 40,
+        marginBottom   : 40,
 
-        .Item = {
-            .height     = 70,
-            .textSize   = 22,
-            .padding    = 9,
+        Item : {
+            height     : 70,
+            textSize   : 22,
+            padding    : 9,
 
-            .textOffsetX        = 14,
-            .activeMarkerWidth  = 4,
+            textOffsetX        : 14,
+            activeMarkerWidth  : 4,
         },
 
-        .Separator = {
-            .height = 28
+        Separator : {
+            height : 28
         }
     },
 
-    .List = {
-        .marginLeftRight    = 60,
-        .marginTopBottom    = 42,
-        .spacing            = 55,
+    List : {
+        marginLeftRight    : 60,
+        marginTopBottom    : 42,
+        spacing            : 55,
 
-        .Item = {
-            .height             = 69, // offset by 1 to have the highlight hide the separator
-            .textSize           = 24,
-            .valueSize          = 20,
-            .padding            = 15,
-            .sublabelIndent     = 20,
-            .sublabelSpacing    = 16
+        Item : {
+            height             : 69, // offset by 1 to have the highlight hide the separator
+            textSize           : 24,
+            valueSize          : 20,
+            padding            : 15,
+            sublabelIndent     : 20,
+            sublabelSpacing    : 16
         }
     },
 
-    .Label = {
-        .regularFontSize    = 20,
-        .sublabelFontSize   = 16,
-        .crashFontSize      = 24,
-        .lineHeight         = 1.65f
+    Label : {
+        regularFontSize    : 20,
+        sublabelFontSize   : 16,
+        crashFontSize      : 24,
+        lineHeight         : 1.65f
     },
 
-    .CrashFrame = {
-        .labelWidth     = 0.60f,
-        .boxStrokeWidth = 5,
-        .boxSize        = 64,
-        .boxSpacing     = 90
+    CrashFrame : {
+        labelWidth     : 0.60f,
+        boxStrokeWidth : 5,
+        boxSize        : 64,
+        boxSpacing     : 90,
+        buttonWidth    : 356,
+        buttonHeight   : 60,
+        buttonSpacing  : 47
     }
 };

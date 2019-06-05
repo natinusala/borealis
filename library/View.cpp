@@ -323,7 +323,7 @@ void View::onFocusGained()
 }
 
 
-void View::setFocusListener(function<void(View*)> listener)
+void View::setFocusListener(EventListener listener)
 {
     this->focusListener = listener;
 }

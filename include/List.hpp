@@ -33,7 +33,7 @@ class ListItem : public View
 
         Label *sublabelView = nullptr;
 
-        function<void(View*)> onClickListener;
+        EventListener clickListener = nullptr;
 
     public:
         ListItem(string label, string sublabel = "");
@@ -50,7 +50,7 @@ class ListItem : public View
 
         void setValue(string value);
 
-        void setOnClickListener(function<void(View*)> listener);
+        void setClickListener(EventListener listener);
 
         ~ListItem();
 };

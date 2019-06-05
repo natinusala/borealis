@@ -18,24 +18,36 @@
 
 #pragma once
 
-// Useful macros
-#ifndef __SWITCH__
-#define ASSET(_str) "./resources/" _str
-#else
-#define ASSET(_str) "romfs:/" _str
-#endif
-
-// Library
-#include <Application.hpp>
 #include <View.hpp>
-#include <SettingsFrame.hpp>
-#include <TabFrame.hpp>
-#include <Rectangle.hpp>
-#include <BoxLayout.hpp>
-#include <Theme.hpp>
-#include <Sidebar.hpp>
-#include <Style.hpp>
-#include <List.hpp>
 #include <Label.hpp>
-#include <CrashFrame.hpp>
-#include <Button.hpp>
+
+enum class ButtonStyle
+{
+    PLAIN = 0,  // regular, plain button
+    BORDERED,   // text and a border
+    BORDERLESS  // only text
+};
+
+// A button
+class Button : public View
+{
+    private:
+        ButtonStyle style;
+        Label *label;
+
+        EventListener clickListener = nullptr;
+
+    public:
+        Button(ButtonStyle style, string label);
+        ~Button();
+
+        void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
+        bool onClick() override;
+
+        View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp) override
+        {
+            return this;
+        }
+
+        void setClickListener(EventListener listener);
+};

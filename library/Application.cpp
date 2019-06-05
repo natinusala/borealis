@@ -287,13 +287,18 @@ bool Application::mainLoop()
     return true;
 }
 
+void Application::quit()
+{
+    glfwSetWindowShouldClose(window, GLFW_TRUE);
+}
+
 void Application::onGamepadButtonPressed(char button)
 {
     switch (button)
     {
         // Exit by pressing Start (aka Plus)
         case GLFW_GAMEPAD_BUTTON_START:
-            glfwSetWindowShouldClose(window, GLFW_TRUE);
+            Application::quit();
             break;
         case GLFW_GAMEPAD_BUTTON_DPAD_DOWN:
             if (Application::currentFocus && Application::currentFocus->getParent())

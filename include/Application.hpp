@@ -59,6 +59,8 @@ class Application
          */
         static void crash(string text);
 
+        static void quit();
+
     private:
         inline static GLFWwindow* window;
         inline static NVGcontext *vg;

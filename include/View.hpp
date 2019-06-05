@@ -49,6 +49,10 @@ enum class Background
 
 extern NVGcolor transparent;
 
+class View;
+
+typedef function<void(View*)> EventListener;
+
 // Superclass for all the other views
 // Lifecycle of a view is :
 //   new -> [willAppear -> willDisappear] -> delete
@@ -89,7 +93,7 @@ class View
 
         View *parent = nullptr;
 
-        function<void(View*)> focusListener = nullptr;
+        EventListener focusListener = nullptr;
 
         virtual void getHighlightInsets(unsigned *top, unsigned *right, unsigned *bottom, unsigned *left)
         {
@@ -272,7 +276,7 @@ class View
          */
         virtual void onFocusLost();
 
-        void setFocusListener(function<void(View*)> listener);
+        void setFocusListener(EventListener listener);
 
         float alpha = 1.0f;
 

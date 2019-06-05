@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
     jankItem->setValue("Minimal");
 
     ListItem *crashItem = new ListItem("Divide by 0", "Can the Switch do it?");
-    crashItem->setOnClickListener([](View *view){ Application::crash("The software was closed because an error occured:\nSIGABRT (signal 6)"); });
+    crashItem->setClickListener([](View *view){ Application::crash("The software was closed because an error occured:\nSIGABRT (signal 6)"); });
 
     testList->addView(themeItem);
     testList->addView(jankItem);

@@ -33,7 +33,8 @@ library_files = files(
     'library/Style.cpp',
     'library/List.cpp',
     'library/Label.cpp',
-    'library/CrashFrame.cpp'
+    'library/CrashFrame.cpp',
+    'library/Button.cpp'
 )
 
 borealis_example = executable(

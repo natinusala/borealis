@@ -26,7 +26,8 @@ enum class LabelStyle
 {
     REGULAR = 0,
     SUBLABEL,
-    CRASH
+    CRASH,
+    BUTTON
 };
 
 // A Label, multiline or with a ticker

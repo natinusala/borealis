@@ -78,16 +78,15 @@ void ListItem::setParent(View *parent)
 
 bool ListItem::onClick()
 {
-    if (this->onClickListener == nullptr)
-        return false;
+    if (this->clickListener)
+        this->clickListener(this);
 
-    this->onClickListener(this);
-    return true;
+    return this->clickListener != nullptr;
 }
 
-void ListItem::setOnClickListener(function<void(View*)> listener)
+void ListItem::setClickListener(EventListener listener)
 {
-    this->onClickListener = listener;
+    this->clickListener = listener;
 }
 
 void ListItem::layout(NVGcontext *vg, Style *style, FontStash *stash)

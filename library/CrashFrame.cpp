@@ -18,6 +18,7 @@
 
 #include <CrashFrame.hpp>
 #include <Animations.hpp>
+#include <Application.hpp>
 
 #include <math.h>
 
@@ -25,9 +26,17 @@
 
 CrashFrame::CrashFrame(string text)
 {
+    // Label
     this->label = new Label(LabelStyle::CRASH, text, true);
     this->label->setHorizontalAlign(NVG_ALIGN_CENTER);
     this->label->setParent(this);
+
+    // Button
+    this->button = new Button(ButtonStyle::BORDERED, "OK");
+    this->button->setParent(this);
+    this->button->setBackground(Background::DEBUG);
+    this->button->alpha = 0.0f;
+    this->button->setClickListener([](View *view) { Application::quit(); });
 }
 
 void CrashFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
@@ -75,12 +84,25 @@ void CrashFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned hei
     nvgBeginPath(vg);
     nvgText(vg, x + style->SettingsFrame.separatorSpacing + style->SettingsFrame.footerTextSpacing, y + height - style->SettingsFrame.footerHeight/2, WINDOW_NAME, nullptr);
 
-    //TODO: Button
+    // Button
+    this->button->frame(ctx);
+
     //TODO: Hint
+}
+
+void CrashFrame::onShowAnimationEnd()
+{
+    this->button->show();
+}
+
+View* CrashFrame::requestFocus(FocusDirection direction, View *oldFocus, bool fromUp)
+{
+    return this->button;
 }
 
 void CrashFrame::layout(NVGcontext* vg, Style *style, FontStash *stash)
 {
+    // Label
     this->label->setWidth(roundf((float)this->width * style->CrashFrame.labelWidth));
     this->label->layout(vg, style, stash);
 
@@ -89,6 +111,14 @@ void CrashFrame::layout(NVGcontext* vg, Style *style, FontStash *stash)
         this->y + (this->height - style->SettingsFrame.footerHeight) / 2,
         this->label->getWidth(),
         this->label->getHeight()
+    );
+
+    // Button
+    this->button->setBoundaries(
+        this->x + this->width / 2 - style->CrashFrame.buttonWidth / 2,
+        this->y + this->height - style->SettingsFrame.footerHeight - style->CrashFrame.boxSpacing - style->CrashFrame.buttonHeight,
+        style->CrashFrame.buttonWidth,
+        style->CrashFrame.buttonHeight
     );
 }
 

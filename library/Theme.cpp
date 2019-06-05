@@ -18,44 +18,42 @@
 
 #include <Theme.hpp>
 
-Theme themeLight =
-{
-    .backgroundColor        = { 0.922f, 0.922f, 0.922f },
+Theme themeLight = {
+    backgroundColor        : { 0.922f, 0.922f, 0.922f },
 
-    .textColor              = nvgRGB(51, 51, 51),
-    .sublabelColor          = nvgRGB(140, 140, 140),
+    textColor              : nvgRGB(51, 51, 51),
+    sublabelColor          : nvgRGB(140, 140, 140),
 
-    .separatorColor         = nvgRGB(45, 45, 45),
+    separatorColor         : nvgRGB(45, 45, 45),
 
-    .sidebarColor           = nvgRGB(240, 240, 240),
-    .activeTabColor         = nvgRGB(49, 79, 235),
-    .sidebarSeparatorColor  = nvgRGB(208, 208, 208),
+    sidebarColor           : nvgRGB(240, 240, 240),
+    activeTabColor         : nvgRGB(49, 79, 235),
+    sidebarSeparatorColor  : nvgRGB(208, 208, 208),
 
-    .highlightBackgroundColor   = nvgRGB(252, 255, 248),
-    .highlightColor1            = nvgRGB(13, 182, 213),
-    .highlightColor2            = nvgRGB(80, 239, 217),
+    highlightBackgroundColor   : nvgRGB(252, 255, 248),
+    highlightColor1            : nvgRGB(13, 182, 213),
+    highlightColor2            : nvgRGB(80, 239, 217),
 
-    .listItemSeparatorColor = nvgRGB(207, 207, 207),
-    .listItemValueColor     = nvgRGB(43, 81, 226)
+    listItemSeparatorColor : nvgRGB(207, 207, 207),
+    listItemValueColor     : nvgRGB(43, 81, 226)
 };
 
-Theme themeDark =
-{
-    .backgroundColor        = { 0.176f, 0.176f, 0.176f },
+Theme themeDark = {
+    backgroundColor        : { 0.176f, 0.176f, 0.176f },
 
-    .textColor              = nvgRGB(255, 255, 255),
-    .sublabelColor          = nvgRGB(163, 163, 163),
+    textColor              : nvgRGB(255, 255, 255),
+    sublabelColor          : nvgRGB(163, 163, 163),
 
-    .separatorColor         = nvgRGB(255, 255, 255),
+    separatorColor         : nvgRGB(255, 255, 255),
 
-    .sidebarColor           = nvgRGB(50, 50, 50),
-    .activeTabColor         = nvgRGB(0, 255, 204),
-    .sidebarSeparatorColor  = nvgRGB(81, 81, 81),
+    sidebarColor           : nvgRGB(50, 50, 50),
+    activeTabColor         : nvgRGB(0, 255, 204),
+    sidebarSeparatorColor  : nvgRGB(81, 81, 81),
 
-    .highlightBackgroundColor   = nvgRGB(31, 34, 39),
-    .highlightColor1            = nvgRGB(25, 138, 198),
-    .highlightColor2            = nvgRGB(137, 241, 242),
+    highlightBackgroundColor   : nvgRGB(31, 34, 39),
+    highlightColor1            : nvgRGB(25, 138, 198),
+    highlightColor2            : nvgRGB(137, 241, 242),
 
-    .listItemSeparatorColor = nvgRGB(78, 78, 78),
-    .listItemValueColor     = nvgRGB(88, 195, 169)
+    listItemSeparatorColor : nvgRGB(78, 78, 78),
+    listItemValueColor     : nvgRGB(88, 195, 169)
 };
