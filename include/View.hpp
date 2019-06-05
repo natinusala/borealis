@@ -82,6 +82,8 @@ class View
         bool fadeIn             = false; // is the fade in animation running?
         bool forceTranslucent   = false;
 
+        Theme *themeOverride = nullptr;
+
     protected:
         int x = 0;
         int y = 0;
@@ -101,6 +103,16 @@ class View
             *right  = 0;
             *bottom = 0;
             *left   = 0;
+        }
+
+        virtual void getHighlightMetrics(Style *style, float *cornerRadius)
+        {
+            *cornerRadius = style->Highlight.cornerRadius;
+        }
+
+        virtual bool isHighlightBackgroundEnabled()
+        {
+            return true;
         }
 
         // Helper functions to apply this view's alpha to a color
@@ -303,6 +315,12 @@ class View
         //TODO: Play click animation here
         void click();
         void cancel();
+
+        /**
+         * Forces this view and its children to use
+         * the specified theme
+         */
+        void overrideTheme(Theme *newTheme);
 
         virtual ~View();
 };

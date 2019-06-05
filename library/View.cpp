@@ -57,8 +57,13 @@ NVGcolor View::a(NVGcolor color)
 void View::frame(FrameContext *ctx)
 {
     Style *style = Application::getStyle();
+    Theme *oldTheme = ctx->theme;
 
     nvgSave(ctx->vg);
+
+    // Theme override
+    if (this->themeOverride)
+        ctx->theme = themeOverride;
 
     // Layout if needed
     if (this->dirty)
@@ -73,7 +78,7 @@ void View::frame(FrameContext *ctx)
         this->drawBackground(ctx->vg, ctx, style);
 
         // Draw highlight background
-        if (this->highlightAlpha > 0.0f)
+        if (this->highlightAlpha > 0.0f && this->isHighlightBackgroundEnabled())
             this->drawHighlight(ctx->vg, ctx->theme, this->highlightAlpha, style, true);
 
         // Draw the view
@@ -84,6 +89,9 @@ void View::frame(FrameContext *ctx)
             this->drawHighlight(ctx->vg, ctx->theme, this->highlightAlpha, style, false);
     }
 
+    // Cleanup
+    if (this->themeOverride)
+        ctx->theme = oldTheme;
     nvgRestore(ctx->vg);
 }
 
@@ -92,6 +100,9 @@ void View::drawHighlight(NVGcontext *vg, Theme *theme, float alpha, Style *style
 {
     unsigned insetTop, insetRight, insetBottom, insetLeft;
     this->getHighlightInsets(&insetTop, &insetRight, &insetBottom, &insetLeft);
+
+    float cornerRadius;
+    this->getHighlightMetrics(style, &cornerRadius);
 
     unsigned x      = this->x - insetLeft   - style->Highlight.strokeWidth/2;
     unsigned y      = this->y - insetTop    - style->Highlight.strokeWidth/2;
@@ -136,7 +147,7 @@ void View::drawHighlight(NVGcontext *vg, Theme *theme, float alpha, Style *style
         // Background
         nvgFillColor(vg, RGBAf(theme->highlightBackgroundColor.r, theme->highlightBackgroundColor.g, theme->highlightBackgroundColor.b, this->highlightAlpha));
         nvgBeginPath(vg);
-        nvgRoundedRect(vg, x, y, width, height, style->Highlight.cornerRadius);
+        nvgRoundedRect(vg, x, y, width, height, cornerRadius);
         nvgFill(vg);
     }
     else
@@ -145,13 +156,13 @@ void View::drawHighlight(NVGcontext *vg, Theme *theme, float alpha, Style *style
         NVGpaint shadowPaint = nvgBoxGradient(vg,
             x, y + style->Highlight.shadowWidth,
             width, height,
-            style->Highlight.cornerRadius*2, style->Highlight.shadowFeather,
+            cornerRadius*2, style->Highlight.shadowFeather,
             RGBA(0, 0, 0, style->Highlight.shadowOpacity * alpha), transparent);
 
         nvgBeginPath(vg);
         nvgRect(vg, x - style->Highlight.shadowOffset, y - style->Highlight.shadowOffset,
             width + style->Highlight.shadowOffset*2, height + style->Highlight.shadowOffset*3);
-        nvgRoundedRect(vg, x, y, width, height, style->Highlight.cornerRadius);
+        nvgRoundedRect(vg, x, y, width, height, cornerRadius);
         nvgPathWinding(vg, NVG_HOLE);
         nvgFillPaint(vg, shadowPaint);
         nvgFill(vg);
@@ -182,19 +193,19 @@ void View::drawHighlight(NVGcontext *vg, Theme *theme, float alpha, Style *style
         nvgBeginPath(vg);
         nvgStrokeColor(vg, pulsationColor);
         nvgStrokeWidth(vg, style->Highlight.strokeWidth);
-        nvgRoundedRect(vg, x, y, width, height, style->Highlight.cornerRadius);
+        nvgRoundedRect(vg, x, y, width, height, cornerRadius);
         nvgStroke(vg);
 
         nvgBeginPath(vg);
         nvgStrokePaint(vg, border1Paint);
         nvgStrokeWidth(vg, style->Highlight.strokeWidth);
-        nvgRoundedRect(vg, x, y, width, height, style->Highlight.cornerRadius);
+        nvgRoundedRect(vg, x, y, width, height, cornerRadius);
         nvgStroke(vg);
 
         nvgBeginPath(vg);
         nvgStrokePaint(vg, border2Paint);
         nvgStrokeWidth(vg, style->Highlight.strokeWidth);
-        nvgRoundedRect(vg, x, y, width, height, style->Highlight.cornerRadius);
+        nvgRoundedRect(vg, x, y, width, height, cornerRadius);
         nvgStroke(vg);
     }
 }
@@ -410,6 +421,11 @@ void View::cancel()
 {
     if (!this->onCancel() && this->getParent())
         this->getParent()->cancel();
+}
+
+void View::overrideTheme(Theme *theme)
+{
+    this->themeOverride = theme;
 }
 
 View::~View()

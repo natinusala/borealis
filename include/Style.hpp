@@ -122,6 +122,13 @@ typedef struct
         unsigned buttonHeight;
         unsigned buttonSpacing;
     } CrashFrame;
+
+    // Button
+    struct
+    {
+        float cornerRadius;
+        float borderedCornerRadius;
+    } Button;
 } Style;
 
 // TODO: Make a condensed style

@@ -49,5 +49,15 @@ class Button : public View
             return this;
         }
 
+        void getHighlightMetrics(Style *style, float *cornerRadius) override
+        {
+            *cornerRadius = this->style == ButtonStyle::BORDERED ? style->Button.borderedCornerRadius : style->Button.cornerRadius;
+        }
+
+        bool isHighlightBackgroundEnabled() override
+        {
+            return false;
+        }
+
         void setClickListener(EventListener listener);
 };

@@ -100,5 +100,10 @@ Style styleAccurate = {
         buttonWidth    : 356,
         buttonHeight   : 60,
         buttonSpacing  : 47
+    },
+
+    Button : {
+        cornerRadius         : 0.5f, // TODO: Adjust that
+        borderedCornerRadius : 5.0f
     }
 };
