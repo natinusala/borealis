@@ -89,6 +89,7 @@ Style styleAccurate = {
         regularFontSize    : 20,
         sublabelFontSize   : 16,
         crashFontSize      : 24,
+        buttonFontSize     : 24,
         lineHeight         : 1.65f
     },
 
@@ -103,7 +104,7 @@ Style styleAccurate = {
     },
 
     Button : {
-        cornerRadius         : 0.5f, // TODO: Adjust that
-        borderedCornerRadius : 5.0f
+        cornerRadius        : 0.5f, // TODO: Adjust that
+        crashCornerRadius   : 5.0f
     }
 };

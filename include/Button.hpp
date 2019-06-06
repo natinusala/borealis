@@ -25,7 +25,8 @@ enum class ButtonStyle
 {
     PLAIN = 0,  // regular, plain button
     BORDERED,   // text and a border
-    BORDERLESS  // only text
+    BORDERLESS, // only text
+    CRASH       // same as borderless but with an increased corner radius
 };
 
 // A button
@@ -43,6 +44,7 @@ class Button : public View
 
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
         bool onClick() override;
+        void layout(NVGcontext* vg, Style *style, FontStash *stash);
 
         View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp) override
         {
@@ -51,7 +53,7 @@ class Button : public View
 
         void getHighlightMetrics(Style *style, float *cornerRadius) override
         {
-            *cornerRadius = this->style == ButtonStyle::BORDERED ? style->Button.borderedCornerRadius : style->Button.cornerRadius;
+            *cornerRadius = this->style == ButtonStyle::CRASH ? style->Button.crashCornerRadius : style->Button.cornerRadius;
         }
 
         bool isHighlightBackgroundEnabled() override

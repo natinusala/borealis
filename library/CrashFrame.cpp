@@ -22,8 +22,6 @@
 
 #include <math.h>
 
-// TODO: Scale animation while fading in? Make it available to all views with a flag
-
 CrashFrame::CrashFrame(string text)
 {
     // Label
@@ -32,7 +30,7 @@ CrashFrame::CrashFrame(string text)
     this->label->setParent(this);
 
     // Button
-    this->button = new Button(ButtonStyle::BORDERED, "OK");
+    this->button = new Button(ButtonStyle::CRASH, "OK");
     this->button->setParent(this);
     this->button->alpha = 0.0f;
     this->button->setClickListener([](View *view) { Application::quit(); });
@@ -120,6 +118,7 @@ void CrashFrame::layout(NVGcontext* vg, Style *style, FontStash *stash)
         style->CrashFrame.buttonWidth,
         style->CrashFrame.buttonHeight
     );
+    this->button->invalidate();
 }
 
 CrashFrame::~CrashFrame()

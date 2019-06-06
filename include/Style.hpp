@@ -108,6 +108,7 @@ typedef struct
         unsigned regularFontSize;
         unsigned sublabelFontSize;
         unsigned crashFontSize;
+        unsigned buttonFontSize;
         float lineHeight;
     } Label;
 
@@ -127,7 +128,7 @@ typedef struct
     struct
     {
         float cornerRadius;
-        float borderedCornerRadius;
+        float crashCornerRadius;
     } Button;
 } Style;
 

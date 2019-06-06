@@ -20,17 +20,9 @@
 
 Button::Button(ButtonStyle style, string text) : style(style)
 {
-    LabelStyle labelStyle;
-    //TODO: Add all other styles
-    switch (style)
-    {
-        case ButtonStyle::BORDERED:
-        default:
-            labelStyle = LabelStyle::BUTTON;
-            break;
-    }
-
-    this->label = new Label(labelStyle, text);
+    this->label = new Label(LabelStyle::BUTTON, text, true);
+    this->label->setHorizontalAlign(NVG_ALIGN_CENTER);
+    this->label->setParent(this);
 }
 
 Button::~Button()
@@ -38,10 +30,23 @@ Button::~Button()
     delete this->label;
 }
 
-//TODO: Change look of highlight
+void Button::layout(NVGcontext* vg, Style *style, FontStash *stash)
+{
+    this->label->setWidth(this->width);
+    this->label->layout(vg, style, stash);
+    this->label->setBoundaries(
+        this->x,
+        this->y + this->height / 2 - this->label->getHeight() / 2,
+        this->label->getWidth(),
+        this->label->getHeight()
+    );
+}
+
 void Button::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
-    //TODO: Draw it
+    // TODO: The rest
+    // Label
+    this->label->frame(ctx);
 }
 
 bool Button::onClick()
