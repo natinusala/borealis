@@ -364,10 +364,11 @@ void Application::frame()
             break;
     }
 
-    reverse(viewsToDraw.begin(), viewsToDraw.end());
-
-    for (View *view : viewsToDraw)
+    for (size_t i = 0; i < viewsToDraw.size(); i++)
+    {
+        View *view = viewsToDraw[viewsToDraw.size()-1-i];
         view->frame(&frameContext);
+    }
 
     // End frame
     nvgEndFrame(Application::vg);
