@@ -54,6 +54,7 @@ NVGcolor View::a(NVGcolor color)
     return newColor;
 }
 
+// TODO: Only draw views that are onscreen (w/ some margins)
 void View::frame(FrameContext *ctx)
 {
     Style *style = Application::getStyle();

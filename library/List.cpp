@@ -20,7 +20,7 @@
 #include <Application.hpp>
 
 // TODO: Scrollbar
-// TODO: Spacing item (defaults to 60px) (to have make groups of items)
+// TODO: Spacing item (defaults to 60px) (to have make groups of items without sublabels)
 
 List::List() : BoxLayout(BoxLayoutOrientation::VERTICAL)
 {
@@ -123,7 +123,6 @@ View* ListItem::requestFocus(FocusDirection direction, View *oldFocus, bool from
     return this;
 }
 
-// TODO: Adjust font size
 void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
     unsigned baseHeight = style->List.Item.height;
