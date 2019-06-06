@@ -192,7 +192,6 @@ bool Application::init(StyleEnum style)
 
     // TODO: Load symbols shared font as a fallback
     // TODO: Font Awesome as fallback too?
-    // TODO: Backport wiggly font fix from RA
 
     // Load theme
 #ifdef __SWITCH__
