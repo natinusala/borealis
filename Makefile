@@ -39,14 +39,10 @@ include $(DEVKITPRO)/libnx/switch_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	borealis_example
 BUILD		:=	build.nx
-
-LIBRETRO_COMMON := library/libretro-common/compat library/libretro-common/features library/libretro-common/encodings
-SOURCES		:=	library library/nanovg example $(LIBRETRO_COMMON)
-
+SOURCES		:=	example
 DATA		:=	data
-INCLUDES	:=	include include/nanovg include/libretro-common
+INCLUDES	:=	
 # ROMFS		:=	resources
-
 APP_TITLE	:=	borealis example
 APP_AUTHOR	:=	natinusala
 APP_VERSION	:=	1.0
@@ -66,7 +62,7 @@ CXXFLAGS	:= $(CFLAGS) -fno-exceptions -std=c++1z -O2
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -lglfw3 -lEGL -lglapi -ldrm_nouveau -lnx -lm
+LIBS	:= -lnx -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -74,6 +70,7 @@ LIBS	:= -lglfw3 -lEGL -lglapi -ldrm_nouveau -lnx -lm
 #---------------------------------------------------------------------------------
 LIBDIRS	:= $(PORTLIBS) $(LIBNX)
 
+include $(TOPDIR)/library/borealis.mk
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
