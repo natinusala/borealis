@@ -1,5 +1,5 @@
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
-current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
+current_dir := $(BOREALIS_PATH)/$(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
 
 LIBRETRO_COMMON := $(current_dir)/lib/libretro-common/compat $(current_dir)/lib/libretro-common/encodings $(current_dir)/lib/libretro-common/features
 

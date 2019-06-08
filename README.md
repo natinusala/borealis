@@ -43,8 +43,9 @@ ninja -C build
 ```
 
 ### How to use (TL;DR: see the example in this repo)
-0. Your project must be build as C++17 (`-std=c++1z`)
+0. Your project must be build as C++17 (`-std=c++1z`). You also need to remove `-fno-rtti` and `-fno-exceptions` if you have them
 1. Use a submodule (or even better, a [subrepo](https://github.com/ingydotnet/git-subrepo)) to clone this repository in your project
 2. For PC (meson) : use `subdir` to import the library folder, then use the `borealis_files`, `borealis_dependencies` and `borealis_include` variables to link and add the dependencies and the includes of the library
-3. For Switch : take a standard homebrew makefile and use include to load `borealis.mk` (after the `LIBDIRS` definition)
+3. For Switch : take a standard homebrew makefile and use include to load `borealis.mk` (after the `LIBDIRS` definition). Add a `BOREALIS_PATH` variable before the include, specifying the subfolder you put the library in
 4. Then, add a `WINDOW_NAME` define that will be, you guessed it, the title of your window
+5. Finally, copy the resources folder to the root of your project
