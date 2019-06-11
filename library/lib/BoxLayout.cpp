@@ -238,7 +238,7 @@ void BoxLayout::layout(NVGcontext* vg, Style *style, FontStash *stash)
             childHeight = child->view->getHeight();
 
             int spacing = (int) this->spacing;
-            View *next= i <= this->children.size()-2 ? this->children[i+1]->view : nullptr;
+            View *next = (this->children.size() > 1 && i <= this->children.size()-2) ? this->children[i+1]->view : nullptr;
 
             this->customSpacing(child->view, next, &spacing);
 
@@ -273,7 +273,7 @@ void BoxLayout::layout(NVGcontext* vg, Style *style, FontStash *stash)
             childWidth = child->view->getWidth();
 
             int spacing = (int) this->spacing;
-            View *next= i <= this->children.size()-2 ? this->children[i+1]->view : nullptr;
+            View *next= i <= (this->children.size() > 1 && this->children.size()-2) ? this->children[i+1]->view : nullptr;
 
             this->customSpacing(child->view, next, &spacing);
 
