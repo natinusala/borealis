@@ -28,6 +28,7 @@ class ListItem : public View
     private:
         string label;
         string value;
+        bool valueFaint;
 
         bool drawTopSeparator = true;
 
@@ -48,11 +49,39 @@ class ListItem : public View
         bool hasSubLabel();
         void setDrawTopSeparator(bool draw);
 
-        void setValue(string value);
+        /**
+         * Sets the value of this list item
+         * (the text on the right)
+         * Set faint to true to have the new value
+         * use a darker color (typically "OFF" labels)
+         */
+        void setValue(string value, bool faint = false);
 
         void setClickListener(EventListener listener);
 
         ~ListItem();
+};
+
+#define TOGGLE_LIST_ITEM_ON     "ON"
+#define TOGGLE_LIST_ITEM_OFF    "OFF"
+
+// A list item with a ON/OFF value
+// that can be toggled
+// Use the clickListener to detect when the value
+// changes
+// TODO: Add the ability to change "ON" and "OFF" strings
+// TODO: Animate value changes
+class ToggleListItem : public ListItem
+{
+    private:
+        bool toggleState;
+
+        void updateValue();
+
+    public:
+        ToggleListItem(string label, bool initialValue, string sublabel = "");
+
+        bool onClick() override;
 };
 
 // A vertical list of various widgets, with proper margins and spacing

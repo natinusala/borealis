@@ -108,9 +108,10 @@ void ListItem::getHighlightInsets(unsigned *top, unsigned *right, unsigned *bott
         *bottom = -(sublabelView->getHeight() + style->List.Item.sublabelSpacing);
 }
 
-void ListItem::setValue(string value)
+void ListItem::setValue(string value, bool faint)
 {
-    this->value = value;
+    this->value         = value;
+    this->valueFaint    = faint;
 }
 
 void ListItem::setDrawTopSeparator(bool draw)
@@ -132,7 +133,7 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
         this->sublabelView->frame(ctx);
 
     // Value
-    nvgFillColor(vg, a(ctx->theme->listItemValueColor));
+    nvgFillColor(vg, a(this->valueFaint ? ctx->theme->listItemFaintValueColor : ctx->theme->listItemValueColor));
     nvgFontSize(vg, style->List.Item.valueSize);
     nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
     nvgFontFaceId(vg, ctx->fontStash->regular);
@@ -174,4 +175,26 @@ ListItem::~ListItem()
 {
     if (this->sublabelView)
         delete this->sublabelView;
+}
+
+ToggleListItem::ToggleListItem(string label, bool initialValue, string sublabel) : ListItem(label, sublabel), toggleState(initialValue)
+{
+    this->updateValue();
+}
+
+void ToggleListItem::updateValue()
+{
+    if (this->toggleState)
+        this->setValue(TOGGLE_LIST_ITEM_ON, false);
+    else
+        this->setValue(TOGGLE_LIST_ITEM_OFF, true);
+}
+
+bool ToggleListItem::onClick()
+{
+    ListItem::onClick();
+
+    this->toggleState = !this->toggleState;
+    this->updateValue();
+    return true;
 }

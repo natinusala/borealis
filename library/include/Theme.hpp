@@ -39,6 +39,7 @@ typedef struct
 
     NVGcolor listItemSeparatorColor;
     NVGcolor listItemValueColor;
+    NVGcolor listItemFaintValueColor;
 } Theme;
 
 extern Theme themeLight;

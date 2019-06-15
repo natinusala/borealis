@@ -34,8 +34,9 @@ Theme themeLight = {
     highlightColor1            : nvgRGB(13, 182, 213),
     highlightColor2            : nvgRGB(80, 239, 217),
 
-    listItemSeparatorColor : nvgRGB(207, 207, 207),
-    listItemValueColor     : nvgRGB(43, 81, 226)
+    listItemSeparatorColor  : nvgRGB(207, 207, 207),
+    listItemValueColor      : nvgRGB(43, 81, 226),
+    listItemFaintValueColor : nvgRGB(181, 184, 191)
 };
 
 Theme themeDark = {
@@ -54,6 +55,7 @@ Theme themeDark = {
     highlightColor1            : nvgRGB(25, 138, 198),
     highlightColor2            : nvgRGB(137, 241, 242),
 
-    listItemSeparatorColor : nvgRGB(78, 78, 78),
-    listItemValueColor     : nvgRGB(88, 195, 169)
+    listItemSeparatorColor  : nvgRGB(78, 78, 78),
+    listItemValueColor      : nvgRGB(88, 195, 169),
+    listItemFaintValueColor : nvgRGB(93, 103, 105)
 };
