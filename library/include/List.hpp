@@ -21,6 +21,8 @@
 #include <BoxLayout.hpp>
 #include <Label.hpp>
 
+#define LIST_ITEM_VALUE_ANIMATION 100
+
 // A list item
 // TODO: Use a Label with integrated ticker
 class ListItem : public View
@@ -30,11 +32,17 @@ class ListItem : public View
         string value;
         bool valueFaint;
 
+        string oldValue;
+        bool oldValueFaint;
+        float valueAnimation = 0.0f;
+
         bool drawTopSeparator = true;
 
         Label *sublabelView = nullptr;
 
         EventListener clickListener = nullptr;
+
+        void resetValueAnimation();
 
     public:
         ListItem(string label, string sublabel = "");

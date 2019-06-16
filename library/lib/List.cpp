@@ -19,6 +19,8 @@
 #include <List.hpp>
 #include <Application.hpp>
 
+#include <Animations.hpp>
+
 // TODO: Scrollbar
 // TODO: Spacing item (defaults to 60px) (to have make groups of items without sublabels)
 
@@ -108,10 +110,37 @@ void ListItem::getHighlightInsets(unsigned *top, unsigned *right, unsigned *bott
         *bottom = -(sublabelView->getHeight() + style->List.Item.sublabelSpacing);
 }
 
+void ListItem::resetValueAnimation()
+{
+    this->valueAnimation = 0.0f;
+
+    menu_animation_ctx_tag tag = (uintptr_t) &this->valueAnimation;
+    menu_animation_kill_by_tag(&tag);
+}
+
 void ListItem::setValue(string value, bool faint)
 {
+    this->oldValue      = this->value;
+    this->oldValueFaint = this->valueFaint;
+
     this->value         = value;
     this->valueFaint    = faint;
+
+    this->resetValueAnimation();
+
+    menu_animation_ctx_tag tag = (uintptr_t) &this->valueAnimation;
+    menu_animation_ctx_entry_t entry;
+
+    entry.cb            = [this](void *userdata) { this->resetValueAnimation(); };
+    entry.duration      = LIST_ITEM_VALUE_ANIMATION;
+    entry.easing_enum   = EASING_IN_OUT_QUAD;
+    entry.subject       = &this->valueAnimation;
+    entry.tag           = tag;
+    entry.target_value  = 1.0f;
+    entry.tick          = nullptr;
+    entry.userdata      = nullptr;
+
+    menu_animation_push(&entry);
 }
 
 void ListItem::setDrawTopSeparator(bool draw)
@@ -133,12 +162,35 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
         this->sublabelView->frame(ctx);
 
     // Value
-    nvgFillColor(vg, a(this->valueFaint ? ctx->theme->listItemFaintValueColor : ctx->theme->listItemValueColor));
-    nvgFontSize(vg, style->List.Item.valueSize);
     nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
     nvgFontFaceId(vg, ctx->fontStash->regular);
-    nvgBeginPath(vg);
-    nvgText(vg, x + width - style->List.Item.padding, y + baseHeight/2, this->value.c_str(), nullptr);
+    if (this->valueAnimation != 0.0f)
+    {
+        //Old value
+        NVGcolor valueColor = a(this->oldValueFaint ? ctx->theme->listItemFaintValueColor : ctx->theme->listItemValueColor);
+        valueColor.a *= (1.0f - this->valueAnimation);
+        nvgFillColor(vg, valueColor);
+        nvgFontSize(vg, style->List.Item.valueSize * (1.0f - this->valueAnimation));
+        nvgBeginPath(vg);
+        nvgText(vg, x + width - style->List.Item.padding, y + baseHeight/2, this->oldValue.c_str(), nullptr);
+
+        //New value
+        valueColor = a(this->valueFaint ? ctx->theme->listItemFaintValueColor : ctx->theme->listItemValueColor);
+        valueColor.a *= this->valueAnimation;
+        nvgFillColor(vg, valueColor);
+        nvgFontSize(vg, style->List.Item.valueSize * this->valueAnimation);
+        nvgBeginPath(vg);
+        nvgText(vg, x + width - style->List.Item.padding, y + baseHeight/2, this->value.c_str(), nullptr);
+    }
+    else
+    {
+        nvgFillColor(vg, a(this->valueFaint ? ctx->theme->listItemFaintValueColor : ctx->theme->listItemValueColor));
+        nvgFontSize(vg, style->List.Item.valueSize);
+        nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
+        nvgFontFaceId(vg, ctx->fontStash->regular);
+        nvgBeginPath(vg);
+        nvgText(vg, x + width - style->List.Item.padding, y + baseHeight/2, this->value.c_str(), nullptr);
+    }
 
     // Label
     nvgFillColor(vg, a(ctx->theme->textColor));
@@ -175,6 +227,8 @@ ListItem::~ListItem()
 {
     if (this->sublabelView)
         delete this->sublabelView;
+
+    this->resetValueAnimation();
 }
 
 ToggleListItem::ToggleListItem(string label, bool initialValue, string sublabel) : ListItem(label, sublabel), toggleState(initialValue)
