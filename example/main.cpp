@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
     // Init the app
     if (!Application::init(StyleEnum::ACCURATE))
     {
-        printf("Unable to init Borealis application");
+        printf("Unable to init Borealis application\n");
         return EXIT_FAILURE;
     }
 

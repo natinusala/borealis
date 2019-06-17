@@ -132,7 +132,7 @@ bool Application::init(StyleEnum style)
     Application::window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, nullptr, nullptr);
     if (!window)
     {
-        printf("glfw: failed to create window");
+        printf("glfw: failed to create window\n");
         glfwTerminate();
         return false;
     }
