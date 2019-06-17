@@ -1,6 +1,7 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2019  natinusala
+    Copyright (C) 2019  p-sam
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -208,12 +209,16 @@ bool Application::init(StyleEnum style)
     ColorSetId theme;
     setsysGetColorSetId(&theme);
 
-    if (theme == ColorSetId_Light)
-        Application::currentTheme = &themeLight;
-    else
+    if (theme == ColorSetId_Dark)
         Application::currentTheme = &themeDark;
+    else
+        Application::currentTheme = &themeLight;
 #else
-    Application::currentTheme = &themeLight; // fight me
+    char *themeEnv = getenv("BOREALIS_THEME");
+    if (themeEnv != nullptr && !strcasecmp(themeEnv, "DARK"))
+        Application::currentTheme = &themeDark;
+    else
+        Application::currentTheme = &themeLight;
 #endif
 
     // Init window size
