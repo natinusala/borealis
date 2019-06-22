@@ -84,8 +84,8 @@ Style styleAccurate = {
             sublabelSpacing    : 16
         },
 
-        GroupSpacing : {
-            height : 60
+        ItemGroupSpacing : {
+            height : 18                 // this + ListView padding = ListItem height
         }
     },
 

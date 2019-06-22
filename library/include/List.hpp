@@ -75,10 +75,10 @@ class ListItem : public View
 #define TOGGLE_LIST_ITEM_OFF    "OFF"
 
 // Some spacing (to make groups of ListItems)
-class ListGroupSpacing : public Rectangle
+class ListItemGroupSpacing : public Rectangle
 {
     public:
-        ListGroupSpacing();
+        ListItemGroupSpacing();
 };
 
 // A list item with a ON/OFF value

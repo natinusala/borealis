@@ -104,7 +104,7 @@ typedef struct
         struct
         {
             unsigned height;
-        } GroupSpacing;
+        } ItemGroupSpacing;
     } List;
 
     // Label

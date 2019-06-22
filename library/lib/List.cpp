@@ -35,6 +35,7 @@ void List::customSpacing(View *current, View *next, int *spacing)
     // Don't add spacing to the first list item
     // if it doesn't have a sublabel and the second one is a
     // list item too
+    // Or if the next item is a ListItemGroupSpacing
     if (ListItem *currentItem = dynamic_cast<ListItem*>(current))
     {
         if (ListItem *nextItem = dynamic_cast<ListItem*>(next))
@@ -44,6 +45,11 @@ void List::customSpacing(View *current, View *next, int *spacing)
                 *spacing = 2;
                 nextItem->setDrawTopSeparator(false);
             }
+        }
+        else if (dynamic_cast<ListItemGroupSpacing*>(next))
+        {
+            Style *style = Application::getStyle();
+            *spacing = style->List.ItemGroupSpacing.height;
         }
     }
 }
@@ -252,8 +258,7 @@ bool ToggleListItem::onClick()
     return true;
 }
 
-ListGroupSpacing::ListGroupSpacing() : Rectangle(nvgRGBA(0, 0, 0, 0))
+ListItemGroupSpacing::ListItemGroupSpacing() : Rectangle(nvgRGBA(0, 0, 0, 0))
 {
-    Style *style = Application::getStyle();
-    this->setHeight(style->List.GroupSpacing.height);
+
 }
