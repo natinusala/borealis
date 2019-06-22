@@ -36,7 +36,10 @@ Theme themeLight = {
 
     listItemSeparatorColor  : nvgRGB(207, 207, 207),
     listItemValueColor      : nvgRGB(43, 81, 226),
-    listItemFaintValueColor : nvgRGB(181, 184, 191)
+    listItemFaintValueColor : nvgRGB(181, 184, 191),
+
+    tableEvenBackgroundColor    : nvgRGB(240, 240, 240),
+    tableBodyTextColor          : nvgRGB(131, 131, 131)
 };
 
 Theme themeDark = {
@@ -57,5 +60,8 @@ Theme themeDark = {
 
     listItemSeparatorColor  : nvgRGB(78, 78, 78),
     listItemValueColor      : nvgRGB(88, 195, 169),
-    listItemFaintValueColor : nvgRGB(93, 103, 105)
+    listItemFaintValueColor : nvgRGB(93, 103, 105),
+
+    tableEvenBackgroundColor    : nvgRGB(57, 58, 60),
+    tableBodyTextColor          : nvgRGB(155, 157, 156)
 };

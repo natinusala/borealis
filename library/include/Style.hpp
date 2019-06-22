@@ -130,6 +130,19 @@ typedef struct
         float cornerRadius;
         float crashCornerRadius;
     } Button;
+
+    // TableViewRow
+    struct
+    {
+        unsigned headerHeight;
+        unsigned headerTextSize;
+
+        unsigned bodyHeight;
+        unsigned bodyIndent;
+        unsigned bodyTextSize;
+
+        unsigned padding;
+    } TableViewRow;
 } Style;
 
 // TODO: Make a condensed style

@@ -18,6 +18,7 @@
 
 #include <List.hpp>
 #include <Application.hpp>
+#include <TableView.hpp>
 
 #include <Animations.hpp>
 
@@ -49,6 +50,10 @@ void List::customSpacing(View *current, View *next, int *spacing)
         else if (dynamic_cast<ListItemGroupSpacing*>(next))
         {
             *spacing = 0;
+        }
+        else if (dynamic_cast<TableView*>(next))
+        {
+            *spacing /= 2;
         }
     }
 }

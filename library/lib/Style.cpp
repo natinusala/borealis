@@ -106,5 +106,16 @@ Style styleAccurate = {
     Button : {
         cornerRadius        : 0.5f, // TODO: Adjust that
         crashCornerRadius   : 5.0f
+    },
+
+    TableViewRow : {
+        headerHeight    : 60,
+        headerTextSize  : 22,
+
+        bodyHeight      : 38,
+        bodyIndent      : 40,
+        bodyTextSize    : 18,
+
+        padding : 15
     }
 };
