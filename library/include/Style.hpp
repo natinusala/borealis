@@ -144,15 +144,3 @@ enum class StyleEnum
 };
 
 extern Style styleAccurate;
-
-/**
- * Sets the global style
- * Must be called before initializing the application
- * Currently cannot be hot swapped
- */
-void setStyle(StyleEnum style);
-
-/**
- * Gets the global style
- */
-Style *getStyle();
