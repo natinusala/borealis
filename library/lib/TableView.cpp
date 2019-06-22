@@ -60,13 +60,13 @@ void TableView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heig
         backgroundColor = even ? theme->tableEvenBackgroundColor : transparent;
 
         // Background
-        nvgFillColor(vg, backgroundColor);
+        nvgFillColor(vg, a(backgroundColor));
         nvgBeginPath(vg);
         nvgRect(vg, x + indent, y + yAdvance, width - indent, height);
         nvgFill(vg);
 
         // Text
-        nvgFillColor(vg, textColor);
+        nvgFillColor(vg, a(textColor));
         nvgFontFaceId(vg, ctx->fontStash->regular);
         nvgFontSize(vg, fontSize);
 

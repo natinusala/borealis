@@ -86,11 +86,12 @@ Style styleAccurate = {
     },
 
     Label : {
-        regularFontSize    : 20,
-        sublabelFontSize   : 16,
-        crashFontSize      : 24,
-        buttonFontSize     : 24,
-        lineHeight         : 1.65f
+        regularFontSize     : 20,
+        smallFontSize       : 16,
+        sublabelFontSize    : 16,
+        crashFontSize       : 24,
+        buttonFontSize      : 24,
+        lineHeight          : 1.65f
     },
 
     CrashFrame : {

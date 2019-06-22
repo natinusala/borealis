@@ -56,6 +56,11 @@ void List::customSpacing(View *current, View *next, int *spacing)
             *spacing /= 2;
         }
     }
+    // TableView custom spacing
+    else if (dynamic_cast<TableView*>(current))
+    {
+        *spacing /= 2;
+    }
 }
 
 

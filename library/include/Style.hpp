@@ -106,6 +106,7 @@ typedef struct
     struct
     {
         unsigned regularFontSize;
+        unsigned smallFontSize;
         unsigned sublabelFontSize;
         unsigned crashFontSize;
         unsigned buttonFontSize;

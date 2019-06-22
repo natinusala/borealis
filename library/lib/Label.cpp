@@ -27,6 +27,9 @@ Label::Label(LabelStyle labelStyle, string text, bool multiline) : text(text), m
         case LabelStyle::REGULAR:
             this->fontSize = style->Label.regularFontSize;
             break;
+        case LabelStyle::SMALL:
+            this->fontSize = style->Label.smallFontSize;
+            break;
         case LabelStyle::SUBLABEL:
             this->fontSize = style->Label.sublabelFontSize;
             break;
@@ -70,6 +73,7 @@ void Label::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, 
     switch (this->labelStyle)
     {
         case LabelStyle::REGULAR:
+        case LabelStyle::SMALL:
         case LabelStyle::BUTTON:
             nvgFillColor(vg, a(ctx->theme->textColor));
             break;

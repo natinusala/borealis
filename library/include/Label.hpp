@@ -25,6 +25,7 @@
 enum class LabelStyle
 {
     REGULAR = 0,
+    SMALL,
     SUBLABEL,
     CRASH,
     BUTTON
