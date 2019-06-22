@@ -48,8 +48,7 @@ void List::customSpacing(View *current, View *next, int *spacing)
         }
         else if (dynamic_cast<ListItemGroupSpacing*>(next))
         {
-            Style *style = Application::getStyle();
-            *spacing = style->List.ItemGroupSpacing.height;
+            *spacing = 0;
         }
     }
 }

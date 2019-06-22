@@ -73,7 +73,7 @@ Style styleAccurate = {
     List : {
         marginLeftRight    : 60,
         marginTopBottom    : 42,
-        spacing            : 55,
+        spacing            : 61,
 
         Item : {
             height             : 69, // offset by 1 to have the highlight hide the separator
@@ -82,10 +82,6 @@ Style styleAccurate = {
             padding            : 15,
             sublabelIndent     : 20,
             sublabelSpacing    : 16
-        },
-
-        ItemGroupSpacing : {
-            height : 18                 // this + ListView padding = ListItem height
         }
     },
 
