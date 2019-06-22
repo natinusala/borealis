@@ -20,6 +20,7 @@
 
 #include <BoxLayout.hpp>
 #include <Label.hpp>
+#include <Rectangle.hpp>
 
 #define LIST_ITEM_VALUE_ANIMATION 100
 
@@ -72,6 +73,13 @@ class ListItem : public View
 
 #define TOGGLE_LIST_ITEM_ON     "ON"
 #define TOGGLE_LIST_ITEM_OFF    "OFF"
+
+// Some spacing (to make groups of ListItems)
+class ListGroupSpacing : public Rectangle
+{
+    public:
+        ListGroupSpacing();
+};
 
 // A list item with a ON/OFF value
 // that can be toggled

@@ -82,6 +82,10 @@ Style styleAccurate = {
             padding            : 15,
             sublabelIndent     : 20,
             sublabelSpacing    : 16
+        },
+
+        GroupSpacing : {
+            height : 60
         }
     },
 

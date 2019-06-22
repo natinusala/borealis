@@ -22,7 +22,6 @@
 #include <Animations.hpp>
 
 // TODO: Scrollbar
-// TODO: Spacing item (defaults to 60px) (to have make groups of items without sublabels)
 
 List::List() : BoxLayout(BoxLayoutOrientation::VERTICAL)
 {
@@ -251,4 +250,10 @@ bool ToggleListItem::onClick()
     this->toggleState = !this->toggleState;
     this->updateValue();
     return true;
+}
+
+ListGroupSpacing::ListGroupSpacing() : Rectangle(nvgRGBA(0, 0, 0, 0))
+{
+    Style *style = Application::getStyle();
+    this->setHeight(style->List.GroupSpacing.height);
 }

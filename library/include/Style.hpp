@@ -100,6 +100,11 @@ typedef struct
             unsigned sublabelIndent;
             unsigned sublabelSpacing;
         } Item;
+
+        struct
+        {
+            unsigned height;
+        } GroupSpacing;
     } List;
 
     // Label
