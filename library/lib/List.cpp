@@ -61,6 +61,11 @@ void List::customSpacing(View *current, View *next, int *spacing)
     {
         *spacing /= 2;
     }
+    // ListItemGroupSpacing custom spacing
+    else if (dynamic_cast<ListItemGroupSpacing*>(current))
+    {
+        *spacing /= 2;
+    }
 }
 
 
@@ -267,7 +272,10 @@ bool ToggleListItem::onClick()
     return true;
 }
 
-ListItemGroupSpacing::ListItemGroupSpacing() : Rectangle(nvgRGBA(0, 0, 0, 0))
+ListItemGroupSpacing::ListItemGroupSpacing(bool separator) : Rectangle(nvgRGBA(0, 0, 0, 0))
 {
+    Theme *theme = Application::getTheme();
 
+    if (separator)
+        this->setColor(theme->listItemSeparatorColor);
 }

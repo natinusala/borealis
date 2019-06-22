@@ -78,7 +78,7 @@ class ListItem : public View
 class ListItemGroupSpacing : public Rectangle
 {
     public:
-        ListItemGroupSpacing();
+        ListItemGroupSpacing(bool separator = false);
 };
 
 // A list item with a ON/OFF value

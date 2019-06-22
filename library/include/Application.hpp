@@ -51,6 +51,7 @@ class Application
         static void requestFocus(View *view, FocusDirection direction);
 
         static Style* getStyle();
+        static Theme *getTheme();
 
         static void onGamepadButtonPressed(char button);
 

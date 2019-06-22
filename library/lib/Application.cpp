@@ -488,6 +488,11 @@ Style* Application::getStyle()
     return Application::currentStyle;
 }
 
+Theme* Application::getTheme()
+{
+    return Application::currentTheme;
+}
+
 void Application::crash(string text)
 {
     CrashFrame *crashFrame = new CrashFrame(text);
