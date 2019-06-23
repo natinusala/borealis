@@ -74,9 +74,9 @@ static float delta_time         = 0.0f;
 static bool animation_is_active = false;
 static bool ticker_is_active    = false;
 
-static float highlight_gradient_x = 0.0f;
-static float highlight_gradient_y = 0.0f;
-static float highlight_color      = 0.0f;
+static double highlight_gradient_x = 0.0f;
+static double highlight_gradient_y = 0.0f;
+static double highlight_color      = 0.0f;
 
 /* from https://github.com/kikito/tween.lua/blob/master/tween.lua */
 
@@ -577,16 +577,16 @@ bool menu_animation_push(menu_animation_ctx_entry_t *entry)
 void menu_animation_get_highlight(float *gradient_x, float *gradient_y, float *color)
 {
    if (gradient_x)
-      *gradient_x = highlight_gradient_x;
+      *gradient_x = (float) highlight_gradient_x;
 
    if (gradient_y)
-      *gradient_y = highlight_gradient_y;
+      *gradient_y = (float) highlight_gradient_y;
 
    if (color)
-      *color = highlight_color;
+      *color = (float) highlight_color;
 }
 
-#define HIGHLIGHT_SPEED 350.0f
+#define HIGHLIGHT_SPEED 350.0
 
 static void menu_animation_update_time(bool timedate_enable)
 {
@@ -607,9 +607,9 @@ static void menu_animation_update_time(bool timedate_enable)
 
    old_time                 = cur_time;
 
-   highlight_gradient_x = (cos((float)cur_time/HIGHLIGHT_SPEED/3.0f)+1.0f)/2.0f;
-   highlight_gradient_y = (sin((float)cur_time/HIGHLIGHT_SPEED/3.0f)+1.0f)/2.0f;
-   highlight_color      = (sin((float)cur_time/HIGHLIGHT_SPEED*2.0f)+1.0f)/2.0f;
+   highlight_gradient_x = (cos((double)cur_time/HIGHLIGHT_SPEED/3.0)+1.0)/2.0;
+   highlight_gradient_y = (sin((double)cur_time/HIGHLIGHT_SPEED/3.0)+1.0)/2.0;
+   highlight_color      = (sin((double)cur_time/HIGHLIGHT_SPEED*2.0)+1.0)/2.0;
 
    if (((cur_time - last_clock_update) > 1000)
          && timedate_enable)
