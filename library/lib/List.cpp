@@ -250,17 +250,44 @@ ListItem::~ListItem()
     this->resetValueAnimation();
 }
 
-ToggleListItem::ToggleListItem(string label, bool initialValue, string sublabel) : ListItem(label, sublabel), toggleState(initialValue)
+ToggleListItem::ToggleListItem(string label, bool initialValue, string sublabel, ToggleListItemType type) : 
+    ListItem(label, sublabel), 
+    toggleState(initialValue),
+    type(type)
 {
     this->updateValue();
+}
+
+string ToggleListItem::getOnValue()
+{
+    switch (this->type)
+    {
+        default:
+        case ToggleListItemType::ON_OFF:
+            return "ON";
+        case ToggleListItemType::YES_NO:
+            return "Yes";
+    }
+}
+
+string ToggleListItem::getOffValue()
+{
+    switch (this->type)
+    {
+        default:
+        case ToggleListItemType::ON_OFF:
+            return "OFF";
+        case ToggleListItemType::YES_NO:
+            return "No";
+    }
 }
 
 void ToggleListItem::updateValue()
 {
     if (this->toggleState)
-        this->setValue(TOGGLE_LIST_ITEM_ON, false);
+        this->setValue(this->getOnValue(), false);
     else
-        this->setValue(TOGGLE_LIST_ITEM_OFF, true);
+        this->setValue(getOffValue(), true);
 }
 
 bool ToggleListItem::onClick()

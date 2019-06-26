@@ -71,14 +71,17 @@ class ListItem : public View
         ~ListItem();
 };
 
-#define TOGGLE_LIST_ITEM_ON     "ON"
-#define TOGGLE_LIST_ITEM_OFF    "OFF"
-
 // Some spacing (to make groups of ListItems)
 class ListItemGroupSpacing : public Rectangle
 {
     public:
         ListItemGroupSpacing(bool separator = false);
+};
+
+enum class ToggleListItemType
+{
+    ON_OFF = 0,
+    YES_NO
 };
 
 // A list item with a ON/OFF value
@@ -91,11 +94,15 @@ class ToggleListItem : public ListItem
 {
     private:
         bool toggleState;
+        ToggleListItemType type;
 
         void updateValue();
 
+        string getOnValue();
+        string getOffValue();
+
     public:
-        ToggleListItem(string label, bool initialValue, string sublabel = "");
+        ToggleListItem(string label, bool initialValue, string sublabel = "", ToggleListItemType type = ToggleListItemType::ON_OFF);
 
         bool onClick() override;
 };
