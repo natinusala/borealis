@@ -43,6 +43,8 @@ class ListItem : public View
 
         EventListener clickListener = nullptr;
 
+        bool indented = false;
+
         void resetValueAnimation();
 
     public:
@@ -57,6 +59,8 @@ class ListItem : public View
 
         bool hasSubLabel();
         void setDrawTopSeparator(bool draw);
+
+        void setIndented(bool indented);
 
         /**
          * Sets the value of this list item

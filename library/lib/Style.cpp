@@ -80,8 +80,11 @@ Style styleAccurate = {
             textSize           : 24,
             valueSize          : 20,
             padding            : 15,
+
             sublabelIndent     : 20,
-            sublabelSpacing    : 16
+            sublabelSpacing    : 16,
+
+            indent : 40
         }
     },
 

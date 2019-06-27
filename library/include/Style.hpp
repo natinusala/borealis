@@ -97,8 +97,11 @@ typedef struct
             unsigned textSize;
             unsigned valueSize;
             unsigned padding;
+
             unsigned sublabelIndent;
             unsigned sublabelSpacing;
+
+            unsigned indent;
         } Item;
     } List;
 

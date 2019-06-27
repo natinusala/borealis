@@ -90,6 +90,11 @@ ListItem::ListItem(string label, string sublabel) : label(label)
         this->sublabelView = new Label(LabelStyle::SUBLABEL, sublabel, true);
 }
 
+void ListItem::setIndented(bool indented)
+{
+    this->indented = indented;
+}
+
 void ListItem::setParent(View *parent)
 {
     View::setParent(parent);
@@ -113,9 +118,14 @@ void ListItem::setClickListener(EventListener listener)
 void ListItem::layout(NVGcontext *vg, Style *style, FontStash *stash)
 {
     if (this->sublabelView)
-    {
+    { 
+        unsigned indent = style->List.Item.sublabelIndent;
+
+        if (this->indented)
+            indent += style->List.Item.indent;
+
         this->height = style->List.Item.height;
-        this->sublabelView->setBoundaries(this->x + style->List.Item.sublabelIndent, this->y + this->height + style->List.Item.sublabelSpacing, this->width - style->List.Item.sublabelIndent*2, 0);
+        this->sublabelView->setBoundaries(this->x + indent, this->y + this->height + style->List.Item.sublabelSpacing, this->width - indent * 2, 0);
         this->sublabelView->layout(vg, style, stash); // we must call layout directly
         this->height += this->sublabelView->getHeight() + style->List.Item.sublabelSpacing;
     }
@@ -125,8 +135,12 @@ void ListItem::getHighlightInsets(unsigned *top, unsigned *right, unsigned *bott
 {
     Style *style = Application::getStyle();
     View::getHighlightInsets(top, right, bottom, left);
+
     if (sublabelView)
         *bottom = -(sublabelView->getHeight() + style->List.Item.sublabelSpacing);
+
+    if (indented)
+        *left = -style->List.Item.indent;
 }
 
 void ListItem::resetValueAnimation()
@@ -175,6 +189,12 @@ View* ListItem::requestFocus(FocusDirection direction, View *oldFocus, bool from
 void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
     unsigned baseHeight = style->List.Item.height;
+
+    if (this->indented)
+    {
+        x       += style->List.Item.indent;
+        width   -= style->List.Item.indent;
+    }
 
     // Sublabel
     if (this->sublabelView)
