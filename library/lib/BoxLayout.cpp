@@ -30,6 +30,7 @@ BoxLayout::BoxLayout(BoxLayoutOrientation orientation) : orientation(orientation
 void BoxLayout::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
     // Enable scissoring
+    nvgSave(vg);
     nvgScissor(vg, x, y, this->width, this->height);
 
     // Draw children
@@ -37,7 +38,7 @@ void BoxLayout::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heig
         child->view->frame(ctx);
 
     //Disable scissoring
-    nvgResetScissor(vg);
+    nvgRestore(vg);
 }
 
 void BoxLayout::setSpacing(unsigned spacing)
@@ -202,7 +203,7 @@ void BoxLayout::scrollAnimationTick()
 
 void BoxLayout::prebakeScrolling()
 {
-    // Prebake values for scrolling
+    // Prebaked values for scrolling
     this->middleY       = this->y + this->height/2;
     this->bottomY       = this->y + this->height;
     this->entriesHeight = 0.0f;
@@ -231,7 +232,7 @@ void BoxLayout::layout(NVGcontext* vg, Style *style, FontStash *stash)
                 child->view->setBoundaries(this->x + this->marginLeft,
                     yAdvance + roundf(this->scrollY),
                     this->width - this->marginLeft - this->marginRight,
-                    childHeight
+                    child->view->getHeight(false)
                 );
 
             child->view->layout(vg, style, stash); // call layout directly in case height is updated

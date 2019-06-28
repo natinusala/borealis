@@ -24,7 +24,8 @@
 
 NVGcolor transparent = nvgRGBA(0, 0, 0, 0);
 
-#define SHAKE_ANIMATION_DURATION 15
+#define SHAKE_ANIMATION_DURATION     15
+#define COLLAPSE_ANIMATION_DURATION  100
 
 static int shakeAnimation(float t, float a) // a = amplitude
 {
@@ -73,7 +74,7 @@ void View::frame(FrameContext *ctx)
         this->dirty = false;
     }
 
-    if (this->alpha > 0.0f)
+    if (this->alpha > 0.0f && this->collapseState != 0.0f)
     {
         // Draw background
         this->drawBackground(ctx->vg, ctx, style);
@@ -82,18 +83,81 @@ void View::frame(FrameContext *ctx)
         if (this->highlightAlpha > 0.0f && this->isHighlightBackgroundEnabled())
             this->drawHighlight(ctx->vg, ctx->theme, this->highlightAlpha, style, true);
 
+        // Collapse clipping
+        if (this->collapseState < 1.0f)
+        {
+            nvgSave(ctx->vg);
+            nvgScissor(ctx->vg, x, y, this->width, this->height * this->collapseState);
+        }
+
         // Draw the view
         this->draw(ctx->vg, this->x, this->y, this->width, this->height, style, ctx);
 
         // Draw highlight
         if (this->highlightAlpha > 0.0f)
             this->drawHighlight(ctx->vg, ctx->theme, this->highlightAlpha, style, false);
+
+        //Reset clipping
+        if (this->collapseState < 1.0f)
+            nvgRestore(ctx->vg);
     }
 
     // Cleanup
     if (this->themeOverride)
         ctx->theme = oldTheme;
     nvgRestore(ctx->vg);
+}
+
+void View::collapse(bool animated)
+{
+    menu_animation_ctx_tag tag = (uintptr_t) &this->collapseState;
+    menu_animation_kill_by_tag(&tag);
+
+    if (animated)
+    {
+        menu_animation_ctx_entry_t entry;
+
+        entry.cb            = nullptr;
+        entry.duration      = COLLAPSE_ANIMATION_DURATION;
+        entry.easing_enum   = EASING_OUT_QUAD;
+        entry.subject       = &this->collapseState;
+        entry.tag           = tag;
+        entry.target_value  = 0.0f;
+        entry.tick          = [this](void *userdata) { if (this->hasParent()) this->getParent()->invalidate(); };
+        entry.userdata      = nullptr;
+
+        menu_animation_push(&entry);
+    }
+    else
+    {
+        this->collapseState = 0.0f;
+    }
+}
+
+void View::expand(bool animated)
+{
+    menu_animation_ctx_tag tag = (uintptr_t) &this->collapseState;
+    menu_animation_kill_by_tag(&tag);
+
+    if (animated)
+    {
+            menu_animation_ctx_entry_t entry;
+
+        entry.cb            = nullptr;
+        entry.duration      = COLLAPSE_ANIMATION_DURATION;
+        entry.easing_enum   = EASING_OUT_QUAD;
+        entry.subject       = &this->collapseState;
+        entry.tag           = tag;
+        entry.target_value  = 1.0f;
+        entry.tick          = [this](void *userdata) { if (this->hasParent()) this->getParent()->invalidate(); };
+        entry.userdata      = nullptr;
+
+        menu_animation_push(&entry);
+    }
+    else
+    {
+        this->collapseState = 1.0f;
+    }
 }
 
 // TODO: Slight glow all around
@@ -281,6 +345,11 @@ View* View::getParent()
     return this->parent;
 }
 
+bool View::hasParent()
+{
+    return this->parent;
+}
+
 void View::setWidth(unsigned width)
 {
     this->width = width;
@@ -301,9 +370,9 @@ int View::getY()
     return this->y;
 }
 
-unsigned View::getHeight()
+unsigned View::getHeight(bool includeCollapse)
 {
-    return this->height;
+    return this->height * (includeCollapse ? this->collapseState : 1.0f);
 }
 
 unsigned View::getWidth()
@@ -435,4 +504,7 @@ View::~View()
 
     menu_animation_ctx_tag highlightTag = (uintptr_t) &this->highlightAlpha;
     menu_animation_kill_by_tag(&highlightTag);
+
+    menu_animation_ctx_tag collapseTag = (uintptr_t) &this->collapseState;
+    menu_animation_kill_by_tag(&collapseTag);
 }

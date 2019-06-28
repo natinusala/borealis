@@ -22,7 +22,7 @@
 #include <Label.hpp>
 #include <Rectangle.hpp>
 
-#define LIST_ITEM_VALUE_ANIMATION 100
+#define LIST_ITEM_VALUE_ANIMATION_DURATION 100
 
 // A list item
 // TODO: Use a Label with integrated ticker
@@ -109,6 +109,8 @@ class ToggleListItem : public ListItem
         ToggleListItem(string label, bool initialValue, string sublabel = "", ToggleListItemType type = ToggleListItemType::ON_OFF);
 
         bool onClick() override;
+
+        bool getToggleState();
 };
 
 // A vertical list of various widgets, with proper margins and spacing

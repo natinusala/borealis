@@ -118,7 +118,7 @@ void ListItem::setClickListener(EventListener listener)
 void ListItem::layout(NVGcontext *vg, Style *style, FontStash *stash)
 {
     if (this->sublabelView)
-    { 
+    {
         unsigned indent = style->List.Item.sublabelIndent;
 
         if (this->indented)
@@ -165,7 +165,7 @@ void ListItem::setValue(string value, bool faint)
     menu_animation_ctx_entry_t entry;
 
     entry.cb            = [this](void *userdata) { this->resetValueAnimation(); };
-    entry.duration      = LIST_ITEM_VALUE_ANIMATION;
+    entry.duration      = LIST_ITEM_VALUE_ANIMATION_DURATION;
     entry.easing_enum   = EASING_IN_OUT_QUAD;
     entry.subject       = &this->valueAnimation;
     entry.tag           = tag;
@@ -183,6 +183,9 @@ void ListItem::setDrawTopSeparator(bool draw)
 
 View* ListItem::requestFocus(FocusDirection direction, View *oldFocus, bool fromUp)
 {
+    if (this->collapseState != 1.0f)
+        return nullptr;
+
     return this;
 }
 
@@ -312,11 +315,17 @@ void ToggleListItem::updateValue()
 
 bool ToggleListItem::onClick()
 {
-    ListItem::onClick();
 
     this->toggleState = !this->toggleState;
     this->updateValue();
+
+    ListItem::onClick();
     return true;
+}
+
+bool ToggleListItem::getToggleState()
+{
+    return this->toggleState;
 }
 
 ListItemGroupSpacing::ListItemGroupSpacing(bool separator) : Rectangle(nvgRGBA(0, 0, 0, 0))

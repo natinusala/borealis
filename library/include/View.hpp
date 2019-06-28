@@ -91,6 +91,8 @@ class View
         unsigned width  = 0;
         unsigned height = 0;
 
+        float collapseState = 1.0f;
+
         bool focused = false;
 
         View *parent = nullptr;
@@ -151,12 +153,13 @@ class View
         int getX();
         int getY();
         unsigned getWidth();
-        unsigned getHeight();
+        unsigned getHeight(bool includeCollapse = true);
 
         void setForceTranslucent(bool translucent);
 
         virtual void setParent(View *parent);
         View* getParent();
+        bool hasParent();
 
         string name() const { return typeid(*this).name(); }
 
@@ -220,6 +223,17 @@ class View
          * Not recursive
          */
         void show();
+
+        /**
+         * Hides the view in a collapse animation
+         */
+        void collapse(bool animated = true);
+
+        /**
+         * Shows the view in a expand animation (opposite
+         * of collapse)
+         */
+        void expand(bool animated = true);
 
         /**
          * Hides the view (fade out animation)
