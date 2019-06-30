@@ -39,7 +39,9 @@ Theme themeLight = {
     listItemFaintValueColor : nvgRGB(181, 184, 191),
 
     tableEvenBackgroundColor    : nvgRGB(240, 240, 240),
-    tableBodyTextColor          : nvgRGB(131, 131, 131)
+    tableBodyTextColor          : nvgRGB(131, 131, 131),
+
+    selectViewBackgroundColor : nvgRGBA(0, 0, 0, 178)
 };
 
 Theme themeDark = {
@@ -63,5 +65,7 @@ Theme themeDark = {
     listItemFaintValueColor : nvgRGB(93, 103, 105),
 
     tableEvenBackgroundColor    : nvgRGB(57, 58, 60),
-    tableBodyTextColor          : nvgRGB(155, 157, 156)
+    tableBodyTextColor          : nvgRGB(155, 157, 156),
+
+    selectViewBackgroundColor : nvgRGBA(0, 0, 0, 178) // TODO: 178 may be too much for dark theme
 };

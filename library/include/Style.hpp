@@ -147,6 +147,20 @@ typedef struct
 
         unsigned padding;
     } TableViewRow;
+
+    // SelectView
+    struct
+    {
+        unsigned listWidth;
+        unsigned listPadding;
+
+        unsigned listItemHeight;
+        unsigned listItemTextSize;
+
+        unsigned headerHeight;
+        unsigned headerFontSize;
+        unsigned headerPadding;
+    } SelectView;
 } Style;
 
 // TODO: Make a condensed style

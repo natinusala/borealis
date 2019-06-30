@@ -48,6 +48,12 @@ class Application
          */
         static void pushView(View *view);
 
+        /**
+         * Pops the last pushed view from the stack
+         * and gives focus back where it was before
+         */
+        static void popView();
+
         static void requestFocus(View *view, FocusDirection direction);
 
         static Style* getStyle();
@@ -69,6 +75,7 @@ class Application
         inline static FontStash fontStash;
 
         inline static vector<View*> viewStack;
+        inline static vector<View*> focusStack;
 
         inline static unsigned windowWidth, windowHeight;
 

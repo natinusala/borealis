@@ -121,5 +121,17 @@ Style styleAccurate = {
         bodyTextSize    : 18,
 
         padding : 15
+    },
+
+    SelectView : {
+        listWidth       : 720,
+        listPadding     : 40,
+
+        listItemHeight      : 60,
+        listItemTextSize    : 20,
+
+        headerHeight    : 71,
+        headerFontSize  : 24,
+        headerPadding   : 70
     }
 };

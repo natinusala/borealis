@@ -37,6 +37,8 @@ class ListItem : public View
         bool oldValueFaint;
         float valueAnimation = 0.0f;
 
+        unsigned textSize;
+
         bool drawTopSeparator = true;
 
         Label *sublabelView = nullptr;
@@ -61,6 +63,8 @@ class ListItem : public View
         void setDrawTopSeparator(bool draw);
 
         void setIndented(bool indented);
+
+        void setTextSize(unsigned textSize);
 
         /**
          * Sets the value of this list item

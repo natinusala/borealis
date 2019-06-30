@@ -43,6 +43,8 @@ typedef struct
 
     NVGcolor tableEvenBackgroundColor;
     NVGcolor tableBodyTextColor;
+
+    NVGcolor selectViewBackgroundColor;
 } Theme;
 
 extern Theme themeLight;

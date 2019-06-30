@@ -20,6 +20,7 @@ borealis_files = files(
     'lib/CrashFrame.cpp',
     'lib/Button.cpp',
     'lib/TableView.cpp',
+    'lib/SelectView.cpp',
 
     'lib/libretro-common/compat/compat_strl.c',
     'lib/libretro-common/features/features_cpu.c',

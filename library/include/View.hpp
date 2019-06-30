@@ -99,6 +99,8 @@ class View
 
         EventListener focusListener = nullptr;
 
+        virtual unsigned getShowAnimationDuration();
+
         virtual void getHighlightInsets(unsigned *top, unsigned *right, unsigned *bottom, unsigned *left)
         {
             *top    = 0;
@@ -243,7 +245,7 @@ class View
          *
          * Not recursive
          */
-        void hide(function<void(void*)> cb);
+        void hide(function<void(void)> cb);
 
         /**
          * Calls layout() on next frame

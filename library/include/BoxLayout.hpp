@@ -69,9 +69,6 @@ class BoxLayout : public View
         void prebakeScrolling();
 
     protected:
-        virtual View* defaultFocus(View *oldFocus);
-        void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
-
         vector<BoxLayoutChild*> children;
 
         unsigned focusedIndex = 0;
@@ -82,9 +79,12 @@ class BoxLayout : public View
          */
         virtual void customSpacing(View *current, View *next, int *spacing) { }
 
+        virtual View* defaultFocus(View *oldFocus);
+
     public:
         BoxLayout(BoxLayoutOrientation orientation);
 
+        void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
         View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override;
         void willAppear() override;

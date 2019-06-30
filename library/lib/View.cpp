@@ -163,6 +163,9 @@ void View::expand(bool animated)
 // TODO: Slight glow all around
 void View::drawHighlight(NVGcontext *vg, Theme *theme, float alpha, Style *style, bool background)
 {
+    nvgSave(vg);
+    nvgResetScissor(vg);
+
     unsigned insetTop, insetRight, insetBottom, insetLeft;
     this->getHighlightInsets(&insetTop, &insetRight, &insetBottom, &insetLeft);
 
@@ -272,6 +275,8 @@ void View::drawHighlight(NVGcontext *vg, Theme *theme, float alpha, Style *style
         nvgRoundedRect(vg, x, y, width, height, cornerRadius);
         nvgStroke(vg);
     }
+
+    nvgRestore(vg);
 }
 
 void View::setBackground(Background background)
@@ -435,6 +440,11 @@ void View::setForceTranslucent(bool translucent)
     this->forceTranslucent = translucent;
 }
 
+unsigned View::getShowAnimationDuration()
+{
+    return VIEW_SHOW_ANIMATION_DURATION;
+}
+
 void View::show()
 {
     menu_animation_ctx_tag tag = (uintptr_t) &this->alpha;
@@ -445,10 +455,10 @@ void View::show()
 
     menu_animation_ctx_entry_t entry;
     entry.cb            = [this](void *userdata) {
-        this->fadeIn = false; 
-        this->onShowAnimationEnd(); 
+        this->fadeIn = false;
+        this->onShowAnimationEnd();
     };
-    entry.duration      = VIEW_SHOW_ANIMATION_DURATION;
+    entry.duration      = this->getShowAnimationDuration();
     entry.easing_enum   = EASING_OUT_QUAD;
     entry.subject       = &this->alpha;
     entry.tag           = tag;
@@ -459,7 +469,7 @@ void View::show()
     menu_animation_push(&entry);
 }
 
-void View::hide(function<void(void*)> cb)
+void View::hide(function<void(void)> cb)
 {
     menu_animation_ctx_tag tag = (uintptr_t) &this->alpha;
     menu_animation_kill_by_tag(&tag);
@@ -468,8 +478,8 @@ void View::hide(function<void(void*)> cb)
     this->alpha     = 1.0f;
 
     menu_animation_ctx_entry_t entry;
-    entry.cb            = cb;
-    entry.duration      = VIEW_SHOW_ANIMATION_DURATION;
+    entry.cb            = [cb](void *userdata){ cb(); };
+    entry.duration      = this->getShowAnimationDuration();
     entry.easing_enum   = EASING_OUT_QUAD;
     entry.subject       = &this->alpha;
     entry.tag           = tag;

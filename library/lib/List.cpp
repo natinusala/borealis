@@ -68,7 +68,6 @@ void List::customSpacing(View *current, View *next, int *spacing)
     }
 }
 
-
 View* List::defaultFocus(View *oldFocus)
 {
     if (this->focusedIndex >= 0 && this->focusedIndex < this->children.size())
@@ -84,7 +83,9 @@ View* List::defaultFocus(View *oldFocus)
 ListItem::ListItem(string label, string sublabel) : label(label)
 {
     Style *style = Application::getStyle();
+
     this->setHeight(style->List.Item.height);
+    this->setTextSize(style->List.Item.textSize);
 
     if (sublabel != "")
         this->sublabelView = new Label(LabelStyle::SUBLABEL, sublabel, true);
@@ -93,6 +94,11 @@ ListItem::ListItem(string label, string sublabel) : label(label)
 void ListItem::setIndented(bool indented)
 {
     this->indented = indented;
+}
+
+void ListItem::setTextSize(unsigned textSize)
+{
+    this->textSize = textSize;
 }
 
 void ListItem::setParent(View *parent)
@@ -191,7 +197,7 @@ View* ListItem::requestFocus(FocusDirection direction, View *oldFocus, bool from
 
 void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
-    unsigned baseHeight = style->List.Item.height;
+    unsigned baseHeight = this->height;
 
     if (this->indented)
     {
@@ -236,7 +242,7 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
 
     // Label
     nvgFillColor(vg, a(ctx->theme->textColor));
-    nvgFontSize(vg, style->List.Item.textSize);
+    nvgFontSize(vg, this->textSize);
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
     nvgFontFaceId(vg, ctx->fontStash->regular);
     nvgBeginPath(vg);

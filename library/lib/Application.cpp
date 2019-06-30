@@ -417,6 +417,27 @@ void Application::requestFocus(View *view, FocusDirection direction)
         oldFocus->shakeHighlight(direction);
 }
 
+void Application::popView()
+{
+    if (Application::viewStack.size() == 0)
+        return;
+
+    View* last = Application::viewStack[Application::viewStack.size()-1];
+    last->willDisappear();
+
+    last->hide([last](){
+        Application::viewStack.pop_back();
+        delete last;
+    });
+
+    if (Application::focusStack.size() > 0)
+    {
+        View *newFocus = Application::focusStack[Application::focusStack.size()-1];
+        Application::requestFocus(newFocus, FocusDirection::NONE);
+        Application::focusStack.pop_back();
+    }
+}
+
 // TODO: Block inputs while this happens
 void Application::pushView(View *view)
 {
@@ -431,7 +452,7 @@ void Application::pushView(View *view)
     if (fadeOutAnimation)
     {
         view->setForceTranslucent(true); // set the new view translucent until the fade out animation is done playing
-        last->hide([](void *userdata) {
+        last->hide([]() {
             View *newLast = Application::viewStack[Application::viewStack.size()-1];
             newLast->setForceTranslucent(false);
             newLast->show();
@@ -444,6 +465,9 @@ void Application::pushView(View *view)
         view->show();
     else
         view->alpha = 0.0f;
+
+    if (Application::viewStack.size() > 0)
+        Application::focusStack.push_back(Application::currentFocus);
 
     view->willAppear();
     Application::requestFocus(view, FocusDirection::NONE);
