@@ -64,7 +64,7 @@ static void windowFramebufferSizeCallback(GLFWwindow* window, int width, int hei
     if (!width || !height)
         return;
 
-    printf("Window size changed to %dx%d\n", width, height);
+    info("Window size changed to %dx%d", width, height);
     glViewport(0, 0, width, height);
 }
 
@@ -72,12 +72,12 @@ static void joystickCallback(int jid, int event)
 {
     if (event == GLFW_CONNECTED)
     {
-        printf("Joystick %d connected\n", jid);
+        info("Joystick %d connected", jid);
         if (glfwJoystickIsGamepad(jid))
-            printf("Joystick %d is gamepad: \"%s\"\n", jid, glfwGetGamepadName(jid));
+            info("Joystick %d is gamepad: \"%s\"", jid, glfwGetGamepadName(jid));
     }
     else if (event == GLFW_DISCONNECTED)
-        printf("Joystick %d disconnected\n", jid);
+        info("Joystick %d disconnected", jid);
 }
 
 static void windowKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -121,7 +121,7 @@ bool Application::init(StyleEnum style)
     glfwInitHint(GLFW_JOYSTICK_HAT_BUTTONS, GLFW_FALSE);
     if (!glfwInit())
     {
-        printf("Failed to initialize glfw\n");
+        error("Failed to initialize glfw");
         return false;
     }
 
@@ -143,7 +143,7 @@ bool Application::init(StyleEnum style)
     Application::window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, nullptr, nullptr);
     if (!window)
     {
-        printf("glfw: failed to create window\n");
+        error("glfw: failed to create window\n");
         glfwTerminate();
         return false;
     }
@@ -159,14 +159,14 @@ bool Application::init(StyleEnum style)
     // Load OpenGL routines using glad
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
-    printf("GL Vendor: %s\n", glGetString(GL_VENDOR));
-    printf("GL Renderer: %s\n", glGetString(GL_RENDERER));
-    printf("GL Version: %s\n", glGetString(GL_VERSION));
+    info("GL Vendor: %s", glGetString(GL_VENDOR));
+    info("GL Renderer: %s", glGetString(GL_RENDERER));
+    info("GL Version: %s", glGetString(GL_VERSION));
 
     if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
     {
         GLFWgamepadstate state;
-        printf("Gamepad detected: %s\n", glfwGetGamepadName(GLFW_JOYSTICK_1));
+        info("Gamepad detected: %s", glfwGetGamepadName(GLFW_JOYSTICK_1));
         glfwGetGamepadState(GLFW_JOYSTICK_1, &state);
     }
 
@@ -174,7 +174,7 @@ bool Application::init(StyleEnum style)
     Application::vg = nvgCreateGL3(NVG_STENCIL_STROKES | NVG_ANTIALIAS);
     if (!vg)
     {
-        printf("Unable to init nanovg\n");
+        error("Unable to init nanovg");
         glfwTerminate();
         return false;
     }
@@ -189,7 +189,7 @@ bool Application::init(StyleEnum style)
         Result rc = plGetSharedFontByType(&font, PlSharedFontType_Standard);
         if(R_SUCCEEDED(rc))
         {
-            printf("Using Switch shared font\n");
+            info("Using Switch shared font");
             Application::fontStash.regular = nvgCreateFontMem(Application::vg, "regular", (unsigned char*)font.address, font.size, 0);
         }
     }
@@ -481,7 +481,7 @@ void Application::pushView(View *view)
 
 void Application::onWindowSizeChanged()
 {
-    printf("Layout triggered\n");
+    debug("Layout triggered");
 
     for (View *view : Application::viewStack)
     {

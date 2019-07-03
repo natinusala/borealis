@@ -18,27 +18,21 @@
 
 #pragma once
 
-// Useful macros
-#ifndef __SWITCH__
-#define ASSET(_str) "./resources/" _str
-#else
-#define ASSET(_str) "romfs:/" _str
-#endif
+#include <string>
 
-// Library
-#include <Application.hpp>
-#include <View.hpp>
-#include <SettingsFrame.hpp>
-#include <TabFrame.hpp>
-#include <Rectangle.hpp>
-#include <BoxLayout.hpp>
-#include <Theme.hpp>
-#include <Sidebar.hpp>
-#include <Style.hpp>
-#include <List.hpp>
-#include <Label.hpp>
-#include <CrashFrame.hpp>
-#include <Button.hpp>
-#include <TableView.hpp>
-#include <SelectView.hpp>
-#include <Logger.hpp>
+using namespace std;
+
+enum class LogLevel
+{
+    ERROR   = 0,
+    INFO,
+    DEBUG
+};
+
+void setLogLevel(LogLevel logLevel);
+
+void printLine(string prefix, string line);
+
+void error(const char * format, ...);
+void info(const char * format, ...);
+void debug(const char * format, ...);
