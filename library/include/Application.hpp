@@ -68,6 +68,17 @@ class Application
 
         static void quit();
 
+        /**
+         * Blocks any and all user inputs
+         */
+        static void blockInputs();
+
+        /**
+         * Unblocks inputs after a call to
+         * blockInputs()
+         */
+        static void unblockInputs();
+
     private:
         inline static GLFWwindow* window;
         inline static NVGcontext *vg;
@@ -87,6 +98,8 @@ class Application
         inline static GLFWgamepadstate gamepad;
 
         inline static Style *currentStyle;
+
+        inline static unsigned blockInputsTokens = 0; // any value > 0 means inputs are blocked
 
         static void onWindowSizeChanged();
 

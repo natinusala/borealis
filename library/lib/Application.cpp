@@ -308,6 +308,9 @@ void Application::quit()
 
 void Application::onGamepadButtonPressed(char button)
 {
+    if (Application::blockInputsTokens != 0)
+        return;
+
     switch (button)
     {
         // Exit by pressing Start (aka Plus)
@@ -438,9 +441,10 @@ void Application::popView()
     }
 }
 
-// TODO: Block inputs while this happens
 void Application::pushView(View *view)
 {
+    Application::blockInputs();
+
     // Call hide() on the previous view in the stack if no
     // views are translucent, then call show() once the animation ends
     View* last = nullptr;
@@ -455,14 +459,14 @@ void Application::pushView(View *view)
         last->hide([]() {
             View *newLast = Application::viewStack[Application::viewStack.size()-1];
             newLast->setForceTranslucent(false);
-            newLast->show();
+            newLast->show([](){ Application::unblockInputs(); });
         });
     }
 
     view->setBoundaries(0, 0, Application::windowWidth, Application::windowHeight);
 
     if (!fadeOutAnimation)
-        view->show();
+        view->show([](){ Application::unblockInputs(); });
     else
         view->alpha = 0.0f;
 
@@ -521,4 +525,17 @@ void Application::crash(string text)
 {
     CrashFrame *crashFrame = new CrashFrame(text);
     Application::pushView(crashFrame);
+}
+
+void Application::blockInputs()
+{
+    Application::blockInputsTokens += 1;
+}
+
+void Application::unblockInputs()
+{
+    Application::blockInputsTokens -= 1;
+
+    if (Application::blockInputsTokens < 0)
+        Application::blockInputsTokens = 0;
 }

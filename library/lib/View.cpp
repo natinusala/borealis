@@ -445,7 +445,7 @@ unsigned View::getShowAnimationDuration()
     return VIEW_SHOW_ANIMATION_DURATION;
 }
 
-void View::show()
+void View::show(function<void(void)> cb)
 {
     menu_animation_ctx_tag tag = (uintptr_t) &this->alpha;
     menu_animation_kill_by_tag(&tag);
@@ -454,9 +454,10 @@ void View::show()
     this->fadeIn    = true;
 
     menu_animation_ctx_entry_t entry;
-    entry.cb            = [this](void *userdata) {
+    entry.cb            = [this, cb](void *userdata) {
         this->fadeIn = false;
         this->onShowAnimationEnd();
+        cb();
     };
     entry.duration      = this->getShowAnimationDuration();
     entry.easing_enum   = EASING_OUT_QUAD;

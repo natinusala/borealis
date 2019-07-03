@@ -90,7 +90,7 @@ void CrashFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned hei
 
 void CrashFrame::onShowAnimationEnd()
 {
-    this->button->show();
+    this->button->show(nullptr);
 }
 
 View* CrashFrame::requestFocus(FocusDirection direction, View *oldFocus, bool fromUp)
