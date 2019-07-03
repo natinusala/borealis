@@ -19,6 +19,8 @@
 #include <SelectView.hpp>
 #include <Application.hpp>
 
+#include <Animations.hpp>
+
 #define SELECT_VIEW_MAX_ITEMS 6 // for max height
 
 #define min(a, b) ((a < b) ? a : b)
@@ -32,6 +34,8 @@ SelectView::SelectView(string title, vector<string> values, SelectListener liste
     listener(listener)
 {
     Style *style = Application::getStyle();
+
+    this->topOffset = (float)style->SelectView.listPadding / 8.0f;
 
     this->valuesCount = values.size();
 
@@ -56,6 +60,23 @@ SelectView::SelectView(string title, vector<string> values, SelectListener liste
 
         this->list->addView(item);
     }
+}
+
+void SelectView::show(function<void(void)> cb)
+{
+    View::show(cb);
+
+    menu_animation_ctx_entry_t entry;
+
+    entry.duration      = this->getShowAnimationDuration();
+    entry.easing_enum   = EASING_OUT_QUAD;
+    entry.subject       = &this->topOffset;
+    entry.tag           = (uintptr_t) nullptr;
+    entry.target_value  = 0.0f;
+    entry.tick          = [this](void* userdata){ this->invalidate(); };
+    entry.userdata      = nullptr;
+
+    menu_animation_push(&entry);
 }
 
 void SelectView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
@@ -117,12 +138,12 @@ unsigned SelectView::getShowAnimationDuration()
 void SelectView::layout(NVGcontext* vg, Style *style, FontStash *stash)
 {
     // Layout and move the list
-    unsigned listHeight = min(SELECT_VIEW_MAX_ITEMS, this->valuesCount) * style->SelectView.listItemHeight;
+    unsigned listHeight = min(SELECT_VIEW_MAX_ITEMS, this->valuesCount) * style->SelectView.listItemHeight - (unsigned) this->topOffset;
     unsigned listWidth  = style->SelectView.listWidth + style->List.marginLeftRight * 2;
 
     this->list->setBoundaries(
         this->width / 2 - listWidth / 2,
-        this->height - style->SettingsFrame.footerHeight - listHeight - style->SelectView.listPadding,
+        this->height - style->SettingsFrame.footerHeight - listHeight - style->SelectView.listPadding + (unsigned) this->topOffset,
         listWidth,
         listHeight);
     this->list->invalidate();

@@ -51,6 +51,8 @@ class SelectView : public View
 
         List *list;
 
+        float topOffset; // for slide in animation
+
     protected:
         unsigned getShowAnimationDuration() override;
 
@@ -61,6 +63,7 @@ class SelectView : public View
         void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
         View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override;
         bool onCancel() override;
+        void show(function<void(void)> cb) override;
 
         static void open(string title, vector<string> values, SelectListener listener, int selected = -1);
 
