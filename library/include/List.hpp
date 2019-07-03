@@ -66,13 +66,15 @@ class ListItem : public View
 
         void setTextSize(unsigned textSize);
 
+        string getLabel();
+
         /**
          * Sets the value of this list item
          * (the text on the right)
          * Set faint to true to have the new value
          * use a darker color (typically "OFF" labels)
          */
-        void setValue(string value, bool faint = false);
+        void setValue(string value, bool faint = false, bool animate = true);
 
         void setClickListener(EventListener listener);
 
@@ -84,6 +86,18 @@ class ListItemGroupSpacing : public Rectangle
 {
     public:
         ListItemGroupSpacing(bool separator = false);
+};
+
+// A list item with mutliple choices for its value
+// (will open a SelectView)
+class SelectListItem : public ListItem
+{
+    public:
+        SelectListItem(string label, vector<string> values, unsigned selectedValue = 0);
+
+    private:
+        vector<string> values;
+        unsigned selectedValue;
 };
 
 enum class ToggleListItemType

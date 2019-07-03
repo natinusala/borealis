@@ -27,6 +27,8 @@
 
 // TODO: Selection marker
 // TODO: Default selection
+// TODO: Fix wonky scrolling near the end of list
+// TODO: Fix scrolling while it shouldn't
 
 SelectView::SelectView(string title, vector<string> values, SelectListener listener, int selected) :
     title(title),
@@ -154,7 +156,6 @@ View* SelectView::requestFocus(FocusDirection direction, View *oldFocus, bool fr
     return this->list->requestFocus(direction, oldFocus, fromUp);
 }
 
-// TODO: Slide up animation
 void SelectView::open(string title, vector<string> values, SelectListener listener, int selected)
 {
     SelectView *selectView = new SelectView(title, values, listener, selected);

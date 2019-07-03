@@ -19,6 +19,7 @@
 #include <List.hpp>
 #include <Application.hpp>
 #include <TableView.hpp>
+#include <SelectView.hpp>
 
 #include <Animations.hpp>
 
@@ -157,7 +158,7 @@ void ListItem::resetValueAnimation()
     menu_animation_kill_by_tag(&tag);
 }
 
-void ListItem::setValue(string value, bool faint)
+void ListItem::setValue(string value, bool faint, bool animate)
 {
     this->oldValue      = this->value;
     this->oldValueFaint = this->valueFaint;
@@ -167,19 +168,22 @@ void ListItem::setValue(string value, bool faint)
 
     this->resetValueAnimation();
 
-    menu_animation_ctx_tag tag = (uintptr_t) &this->valueAnimation;
-    menu_animation_ctx_entry_t entry;
+    if (animate)
+    {
+        menu_animation_ctx_tag tag = (uintptr_t) &this->valueAnimation;
+        menu_animation_ctx_entry_t entry;
 
-    entry.cb            = [this](void *userdata) { this->resetValueAnimation(); };
-    entry.duration      = LIST_ITEM_VALUE_ANIMATION_DURATION;
-    entry.easing_enum   = EASING_IN_OUT_QUAD;
-    entry.subject       = &this->valueAnimation;
-    entry.tag           = tag;
-    entry.target_value  = 1.0f;
-    entry.tick          = nullptr;
-    entry.userdata      = nullptr;
+        entry.cb            = [this](void *userdata) { this->resetValueAnimation(); };
+        entry.duration      = LIST_ITEM_VALUE_ANIMATION_DURATION;
+        entry.easing_enum   = EASING_IN_OUT_QUAD;
+        entry.subject       = &this->valueAnimation;
+        entry.tag           = tag;
+        entry.target_value  = 1.0f;
+        entry.tick          = nullptr;
+        entry.userdata      = nullptr;
 
-    menu_animation_push(&entry);
+        menu_animation_push(&entry);
+    }
 }
 
 void ListItem::setDrawTopSeparator(bool draw)
@@ -271,6 +275,11 @@ bool ListItem::hasSubLabel()
     return this->sublabelView;
 }
 
+string ListItem::getLabel()
+{
+    return this->label;
+}
+
 ListItem::~ListItem()
 {
     if (this->sublabelView)
@@ -280,7 +289,7 @@ ListItem::~ListItem()
 }
 
 ToggleListItem::ToggleListItem(string label, bool initialValue, string sublabel, ToggleListItemType type) : 
-    ListItem(label, sublabel), 
+    ListItem(label, sublabel),
     toggleState(initialValue),
     type(type)
 {
@@ -340,4 +349,23 @@ ListItemGroupSpacing::ListItemGroupSpacing(bool separator) : Rectangle(nvgRGBA(0
 
     if (separator)
         this->setColor(theme->listItemSeparatorColor);
+}
+
+SelectListItem::SelectListItem(string label, vector<string> values, unsigned selectedValue) :
+    ListItem(label, ""),
+    values(values),
+    selectedValue(selectedValue)
+{
+    this->setValue(values[selectedValue], false, false);
+
+    this->setClickListener([this](View *view){
+        SelectListener selectListener = [this](int result){
+            if (result == -1)
+                return;
+
+            this->setValue(this->values[result], false, false);
+            this->selectedValue = result;
+        };
+        SelectView::open(this->getLabel(), this->values, selectListener, this->selectedValue);
+    });
 }
