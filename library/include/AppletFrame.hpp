@@ -26,7 +26,7 @@
 using namespace std;
 
 // A Horizon settings-like frame, with header and footer (no sidebar)
-class SettingsFrame : public View
+class AppletFrame : public View
 {
     private:
         string title = "";
@@ -40,7 +40,7 @@ class SettingsFrame : public View
         void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
 
     public:
-        SettingsFrame(bool padLeft, bool padRight);
+        AppletFrame(bool padLeft, bool padRight);
 
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
         View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override;
@@ -50,5 +50,5 @@ class SettingsFrame : public View
         void setTitle(string title);
         void setContentView(View *view);
 
-        ~SettingsFrame();
+        ~AppletFrame();
 };

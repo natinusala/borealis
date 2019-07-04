@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <SettingsFrame.hpp>
+#include <AppletFrame.hpp>
 #include <Sidebar.hpp>
 
 #include <vector>
@@ -26,10 +26,10 @@
 
 using namespace std;
 
-// A settings frame containing a sidebar on the left with multiple tabs
+// A applet frame containing a sidebar on the left with multiple tabs
 
-// TODO: Separate it from SettingsFrame to allow using tabs without the header and footer
-class TabFrame : public SettingsFrame
+// TODO: Separate it from AppletFrame to allow using tabs without the header and footer
+class TabFrame : public AppletFrame
 {
     public:
         TabFrame();

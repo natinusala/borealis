@@ -28,7 +28,7 @@
 // Library
 #include <Application.hpp>
 #include <View.hpp>
-#include <SettingsFrame.hpp>
+#include <AppletFrame.hpp>
 #include <TabFrame.hpp>
 #include <Rectangle.hpp>
 #include <BoxLayout.hpp>

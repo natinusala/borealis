@@ -74,13 +74,13 @@ void CrashFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned hei
 
     // Footer
     nvgBeginPath(vg);
-    nvgRect(vg, x + style->SettingsFrame.separatorSpacing, y + height - style->SettingsFrame.footerHeight, width - style->SettingsFrame.separatorSpacing * 2, 1);
+    nvgRect(vg, x + style->AppletFrame.separatorSpacing, y + height - style->AppletFrame.footerHeight, width - style->AppletFrame.separatorSpacing * 2, 1);
     nvgFill(vg);
 
-    nvgFontSize(vg, style->SettingsFrame.footerTextSize);
+    nvgFontSize(vg, style->AppletFrame.footerTextSize);
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
     nvgBeginPath(vg);
-    nvgText(vg, x + style->SettingsFrame.separatorSpacing + style->SettingsFrame.footerTextSpacing, y + height - style->SettingsFrame.footerHeight/2, WINDOW_NAME, nullptr);
+    nvgText(vg, x + style->AppletFrame.separatorSpacing + style->AppletFrame.footerTextSpacing, y + height - style->AppletFrame.footerHeight/2, WINDOW_NAME, nullptr);
 
     // Button
     this->button->frame(ctx);
@@ -106,7 +106,7 @@ void CrashFrame::layout(NVGcontext* vg, Style *style, FontStash *stash)
 
     this->label->setBoundaries(
         this->x + this->width / 2 - this->label->getWidth() / 2,
-        this->y + (this->height - style->SettingsFrame.footerHeight) / 2,
+        this->y + (this->height - style->AppletFrame.footerHeight) / 2,
         this->label->getWidth(),
         this->label->getHeight()
     );
@@ -114,7 +114,7 @@ void CrashFrame::layout(NVGcontext* vg, Style *style, FontStash *stash)
     // Button
     this->button->setBoundaries(
         this->x + this->width / 2 - style->CrashFrame.buttonWidth / 2,
-        this->y + this->height - style->SettingsFrame.footerHeight - style->CrashFrame.boxSpacing - style->CrashFrame.buttonHeight,
+        this->y + this->height - style->AppletFrame.footerHeight - style->CrashFrame.boxSpacing - style->CrashFrame.buttonHeight,
         style->CrashFrame.buttonWidth,
         style->CrashFrame.buttonHeight
     );
