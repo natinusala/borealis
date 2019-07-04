@@ -210,8 +210,11 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
     }
 
     // Sublabel
-    if (this->sublabelView)
+    if (this->sublabelView) {
+        // Don't count sublabel as part of list item
+        baseHeight -= this->sublabelView->getHeight() + style->List.Item.sublabelSpacing;
         this->sublabelView->frame(ctx);
+    }
 
     // Value
     nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
