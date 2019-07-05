@@ -7,7 +7,7 @@ borealis_files = files(
 
     'lib/Application.cpp',
     'lib/View.cpp',
-    'lib/SettingsFrame.cpp',
+    'lib/AppletFrame.cpp',
     'lib/Theme.cpp',
     'lib/TabFrame.cpp',
     'lib/Rectangle.cpp',

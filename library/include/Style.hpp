@@ -20,7 +20,7 @@
 
 typedef struct
 {
-    // SettingsFrame
+    // AppletFrame
     struct
     {
         unsigned headerHeight;
@@ -34,7 +34,7 @@ typedef struct
 
         unsigned footerTextSize;
         unsigned footerTextSpacing;
-    } SettingsFrame;
+    } AppletFrame;
 
 
     // Highlight

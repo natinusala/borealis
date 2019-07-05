@@ -107,12 +107,12 @@ void SelectView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned hei
     // Footer
     // TODO: Text
     nvgBeginPath(vg);
-    nvgRect(vg, x + style->SettingsFrame.separatorSpacing, y + height - style->SettingsFrame.footerHeight, width - style->SettingsFrame.separatorSpacing * 2, 1);
+    nvgRect(vg, x + style->AppletFrame.separatorSpacing, y + height - style->AppletFrame.footerHeight, width - style->AppletFrame.separatorSpacing * 2, 1);
     nvgFill(vg);
 
     // Header
     nvgBeginPath(vg);
-    nvgRect(vg, x + style->SettingsFrame.separatorSpacing, top + style->SelectView.headerHeight - 1, width - style->SettingsFrame.separatorSpacing * 2, 1);
+    nvgRect(vg, x + style->AppletFrame.separatorSpacing, top + style->SelectView.headerHeight - 1, width - style->AppletFrame.separatorSpacing * 2, 1);
     nvgFill(vg);
 
     nvgBeginPath(vg);
@@ -145,7 +145,7 @@ void SelectView::layout(NVGcontext* vg, Style *style, FontStash *stash)
 
     this->list->setBoundaries(
         this->width / 2 - listWidth / 2,
-        this->height - style->SettingsFrame.footerHeight - listHeight - style->SelectView.listPadding + (unsigned) this->topOffset,
+        this->height - style->AppletFrame.footerHeight - listHeight - style->SelectView.listPadding + (unsigned) this->topOffset,
         listWidth,
         listHeight);
     this->list->invalidate();

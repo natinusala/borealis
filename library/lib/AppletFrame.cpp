@@ -16,33 +16,33 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <SettingsFrame.hpp>
+#include <AppletFrame.hpp>
 #include <Application.hpp>
 
 // TODO: Add hints system
 
-SettingsFrame::SettingsFrame(bool padLeft, bool padRight)
+AppletFrame::AppletFrame(bool padLeft, bool padRight)
 {
     Style *style = Application::getStyle();
 
     if (padLeft)
-        this->leftPadding = style->SettingsFrame.separatorSpacing;
+        this->leftPadding = style->AppletFrame.separatorSpacing;
 
     if (padRight)
-        this->rightPadding = style->SettingsFrame.separatorSpacing;
+        this->rightPadding = style->AppletFrame.separatorSpacing;
 }
 
-void SettingsFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
+void AppletFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
     // Text
     // Title
     nvgFillColor(vg, a(ctx->theme->textColor));
-    nvgFontSize(vg, style->SettingsFrame.titleSize);
+    nvgFontSize(vg, style->AppletFrame.titleSize);
     nvgFontFaceId(vg, ctx->fontStash->regular);
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
     nvgFontFaceId(vg, ctx->fontStash->regular);
     nvgBeginPath(vg);
-    nvgText(vg, x + style->SettingsFrame.titleStart, y + style->SettingsFrame.headerHeight / 2 + style->SettingsFrame.titleOffset, this->title.c_str(), nullptr);
+    nvgText(vg, x + style->AppletFrame.titleStart, y + style->AppletFrame.headerHeight / 2 + style->AppletFrame.titleOffset, this->title.c_str(), nullptr);
 
     // TODO: Footer
 
@@ -53,12 +53,12 @@ void SettingsFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned 
 
     // Header
     nvgBeginPath(vg);
-    nvgRect(vg, x + style->SettingsFrame.separatorSpacing, y + style->SettingsFrame.headerHeight - 1, width - style->SettingsFrame.separatorSpacing * 2, 1);
+    nvgRect(vg, x + style->AppletFrame.separatorSpacing, y + style->AppletFrame.headerHeight - 1, width - style->AppletFrame.separatorSpacing * 2, 1);
     nvgFill(vg);
 
     // Footer
     nvgBeginPath(vg);
-    nvgRect(vg, x + style->SettingsFrame.separatorSpacing, y + height - style->SettingsFrame.footerHeight, width - style->SettingsFrame.separatorSpacing * 2, 1);
+    nvgRect(vg, x + style->AppletFrame.separatorSpacing, y + height - style->AppletFrame.footerHeight, width - style->AppletFrame.separatorSpacing * 2, 1);
     nvgFill(vg);
 
     // Content view
@@ -66,7 +66,7 @@ void SettingsFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned 
         contentView->frame(ctx);
 }
 
-View* SettingsFrame::requestFocus(FocusDirection direction, View *oldFocus, bool fromUp)
+View* AppletFrame::requestFocus(FocusDirection direction, View *oldFocus, bool fromUp)
 {
     if (fromUp)
         return View::requestFocus(direction, oldFocus);
@@ -75,16 +75,16 @@ View* SettingsFrame::requestFocus(FocusDirection direction, View *oldFocus, bool
     return nullptr;
 }
 
-void SettingsFrame::layout(NVGcontext* vg, Style *style, FontStash *stash)
+void AppletFrame::layout(NVGcontext* vg, Style *style, FontStash *stash)
 {
     if (this->contentView)
     {
-        this->contentView->setBoundaries(this->x + leftPadding, this->y + style->SettingsFrame.headerHeight, this->width - this->leftPadding - this->rightPadding, this->height - style->SettingsFrame.footerHeight - style->SettingsFrame.headerHeight);
+        this->contentView->setBoundaries(this->x + leftPadding, this->y + style->AppletFrame.headerHeight, this->width - this->leftPadding - this->rightPadding, this->height - style->AppletFrame.footerHeight - style->AppletFrame.headerHeight);
         this->contentView->invalidate();
     }
 }
 
-void SettingsFrame::setContentView(View *view)
+void AppletFrame::setContentView(View *view)
 {
     this->contentView = view;
     this->contentView->setParent(this);
@@ -92,12 +92,12 @@ void SettingsFrame::setContentView(View *view)
     this->invalidate();
 }
 
-void SettingsFrame::setTitle(string title)
+void AppletFrame::setTitle(string title)
 {
     this->title = title;
 }
 
-SettingsFrame::~SettingsFrame()
+AppletFrame::~AppletFrame()
 {
     if (this->contentView)
     {
@@ -106,13 +106,13 @@ SettingsFrame::~SettingsFrame()
     }
 }
 
-void SettingsFrame::willAppear()
+void AppletFrame::willAppear()
 {
     if (this->contentView)
         this->contentView->willAppear();
 }
 
-void SettingsFrame::willDisappear()
+void AppletFrame::willDisappear()
 {
     if (this->contentView)
         this->contentView->willDisappear();

@@ -22,7 +22,7 @@
 #include <Sidebar.hpp>
 #include <Application.hpp>
 
-TabFrame::TabFrame() : SettingsFrame(false, true)
+TabFrame::TabFrame() : AppletFrame(false, true)
 {
     //Create sidebar
     this->sidebar = new Sidebar();
@@ -101,5 +101,5 @@ TabFrame::~TabFrame()
 {
     switchToView(nullptr);
 
-    // Content view is freed by ~SettingsFrame()
+    // Content view is freed by ~AppletFrame()
 }

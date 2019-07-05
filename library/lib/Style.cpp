@@ -19,7 +19,7 @@
 #include <Style.hpp>
 
 Style styleAccurate = {
-    SettingsFrame : {
+    AppletFrame : {
         headerHeight      : 88,
         footerHeight      : 73,
 
