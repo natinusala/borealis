@@ -1,6 +1,6 @@
 /*
     Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2019  natinusala
+    Copyright (C) 2019  Billy Laws
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,28 +18,30 @@
 
 #pragma once
 
-// Useful macros
-#ifndef __SWITCH__
-#define ASSET(_str) "./resources/" _str
-#else
-#define ASSET(_str) "romfs:/" _str
-#endif
-
-// Library
-#include <Application.hpp>
-#include <View.hpp>
 #include <AppletFrame.hpp>
-#include <TabFrame.hpp>
-#include <Rectangle.hpp>
-#include <BoxLayout.hpp>
-#include <Theme.hpp>
 #include <Sidebar.hpp>
-#include <Style.hpp>
-#include <List.hpp>
-#include <Label.hpp>
-#include <CrashFrame.hpp>
-#include <Button.hpp>
-#include <TableView.hpp>
-#include <SelectView.hpp>
-#include <Logger.hpp>
-#include <StagedAppletFrame.hpp>
+
+#include <vector>
+#include <string>
+
+using namespace std;
+
+// An applet frame for implementing a stage based app with a progress display in top right
+
+class StagedAppletFrame : public AppletFrame
+{
+    public:
+        StagedAppletFrame();
+
+        void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
+
+        void addStage(View *view);
+        void nextStage();
+        void enterStage(int index);
+
+        ~StagedAppletFrame();
+
+    private:
+        size_t currentStage = 0;
+        vector<View*> stageViews;
+};
