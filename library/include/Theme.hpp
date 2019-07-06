@@ -45,6 +45,8 @@ typedef struct
     NVGcolor tableBodyTextColor;
 
     NVGcolor selectViewBackgroundColor;
+
+    NVGcolor nextStageBulletColor;
 } Theme;
 
 extern Theme themeLight;

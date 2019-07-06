@@ -63,27 +63,38 @@ void StagedAppletFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsig
     if (stageViews.empty())
         return;
 
-    for (size_t i = 0; i < stageViews.size(); i++) {
+    for (size_t i = 0; i < stageViews.size(); i++)
+    {
         bool current = (i == (stageViews.size() - 1) - currentStage);
-        NVGcolor borderColor = ctx->theme->listItemSeparatorColor;
+
+        // Border color for next stages
+        NVGcolor borderColor = ctx->theme->nextStageBulletColor;
+
         nvgBeginPath(vg);
-        nvgCircle(vg, x + width - style->AppletFrame.separatorSpacing * (style->StagedAppletFrame.progressIndicatorSpacing + i),
+        nvgCircle(vg, x + width - style->AppletFrame.separatorSpacing * (style->StagedAppletFrame.progressIndicatorSpacing + i) + style->AppletFrame.separatorSpacing + style->AppletFrame.separatorSpacing / 2,
                   y + style->AppletFrame.headerHeight / 2, current ? style->StagedAppletFrame.progressIndicatorRadiusSelected :
                   style->StagedAppletFrame.progressIndicatorRadiusUnselected);
 
-        if (current) {
-            borderColor = ctx->theme->listItemSeparatorColor;
+        // Current stage
+        if (current)
+        {
             nvgFillColor(vg, a(ctx->theme->listItemValueColor));
             nvgFill(vg);
-        } else if (i > (stageViews.size() - 1) - currentStage) {
+        }
+        // Previous stages
+        else if (i > (stageViews.size() - 1) - currentStage)
+        {
             borderColor = ctx->theme->separatorColor;
             nvgFillColor(vg, a(ctx->theme->textColor));
             nvgFill(vg);
         }
 
-        nvgStrokeColor(vg, a(borderColor));
-        nvgStrokeWidth(vg, style->StagedAppletFrame.progressIndicatorBorderWidth);
-        nvgStroke(vg);
+        if (!current)
+        {
+            nvgStrokeColor(vg, a(borderColor));
+            nvgStrokeWidth(vg, style->StagedAppletFrame.progressIndicatorBorderWidth);
+            nvgStroke(vg);
+        }
     }
 }
 

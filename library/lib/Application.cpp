@@ -430,7 +430,7 @@ void Application::popView()
     View* last = Application::viewStack[Application::viewStack.size()-1];
     last->willDisappear();
 
-    //Hide animation (and show previous view, if any)
+    // Hide animation (and show previous view, if any)
     last->hide([last](){
         Application::viewStack.pop_back();
         delete last;
@@ -446,7 +446,7 @@ void Application::popView()
         Application::unblockInputs();
     });
 
-    //Focus
+    // Focus
     if (Application::focusStack.size() > 0)
     {
         View *newFocus = Application::focusStack[Application::focusStack.size()-1];
@@ -470,7 +470,7 @@ void Application::pushView(View *view)
 
     bool fadeOutAnimation = last && !last->isTranslucent() && !view->isTranslucent();
 
-    //Fade out animation
+    // Fade out animation
     if (fadeOutAnimation)
     {
         view->setForceTranslucent(true); // set the new view translucent until the fade out animation is done playing
@@ -488,7 +488,7 @@ void Application::pushView(View *view)
     else
         view->alpha = 0.0f;
 
-    //Focus
+    // Focus
     if (Application::viewStack.size() > 0)
     {
         debug("Pushing %s to the focus stack", Application::currentFocus->name().c_str());

@@ -137,8 +137,8 @@ Style styleAccurate = {
 
     StagedAppletFrame : {
         progressIndicatorSpacing : 4,
-        progressIndicatorRadiusUnselected : 6,
-        progressIndicatorRadiusSelected : 10,
+        progressIndicatorRadiusUnselected : 5 - 1, // minus half of border width
+        progressIndicatorRadiusSelected : 8,
         progressIndicatorBorderWidth : 2
     }
 };

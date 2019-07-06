@@ -41,7 +41,9 @@ Theme themeLight = {
     tableEvenBackgroundColor    : nvgRGB(240, 240, 240),
     tableBodyTextColor          : nvgRGB(131, 131, 131),
 
-    selectViewBackgroundColor : nvgRGBA(0, 0, 0, 178)
+    selectViewBackgroundColor : nvgRGBA(0, 0, 0, 178),
+
+    nextStageBulletColor : nvgRGB(165, 165, 165)
 };
 
 Theme themeDark = {
@@ -67,5 +69,7 @@ Theme themeDark = {
     tableEvenBackgroundColor    : nvgRGB(57, 58, 60),
     tableBodyTextColor          : nvgRGB(155, 157, 156),
 
-    selectViewBackgroundColor : nvgRGBA(0, 0, 0, 178) // TODO: 178 may be too much for dark theme
+    selectViewBackgroundColor : nvgRGBA(0, 0, 0, 178), // TODO: 178 may be too much for dark theme
+
+    nextStageBulletColor : nvgRGB(165, 165, 165)
 };
