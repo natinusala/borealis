@@ -8,7 +8,8 @@ add_global_arguments('-DWINDOW_NAME="Borealis example"', language : 'cpp')
 subdir('library')
 
 example_files = files(
-    'example/main.cpp'
+    'example/main.cpp',
+    'example/SampleInstallerPage.cpp'
 )
 
 borealis_example = executable(
@@ -16,6 +17,6 @@ borealis_example = executable(
     [ example_files, borealis_files ],
     dependencies : borealis_dependencies,
     install: true,
-    include_directories: borealis_include,
+    include_directories: [ borealis_include, 'example'],
     cpp_args: [ '-g', '-O2' ]
 )

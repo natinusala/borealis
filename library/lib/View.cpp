@@ -447,6 +447,8 @@ unsigned View::getShowAnimationDuration()
 
 void View::show(function<void(void)> cb)
 {
+    this->hidden = false;
+
     menu_animation_ctx_tag tag = (uintptr_t) &this->alpha;
     menu_animation_kill_by_tag(&tag);
 
@@ -472,6 +474,8 @@ void View::show(function<void(void)> cb)
 
 void View::hide(function<void(void)> cb)
 {
+    this->hidden = true;
+
     menu_animation_ctx_tag tag = (uintptr_t) &this->alpha;
     menu_animation_kill_by_tag(&tag);
 
@@ -489,6 +493,11 @@ void View::hide(function<void(void)> cb)
     entry.userdata      = nullptr;
 
     menu_animation_push(&entry);
+}
+
+bool View::isHidden()
+{
+    return this->hidden;
 }
 
 void View::click()

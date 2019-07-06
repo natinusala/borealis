@@ -168,7 +168,7 @@ void ListItem::setValue(string value, bool faint, bool animate)
 
     this->resetValueAnimation();
 
-    if (animate)
+    if (animate && this->oldValue != "")
     {
         menu_animation_ctx_tag tag = (uintptr_t) &this->valueAnimation;
         menu_animation_ctx_entry_t entry;

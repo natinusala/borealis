@@ -84,6 +84,8 @@ class View
 
         Theme *themeOverride = nullptr;
 
+        bool hidden = false;
+
     protected:
         int x = 0;
         int y = 0;
@@ -246,6 +248,8 @@ class View
          * Not recursive
          */
         void hide(function<void(void)> cb);
+
+        bool isHidden();
 
         /**
          * Calls layout() on next frame

@@ -22,11 +22,15 @@
 
 #include <Borealis.hpp>
 
+#include <SampleInstallerPage.hpp>
+
 using namespace std;
 
 int main(int argc, char* argv[])
 {
     // Init the app
+    setLogLevel(LogLevel::DEBUG);
+
     if (!Application::init(StyleEnum::ACCURATE))
     {
         error("Unable to init Borealis application");
@@ -47,9 +51,22 @@ int main(int argc, char* argv[])
     ListItem *crashItem = new ListItem("Divide by 0", "Can the Switch do it?");
     crashItem->setClickListener([](View *view){ Application::crash("The software was closed because an error occured:\nSIGABRT (signal 6)"); });
 
+    ListItem *installerItem = new ListItem("Open example installer");
+    installerItem->setClickListener([](View *view) {
+        StagedAppletFrame *stagedFrame = new StagedAppletFrame();
+        stagedFrame->setTitle("My great installer");
+
+        stagedFrame->addStage(new SampleInstallerPage(stagedFrame, "Go to step 2"));
+        stagedFrame->addStage(new SampleInstallerPage(stagedFrame, "Go to step 3"));
+        stagedFrame->addStage(new SampleInstallerPage(stagedFrame, "Finish"));
+
+        Application::pushView(stagedFrame);
+    });
+
     testList->addView(themeItem);
     testList->addView(jankItem);
     testList->addView(crashItem);
+    testList->addView(installerItem);
 
     Label *testLabel = new Label(LabelStyle::REGULAR, "For more information about how to use Nintendo Switch and its features, please refer to the Nintendo Support Website on your smart device or PC.", true);
     testList->addView(testLabel);

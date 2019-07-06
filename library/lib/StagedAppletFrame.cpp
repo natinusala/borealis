@@ -30,20 +30,20 @@ void StagedAppletFrame::addStage(View *view)
     stageViews.push_back(view);
 
     if (!currentStage)
-        enterStage(0);
+        enterStage(0, false);
 }
 
 void StagedAppletFrame::nextStage()
 {
-    enterStage((int)currentStage + 1);
+    enterStage((int)currentStage + 1, true);
 }
 
 void StagedAppletFrame::previousStage()
 {
-    enterStage((int)currentStage - 1);
+    enterStage((int)currentStage - 1, true);
 }
 
-void StagedAppletFrame::enterStage(int index)
+void StagedAppletFrame::enterStage(int index, bool requestFocus)
 {
     if ((size_t)index >= stageViews.size())
         return;
@@ -51,7 +51,9 @@ void StagedAppletFrame::enterStage(int index)
     currentStage = (size_t)index;
 
     this->setContentView(stageViews[currentStage]);
-    Application::requestFocus(this, FocusDirection::NONE);
+
+    if (requestFocus)
+        Application::requestFocus(this, FocusDirection::NONE);
 }
 
 void StagedAppletFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
@@ -83,6 +85,21 @@ void StagedAppletFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsig
         nvgStrokeWidth(vg, style->StagedAppletFrame.progressIndicatorBorderWidth);
         nvgStroke(vg);
     }
+}
+
+unsigned StagedAppletFrame::getStagesCount()
+{
+    return this->stageViews.size();
+}
+
+unsigned StagedAppletFrame::getCurrentStage()
+{
+    return this->currentStage;
+}
+
+unsigned StagedAppletFrame::isLastStage()
+{
+    return this->currentStage == this->stageViews.size() - 1;
 }
 
 StagedAppletFrame::~StagedAppletFrame()

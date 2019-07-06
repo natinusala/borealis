@@ -425,17 +425,34 @@ void Application::popView()
     if (Application::viewStack.size() == 0)
         return;
 
+    Application::blockInputs();
+
     View* last = Application::viewStack[Application::viewStack.size()-1];
     last->willDisappear();
 
+    //Hide animation (and show previous view, if any)
     last->hide([last](){
         Application::viewStack.pop_back();
         delete last;
+
+        if (Application::viewStack.size() > 0)
+        {
+            View *newLast = Application::viewStack[Application::viewStack.size()-1];
+
+            if (newLast->isHidden())
+                newLast->show([](){});
+        }
+
+        Application::unblockInputs();
     });
 
+    //Focus
     if (Application::focusStack.size() > 0)
     {
         View *newFocus = Application::focusStack[Application::focusStack.size()-1];
+
+        debug("Giving focus to %s, and removing it from the focus stack", newFocus->name().c_str());
+
         Application::requestFocus(newFocus, FocusDirection::NONE);
         Application::focusStack.pop_back();
     }
@@ -453,6 +470,7 @@ void Application::pushView(View *view)
 
     bool fadeOutAnimation = last && !last->isTranslucent() && !view->isTranslucent();
 
+    //Fade out animation
     if (fadeOutAnimation)
     {
         view->setForceTranslucent(true); // set the new view translucent until the fade out animation is done playing
@@ -470,8 +488,13 @@ void Application::pushView(View *view)
     else
         view->alpha = 0.0f;
 
+    //Focus
     if (Application::viewStack.size() > 0)
+    {
+        debug("Pushing %s to the focus stack", Application::currentFocus->name().c_str());
         Application::focusStack.push_back(Application::currentFocus);
+    }
+
 
     view->willAppear();
     Application::requestFocus(view, FocusDirection::NONE);
