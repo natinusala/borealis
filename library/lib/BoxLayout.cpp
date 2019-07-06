@@ -171,7 +171,7 @@ void BoxLayout::updateScroll()
     menu_animation_kill_by_tag(&tag);
 
     menu_animation_ctx_entry_t entry;
-    entry.cb            = nullptr;
+    entry.cb            = [](void *userdata){};
     entry.duration      = VIEW_HIGHLIGHT_ANIMATION_DURATION;
     entry.easing_enum   = EASING_OUT_QUAD;
     entry.subject       = &this->scrollY;

@@ -117,7 +117,7 @@ void View::collapse(bool animated)
     {
         menu_animation_ctx_entry_t entry;
 
-        entry.cb            = nullptr;
+        entry.cb            = [](void *userdata){};
         entry.duration      = COLLAPSE_ANIMATION_DURATION;
         entry.easing_enum   = EASING_OUT_QUAD;
         entry.subject       = &this->collapseState;
@@ -143,7 +143,7 @@ void View::expand(bool animated)
     {
             menu_animation_ctx_entry_t entry;
 
-        entry.cb            = nullptr;
+        entry.cb            = [](void *userdata){};
         entry.duration      = COLLAPSE_ANIMATION_DURATION;
         entry.easing_enum   = EASING_OUT_QUAD;
         entry.subject       = &this->collapseState;
@@ -392,13 +392,13 @@ void View::onFocusGained()
     menu_animation_ctx_tag tag = (uintptr_t) this->highlightAlpha;
 
     menu_animation_ctx_entry_t entry;
-    entry.cb            = nullptr;
+    entry.cb            = [](void *userdata){};
     entry.duration      = VIEW_HIGHLIGHT_ANIMATION_DURATION;
     entry.easing_enum   = EASING_OUT_QUAD;
     entry.subject       = &this->highlightAlpha;
     entry.tag           = tag;
     entry.target_value  = 1.0f;
-    entry.tick          = nullptr;
+    entry.tick          = [](void *userdata){};
     entry.userdata      = nullptr;
 
     menu_animation_push(&entry);
@@ -423,13 +423,13 @@ void View::onFocusLost()
     menu_animation_ctx_tag tag = (uintptr_t) this->highlightAlpha;
 
     menu_animation_ctx_entry_t entry;
-    entry.cb            = nullptr;
+    entry.cb            = [](void *userdata){};
     entry.duration      = VIEW_HIGHLIGHT_ANIMATION_DURATION;
     entry.easing_enum   = EASING_OUT_QUAD;
     entry.subject       = &this->highlightAlpha;
     entry.tag           = tag;
     entry.target_value  = 0.0f;
-    entry.tick          = nullptr;
+    entry.tick          = [](void *userdata){};
     entry.userdata      = nullptr;
 
     menu_animation_push(&entry);
@@ -464,7 +464,7 @@ void View::show(function<void(void)> cb)
     entry.subject       = &this->alpha;
     entry.tag           = tag;
     entry.target_value  = 1.0f;
-    entry.tick          = nullptr;
+    entry.tick          = [](void *userdata){};
     entry.userdata      = nullptr;
 
     menu_animation_push(&entry);
@@ -485,7 +485,7 @@ void View::hide(function<void(void)> cb)
     entry.subject       = &this->alpha;
     entry.tag           = tag;
     entry.target_value  = 0.0f;
-    entry.tick          = nullptr;
+    entry.tick          = [](void *userdata){};
     entry.userdata      = nullptr;
 
     menu_animation_push(&entry);

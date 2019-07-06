@@ -179,7 +179,7 @@ void ListItem::setValue(string value, bool faint, bool animate)
         entry.subject       = &this->valueAnimation;
         entry.tag           = tag;
         entry.target_value  = 1.0f;
-        entry.tick          = nullptr;
+        entry.tick          = [](void *userdata){};
         entry.userdata      = nullptr;
 
         menu_animation_push(&entry);
