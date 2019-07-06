@@ -161,6 +161,15 @@ typedef struct
         unsigned headerFontSize;
         unsigned headerPadding;
     } SelectView;
+
+    // StagedAppletFrame
+    struct
+    {
+        unsigned progressIndicatorSpacing;
+        unsigned progressIndicatorRadiusUnselected;
+        unsigned progressIndicatorRadiusSelected;
+        unsigned progressIndicatorBorderWidth;
+    } StagedAppletFrame;
 } Style;
 
 // TODO: Make a condensed style

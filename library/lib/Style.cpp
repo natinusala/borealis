@@ -133,5 +133,12 @@ Style styleAccurate = {
         headerHeight    : 71,
         headerFontSize  : 24,
         headerPadding   : 70
+    },
+
+    StagedAppletFrame : {
+        progressIndicatorSpacing : 4,
+        progressIndicatorRadiusUnselected : 6,
+        progressIndicatorRadiusSelected : 10,
+        progressIndicatorBorderWidth : 2
     }
 };

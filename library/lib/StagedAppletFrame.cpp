@@ -35,22 +35,12 @@ void StagedAppletFrame::addStage(View *view)
 
 void StagedAppletFrame::nextStage()
 {
-    if (currentStage + 1 >= stageViews.size())
-        return;
-
-    currentStage++;
-    this->setContentView(stageViews[currentStage]);
-    Application::requestFocus(stageViews[currentStage], FocusDirection::NONE);
+    enterStage((int)currentStage + 1);
 }
 
 void StagedAppletFrame::previousStage()
 {
-    if (currentStage == 0)
-        return;
-
-    currentStage--;
-    this->setContentView(stageViews[currentStage]);
-    Application::requestFocus(stageViews[currentStage], FocusDirection::NONE);
+    enterStage((int)currentStage - 1);
 }
 
 void StagedAppletFrame::enterStage(int index)
@@ -61,8 +51,9 @@ void StagedAppletFrame::enterStage(int index)
     currentStage = (size_t)index;
 
     this->setContentView(stageViews[currentStage]);
-    Application::requestFocus(stageViews[currentStage], FocusDirection::NONE);
+    Application::requestFocus(this, FocusDirection::NONE);
 }
+
 void StagedAppletFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
     AppletFrame::draw(vg, x, y, width, height, style, ctx);
@@ -74,7 +65,9 @@ void StagedAppletFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsig
         bool current = (i == (stageViews.size() - 1) - currentStage);
         NVGcolor borderColor = ctx->theme->listItemSeparatorColor;
         nvgBeginPath(vg);
-        nvgCircle(vg, x + width - style->AppletFrame.separatorSpacing * (4 + i), y + style->AppletFrame.headerHeight / 2, current ? 10 : 6);
+        nvgCircle(vg, x + width - style->AppletFrame.separatorSpacing * (style->StagedAppletFrame.progressIndicatorSpacing + i),
+                  y + style->AppletFrame.headerHeight / 2, current ? style->StagedAppletFrame.progressIndicatorRadiusSelected :
+                  style->StagedAppletFrame.progressIndicatorRadiusUnselected);
 
         if (current) {
             borderColor = ctx->theme->listItemSeparatorColor;
@@ -87,7 +80,7 @@ void StagedAppletFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsig
         }
 
         nvgStrokeColor(vg, a(borderColor));
-        nvgStrokeWidth(vg, 2);
+        nvgStrokeWidth(vg, style->StagedAppletFrame.progressIndicatorBorderWidth);
         nvgStroke(vg);
     }
 }
