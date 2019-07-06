@@ -20,6 +20,7 @@
 
 #include <Style.hpp>
 #include <Theme.hpp>
+#include <Application.hpp>
 #include <Logger.hpp>
 
 StagedAppletFrame::StagedAppletFrame() : AppletFrame(false, true) {}
@@ -34,11 +35,12 @@ void StagedAppletFrame::addStage(View *view)
 
 void StagedAppletFrame::nextStage()
 {
-    if (currentStage >= stageViews.size())
+    if (currentStage + 1 >= stageViews.size())
         return;
 
     currentStage++;
     this->setContentView(stageViews[currentStage]);
+    Application::requestFocus(stageViews[currentStage], FocusDirection::NONE);
 }
 
 void StagedAppletFrame::enterStage(int index)
@@ -49,6 +51,7 @@ void StagedAppletFrame::enterStage(int index)
     currentStage = (size_t)index;
 
     this->setContentView(stageViews[currentStage]);
+    Application::requestFocus(stageViews[currentStage], FocusDirection::NONE);
 }
 void StagedAppletFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
