@@ -43,6 +43,8 @@ void StagedAppletFrame::previousStage()
     enterStage((int)currentStage - 1, true);
 }
 
+// TODO: Add animation for bullets when changing stage
+// TODO: Add left/right and right/left animations for views when changing stage - put the animation in AppletFrame::setContentView()
 void StagedAppletFrame::enterStage(int index, bool requestFocus)
 {
     if ((size_t)index >= stageViews.size())
