@@ -23,7 +23,7 @@
 #include <Application.hpp>
 #include <Logger.hpp>
 
-StagedAppletFrame::StagedAppletFrame() : AppletFrame(false, true) {}
+StagedAppletFrame::StagedAppletFrame() : AppletFrame(true, true) {}
 
 void StagedAppletFrame::addStage(View *view)
 {
@@ -39,6 +39,16 @@ void StagedAppletFrame::nextStage()
         return;
 
     currentStage++;
+    this->setContentView(stageViews[currentStage]);
+    Application::requestFocus(stageViews[currentStage], FocusDirection::NONE);
+}
+
+void StagedAppletFrame::previousStage()
+{
+    if (currentStage == 0)
+        return;
+
+    currentStage--;
     this->setContentView(stageViews[currentStage]);
     Application::requestFocus(stageViews[currentStage], FocusDirection::NONE);
 }

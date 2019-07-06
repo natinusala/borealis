@@ -37,6 +37,7 @@ class StagedAppletFrame : public AppletFrame
 
         void addStage(View *view);
         void nextStage();
+        void previousStage();
         void enterStage(int index);
 
         ~StagedAppletFrame();
