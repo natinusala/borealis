@@ -55,4 +55,5 @@ class Label : public View
         }
 
         void setHorizontalAlign(NVGalign align);
+        void setText(string text);
 };
