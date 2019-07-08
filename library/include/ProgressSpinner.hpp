@@ -1,6 +1,6 @@
 /*
     Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2019  natinusala
+    Copyright (C) 2019  Billy Laws
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,30 +18,28 @@
 
 #pragma once
 
-// Useful macros
-#ifndef __SWITCH__
-#define ASSET(_str) "./resources/" _str
-#else
-#define ASSET(_str) "romfs:/" _str
-#endif
-
-// Library
-#include <Application.hpp>
 #include <View.hpp>
-#include <AppletFrame.hpp>
-#include <TabFrame.hpp>
-#include <Rectangle.hpp>
-#include <BoxLayout.hpp>
-#include <Theme.hpp>
-#include <Sidebar.hpp>
-#include <Style.hpp>
-#include <List.hpp>
-#include <Label.hpp>
-#include <CrashFrame.hpp>
-#include <Button.hpp>
-#include <TableView.hpp>
-#include <SelectView.hpp>
-#include <Logger.hpp>
-#include <StagedAppletFrame.hpp>
-#include <ProgressDisplay.hpp>
-#include <ProgressSpinner.hpp>
+
+#define PROGRESS_SPINNER_ANIMATION_DURATION 1000
+
+// A progress spinner
+class ProgressSpinner : public View
+{
+    public:
+        ProgressSpinner();
+ 
+        void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
+        void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
+        void willAppear() override;
+        void willDisappear() override;
+
+        View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override
+        {
+            return nullptr;
+        }
+
+    private:
+        float animationValue = 0.0f;
+
+        void restartAnimation();
+};
