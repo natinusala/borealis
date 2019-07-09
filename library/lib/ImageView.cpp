@@ -19,11 +19,9 @@
 #include <ImageView.hpp>
 #include <cstring>
 
-ImageView::ImageView(string imagePath, unsigned int width, unsigned int height) : imagePath(imagePath)
+ImageView::ImageView(string imagePath, unsigned int width, unsigned int height)
 {
-    this->imageBuffer = nullptr;
-    this->textureRedraw = true;
-    this->texture = -1;
+    setImage(imagePath);
     
     setOpacity(1.0F);
 
@@ -33,12 +31,7 @@ ImageView::ImageView(string imagePath, unsigned int width, unsigned int height) 
 
 ImageView::ImageView(unsigned char *buffer, size_t bufferSize, unsigned int width, unsigned int height)
 {
-    this->imageBuffer = new unsigned char[bufferSize];
-    std::memcpy(this->imageBuffer, buffer, bufferSize);
-    this->imageBufferSize = bufferSize;
-
-    this->textureRedraw = true;
-    this->texture = -1;
+    setImage(buffer, bufferSize);
 
     setOpacity(1.0F);
 
@@ -55,55 +48,55 @@ void ImageView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heig
 {
     nvgSave(vg);
 
-    if (textureRedraw) {
-        if (texture != -1)
-            nvgDeleteImage(vg, texture);
+    if (this->textureRedraw) {
+        if (this->texture != -1)
+            nvgDeleteImage(vg, this->texture);
 
-        if (!imagePath.empty())
-            texture = nvgCreateImage(vg, imagePath.c_str(), 0);
-        else if (imageBuffer != nullptr)
-            texture = nvgCreateImageMem(vg, 0, this->imageBuffer, this->imageBufferSize);
+        if (!this->imagePath.empty())
+            this->texture = nvgCreateImage(vg, this->imagePath.c_str(), 0);
+        else if (this->imageBuffer != nullptr)
+            this->texture = nvgCreateImageMem(vg, 0, this->imageBuffer, this->imageBufferSize);
         
-        nvgImageSize(vg, texture, &imageWidth, &imageHeight);
+        nvgImageSize(vg, this->texture, &this->imageWidth, &this->imageHeight);
 
         float viewAspectRatio = static_cast<float>(getWidth()) / static_cast<float>(getHeight());
-        float imageAspectRatio = static_cast<float>(imageWidth) / static_cast<float>(imageHeight);
+        float imageAspectRatio = static_cast<float>(this->imageWidth) / static_cast<float>(this->imageHeight);
 
         switch (imageScaleType) {
             case ImageScaleType::NO_RESIZE:
                 break;
             case ImageScaleType::FIT:
                 if (viewAspectRatio >= imageAspectRatio) {
-                    imageHeight = getHeight();
-                    imageWidth = imageHeight * imageAspectRatio;
+                    this->imageHeight = getHeight();
+                    this->imageWidth = this->imageHeight * imageAspectRatio;
                 } else {
-                    imageWidth = getWidth();
-                    imageHeight = imageWidth * imageAspectRatio;
+                    this->imageWidth = getWidth();
+                    this->imageHeight = this->imageWidth * imageAspectRatio;
                 }
                 break;
             case ImageScaleType::CROP:
                 if (viewAspectRatio < imageAspectRatio) {
-                    imageHeight = getHeight();
-                    imageWidth = imageHeight * imageAspectRatio;
+                    this->imageHeight = getHeight();
+                    this->imageWidth = this->imageHeight * imageAspectRatio;
                 } else {
-                    imageWidth = getWidth();
-                    imageHeight = imageWidth * imageAspectRatio;
+                    this->imageWidth = getWidth();
+                    this->imageHeight = this->imageWidth * imageAspectRatio;
                 }
                 break;
             case ImageScaleType::SCALE:
-                imageWidth = getWidth();
-                imageHeight = getHeight();
+                this->imageWidth = getWidth();
+                this->imageHeight = getHeight();
                 break;
         }
 
-        imgPaint = nvgImagePattern(vg, x, y, imageWidth, imageHeight, 0, texture, opacity);
+        this->imgPaint = nvgImagePattern(vg, x, y, this->imageWidth, this->imageHeight, 0, this->texture, this->opacity);
 
-        textureRedraw = false;
+        this->textureRedraw = false;
     }
     
     nvgBeginPath(vg);
-    nvgRect(vg, x, y, imageWidth, imageHeight);
-    nvgFillPaint(vg, imgPaint);
+    nvgRect(vg, x, y, this->imageWidth, this->imageHeight);
+    nvgFillPaint(vg, this->imgPaint);
     nvgFill(vg);
 
     nvgRestore(vg);
@@ -119,14 +112,14 @@ void ImageView::setImage(unsigned char *buffer, size_t bufferSize)
     if (this->imageBuffer != nullptr)
         delete[] this->imageBuffer;
     
-    this->imageBuffer = new unsigned char[bufferSize];
+    this->imagePath = "";
 
+    this->imageBuffer = new unsigned char[bufferSize];
     std::memcpy(this->imageBuffer, buffer, bufferSize);
     this->imageBufferSize = bufferSize;
 
-    this->imagePath = "";
-
-    textureRedraw = true;
+    this->textureRedraw = true;
+    this->texture = -1;
 }
 
 void ImageView::setImage(string imagePath)
@@ -144,10 +137,10 @@ void ImageView::setImage(string imagePath)
 void ImageView::setOpacity(float opacity)
 {
     this->opacity = opacity;
-    textureRedraw = true;
+    this->textureRedraw = true;
 }
 
 void ImageView::setScaleType(ImageScaleType imageScaleType) {
     this->imageScaleType = imageScaleType;
-    textureRedraw = true;
+    this->textureRedraw = true;
 }
