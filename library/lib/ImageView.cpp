@@ -140,7 +140,7 @@ void ImageView::setOpacity(float opacity)
     this->textureRedraw = true;
 }
 
-void ImageView::setScaleType(ImageScaleType imageScaleType) {
+void ImageView::setImageScaleType(ImageScaleType imageScaleType) {
     this->imageScaleType = imageScaleType;
     this->textureRedraw = true;
 }
