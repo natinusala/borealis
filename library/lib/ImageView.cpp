@@ -69,10 +69,10 @@ void ImageView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heig
         float viewAspectRatio = static_cast<float>(getWidth()) / static_cast<float>(getHeight());
         float imageAspectRatio = static_cast<float>(imageWidth) / static_cast<float>(imageHeight);
 
-        switch (scaleType) {
-            case ScaleType::NO_RESIZE:
+        switch (imageScaleType) {
+            case ImageScaleType::NO_RESIZE:
                 break;
-            case ScaleType::FIT:
+            case ImageScaleType::FIT:
                 if (viewAspectRatio >= imageAspectRatio) {
                     imageHeight = getHeight();
                     imageWidth = imageHeight * imageAspectRatio;
@@ -81,7 +81,7 @@ void ImageView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heig
                     imageHeight = imageWidth * imageAspectRatio;
                 }
                 break;
-            case ScaleType::CROP:
+            case ImageScaleType::CROP:
                 if (viewAspectRatio < imageAspectRatio) {
                     imageHeight = getHeight();
                     imageWidth = imageHeight * imageAspectRatio;
@@ -90,7 +90,7 @@ void ImageView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heig
                     imageHeight = imageWidth * imageAspectRatio;
                 }
                 break;
-            case ScaleType::SCALE:
+            case ImageScaleType::SCALE:
                 imageWidth = getWidth();
                 imageHeight = getHeight();
                 break;
@@ -147,7 +147,7 @@ void ImageView::setOpacity(float opacity)
     textureRedraw = true;
 }
 
-void ImageView::setScaleType(ScaleType scaleType) {
-    this->scaleType = scaleType;
+void ImageView::setScaleType(ImageScaleType imageScaleType) {
+    this->imageScaleType = imageScaleType;
     textureRedraw = true;
 }
