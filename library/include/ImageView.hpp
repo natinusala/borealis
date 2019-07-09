@@ -58,7 +58,7 @@ class ImageView : public View
 
         ImageScaleType imageScaleType = ImageScaleType::NO_RESIZE;
 
+        int imageX, imageY;
         int imageWidth, imageHeight;
-        int origViewWidth, origViewHeight;
         float opacity;
 };
