@@ -25,7 +25,8 @@ enum class ImageScaleType {
     NO_RESIZE = 0,
     FIT,
     CROP,
-    SCALE
+    SCALE,
+    VIEW_RESIZE
 };
 
 // An image
@@ -54,10 +55,10 @@ class ImageView : public View
 
         int texture;
         NVGpaint imgPaint;
-        bool textureRedraw;
 
         ImageScaleType imageScaleType = ImageScaleType::NO_RESIZE;
 
-        int imageX, imageY, imageWidth, imageHeight;
+        int imageWidth, imageHeight;
+        int origViewWidth, origViewHeight;
         float opacity;
 };
