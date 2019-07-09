@@ -21,14 +21,14 @@
 #include <View.hpp>
 #include <FrameContext.hpp>
 
-enum class ScaleType {
+enum class ImageScaleType {
     NO_RESIZE = 0,
     FIT,
     CROP,
     SCALE
 };
 
-// A image
+// An image
 class ImageView : public View
 {
     protected:
