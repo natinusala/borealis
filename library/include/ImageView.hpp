@@ -45,7 +45,7 @@ class ImageView : public View
         void setImage(string imagePath);
 
         void setOpacity(float opacity);
-        void setScaleType(ScaleType scaleType);
+        void setImageScaleType(ImageScaleType imageScaleType);
 
     private:
         string imagePath;
@@ -56,7 +56,7 @@ class ImageView : public View
         NVGpaint imgPaint;
         bool textureRedraw;
 
-        ScaleType scaleType = ScaleType::NO_RESIZE;
+        ImageScaleType imageScaleType = ImageScaleType::NO_RESIZE;
 
         int imageX, imageY, imageWidth, imageHeight;
         float opacity;
