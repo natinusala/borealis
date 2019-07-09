@@ -111,8 +111,7 @@ void ImageView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heig
 
 void ImageView::layout(NVGcontext* vg, Style *style, FontStash *stash)
 {
-    this->imageX = getX();
-    this->imageY = getY();
+    textureRedraw = true;
 }
 
 void ImageView::setImage(unsigned char *buffer, size_t bufferSize)
