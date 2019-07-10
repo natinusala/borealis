@@ -47,6 +47,13 @@ void Label::setHorizontalAlign(NVGalign align)
     this->horizontalAlign = align;
 }
 
+void Label::setText(string text) {
+    this->text = text;
+
+    if (this->hasParent())
+        this->getParent()->invalidate();
+}
+
 void Label::layout(NVGcontext* vg, Style *style, FontStash *stash)
 {
     // Update height if needed

@@ -43,7 +43,10 @@ Theme themeLight = {
 
     selectViewBackgroundColor : nvgRGBA(0, 0, 0, 178),
 
-    nextStageBulletColor : nvgRGB(165, 165, 165)
+    nextStageBulletColor : nvgRGB(165, 165, 165),
+
+    spinnerBarColor : nvgRGBA(131, 131, 131, 102)
+
 };
 
 Theme themeDark = {

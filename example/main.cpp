@@ -23,6 +23,7 @@
 #include <Borealis.hpp>
 
 #include <SampleInstallerPage.hpp>
+#include <SampleLoadingPage.hpp>
 
 using namespace std;
 
@@ -57,7 +58,7 @@ int main(int argc, char* argv[])
         stagedFrame->setTitle("My great installer");
 
         stagedFrame->addStage(new SampleInstallerPage(stagedFrame, "Go to step 2"));
-        stagedFrame->addStage(new SampleInstallerPage(stagedFrame, "Go to step 3"));
+        stagedFrame->addStage(new SampleLoadingPage(stagedFrame));
         stagedFrame->addStage(new SampleInstallerPage(stagedFrame, "Finish"));
 
         Application::pushView(stagedFrame);

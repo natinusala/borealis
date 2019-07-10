@@ -47,6 +47,8 @@ typedef struct
     NVGcolor selectViewBackgroundColor;
 
     NVGcolor nextStageBulletColor;
+
+    NVGcolor spinnerBarColor;
 } Theme;
 
 extern Theme themeLight;
