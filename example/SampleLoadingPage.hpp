@@ -1,6 +1,7 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2019  natinusala
+    Copyright (C) 2019  Billy Laws
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,42 +19,20 @@
 
 #pragma once
 
-#include <View.hpp>
+#include <Borealis.hpp>
 
-// TODO: setText, which calls getParent()->invalidate()
-
-enum class LabelStyle
-{
-    REGULAR = 0,
-    SMALL,
-    SUBLABEL,
-    CRASH,
-    BUTTON
-};
-
-// A Label, multiline or with a ticker
-class Label : public View
+class SampleLoadingPage : public View
 {
     private:
-        string text;
-
-        bool multiline;
-        unsigned fontSize;
-        LabelStyle labelStyle;
-
-        NVGalign horizontalAlign = NVG_ALIGN_LEFT;
+        StagedAppletFrame *frame;
+        ProgressDisplay *progressDisp;
+        Label *label;
+        int progressValue = 0;
 
     public:
-        Label(LabelStyle labelStyle, string text, bool multiline = false);
+        SampleLoadingPage(StagedAppletFrame *frame);
 
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
         void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
-
-        View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override
-        {
-            return nullptr;
-        }
-
-        void setHorizontalAlign(NVGalign align);
-        void setText(string text);
+        View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override;
 };

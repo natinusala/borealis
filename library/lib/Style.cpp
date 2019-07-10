@@ -140,5 +140,14 @@ Style styleAccurate = {
         progressIndicatorRadiusUnselected : 5 - 1, // minus half of border width
         progressIndicatorRadiusSelected : 8,
         progressIndicatorBorderWidth : 2
+    },
+
+    ProgressSpinner : {
+        centerGapMultiplier : 0.2f,
+        barWidthMultiplier : 0.06f
+    },
+
+    ProgressDisplay : {
+        percentageLabelWidth : 70
     }
 };

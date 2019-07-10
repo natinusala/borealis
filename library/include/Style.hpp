@@ -170,6 +170,19 @@ typedef struct
         unsigned progressIndicatorRadiusSelected;
         unsigned progressIndicatorBorderWidth;
     } StagedAppletFrame;
+
+    // ProgressSpinner
+    struct
+    {
+        float centerGapMultiplier;
+        float barWidthMultiplier;
+    } ProgressSpinner;
+
+    // ProgressDisplay
+    struct
+    {
+        unsigned percentageLabelWidth;
+    } ProgressDisplay;
 } Style;
 
 // TODO: Make a condensed style

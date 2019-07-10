@@ -43,4 +43,6 @@
 #include <SelectView.hpp>
 #include <Logger.hpp>
 #include <StagedAppletFrame.hpp>
+#include <ProgressDisplay.hpp>
+#include <ProgressSpinner.hpp>
 #include <ImageView.hpp>
