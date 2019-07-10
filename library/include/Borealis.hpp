@@ -43,3 +43,4 @@
 #include <SelectView.hpp>
 #include <Logger.hpp>
 #include <StagedAppletFrame.hpp>
+#include <ImageView.hpp>
