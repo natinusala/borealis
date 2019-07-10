@@ -45,3 +45,4 @@
 #include <StagedAppletFrame.hpp>
 #include <ProgressDisplay.hpp>
 #include <ProgressSpinner.hpp>
+#include <ImageView.hpp>

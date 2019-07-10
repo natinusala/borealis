@@ -25,6 +25,7 @@ borealis_files = files(
     'lib/StagedAppletFrame.cpp',
     'lib/ProgressDisplay.cpp',
     'lib/ProgressSpinner.cpp',
+    'lib/ImageView.cpp',
 
     'lib/libretro-common/compat/compat_strl.c',
     'lib/libretro-common/features/features_cpu.c',
