@@ -50,15 +50,15 @@ class ImageView : public View
 
     private:
         string imagePath;
-        unsigned char *imageBuffer;
-        size_t imageBufferSize;
+        unsigned char *imageBuffer = nullptr;
+        size_t imageBufferSize = 0;
 
-        int texture;
+        int texture = -1;
         NVGpaint imgPaint;
 
         ImageScaleType imageScaleType = ImageScaleType::NO_RESIZE;
 
-        int imageX, imageY;
-        int imageWidth, imageHeight;
-        float opacity;
+        int imageX = 0, imageY = 0;
+        int imageWidth = 0, imageHeight = 0;
+        float opacity = 1.0F;
 };

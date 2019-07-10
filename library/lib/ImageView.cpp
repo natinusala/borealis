@@ -18,9 +18,10 @@
 
 #include <ImageView.hpp>
 #include <cstring>
+#include <Application.hpp>
 
 ImageView::ImageView(string imagePath, unsigned int width, unsigned int height)
-{
+{   
     setImage(imagePath);    
     setOpacity(1.0F);
 }
@@ -34,6 +35,9 @@ ImageView::ImageView(unsigned char *buffer, size_t bufferSize, unsigned int widt
 ImageView::~ImageView() {
     if (this->imageBuffer != nullptr)
         delete[] this->imageBuffer;
+
+    if (texture != -1)
+        nvgDeleteImage(Application::getNVGContext(), this->texture);
 }
 
 void ImageView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
