@@ -79,6 +79,8 @@ class Application
          */
         static void unblockInputs();
 
+        static NVGcontext* getNVGContext();
+
     private:
         inline static GLFWwindow* window;
         inline static NVGcontext *vg;

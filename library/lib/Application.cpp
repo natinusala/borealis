@@ -562,3 +562,7 @@ void Application::unblockInputs()
     if (Application::blockInputsTokens < 0)
         Application::blockInputsTokens = 0;
 }
+
+NVGcontext* Application::getNVGContext() {
+    return Application::vg;
+}
