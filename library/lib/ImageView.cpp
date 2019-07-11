@@ -20,13 +20,13 @@
 #include <cstring>
 #include <Application.hpp>
 
-ImageView::ImageView(string imagePath, unsigned int width, unsigned int height)
-{   
-    setImage(imagePath);    
+ImageView::ImageView(string imagePath)
+{
+    setImage(imagePath);
     setOpacity(1.0F);
 }
 
-ImageView::ImageView(unsigned char *buffer, size_t bufferSize, unsigned int width, unsigned int height)
+ImageView::ImageView(unsigned char *buffer, size_t bufferSize)
 {
     setImage(buffer, bufferSize);
     setOpacity(1.0F);
@@ -43,7 +43,7 @@ ImageView::~ImageView() {
 void ImageView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
     nvgSave(vg);
-    
+
     if (this->texture != -1) {
         nvgBeginPath(vg);
         nvgRect(vg, x + this->imageX, y + this->imageY, this->imageWidth, this->imageHeight);
@@ -66,7 +66,7 @@ void ImageView::layout(NVGcontext* vg, Style *style, FontStash *stash)
         this->texture = nvgCreateImage(vg, this->imagePath.c_str(), 0);
     else if (this->imageBuffer != nullptr)
         this->texture = nvgCreateImageMem(vg, 0, this->imageBuffer, this->imageBufferSize);
-    
+
     nvgImageSize(vg, this->texture, &this->imageWidth, &this->imageHeight);
 
     setWidth(origViewWidth);
@@ -122,7 +122,7 @@ void ImageView::setImage(unsigned char *buffer, size_t bufferSize)
 {
     if (this->imageBuffer != nullptr)
         delete[] this->imageBuffer;
-    
+
     this->imagePath = "";
 
     this->imageBuffer = new unsigned char[bufferSize];

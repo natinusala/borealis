@@ -36,8 +36,8 @@ class ImageView : public View
         void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
 
     public:
-        ImageView(string imagePath, unsigned int width, unsigned int height);
-        ImageView(unsigned char *buffer, size_t bufferSize, unsigned int width, unsigned int height);
+        ImageView(string imagePath);
+        ImageView(unsigned char *buffer, size_t bufferSize);
         ~ImageView();
 
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
