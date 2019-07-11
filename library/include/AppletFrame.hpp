@@ -30,6 +30,7 @@ class AppletFrame : public View
 {
     private:
         string title = "";
+        string subtitle = "";
 
         View *contentView = nullptr;
 
@@ -48,6 +49,7 @@ class AppletFrame : public View
         void willDisappear() override;
 
         void setTitle(string title);
+        void setSubtitle(string subtitle);
         void setContentView(View *view);
 
         ~AppletFrame();
