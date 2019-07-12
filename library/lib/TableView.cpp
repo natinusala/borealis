@@ -128,6 +128,11 @@ string* TableViewRow::getValue()
     return &this->value;
 }
 
+void TableViewRow::setValue(string value)
+{
+    this->value = value;
+}
+
 TableViewRowType TableViewRow::getType()
 {
     return this->type;

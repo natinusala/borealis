@@ -44,6 +44,8 @@ class TableViewRow
         string* getLabel();
         string *getValue();
         TableViewRowType getType();
+
+        void setValue(string value);
 };
 
 // A simple, static two-columns table, as seen in
