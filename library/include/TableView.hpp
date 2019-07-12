@@ -61,5 +61,5 @@ class TableView : public View
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
         void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
 
-        void addRow(TableViewRowType type, string label, string value = "");
+        TableViewRow* addRow(TableViewRowType type, string label, string value = "");
 };

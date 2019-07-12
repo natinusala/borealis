@@ -18,10 +18,11 @@
 
 #include <TableView.hpp>
 
-void TableView::addRow(TableViewRowType type, string label, string value)
+TableViewRow* TableView::addRow(TableViewRowType type, string label, string value)
 {
     TableViewRow *row = new TableViewRow(type, label, value);
     this->rows.push_back(row);
+    return row;
 }
 
 void TableView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
