@@ -247,7 +247,7 @@ class View
          *
          * Not recursive
          */
-        void hide(function<void(void)> cb);
+        void hide(function<void(void)> cb, bool animated = true);
 
         bool isHidden();
 
