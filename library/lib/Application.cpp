@@ -231,6 +231,9 @@ bool Application::init(StyleEnum style)
     // Init animations engine
     menu_animation_init();
 
+    // Init tasks manager
+    Application::taskManager = new TaskManager();
+
     return true;
 }
 
@@ -293,6 +296,9 @@ bool Application::mainLoop()
 
     // Animations
     menu_animation_update();
+
+    // Tasks
+    Application::taskManager->frame();
 
     // Render
     Application::frame();
@@ -401,6 +407,9 @@ void Application::exit()
     glfwTerminate();
 
     menu_animation_free();
+
+    if (Application::taskManager)
+        delete Application::taskManager;
 }
 
 void Application::requestFocus(View *view, FocusDirection direction)
@@ -565,4 +574,9 @@ void Application::unblockInputs()
 
 NVGcontext* Application::getNVGContext() {
     return Application::vg;
+}
+
+TaskManager* Application::getTaskManager()
+{
+    return Application::taskManager;
 }

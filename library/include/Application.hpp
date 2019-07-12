@@ -30,6 +30,8 @@
 #include <Theme.hpp>
 #include <Style.hpp>
 
+#include <TaskManager.hpp>
+
 using namespace std;
 
 class Application
@@ -80,10 +82,13 @@ class Application
         static void unblockInputs();
 
         static NVGcontext* getNVGContext();
+        static TaskManager* getTaskManager();
 
     private:
         inline static GLFWwindow* window;
         inline static NVGcontext *vg;
+
+        inline static TaskManager *taskManager;
 
         inline static FontStash fontStash;
 
@@ -92,7 +97,7 @@ class Application
 
         inline static unsigned windowWidth, windowHeight;
 
-        inline static View* currentFocus;
+        inline static View *currentFocus;
 
         inline static Theme *currentTheme;
 

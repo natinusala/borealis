@@ -18,32 +18,23 @@
 
 #pragma once
 
-// Useful macros
-#ifndef __SWITCH__
-#define ASSET(_str) "./resources/" _str
-#else
-#define ASSET(_str) "romfs:/" _str
-#endif
+#include <vector>
 
-// Library
-#include <Application.hpp>
-#include <View.hpp>
-#include <AppletFrame.hpp>
-#include <TabFrame.hpp>
-#include <Rectangle.hpp>
-#include <BoxLayout.hpp>
-#include <Theme.hpp>
-#include <Sidebar.hpp>
-#include <Style.hpp>
-#include <List.hpp>
-#include <Label.hpp>
-#include <CrashFrame.hpp>
-#include <Button.hpp>
-#include <TableView.hpp>
-#include <SelectView.hpp>
-#include <Logger.hpp>
-#include <StagedAppletFrame.hpp>
-#include <ProgressDisplay.hpp>
-#include <ProgressSpinner.hpp>
-#include <ImageView.hpp>
 #include <RepeatingTask.hpp>
+
+using namespace std;
+
+class TaskManager
+{
+    private:
+        vector<RepeatingTask*> repeatingTasks;
+
+        void stopRepeatingTask(RepeatingTask *task);
+
+    public:
+        void frame();
+
+        void registerRepeatingTask(RepeatingTask *task);
+
+        ~TaskManager();
+};
