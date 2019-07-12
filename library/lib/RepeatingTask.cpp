@@ -49,6 +49,9 @@ void RepeatingTask::stop()
 
 void RepeatingTask::fireNow()
 {
+    if (!this->isRunning)
+        return;
+
     retro_time_t currentTime = cpu_features_get_time_usec() / 1000;
     this->run(currentTime);
 }
