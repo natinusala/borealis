@@ -45,11 +45,15 @@ void AppletFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned he
     nvgText(vg, x + style->AppletFrame.titleStart, y + style->AppletFrame.headerHeight / 2 + style->AppletFrame.titleOffset, this->title.c_str(), nullptr);
 
     // Footer
+    string *text = &this->subtitle;
+
+    if (*text == "")
+        text = Application::getCommonFooter();
 
     nvgFontSize(vg, style->AppletFrame.footerTextSize);
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
     nvgBeginPath(vg);
-    nvgText(vg, x + style->AppletFrame.separatorSpacing + style->AppletFrame.footerTextSpacing, y + height - style->AppletFrame.footerHeight/2, this->subtitle.c_str(), nullptr);
+    nvgText(vg, x + style->AppletFrame.separatorSpacing + style->AppletFrame.footerTextSpacing, y + height - style->AppletFrame.footerHeight/2, text->c_str(), nullptr);
 
     //TODO: Hint
 

@@ -84,6 +84,9 @@ class Application
         static NVGcontext* getNVGContext();
         static TaskManager* getTaskManager();
 
+        static void setCommonFooter(string footer);
+        static string* getCommonFooter();
+
     private:
         inline static GLFWwindow* window;
         inline static NVGcontext *vg;
@@ -107,6 +110,8 @@ class Application
         inline static Style *currentStyle;
 
         inline static unsigned blockInputsTokens = 0; // any value > 0 means inputs are blocked
+
+        inline static string commonFooter = "";
 
         static void onWindowSizeChanged();
 

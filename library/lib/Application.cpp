@@ -580,3 +580,13 @@ TaskManager* Application::getTaskManager()
 {
     return Application::taskManager;
 }
+
+void Application::setCommonFooter(string footer)
+{
+    Application::commonFooter = footer;
+}
+
+string* Application::getCommonFooter()
+{
+    return &Application::commonFooter;
+}

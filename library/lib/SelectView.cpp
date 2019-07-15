@@ -105,15 +105,24 @@ void SelectView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned hei
     // List
     this->list->frame(ctx);
 
-    nvgFillColor(vg, a(ctx->theme->separatorColor));
-
     // Footer
-    // TODO: Text
+    // TODO: Hint
+
+    nvgFillColor(vg, ctx->theme->separatorColor); // we purposely don't apply opacity
+
     nvgBeginPath(vg);
     nvgRect(vg, x + style->AppletFrame.separatorSpacing, y + height - style->AppletFrame.footerHeight, width - style->AppletFrame.separatorSpacing * 2, 1);
     nvgFill(vg);
 
+    nvgFillColor(vg, ctx->theme->textColor); // we purposely don't apply opacity
+    nvgFontSize(vg, style->AppletFrame.footerTextSize);
+    nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+    nvgBeginPath(vg);
+    nvgText(vg, x + style->AppletFrame.separatorSpacing + style->AppletFrame.footerTextSpacing, y + height - style->AppletFrame.footerHeight/2, Application::getCommonFooter()->c_str(), nullptr);
+
+
     // Header
+    nvgFillColor(vg, a(ctx->theme->separatorColor));
     nvgBeginPath(vg);
     nvgRect(vg, x + style->AppletFrame.separatorSpacing, top + style->SelectView.headerHeight - 1, width - style->AppletFrame.separatorSpacing * 2, 1);
     nvgFill(vg);
