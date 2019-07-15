@@ -40,12 +40,12 @@ typedef function<void(int)> SelectListener;
 class SelectView : public View
 {
     private:
-        SelectView(string title, vector<string> values, SelectListener listener, int selected = -1);
+        SelectView(string title, vector<string> values, SelectListener listener, unsigned selected = 0);
 
         string title;
 
         int valuesCount;
-        int selectedValue;
+        unsigned selectedValue;
 
         SelectListener listener;
 

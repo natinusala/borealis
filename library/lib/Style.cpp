@@ -84,7 +84,9 @@ Style styleAccurate = {
             sublabelIndent     : 20,
             sublabelSpacing    : 16,
 
-            indent : 40
+            indent : 40,
+
+            selectRadius: 15
         }
     },
 

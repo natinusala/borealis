@@ -102,6 +102,8 @@ typedef struct
             unsigned sublabelSpacing;
 
             unsigned indent;
+
+            unsigned selectRadius;
         } Item;
     } List;
 

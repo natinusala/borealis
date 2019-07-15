@@ -21,16 +21,16 @@
 
 #include <Animations.hpp>
 
+#include <Logger.hpp>
+
 #define SELECT_VIEW_MAX_ITEMS 6 // for max height
 
 #define min(a, b) ((a < b) ? a : b)
 
-// TODO: Selection marker
-// TODO: Default selection
+// TODO: Default selection (focus the right list item)
 // TODO: Fix wonky scrolling near the end of list
-// TODO: Fix scrolling while it shouldn't
 
-SelectView::SelectView(string title, vector<string> values, SelectListener listener, int selected) :
+SelectView::SelectView(string title, vector<string> values, SelectListener listener, unsigned selected) :
     title(title),
     selectedValue(selected),
     listener(listener)
@@ -50,6 +50,9 @@ SelectView::SelectView(string title, vector<string> values, SelectListener liste
         string value = values[i];
 
         ListItem *item = new ListItem(value);
+
+        if (i == selected)
+            item->setSelected(true);
 
         item->setHeight(style->SelectView.listItemHeight);
         item->setTextSize(style->SelectView.listItemTextSize);

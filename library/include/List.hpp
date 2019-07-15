@@ -37,6 +37,8 @@ class ListItem : public View
         bool oldValueFaint;
         float valueAnimation = 0.0f;
 
+        bool selected = false; // check mark on the right
+
         unsigned textSize;
 
         bool drawTopSeparator = true;
@@ -65,6 +67,8 @@ class ListItem : public View
         void setIndented(bool indented);
 
         void setTextSize(unsigned textSize);
+
+        void setSelected(bool selected);
 
         string getLabel();
 

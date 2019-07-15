@@ -20,6 +20,7 @@
 
 Theme themeLight = {
     backgroundColor        : { 0.922f, 0.922f, 0.922f },
+    backgroundColorRGB     : nvgRGB(235, 235, 235),
 
     textColor              : nvgRGB(51, 51, 51),
     sublabelColor          : nvgRGB(140, 140, 140),
@@ -51,6 +52,7 @@ Theme themeLight = {
 
 Theme themeDark = {
     backgroundColor        : { 0.176f, 0.176f, 0.176f },
+    backgroundColorRGB     : nvgRGB(45, 45, 45),
 
     textColor              : nvgRGB(255, 255, 255),
     sublabelColor          : nvgRGB(163, 163, 163),

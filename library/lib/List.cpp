@@ -23,6 +23,10 @@
 
 #include <Animations.hpp>
 
+#include <Logger.hpp>
+
+#include <math.h>
+
 // TODO: Scrollbar
 
 List::List() : BoxLayout(BoxLayoutOrientation::VERTICAL)
@@ -100,6 +104,12 @@ void ListItem::setIndented(bool indented)
 void ListItem::setTextSize(unsigned textSize)
 {
     this->textSize = textSize;
+}
+
+// TODO: Should we animate this?
+void ListItem::setSelected(bool selected)
+{
+    this->selected = selected;
 }
 
 void ListItem::setParent(View *parent)
@@ -227,7 +237,7 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
         nvgFillColor(vg, valueColor);
         nvgFontSize(vg, style->List.Item.valueSize * (1.0f - this->valueAnimation));
         nvgBeginPath(vg);
-        nvgText(vg, x + width - style->List.Item.padding, y + baseHeight/2, this->oldValue.c_str(), nullptr);
+        nvgText(vg, x + width - style->List.Item.padding, y + baseHeight / 2, this->oldValue.c_str(), nullptr);
 
         //New value
         valueColor = a(this->valueFaint ? ctx->theme->listItemFaintValueColor : ctx->theme->listItemValueColor);
@@ -235,7 +245,7 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
         nvgFillColor(vg, valueColor);
         nvgFontSize(vg, style->List.Item.valueSize * this->valueAnimation);
         nvgBeginPath(vg);
-        nvgText(vg, x + width - style->List.Item.padding, y + baseHeight/2, this->value.c_str(), nullptr);
+        nvgText(vg, x + width - style->List.Item.padding, y + baseHeight / 2, this->value.c_str(), nullptr);
     }
     else
     {
@@ -244,7 +254,49 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
         nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
         nvgFontFaceId(vg, ctx->fontStash->regular);
         nvgBeginPath(vg);
-        nvgText(vg, x + width - style->List.Item.padding, y + baseHeight/2, this->value.c_str(), nullptr);
+        nvgText(vg, x + width - style->List.Item.padding, y + baseHeight / 2, this->value.c_str(), nullptr);
+    }
+
+    // Selected marker
+    if (this->selected)
+    {
+        unsigned radius     = style->List.Item.selectRadius;
+        unsigned centerX    = x + width - radius - style->List.Item.padding;
+        unsigned centerY    = y + baseHeight / 2;
+
+        float radiusf = (float) radius;
+
+        int thickness = roundf(radiusf * 0.10f);
+
+        // Background
+        nvgFillColor(vg, a(ctx->theme->listItemValueColor));
+        nvgBeginPath(vg);
+        nvgCircle(vg, centerX, centerY, radiusf);
+        nvgFill(vg);
+
+        // Check mark
+        nvgFillColor(vg, a(ctx->theme->backgroundColorRGB));
+
+        // Long stroke
+        nvgSave(vg);
+        nvgTranslate(vg, centerX, centerY);
+        nvgRotate(vg, - M_PI / 4.0f);
+
+        nvgBeginPath(vg);
+        nvgRect(vg, - (radiusf * 0.55f), 0, radiusf * 1.3f, thickness);
+        nvgFill(vg);
+        nvgRestore(vg);
+
+        // Short stroke
+        nvgSave(vg);
+        nvgTranslate(vg, centerX - (radiusf * 0.65f), centerY);
+        nvgRotate(vg, M_PI / 4.0f);
+
+        nvgBeginPath(vg);
+        nvgRect(vg, 0, - (thickness / 2), radiusf * 0.53f, thickness);
+        nvgFill(vg);
+
+        nvgRestore(vg);
     }
 
     // Label
@@ -253,7 +305,7 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
     nvgFontFaceId(vg, ctx->fontStash->regular);
     nvgBeginPath(vg);
-    nvgText(vg, x + style->List.Item.padding, y + baseHeight/2, this->label.c_str(), nullptr);
+    nvgText(vg, x + style->List.Item.padding, y + baseHeight / 2, this->label.c_str(), nullptr);
 
     // Separators
     // Offset by one to be hidden by highlight
