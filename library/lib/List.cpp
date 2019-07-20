@@ -198,6 +198,11 @@ void ListItem::setValue(string value, bool faint, bool animate)
     }
 }
 
+string ListItem::getValue()
+{
+    return this->value;
+}
+
 void ListItem::setDrawTopSeparator(bool draw)
 {
     this->drawTopSeparator = draw;
@@ -354,27 +359,16 @@ ToggleListItem::ToggleListItem(string label, bool initialValue, string sublabel,
     this->updateValue();
 }
 
-string ToggleListItem::getOnValue()
-{
-    return this->onValue;
-}
-
-string ToggleListItem::getOffValue()
-{
-    return this->offValue;
-}
-
 void ToggleListItem::updateValue()
 {
     if (this->toggleState)
-        this->setValue(this->getOnValue(), false);
+        this->setValue(this->onValue, false);
     else
-        this->setValue(getOffValue(), true);
+        this->setValue(this->offValue, true);
 }
 
 bool ToggleListItem::onClick()
 {
-
     this->toggleState = !this->toggleState;
     this->updateValue();
 
@@ -387,49 +381,33 @@ bool ToggleListItem::getToggleState()
     return this->toggleState;
 }
 
-StringListItem::StringListItem(string label, string initialValue, string helpText, string sublabel, int maxInputLength) :
+InputListItem::InputListItem(string label, string initialValue, string helpText, string sublabel, int maxInputLength) :
     ListItem(label, sublabel),
-    currentValue(initialValue),
     helpText(helpText),
     maxInputLength(maxInputLength)
 {
-    this->setValue(this->currentValue, false);
+    this->setValue(initialValue, false);
 }
 
-string StringListItem::getValue()
-{
-    return this->currentValue;
-}
-
-bool StringListItem::onClick() {
-    askForKeyboardInputString([&](string text) {
-        this->currentValue = text;
+bool InputListItem::onClick() {
+    openSwkbdForText([&](string text) {
         this->setValue(text, false);
-    }, this->helpText, "", this->maxInputLength, this->currentValue);
+    }, this->helpText, "", this->maxInputLength, this->getValue());
 
     ListItem::onClick();
     return true;
 }
 
-IntegerListItem::IntegerListItem(string label, int initialValue, string helpText, string sublabel, int maxInputLength) :
-    ListItem(label, sublabel),
-    currentValue(initialValue),
-    helpText(helpText),
-    maxInputLength(maxInputLength)
+IntegerInputListItem::IntegerInputListItem(string label, int initialValue, string helpText, string sublabel, int maxInputLength) :
+    InputListItem(label, to_string(initialValue), helpText, sublabel, maxInputLength)
 {
-    this->setValue(std::to_string(this->currentValue), false);
+    
 }
 
-int IntegerListItem::getValue()
-{
-    return this->currentValue;
-}
-
-bool IntegerListItem::onClick() {
-    askForKeyboardInputInteger([&](int number) {
-        this->currentValue = number;
+bool IntegerInputListItem::onClick() {
+    openSwkbdForNumber([&](int number) {
         this->setValue(to_string(number), false);
-    }, this->helpText, "", this->maxInputLength, to_string(this->currentValue));
+    }, this->helpText, "", this->maxInputLength, std::to_string(this->getValue()));
 
     ListItem::onClick();
     return true;

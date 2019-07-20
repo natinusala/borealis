@@ -23,5 +23,5 @@
 
 using namespace std;
 
-bool askForKeyboardInputString(function<void(string)> f, string headerText = "", string subText = "", int maxStringLength = 32, string initialText = "");
-bool askForKeyboardInputInteger(function<void(int)> f, string headerText = "", string subText = "", int maxStringLength = 32, string initialText = "", string leftButton = "", string rightButton = "");
+bool openSwkbdForText(function<void(string)> f, string headerText = "", string subText = "", int maxStringLength = 32, string initialText = "");
+bool openSwkbdForNumber(function<void(int)> f, string headerText = "", string subText = "", int maxStringLength = 32, string initialText = "", string leftButton = "", string rightButton = "");

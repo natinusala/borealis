@@ -24,7 +24,7 @@
 #include <switch.h>
 #endif
 
-bool askForKeyboardInputString(function<void(string)> f, string headerText, string subText, int maxStringLength, string initialText) {
+bool openSwkbdForText(function<void(string)> f, string headerText, string subText, int maxStringLength, string initialText) {
     #ifdef __SWITCH__
 
     SwkbdConfig config;
@@ -62,7 +62,7 @@ bool askForKeyboardInputString(function<void(string)> f, string headerText, stri
     #endif
 }
 
-bool askForKeyboardInputInteger(function<void(int)> f, string headerText, string subText, int maxStringLength, string initialText, string leftButton, string rightButton) {
+bool openSwkbdForNumber(function<void(int)> f, string headerText, string subText, int maxStringLength, string initialText, string leftButton, string rightButton) {
     #ifdef __SWITCH__
 
     SwkbdConfig config;

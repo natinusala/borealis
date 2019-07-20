@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include <string>
+
 #include <BoxLayout.hpp>
 #include <Label.hpp>
 #include <Rectangle.hpp>
@@ -79,6 +81,7 @@ class ListItem : public View
          * use a darker color (typically "OFF" labels)
          */
         void setValue(string value, bool faint = false, bool animate = true);
+        string getValue();
 
         void setClickListener(EventListener listener);
 
@@ -117,9 +120,6 @@ class ToggleListItem : public ListItem
 
         void updateValue();
 
-        string getOnValue();
-        string getOffValue();
-
     public:
         ToggleListItem(string label, bool initialValue, string sublabel = "", string onValue = "On", string offValue = "Off");
 
@@ -128,32 +128,24 @@ class ToggleListItem : public ListItem
         bool getToggleState();
 };
 
-class StringListItem : public ListItem
+class InputListItem : public ListItem
 {
-    private:
-        string currentValue;
+    protected:
         string helpText;
         int maxInputLength;
 
     public:
-        StringListItem(string label, string initialValue, string helpText, string sublabel = "", int maxInputLength = 32);
+        InputListItem(string label, string initialValue, string helpText, string sublabel = "", int maxInputLength = 32);
 
         bool onClick() override;
-        string getValue();
 };
 
-class IntegerListItem : public ListItem
+class IntegerInputListItem : public InputListItem
 {
-    private:
-        int currentValue;
-        string helpText;
-        int maxInputLength;
-
     public:
-        IntegerListItem(string label, int initialValue, string helpText, string sublabel = "", int maxInputLength = 32);
+        IntegerInputListItem(string label, int initialValue, string helpText, string sublabel = "", int maxInputLength = 32);
 
         bool onClick() override;
-        int getValue();
 };
 
 // A vertical list of various widgets, with proper margins and spacing
