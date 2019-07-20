@@ -24,9 +24,10 @@
 #include <switch.h>
 #endif
 
-bool openSwkbdForText(function<void(string)> f, string headerText, string subText, int maxStringLength, string initialText) {
 #ifdef __SWITCH__
 
+static SwkbdConfig createSwkbdBaseConfig(string headerText, string subText, int maxStringLength, string initialText)
+{
     SwkbdConfig config;
 
     swkbdCreate(&config, 0);
@@ -34,11 +35,24 @@ bool openSwkbdForText(function<void(string)> f, string headerText, string subTex
     swkbdConfigMakePresetDefault(&config);
     swkbdConfigSetHeaderText(&config, headerText.c_str());
     swkbdConfigSetSubText(&config, subText.c_str());
-    swkbdConfigSetInitialText(&config, initialText.c_str());
-    swkbdConfigSetBlurBackground(&config, true);
-    swkbdConfigSetType(&config, SwkbdType_Normal);
     swkbdConfigSetStringLenMax(&config, maxStringLength);
+    swkbdConfigSetInitialText(&config, initialText.c_str());
     swkbdConfigSetStringLenMaxExt(&config, 1);
+    swkbdConfigSetBlurBackground(&config, true);
+
+    return config;
+}
+
+#endif
+
+bool openSwkbdForText(function<void(string)> f, string headerText, string subText, int maxStringLength, string initialText)
+{
+
+#ifdef __SWITCH__
+
+    SwkbdConfig config = createSwkbdBaseConfig(headerText, subText, maxStringLength, initialText);
+
+    swkbdConfigSetType(&config, SwkbdType_Normal);
     swkbdConfigSetKeySetDisableBitmask(&config, SwkbdKeyDisableBitmask_At | SwkbdKeyDisableBitmask_Percent | SwkbdKeyDisableBitmask_ForwardSlash | SwkbdKeyDisableBitmask_Backslash);
 
     char buffer[0x100];
@@ -60,25 +74,19 @@ bool openSwkbdForText(function<void(string)> f, string headerText, string subTex
     return true;
 
 #endif
+
 }
 
-bool openSwkbdForNumber(function<void(int)> f, string headerText, string subText, int maxStringLength, string initialText, string leftButton, string rightButton) {
+bool openSwkbdForNumber(function<void(int)> f, string headerText, string subText, int maxStringLength, string initialText, string leftButton, string rightButton)
+{
+
 #ifdef __SWITCH__
 
-    SwkbdConfig config;
+    SwkbdConfig config = createSwkbdBaseConfig(headerText, subText, maxStringLength, initialText);
 
-    swkbdCreate(&config, 0);
-
-    swkbdConfigMakePresetDefault(&config);
-    swkbdConfigSetHeaderText(&config, headerText.c_str());
-    swkbdConfigSetSubText(&config, subText.c_str());
-    swkbdConfigSetInitialText(&config, initialText.c_str());
-    swkbdConfigSetBlurBackground(&config, true);
     swkbdConfigSetType(&config, SwkbdType_NumPad);
-    swkbdConfigSetStringLenMax(&config, maxStringLength);
     swkbdConfigSetLeftOptionalSymbolKey(&config, leftButton.c_str());
     swkbdConfigSetRightOptionalSymbolKey(&config, rightButton.c_str());
-    swkbdConfigSetStringLenMaxExt(&config, 1);
     swkbdConfigSetKeySetDisableBitmask(&config, SwkbdKeyDisableBitmask_At | SwkbdKeyDisableBitmask_Percent | SwkbdKeyDisableBitmask_ForwardSlash | SwkbdKeyDisableBitmask_Backslash);
 
     char buffer[0x100];
@@ -100,4 +108,5 @@ bool openSwkbdForNumber(function<void(int)> f, string headerText, string subText
     return true;
 
 #endif
+
 }
