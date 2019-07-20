@@ -25,7 +25,7 @@
 #endif
 
 bool openSwkbdForText(function<void(string)> f, string headerText, string subText, int maxStringLength, string initialText) {
-    #ifdef __SWITCH__
+#ifdef __SWITCH__
 
     SwkbdConfig config;
 
@@ -54,16 +54,16 @@ bool openSwkbdForText(function<void(string)> f, string headerText, string subTex
 
     return false;
 
-    #else
+#else
 
     f("");
     return true;
 
-    #endif
+#endif
 }
 
 bool openSwkbdForNumber(function<void(int)> f, string headerText, string subText, int maxStringLength, string initialText, string leftButton, string rightButton) {
-    #ifdef __SWITCH__
+#ifdef __SWITCH__
 
     SwkbdConfig config;
 
@@ -94,10 +94,10 @@ bool openSwkbdForNumber(function<void(int)> f, string headerText, string subText
 
     return false;
 
-    #else
+#else
     
     f(0);
     return true;
 
-    #endif
+#endif
 }
