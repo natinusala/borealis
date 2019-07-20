@@ -25,6 +25,8 @@
 
 #include <Logger.hpp>
 
+#include <SwkbdUtils.hpp>
+
 #include <math.h>
 
 // TODO: Scrollbar
@@ -280,7 +282,7 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
         // Long stroke
         nvgSave(vg);
         nvgTranslate(vg, centerX, centerY);
-        nvgRotate(vg, - M_PI / 4.0f);
+        nvgRotate(vg, - NVG_PI / 4.0f);
 
         nvgBeginPath(vg);
         nvgRect(vg, - (radiusf * 0.55f), 0, radiusf * 1.3f, thickness);
@@ -290,7 +292,7 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
         // Short stroke
         nvgSave(vg);
         nvgTranslate(vg, centerX - (radiusf * 0.65f), centerY);
-        nvgRotate(vg, M_PI / 4.0f);
+        nvgRotate(vg, NVG_PI / 4.0f);
 
         nvgBeginPath(vg);
         nvgRect(vg, 0, - (thickness / 2), radiusf * 0.53f, thickness);
@@ -343,36 +345,23 @@ ListItem::~ListItem()
     this->resetValueAnimation();
 }
 
-ToggleListItem::ToggleListItem(string label, bool initialValue, string sublabel, ToggleListItemType type) : 
+ToggleListItem::ToggleListItem(string label, bool initialValue, string sublabel, string onValue, string offValue) : 
     ListItem(label, sublabel),
     toggleState(initialValue),
-    type(type)
+    onValue(onValue),
+    offValue(offValue)
 {
     this->updateValue();
 }
 
 string ToggleListItem::getOnValue()
 {
-    switch (this->type)
-    {
-        default:
-        case ToggleListItemType::ON_OFF:
-            return "ON";
-        case ToggleListItemType::YES_NO:
-            return "Yes";
-    }
+    return this->onValue;
 }
 
 string ToggleListItem::getOffValue()
 {
-    switch (this->type)
-    {
-        default:
-        case ToggleListItemType::ON_OFF:
-            return "OFF";
-        case ToggleListItemType::YES_NO:
-            return "No";
-    }
+    return this->offValue;
 }
 
 void ToggleListItem::updateValue()
@@ -396,6 +385,54 @@ bool ToggleListItem::onClick()
 bool ToggleListItem::getToggleState()
 {
     return this->toggleState;
+}
+
+StringListItem::StringListItem(string label, string initialValue, string helpText, string sublabel, int maxInputLength) :
+    ListItem(label, sublabel),
+    currentValue(initialValue),
+    helpText(helpText),
+    maxInputLength(maxInputLength)
+{
+    this->setValue(this->currentValue, false);
+}
+
+string StringListItem::getValue()
+{
+    return this->currentValue;
+}
+
+bool StringListItem::onClick() {
+    askForKeyboardInputString([&](string text) {
+        this->currentValue = text;
+        this->setValue(text, false);
+    }, this->helpText, "", this->maxInputLength, this->currentValue);
+
+    ListItem::onClick();
+    return true;
+}
+
+IntegerListItem::IntegerListItem(string label, int initialValue, string helpText, string sublabel, int maxInputLength) :
+    ListItem(label, sublabel),
+    currentValue(initialValue),
+    helpText(helpText),
+    maxInputLength(maxInputLength)
+{
+    this->setValue(std::to_string(this->currentValue), false);
+}
+
+int IntegerListItem::getValue()
+{
+    return this->currentValue;
+}
+
+bool IntegerListItem::onClick() {
+    askForKeyboardInputInteger([&](int number) {
+        this->currentValue = number;
+        this->setValue(to_string(number), false);
+    }, this->helpText, "", this->maxInputLength, to_string(this->currentValue));
+
+    ListItem::onClick();
+    return true;
 }
 
 ListItemGroupSpacing::ListItemGroupSpacing(bool separator) : Rectangle(nvgRGBA(0, 0, 0, 0))

@@ -104,23 +104,16 @@ class SelectListItem : public ListItem
         unsigned selectedValue;
 };
 
-enum class ToggleListItemType
-{
-    ON_OFF = 0,
-    YES_NO
-};
 
 // A list item with a ON/OFF value
 // that can be toggled
 // Use the clickListener to detect when the value
 // changes
-// TODO: Add the ability to change "ON" and "OFF" strings
-// TODO: Animate value changes
 class ToggleListItem : public ListItem
 {
     private:
         bool toggleState;
-        ToggleListItemType type;
+        string onValue, offValue;
 
         void updateValue();
 
@@ -128,11 +121,39 @@ class ToggleListItem : public ListItem
         string getOffValue();
 
     public:
-        ToggleListItem(string label, bool initialValue, string sublabel = "", ToggleListItemType type = ToggleListItemType::ON_OFF);
+        ToggleListItem(string label, bool initialValue, string sublabel = "", string onValue = "On", string offValue = "Off");
 
         bool onClick() override;
 
         bool getToggleState();
+};
+
+class StringListItem : public ListItem
+{
+    private:
+        string currentValue;
+        string helpText;
+        int maxInputLength;
+
+    public:
+        StringListItem(string label, string initialValue, string helpText, string sublabel = "", int maxInputLength = 32);
+
+        bool onClick() override;
+        string getValue();
+};
+
+class IntegerListItem : public ListItem
+{
+    private:
+        int currentValue;
+        string helpText;
+        int maxInputLength;
+
+    public:
+        IntegerListItem(string label, int initialValue, string helpText, string sublabel = "", int maxInputLength = 32);
+
+        bool onClick() override;
+        int getValue();
 };
 
 // A vertical list of various widgets, with proper margins and spacing

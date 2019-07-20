@@ -30,6 +30,8 @@ borealis_files = files(
     'lib/TaskManager.cpp',
     'lib/RepeatingTask.cpp',
 
+    'lib/SwkbdUtils.cpp',
+
     'lib/libretro-common/compat/compat_strl.c',
     'lib/libretro-common/features/features_cpu.c',
     'lib/libretro-common/encodings/encoding_utf.c'
