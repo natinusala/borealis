@@ -146,10 +146,19 @@ Style styleAccurate = {
 
     ProgressSpinner : {
         centerGapMultiplier : 0.2f,
-        barWidthMultiplier : 0.06f
+        barWidthMultiplier  : 0.06f
     },
 
     ProgressDisplay : {
         percentageLabelWidth : 70
+    },
+
+    Header : {
+        height  : 44,
+        padding : 11,
+
+        rectangleWidth : 5,
+
+        fontSize : 18
     }
 };

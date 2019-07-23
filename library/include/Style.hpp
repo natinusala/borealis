@@ -185,6 +185,17 @@ typedef struct
     {
         unsigned percentageLabelWidth;
     } ProgressDisplay;
+
+    // Header
+    struct
+    {
+        unsigned height;
+        unsigned padding;
+
+        unsigned rectangleWidth;
+
+        unsigned fontSize;
+    } Header;
 } Style;
 
 // TODO: Make a condensed style

@@ -46,8 +46,9 @@ Theme themeLight = {
 
     nextStageBulletColor : nvgRGB(165, 165, 165),
 
-    spinnerBarColor : nvgRGBA(131, 131, 131, 102)
+    spinnerBarColor : nvgRGBA(131, 131, 131, 102),
 
+    headerRectangleColor : nvgRGB(127, 127, 127)
 };
 
 Theme themeDark = {
@@ -76,5 +77,9 @@ Theme themeDark = {
 
     dropdownBackgroundColor : nvgRGBA(0, 0, 0, 178), // TODO: 178 may be too much for dark theme
 
-    nextStageBulletColor : nvgRGB(165, 165, 165)
+    nextStageBulletColor : nvgRGB(165, 165, 165),
+
+    spinnerBarColor : nvgRGBA(131, 131, 131, 102), // TODO: get this right
+
+    headerRectangleColor : nvgRGB(160, 160, 160)
 };

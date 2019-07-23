@@ -18,33 +18,17 @@
 
 #pragma once
 
-// Useful macros
-#ifndef __SWITCH__
-#define ASSET(_str) "./resources/" _str
-#else
-#define ASSET(_str) "romfs:/" _str
-#endif
-
-// Library
-#include <Application.hpp>
 #include <View.hpp>
-#include <AppletFrame.hpp>
-#include <TabFrame.hpp>
-#include <Rectangle.hpp>
-#include <BoxLayout.hpp>
-#include <Theme.hpp>
-#include <Sidebar.hpp>
-#include <Style.hpp>
-#include <List.hpp>
-#include <Label.hpp>
-#include <CrashFrame.hpp>
-#include <Button.hpp>
-#include <Table.hpp>
-#include <Dropdown.hpp>
-#include <Logger.hpp>
-#include <StagedAppletFrame.hpp>
-#include <ProgressDisplay.hpp>
-#include <ProgressSpinner.hpp>
-#include <Image.hpp>
-#include <RepeatingTask.hpp>
-#include <Header.hpp>
+
+// A simple header with text, a rectangle on the left
+// and a separator
+class Header : public View
+{
+    private:
+        string label;
+
+    public:
+        Header(string label);
+
+        void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
+};

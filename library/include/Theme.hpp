@@ -50,6 +50,8 @@ typedef struct
     NVGcolor nextStageBulletColor;
 
     NVGcolor spinnerBarColor;
+
+    NVGcolor headerRectangleColor;
 } Theme;
 
 extern Theme themeLight;
