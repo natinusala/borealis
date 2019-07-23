@@ -39,11 +39,11 @@
 #include <Label.hpp>
 #include <CrashFrame.hpp>
 #include <Button.hpp>
-#include <TableView.hpp>
-#include <SelectView.hpp>
+#include <Table.hpp>
+#include <Dropdown.hpp>
 #include <Logger.hpp>
 #include <StagedAppletFrame.hpp>
 #include <ProgressDisplay.hpp>
 #include <ProgressSpinner.hpp>
-#include <ImageView.hpp>
+#include <Image.hpp>
 #include <RepeatingTask.hpp>

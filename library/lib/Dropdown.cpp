@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <SelectView.hpp>
+#include <Dropdown.hpp>
 #include <Application.hpp>
 
 #include <Animations.hpp>
@@ -30,14 +30,14 @@
 // TODO: Default selection (focus the right list item)
 // TODO: Fix wonky scrolling near the end of list
 
-SelectView::SelectView(string title, vector<string> values, SelectListener listener, unsigned selected) :
+Dropdown::Dropdown(string title, vector<string> values, SelectListener listener, unsigned selected) :
     title(title),
     selectedValue(selected),
     listener(listener)
 {
     Style *style = Application::getStyle();
 
-    this->topOffset = (float)style->SelectView.listPadding / 8.0f;
+    this->topOffset = (float)style->Dropdown.listPadding / 8.0f;
 
     this->valuesCount = values.size();
 
@@ -54,8 +54,8 @@ SelectView::SelectView(string title, vector<string> values, SelectListener liste
         if (i == selected)
             item->setSelected(true);
 
-        item->setHeight(style->SelectView.listItemHeight);
-        item->setTextSize(style->SelectView.listItemTextSize);
+        item->setHeight(style->Dropdown.listItemHeight);
+        item->setTextSize(style->Dropdown.listItemTextSize);
 
         item->setClickListener([listener, i](View *view){
             if (listener)
@@ -67,7 +67,7 @@ SelectView::SelectView(string title, vector<string> values, SelectListener liste
     }
 }
 
-void SelectView::show(function<void(void)> cb)
+void Dropdown::show(function<void(void)> cb)
 {
     View::show(cb);
 
@@ -84,12 +84,12 @@ void SelectView::show(function<void(void)> cb)
     menu_animation_push(&entry);
 }
 
-void SelectView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
+void Dropdown::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
-    unsigned top = this->list->getY() - style->SelectView.headerHeight - style->SelectView.listPadding;
+    unsigned top = this->list->getY() - style->Dropdown.headerHeight - style->Dropdown.listPadding;
 
     // Backdrop
-    nvgFillColor(vg, a(ctx->theme->selectViewBackgroundColor));
+    nvgFillColor(vg, a(ctx->theme->dropdownBackgroundColor));
     nvgBeginPath(vg);
     nvgRect(vg, x, y, width, top);
     nvgFill(vg);
@@ -124,18 +124,18 @@ void SelectView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned hei
     // Header
     nvgFillColor(vg, a(ctx->theme->separatorColor));
     nvgBeginPath(vg);
-    nvgRect(vg, x + style->AppletFrame.separatorSpacing, top + style->SelectView.headerHeight - 1, width - style->AppletFrame.separatorSpacing * 2, 1);
+    nvgRect(vg, x + style->AppletFrame.separatorSpacing, top + style->Dropdown.headerHeight - 1, width - style->AppletFrame.separatorSpacing * 2, 1);
     nvgFill(vg);
 
     nvgBeginPath(vg);
     nvgFillColor(vg, a(ctx->theme->textColor));
     nvgFontFaceId(vg, ctx->fontStash->regular);
-    nvgFontSize(vg, style->SelectView.headerFontSize);
+    nvgFontSize(vg, style->Dropdown.headerFontSize);
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-    nvgText(vg, x + style->SelectView.headerPadding, top + style->SelectView.headerHeight / 2, this->title.c_str(), nullptr);
+    nvgText(vg, x + style->Dropdown.headerPadding, top + style->Dropdown.headerHeight / 2, this->title.c_str(), nullptr);
 }
 
-bool SelectView::onCancel()
+bool Dropdown::onCancel()
 {
     if (this->listener)
         this->listener(-1);
@@ -144,37 +144,37 @@ bool SelectView::onCancel()
     return true;
 }
 
-unsigned SelectView::getShowAnimationDuration()
+unsigned Dropdown::getShowAnimationDuration()
 {
     return View::getShowAnimationDuration() / 2;
 }
 
-void SelectView::layout(NVGcontext* vg, Style *style, FontStash *stash)
+void Dropdown::layout(NVGcontext* vg, Style *style, FontStash *stash)
 {
     // Layout and move the list
-    unsigned listHeight = min(SELECT_VIEW_MAX_ITEMS, this->valuesCount) * style->SelectView.listItemHeight - (unsigned) this->topOffset;
-    unsigned listWidth  = style->SelectView.listWidth + style->List.marginLeftRight * 2;
+    unsigned listHeight = min(SELECT_VIEW_MAX_ITEMS, this->valuesCount) * style->Dropdown.listItemHeight - (unsigned) this->topOffset;
+    unsigned listWidth  = style->Dropdown.listWidth + style->List.marginLeftRight * 2;
 
     this->list->setBoundaries(
         this->width / 2 - listWidth / 2,
-        this->height - style->AppletFrame.footerHeight - listHeight - style->SelectView.listPadding + (unsigned) this->topOffset,
+        this->height - style->AppletFrame.footerHeight - listHeight - style->Dropdown.listPadding + (unsigned) this->topOffset,
         listWidth,
         listHeight);
     this->list->invalidate();
 }
 
-View* SelectView::requestFocus(FocusDirection direction, View *oldFocus, bool fromUp)
+View* Dropdown::requestFocus(FocusDirection direction, View *oldFocus, bool fromUp)
 {
     return this->list->requestFocus(direction, oldFocus, fromUp);
 }
 
-void SelectView::open(string title, vector<string> values, SelectListener listener, int selected)
+void Dropdown::open(string title, vector<string> values, SelectListener listener, int selected)
 {
-    SelectView *selectView = new SelectView(title, values, listener, selected);
-    Application::pushView(selectView);
+    Dropdown *dropdown = new Dropdown(title, values, listener, selected);
+    Application::pushView(dropdown);
 }
 
-SelectView::~SelectView()
+Dropdown::~Dropdown()
 {
     delete this->list;
 }

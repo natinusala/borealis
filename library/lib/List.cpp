@@ -18,8 +18,8 @@
 
 #include <List.hpp>
 #include <Application.hpp>
-#include <TableView.hpp>
-#include <SelectView.hpp>
+#include <Table.hpp>
+#include <Dropdown.hpp>
 
 #include <Animations.hpp>
 
@@ -56,13 +56,13 @@ void List::customSpacing(View *current, View *next, int *spacing)
         {
             *spacing = 0;
         }
-        else if (dynamic_cast<TableView*>(next))
+        else if (dynamic_cast<Table*>(next))
         {
             *spacing /= 2;
         }
     }
-    // TableView custom spacing
-    else if (dynamic_cast<TableView*>(current))
+    // Table custom spacing
+    else if (dynamic_cast<Table*>(current))
     {
         *spacing /= 2;
     }
@@ -421,6 +421,6 @@ SelectListItem::SelectListItem(string label, vector<string> values, unsigned sel
             this->setValue(this->values[result], false, false);
             this->selectedValue = result;
         };
-        SelectView::open(this->getLabel(), this->values, selectListener, this->selectedValue);
+        Dropdown::open(this->getLabel(), this->values, selectListener, this->selectedValue);
     });
 }

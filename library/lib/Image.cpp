@@ -16,23 +16,23 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <ImageView.hpp>
+#include <Image.hpp>
 #include <cstring>
 #include <Application.hpp>
 
-ImageView::ImageView(string imagePath)
+Image::Image(string imagePath)
 {
     setImage(imagePath);
     setOpacity(1.0F);
 }
 
-ImageView::ImageView(unsigned char *buffer, size_t bufferSize)
+Image::Image(unsigned char *buffer, size_t bufferSize)
 {
     setImage(buffer, bufferSize);
     setOpacity(1.0F);
 }
 
-ImageView::~ImageView() {
+Image::~Image() {
     if (this->imageBuffer != nullptr)
         delete[] this->imageBuffer;
 
@@ -40,7 +40,7 @@ ImageView::~ImageView() {
         nvgDeleteImage(Application::getNVGContext(), this->texture);
 }
 
-void ImageView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
+void Image::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
     nvgSave(vg);
 
@@ -54,7 +54,7 @@ void ImageView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heig
     nvgRestore(vg);
 }
 
-void ImageView::layout(NVGcontext* vg, Style *style, FontStash *stash)
+void Image::layout(NVGcontext* vg, Style *style, FontStash *stash)
 {
     static int origViewWidth = getWidth();
     static int origViewHeight = getHeight();
@@ -118,7 +118,7 @@ void ImageView::layout(NVGcontext* vg, Style *style, FontStash *stash)
     this->imgPaint = nvgImagePattern(vg, getX() + this->imageX, getY() + this->imageY, this->imageWidth, this->imageHeight, 0, this->texture, this->opacity);
 }
 
-void ImageView::setImage(unsigned char *buffer, size_t bufferSize)
+void Image::setImage(unsigned char *buffer, size_t bufferSize)
 {
     if (this->imageBuffer != nullptr)
         delete[] this->imageBuffer;
@@ -133,7 +133,7 @@ void ImageView::setImage(unsigned char *buffer, size_t bufferSize)
     invalidate();
 }
 
-void ImageView::setImage(string imagePath)
+void Image::setImage(string imagePath)
 {
     this->imagePath = imagePath;
 
@@ -145,13 +145,13 @@ void ImageView::setImage(string imagePath)
     invalidate();
 }
 
-void ImageView::setOpacity(float opacity)
+void Image::setOpacity(float opacity)
 {
     this->opacity = opacity;
     invalidate();
 }
 
-void ImageView::setImageScaleType(ImageScaleType imageScaleType) {
+void Image::setImageScaleType(ImageScaleType imageScaleType) {
     this->imageScaleType = imageScaleType;
     invalidate();
 }

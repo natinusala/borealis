@@ -76,7 +76,7 @@ View* BoxLayout::defaultFocus(View *oldFocus)
     return nullptr;
 }
 
-// TODO: Fix stack overflow when going to a direction that's not ours (hit left or right in a SelectView)
+// TODO: Fix stack overflow when going to a direction that's not ours (hit left or right in a Dropdown)
 View* BoxLayout::updateFocus(FocusDirection direction, View *oldFocus, bool fromUp)
 {
     // Give focus to first focusable view by default

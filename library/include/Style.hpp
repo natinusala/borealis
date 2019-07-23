@@ -137,7 +137,7 @@ typedef struct
         float crashCornerRadius;
     } Button;
 
-    // TableViewRow
+    // TableRow
     struct
     {
         unsigned headerHeight;
@@ -148,9 +148,9 @@ typedef struct
         unsigned bodyTextSize;
 
         unsigned padding;
-    } TableViewRow;
+    } TableRow;
 
-    // SelectView
+    // Dropdown
     struct
     {
         unsigned listWidth;
@@ -162,7 +162,7 @@ typedef struct
         unsigned headerHeight;
         unsigned headerFontSize;
         unsigned headerPadding;
-    } SelectView;
+    } Dropdown;
 
     // StagedAppletFrame
     struct

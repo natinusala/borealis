@@ -30,17 +30,17 @@ using namespace std;
 // Parameter is either the selected value index
 // or -1 if the user cancelled
 //
-// Assume that the SelectView is deleted
+// Assume that the Dropdown is deleted
 // as soon as this function is called
 typedef function<void(int)> SelectListener;
 
 // Allows the user to select between multiple
-// values (like a dropdown menu)
-// Use SelectView::open()
-class SelectView : public View
+// values
+// Use Dropdown::open()
+class Dropdown : public View
 {
     private:
-        SelectView(string title, vector<string> values, SelectListener listener, unsigned selected = 0);
+        Dropdown(string title, vector<string> values, SelectListener listener, unsigned selected = 0);
 
         string title;
 
@@ -57,7 +57,7 @@ class SelectView : public View
         unsigned getShowAnimationDuration() override;
 
     public:
-        ~SelectView();
+        ~Dropdown();
 
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
         void layout(NVGcontext* vg, Style *style, FontStash *stash) override;

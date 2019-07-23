@@ -30,15 +30,15 @@ enum class ImageScaleType {
 };
 
 // An image
-class ImageView : public View
+class Image : public View
 {
     protected:
         void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
 
     public:
-        ImageView(string imagePath);
-        ImageView(unsigned char *buffer, size_t bufferSize);
-        ~ImageView();
+        Image(string imagePath);
+        Image(unsigned char *buffer, size_t bufferSize);
+        ~Image();
 
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
 

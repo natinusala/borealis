@@ -16,16 +16,16 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <TableView.hpp>
+#include <Table.hpp>
 
-TableViewRow* TableView::addRow(TableViewRowType type, string label, string value)
+TableRow* Table::addRow(TableRowType type, string label, string value)
 {
-    TableViewRow *row = new TableViewRow(type, label, value);
+    TableRow *row = new TableRow(type, label, value);
     this->rows.push_back(row);
     return row;
 }
 
-void TableView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
+void Table::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
     Theme *theme = ctx->theme;
     unsigned yAdvance = 0;
@@ -33,7 +33,7 @@ void TableView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heig
     for (size_t i = 0; i < this->rows.size(); i++)
     {
         bool even = i % 2 == 0;
-        TableViewRow *row = this->rows[i];
+        TableRow *row = this->rows[i];
 
         // Get appearance
         unsigned indent     = 0;
@@ -44,17 +44,17 @@ void TableView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heig
 
         switch (row->getType())
         {
-            case TableViewRowType::HEADER:
+            case TableRowType::HEADER:
                 indent      = 0;
-                height      = style->TableViewRow.headerHeight;
+                height      = style->TableRow.headerHeight;
                 textColor   = theme->textColor;
-                fontSize    = style->TableViewRow.headerTextSize;
+                fontSize    = style->TableRow.headerTextSize;
                 break;
-            case TableViewRowType::BODY:
-                indent      = style->TableViewRow.bodyIndent;
-                height      = style->TableViewRow.bodyHeight;
+            case TableRowType::BODY:
+                indent      = style->TableRow.bodyIndent;
+                height      = style->TableRow.bodyHeight;
                 textColor   = theme->tableBodyTextColor;
-                fontSize    = style->TableViewRow.bodyTextSize;
+                fontSize    = style->TableRow.bodyTextSize;
                 break;
         }
 
@@ -74,30 +74,30 @@ void TableView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heig
         // Label
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
         nvgBeginPath(vg);
-        nvgText(vg, x + indent + style->TableViewRow.padding, y + yAdvance + height/2, row->getLabel()->c_str(), nullptr);
+        nvgText(vg, x + indent + style->TableRow.padding, y + yAdvance + height/2, row->getLabel()->c_str(), nullptr);
 
         // Value
         nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
         nvgBeginPath(vg);
-        nvgText(vg, x + width - style->TableViewRow.padding, y + yAdvance + height/2, row->getValue()->c_str(), nullptr);
+        nvgText(vg, x + width - style->TableRow.padding, y + yAdvance + height/2, row->getValue()->c_str(), nullptr);
 
         yAdvance += height;
     }
 }
 
-void TableView::layout(NVGcontext* vg, Style *style, FontStash *stash)
+void Table::layout(NVGcontext* vg, Style *style, FontStash *stash)
 {
     unsigned height = 0;
 
-    for (TableViewRow *row : this->rows)
+    for (TableRow *row : this->rows)
     {
         switch (row->getType())
         {
-            case TableViewRowType::HEADER:
-                height += style->TableViewRow.headerHeight;
+            case TableRowType::HEADER:
+                height += style->TableRow.headerHeight;
                 break;
-            case TableViewRowType::BODY:
-                height += style->TableViewRow.bodyHeight;
+            case TableRowType::BODY:
+                height += style->TableRow.bodyHeight;
                 break;
         }
     }
@@ -105,35 +105,35 @@ void TableView::layout(NVGcontext* vg, Style *style, FontStash *stash)
     this->setHeight(height);
 }
 
-TableView::~TableView()
+Table::~Table()
 {
-    for (TableViewRow *row : this->rows)
+    for (TableRow *row : this->rows)
     {
         delete row;
     }
 }
 
-TableViewRow::TableViewRow(TableViewRowType type, string label, string value) : type(type), label(label), value(value)
+TableRow::TableRow(TableRowType type, string label, string value) : type(type), label(label), value(value)
 {
 
 }
 
-string* TableViewRow::getLabel()
+string* TableRow::getLabel()
 {
     return &this->label;
 }
 
-string* TableViewRow::getValue()
+string* TableRow::getValue()
 {
     return &this->value;
 }
 
-void TableViewRow::setValue(string value)
+void TableRow::setValue(string value)
 {
     this->value = value;
 }
 
-TableViewRowType TableViewRow::getType()
+TableRowType TableRow::getType()
 {
     return this->type;
 }

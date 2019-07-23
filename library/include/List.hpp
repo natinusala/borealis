@@ -93,7 +93,7 @@ class ListItemGroupSpacing : public Rectangle
 };
 
 // A list item with mutliple choices for its value
-// (will open a SelectView)
+// (will open a Dropdown)
 class SelectListItem : public ListItem
 {
     public:

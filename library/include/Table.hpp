@@ -22,28 +22,28 @@
 
 #include <string>
 
-// The type of a TableView Row
-enum class TableViewRowType
+// The type of a Table Row
+enum class TableRowType
 {
     HEADER = 0,
     BODY
 };
 
-// A TableView row
-class TableViewRow
+// A Table row
+class TableRow
 {
     private:
-        TableViewRowType type;
+        TableRowType type;
 
         string label;
         string value;
 
     public:
-        TableViewRow(TableViewRowType type, string label, string value = "");
+        TableRow(TableRowType type, string label, string value = "");
 
         string* getLabel();
         string *getValue();
-        TableViewRowType getType();
+        TableRowType getType();
 
         void setValue(string value);
 };
@@ -52,16 +52,16 @@ class TableViewRow
 // the Settings app (Internet connection details)
 // All rows must be added before adding the view
 // to a layout (it's static)
-class TableView : public View
+class Table : public View
 {
     private:
-        vector<TableViewRow*> rows;
+        vector<TableRow*> rows;
 
     public:
-        ~TableView();
+        ~Table();
 
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
         void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
 
-        TableViewRow* addRow(TableViewRowType type, string label, string value = "");
+        TableRow* addRow(TableRowType type, string label, string value = "");
 };

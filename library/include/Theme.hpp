@@ -45,7 +45,7 @@ typedef struct
     NVGcolor tableEvenBackgroundColor;
     NVGcolor tableBodyTextColor;
 
-    NVGcolor selectViewBackgroundColor;
+    NVGcolor dropdownBackgroundColor;
 
     NVGcolor nextStageBulletColor;
 

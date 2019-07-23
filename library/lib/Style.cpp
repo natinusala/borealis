@@ -114,7 +114,7 @@ Style styleAccurate = {
         crashCornerRadius   : 5.0f
     },
 
-    TableViewRow : {
+    TableRow : {
         headerHeight    : 60,
         headerTextSize  : 22,
 
@@ -125,7 +125,7 @@ Style styleAccurate = {
         padding : 15
     },
 
-    SelectView : {
+    Dropdown : {
         listWidth       : 720,
         listPadding     : 40,
 
