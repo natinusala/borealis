@@ -47,6 +47,11 @@ void BoxLayout::setSpacing(unsigned spacing)
     this->invalidate();
 }
 
+unsigned BoxLayout::getSpacing()
+{
+    return this->spacing;
+}
+
 void BoxLayout::setMargins(unsigned top, unsigned right, unsigned bottom, unsigned left)
 {
     this->marginBottom  = bottom;

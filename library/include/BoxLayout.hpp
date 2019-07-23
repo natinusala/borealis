@@ -51,11 +51,6 @@ class BoxLayout : public View
 
         unsigned spacing = 0;
 
-        unsigned marginTop      = 0;
-        unsigned marginRight    = 0;
-        unsigned marginBottom   = 0;
-        unsigned marginLeft     = 0;
-
         unsigned middleY        = 0; // y + height/2
         unsigned bottomY        = 0; // y + height
         unsigned entriesHeight  = 0; // sum of all entries heights (with spacing) + bottom margin
@@ -72,6 +67,11 @@ class BoxLayout : public View
         vector<BoxLayoutChild*> children;
 
         unsigned focusedIndex = 0;
+
+        unsigned marginTop      = 0;
+        unsigned marginRight    = 0;
+        unsigned marginBottom   = 0;
+        unsigned marginLeft     = 0;
 
         /**
          * Should the BoxLayout apply spacing after
@@ -94,6 +94,7 @@ class BoxLayout : public View
          * Sets spacing between views
          */
         void setSpacing(unsigned spacing);
+        unsigned getSpacing();
 
         /**
          * Sets margins around views

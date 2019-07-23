@@ -20,6 +20,7 @@
 #include <Application.hpp>
 #include <Table.hpp>
 #include <Dropdown.hpp>
+#include <Header.hpp>
 
 #include <Animations.hpp>
 
@@ -70,6 +71,12 @@ void List::customSpacing(View *current, View *next, int *spacing)
     else if (dynamic_cast<ListItemGroupSpacing*>(current))
     {
         *spacing /= 2;
+    }
+    // Header custom spacing
+    else if (dynamic_cast<Header*>(current) || dynamic_cast<Header*>(next))
+    {
+        Style *style = Application::getStyle();
+        *spacing = style->Header.padding;
     }
 }
 
