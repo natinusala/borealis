@@ -192,6 +192,13 @@ bool Application::init(StyleEnum style)
             info("Using Switch shared font");
             Application::fontStash.regular = nvgCreateFontMem(Application::vg, "regular", (unsigned char*)font.address, font.size, 0);
         }
+
+        Result rc = plGetSharedFontByType(&font, PlSharedFontType_NintendoExt);
+        if(R_SUCCEEDED(rc))
+        {
+            info("Using Switch shared symbols font");
+            Application::fontStash.symbols = nvgCreateFontMem(Application::vg, "symbols", (unsigned char*)font.address, font.size, 0);
+        }
     }
 #else
     // Use illegal font if available
@@ -199,9 +206,24 @@ bool Application::init(StyleEnum style)
         Application::fontStash.regular = nvgCreateFont(Application::vg, "regular", ASSET("Illegal-Font.ttf"));
     else
         Application::fontStash.regular = nvgCreateFont(Application::vg, "regular", ASSET("inter/Inter-Switch.ttf"));
+
+    if (access(ASSET("Wingdings.ttf"), F_OK) != -1)
+    {
+        Application::fontStash.symbols = nvgCreateFont(Application::vg, "symbols", ASSET("Wingdings.ttf"));
+    }
 #endif
 
-    // TODO: Load symbols shared font as a fallback
+    // Set symbols font as fallback
+    if (Application::fontStash.symbols)
+    {
+        info("Using symbols font");
+        nvgAddFallbackFontId(Application::vg, Application::fontStash.regular, Application::fontStash.symbols);
+    }
+    else
+    {
+        error("No symbols font found");
+    }
+
     // TODO: Font Awesome as fallback too?
 
     // Load theme

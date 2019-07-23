@@ -92,6 +92,7 @@ Style styleAccurate = {
 
     Label : {
         regularFontSize     : 20,
+        mediumFontSize      : 18,
         smallFontSize       : 16,
         sublabelFontSize    : 16,
         crashFontSize       : 24,

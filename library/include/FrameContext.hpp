@@ -26,6 +26,7 @@ class FontStash
 {
     public:
         int regular = 0;
+        int symbols = 0;
 };
 
 class FrameContext
