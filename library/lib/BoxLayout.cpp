@@ -18,6 +18,7 @@
 
 #include <BoxLayout.hpp>
 #include <Animations.hpp>
+#include <Logger.hpp>
 
 #include <stdio.h>
 #include <math.h>
@@ -58,6 +59,12 @@ void BoxLayout::setMargins(unsigned top, unsigned right, unsigned bottom, unsign
     this->marginLeft    = left;
     this->marginRight   = right;
     this->marginTop     = top;
+    this->invalidate();
+}
+
+void BoxLayout::setMarginBottom(unsigned bottom)
+{
+    this->marginBottom = bottom;
     this->invalidate();
 }
 
@@ -230,7 +237,7 @@ void BoxLayout::layout(NVGcontext* vg, Style *style, FontStash *stash)
                 child->view->setBoundaries(this->x + this->marginLeft,
                     yAdvance + roundf(this->scrollY),
                     this->width - this->marginLeft - this->marginRight,
-                    this->height - yAdvance - this->marginBottom
+                    this->y + this->height - yAdvance - this->marginBottom
                 );
             else
                 child->view->setBoundaries(this->x + this->marginLeft,
@@ -264,7 +271,7 @@ void BoxLayout::layout(NVGcontext* vg, Style *style, FontStash *stash)
             if (child->fill)
                 child->view->setBoundaries(xAdvance,
                     this->y + this->marginTop,
-                    this->width - xAdvance - this->marginRight,
+                    this->x + this->width - xAdvance - this->marginRight,
                     this->height - this->marginTop - this->marginBottom
                 );
             else

@@ -43,6 +43,7 @@ class Label : public View
         LabelStyle labelStyle;
 
         NVGalign horizontalAlign = NVG_ALIGN_LEFT;
+        NVGalign verticalAlign = NVG_ALIGN_MIDDLE;
 
     public:
         Label(LabelStyle labelStyle, string text, bool multiline = false);
@@ -55,6 +56,7 @@ class Label : public View
             return nullptr;
         }
 
+        void setVerticalAlign(NVGalign align);
         void setHorizontalAlign(NVGalign align);
         void setText(string text);
 };

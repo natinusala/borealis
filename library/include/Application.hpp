@@ -32,6 +32,8 @@
 
 #include <TaskManager.hpp>
 
+#include <Logger.hpp>
+
 using namespace std;
 
 class Application

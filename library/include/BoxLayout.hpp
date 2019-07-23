@@ -102,6 +102,7 @@ class BoxLayout : public View
          * only effective if the last child is set to fill
          */
         void setMargins(unsigned top, unsigned right, unsigned bottom, unsigned left);
+        void setMarginBottom(unsigned bottom);
 
         /**
          * Adds a view to this box layout

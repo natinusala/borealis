@@ -50,6 +50,11 @@ void Label::setHorizontalAlign(NVGalign align)
     this->horizontalAlign = align;
 }
 
+void Label::setVerticalAlign(NVGalign align)
+{
+    this->verticalAlign = align;
+}
+
 void Label::setText(string text) {
     this->text = text;
 
@@ -109,9 +114,17 @@ void Label::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, 
     else
     {
         nvgTextLineHeight(vg, 1.0f);
-        nvgTextAlign(vg, this->horizontalAlign | NVG_ALIGN_MIDDLE);
+        nvgTextAlign(vg, this->horizontalAlign | this->verticalAlign);
         nvgFontFaceId(vg, ctx->fontStash->regular);
         nvgBeginPath(vg);
-        nvgText(vg, x, y + height / 2, this->text.c_str(), nullptr); // TODO: Ticker
+
+        if (this->horizontalAlign == NVG_ALIGN_RIGHT)
+            x += width;
+
+        // TODO: Ticker
+        if (this->verticalAlign == NVG_ALIGN_BOTTOM)
+            nvgText(vg, x, y + height, this->text.c_str(), nullptr);
+        else
+            nvgText(vg, x, y + height / 2, this->text.c_str(), nullptr);
     }
 }
