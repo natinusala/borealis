@@ -26,6 +26,8 @@
 
 #include <Logger.hpp>
 
+#include <SwkbdUtils.hpp>
+
 #include <math.h>
 
 // TODO: Scrollbar
@@ -203,6 +205,11 @@ void ListItem::setValue(string value, bool faint, bool animate)
     }
 }
 
+string ListItem::getValue()
+{
+    return this->value;
+}
+
 void ListItem::setDrawTopSeparator(bool draw)
 {
     this->drawTopSeparator = draw;
@@ -287,7 +294,7 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
         // Long stroke
         nvgSave(vg);
         nvgTranslate(vg, centerX, centerY);
-        nvgRotate(vg, - M_PI / 4.0f);
+        nvgRotate(vg, - NVG_PI / 4.0f);
 
         nvgBeginPath(vg);
         nvgRect(vg, - (radiusf * 0.55f), 0, radiusf * 1.3f, thickness);
@@ -297,7 +304,7 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
         // Short stroke
         nvgSave(vg);
         nvgTranslate(vg, centerX - (radiusf * 0.65f), centerY);
-        nvgRotate(vg, M_PI / 4.0f);
+        nvgRotate(vg, NVG_PI / 4.0f);
 
         nvgBeginPath(vg);
         nvgRect(vg, 0, - (thickness / 2), radiusf * 0.53f, thickness);
@@ -350,49 +357,25 @@ ListItem::~ListItem()
     this->resetValueAnimation();
 }
 
-ToggleListItem::ToggleListItem(string label, bool initialValue, string sublabel, ToggleListItemType type) : 
+ToggleListItem::ToggleListItem(string label, bool initialValue, string sublabel, string onValue, string offValue) : 
     ListItem(label, sublabel),
     toggleState(initialValue),
-    type(type)
+    onValue(onValue),
+    offValue(offValue)
 {
     this->updateValue();
-}
-
-string ToggleListItem::getOnValue()
-{
-    switch (this->type)
-    {
-        default:
-        case ToggleListItemType::ON_OFF:
-            return "ON";
-        case ToggleListItemType::YES_NO:
-            return "Yes";
-    }
-}
-
-string ToggleListItem::getOffValue()
-{
-    switch (this->type)
-    {
-        default:
-        case ToggleListItemType::ON_OFF:
-            return "OFF";
-        case ToggleListItemType::YES_NO:
-            return "No";
-    }
 }
 
 void ToggleListItem::updateValue()
 {
     if (this->toggleState)
-        this->setValue(this->getOnValue(), false);
+        this->setValue(this->onValue, false);
     else
-        this->setValue(getOffValue(), true);
+        this->setValue(this->offValue, true);
 }
 
 bool ToggleListItem::onClick()
 {
-
     this->toggleState = !this->toggleState;
     this->updateValue();
 
@@ -403,6 +386,38 @@ bool ToggleListItem::onClick()
 bool ToggleListItem::getToggleState()
 {
     return this->toggleState;
+}
+
+InputListItem::InputListItem(string label, string initialValue, string helpText, string sublabel, int maxInputLength) :
+    ListItem(label, sublabel),
+    helpText(helpText),
+    maxInputLength(maxInputLength)
+{
+    this->setValue(initialValue, false);
+}
+
+bool InputListItem::onClick() {
+    openSwkbdForText([&](string text) {
+        this->setValue(text, false);
+    }, this->helpText, "", this->maxInputLength, this->getValue());
+
+    ListItem::onClick();
+    return true;
+}
+
+IntegerInputListItem::IntegerInputListItem(string label, int initialValue, string helpText, string sublabel, int maxInputLength) :
+    InputListItem(label, to_string(initialValue), helpText, sublabel, maxInputLength)
+{
+    
+}
+
+bool IntegerInputListItem::onClick() {
+    openSwkbdForNumber([&](int number) {
+        this->setValue(to_string(number), false);
+    }, this->helpText, "", this->maxInputLength, this->getValue());
+
+    ListItem::onClick();
+    return true;
 }
 
 ListItemGroupSpacing::ListItemGroupSpacing(bool separator) : Rectangle(nvgRGBA(0, 0, 0, 0))

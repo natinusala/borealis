@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include <string>
+
 #include <BoxLayout.hpp>
 #include <Label.hpp>
 #include <Rectangle.hpp>
@@ -79,6 +81,7 @@ class ListItem : public View
          * use a darker color (typically "OFF" labels)
          */
         void setValue(string value, bool faint = false, bool animate = true);
+        string getValue();
 
         void setClickListener(EventListener listener);
 
@@ -104,35 +107,45 @@ class SelectListItem : public ListItem
         unsigned selectedValue;
 };
 
-enum class ToggleListItemType
-{
-    ON_OFF = 0,
-    YES_NO
-};
 
 // A list item with a ON/OFF value
 // that can be toggled
 // Use the clickListener to detect when the value
 // changes
-// TODO: Add the ability to change "ON" and "OFF" strings
-// TODO: Animate value changes
 class ToggleListItem : public ListItem
 {
     private:
         bool toggleState;
-        ToggleListItemType type;
+        string onValue, offValue;
 
         void updateValue();
 
-        string getOnValue();
-        string getOffValue();
-
     public:
-        ToggleListItem(string label, bool initialValue, string sublabel = "", ToggleListItemType type = ToggleListItemType::ON_OFF);
+        ToggleListItem(string label, bool initialValue, string sublabel = "", string onValue = "On", string offValue = "Off");
 
         bool onClick() override;
 
         bool getToggleState();
+};
+
+class InputListItem : public ListItem
+{
+    protected:
+        string helpText;
+        int maxInputLength;
+
+    public:
+        InputListItem(string label, string initialValue, string helpText, string sublabel = "", int maxInputLength = 32);
+
+        bool onClick() override;
+};
+
+class IntegerInputListItem : public InputListItem
+{
+    public:
+        IntegerInputListItem(string label, int initialValue, string helpText, string sublabel = "", int maxInputLength = 32);
+
+        bool onClick() override;
 };
 
 // A vertical list of various widgets, with proper margins and spacing
