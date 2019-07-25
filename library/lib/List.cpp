@@ -407,7 +407,7 @@ IntegerInputListItem::IntegerInputListItem(string label, int initialValue, strin
 bool IntegerInputListItem::onClick() {
     openSwkbdForNumber([&](int number) {
         this->setValue(to_string(number), false);
-    }, this->helpText, "", this->maxInputLength, std::to_string(this->getValue()));
+    }, this->helpText, "", this->maxInputLength, this->getValue());
 
     ListItem::onClick();
     return true;
