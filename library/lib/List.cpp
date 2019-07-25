@@ -358,7 +358,7 @@ ListItem::~ListItem()
     this->resetValueAnimation();
 }
 
-ToggleListItem::ToggleListItem(string label, bool initialValue, string sublabel, ToggleListItemType type) :
+ToggleListItem::ToggleListItem(string label, bool initialValue, string sublabel, string onValue, string offValue) :
     ListItem(label, sublabel),
     toggleState(initialValue),
     onValue(onValue),

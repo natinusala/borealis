@@ -33,6 +33,7 @@ typedef struct
         unsigned titleOffset;
 
         unsigned footerTextSize;
+        unsigned footerHintSize;
         unsigned footerTextSpacing;
     } AppletFrame;
 

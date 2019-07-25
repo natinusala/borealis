@@ -106,7 +106,7 @@ void Dropdown::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
     this->list->frame(ctx);
 
     // Footer
-    // TODO: Hint
+    this->drawHint(ctx, x, y, width, height);
 
     nvgFillColor(vg, ctx->theme->separatorColor); // we purposely don't apply opacity
 

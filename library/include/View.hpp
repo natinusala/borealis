@@ -144,6 +144,11 @@ class View
             return this->a(nvgRGBAf(r, g, b, a));
         }
 
+        /**
+         * Draws the bottom-right buttons hint
+         */
+        void drawHint(FrameContext *ctx, unsigned x, unsigned y, unsigned width, unsigned height);
+
     public:
         void setBoundaries(int x, int y, unsigned width, unsigned height);
 

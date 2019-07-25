@@ -29,7 +29,8 @@ Style styleAccurate = {
         titleStart     : 130,
         titleOffset    : 5,
 
-        footerTextSize     : 20,
+        footerTextSize     : 22,
+        footerHintSize     : 26,
         footerTextSpacing  : 30
     },
 

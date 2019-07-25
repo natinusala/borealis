@@ -85,7 +85,8 @@ void CrashFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned hei
     // Button
     this->button->frame(ctx);
 
-    //TODO: Hint
+    // Hint
+    this->drawHint(ctx, x, y, width, height);
 }
 
 void CrashFrame::onShowAnimationEnd()

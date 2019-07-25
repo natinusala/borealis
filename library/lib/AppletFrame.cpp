@@ -19,8 +19,6 @@
 #include <AppletFrame.hpp>
 #include <Application.hpp>
 
-// TODO: Add hints system
-
 AppletFrame::AppletFrame(bool padLeft, bool padRight)
 {
     Style *style = Application::getStyle();
@@ -55,7 +53,8 @@ void AppletFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned he
     nvgBeginPath(vg);
     nvgText(vg, x + style->AppletFrame.separatorSpacing + style->AppletFrame.footerTextSpacing, y + height - style->AppletFrame.footerHeight/2, text->c_str(), nullptr);
 
-    //TODO: Hint
+    // Hint
+    this->drawHint(ctx, x, y, width, height);
 
     // TODO: Icon
 

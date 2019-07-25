@@ -327,6 +327,60 @@ void View::drawBackground(NVGcontext* vg, FrameContext *ctx, Style *style)
     }
 }
 
+// TODO: Make it dynamic somehow
+void View::drawHint(FrameContext *ctx, unsigned x, unsigned y, unsigned width, unsigned height)
+{
+    NVGcontext *vg = ctx->vg;
+    Style *style = Application::getStyle();
+
+    unsigned xAdvance   = x + width - style->AppletFrame.separatorSpacing - style->AppletFrame.footerTextSpacing;
+
+    y       = y + height - style->AppletFrame.footerHeight;
+    height  = style->AppletFrame.footerHeight;
+
+    unsigned middle = y + height / 2;
+
+    nvgFillColor(vg, ctx->theme->textColor);
+    nvgTextAlign(ctx->vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
+
+    string okText   = "OK";
+    string backText = "Back";
+
+    string okIcon = "\uE0E0";
+    string backIcon = "\uE0E1";
+
+    float bounds[4];
+
+    // OK
+    nvgBeginPath(vg);
+    nvgFontSize(vg, style->AppletFrame.footerTextSize);
+    nvgText(vg, xAdvance, middle, okText.c_str(), nullptr);
+    nvgTextBounds(vg, xAdvance, middle, okText.c_str(), nullptr, bounds);
+
+    xAdvance -= style->AppletFrame.footerTextSpacing / 3;
+    xAdvance -= (unsigned) (bounds[2] - bounds[0]);
+
+    nvgBeginPath(vg);
+    nvgFontSize(vg, style->AppletFrame.footerHintSize);
+    nvgText(vg, xAdvance, middle, okIcon.c_str(), nullptr);
+    nvgTextBounds(vg, xAdvance, middle, okIcon.c_str(), nullptr, bounds);
+
+    xAdvance -= (unsigned) (bounds[2] - bounds[0]);
+    xAdvance -= style->AppletFrame.footerTextSpacing + style->AppletFrame.separatorSpacing / 2;
+
+    // Back
+    nvgFontSize(vg, style->AppletFrame.footerTextSize);
+    nvgText(vg, xAdvance, middle, backText.c_str(), nullptr);
+    nvgTextBounds(vg, xAdvance, middle, backText.c_str(), nullptr, bounds);
+
+    xAdvance -= style->AppletFrame.footerTextSpacing / 3;
+    xAdvance -= (unsigned) (bounds[2] - bounds[0]);
+
+    nvgBeginPath(vg);
+    nvgFontSize(vg, style->AppletFrame.footerHintSize);
+    nvgText(vg, xAdvance, middle, backIcon.c_str(), nullptr);
+}
+
 void View::setBoundaries(int x, int y, unsigned width, unsigned height)
 {
     this->x         = x;
