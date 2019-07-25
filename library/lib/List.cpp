@@ -29,6 +29,7 @@
 #include <SwkbdUtils.hpp>
 
 #include <math.h>
+#include <retro_math.h>
 
 // TODO: Scrollbar
 
@@ -357,7 +358,7 @@ ListItem::~ListItem()
     this->resetValueAnimation();
 }
 
-ToggleListItem::ToggleListItem(string label, bool initialValue, string sublabel, string onValue, string offValue) : 
+ToggleListItem::ToggleListItem(string label, bool initialValue, string sublabel, ToggleListItemType type) :
     ListItem(label, sublabel),
     toggleState(initialValue),
     onValue(onValue),

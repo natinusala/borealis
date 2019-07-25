@@ -193,7 +193,7 @@ bool Application::init(StyleEnum style)
             Application::fontStash.regular = nvgCreateFontMem(Application::vg, "regular", (unsigned char*)font.address, font.size, 0);
         }
 
-        Result rc = plGetSharedFontByType(&font, PlSharedFontType_NintendoExt);
+        rc = plGetSharedFontByType(&font, PlSharedFontType_NintendoExt);
         if(R_SUCCEEDED(rc))
         {
             info("Using Switch shared symbols font");
