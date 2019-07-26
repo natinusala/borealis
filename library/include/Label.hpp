@@ -45,6 +45,9 @@ class Label : public View
         NVGalign horizontalAlign = NVG_ALIGN_LEFT;
         NVGalign verticalAlign = NVG_ALIGN_MIDDLE;
 
+        NVGcolor customColor;
+        bool useCustomColor = false;
+
     public:
         Label(LabelStyle labelStyle, string text, bool multiline = false);
 
@@ -59,4 +62,16 @@ class Label : public View
         void setVerticalAlign(NVGalign align);
         void setHorizontalAlign(NVGalign align);
         void setText(string text);
+
+        /**
+         * Sets the label color
+         */
+        void setColor(NVGcolor color);
+
+        /**
+         * Unsets the label color - it
+         * will now use the default one
+         * for the label style
+         */
+        void unsetColor();
 };

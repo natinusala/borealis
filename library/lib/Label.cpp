@@ -85,22 +85,29 @@ void Label::layout(NVGcontext* vg, Style *style, FontStash *stash)
 
 void Label::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
-    switch (this->labelStyle)
+    // Use custom color if any
+    if (this->useCustomColor)
+        nvgFillColor(vg, a(this->customColor));
+    else
     {
-        case LabelStyle::REGULAR:
-        case LabelStyle::MEDIUM:
-        case LabelStyle::SMALL:
-        case LabelStyle::BUTTON:
-            nvgFillColor(vg, a(ctx->theme->textColor));
-            break;
-        case LabelStyle::SUBLABEL:
-            nvgFillColor(vg, a(ctx->theme->sublabelColor));
-            break;
-        case LabelStyle::CRASH:
-            nvgFillColor(vg, RGB(255, 255, 255));
-            break;
+        switch (this->labelStyle)
+        {
+            case LabelStyle::REGULAR:
+            case LabelStyle::MEDIUM:
+            case LabelStyle::SMALL:
+            case LabelStyle::BUTTON:
+                nvgFillColor(vg, a(ctx->theme->textColor));
+                break;
+            case LabelStyle::SUBLABEL:
+                nvgFillColor(vg, a(ctx->theme->sublabelColor));
+                break;
+            case LabelStyle::CRASH:
+                nvgFillColor(vg, RGB(255, 255, 255));
+                break;
+        }
     }
 
+    // Draw
     nvgFontSize(vg, this->fontSize);
 
     if (this->multiline)
@@ -127,4 +134,15 @@ void Label::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, 
         else
             nvgText(vg, x, y + height / 2, this->text.c_str(), nullptr);
     }
+}
+
+void Label::setColor(NVGcolor color)
+{
+    this->customColor       = color;
+    this->useCustomColor    = true;
+}
+
+void Label::unsetColor()
+{
+    this->useCustomColor = false;
 }
