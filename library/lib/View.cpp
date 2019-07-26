@@ -346,7 +346,7 @@ void View::drawHint(FrameContext *ctx, unsigned x, unsigned y, unsigned width, u
     string okText   = "OK";
     string backText = "Back";
 
-    string okIcon = "\uE0E0";
+    string okIcon   = "\uE0E0";
     string backIcon = "\uE0E1";
 
     float bounds[4];

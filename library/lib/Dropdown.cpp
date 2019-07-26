@@ -165,7 +165,9 @@ void Dropdown::layout(NVGcontext* vg, Style *style, FontStash *stash)
 
 View* Dropdown::requestFocus(FocusDirection direction, View *oldFocus, bool fromUp)
 {
-    return this->list->requestFocus(direction, oldFocus, fromUp);
+    if (direction == FocusDirection::NONE)
+        return this->list->requestFocus(direction, oldFocus, fromUp);
+    return nullptr;
 }
 
 void Dropdown::open(string title, vector<string> values, SelectListener listener, int selected)

@@ -88,7 +88,6 @@ View* BoxLayout::defaultFocus(View *oldFocus)
     return nullptr;
 }
 
-// TODO: Fix stack overflow when going to a direction that's not ours (hit left or right in a Dropdown)
 View* BoxLayout::updateFocus(FocusDirection direction, View *oldFocus, bool fromUp)
 {
     // Give focus to first focusable view by default
@@ -101,8 +100,8 @@ View* BoxLayout::updateFocus(FocusDirection direction, View *oldFocus, bool from
     // Handle directions
     else
     {
-        // Give focus to next focusable view
         View *newFocus = nullptr;
+        // Give focus to next focusable view
         if ((this->orientation == BoxLayoutOrientation::HORIZONTAL && direction == FocusDirection::RIGHT) ||
             (this->orientation == BoxLayoutOrientation::VERTICAL && direction == FocusDirection::DOWN))
         {
@@ -117,6 +116,7 @@ View* BoxLayout::updateFocus(FocusDirection direction, View *oldFocus, bool from
             }
             return nullptr;
         }
+        // Give focus to previous focusable view
         else if ((this->orientation == BoxLayoutOrientation::HORIZONTAL && direction == FocusDirection::LEFT) ||
                     (this->orientation == BoxLayoutOrientation::VERTICAL && direction == FocusDirection::UP))
         {
