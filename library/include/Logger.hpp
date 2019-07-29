@@ -1,6 +1,7 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2019  natinusala
+    Copyright (C) 2019  p-sam
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,6 +23,10 @@
 
 using namespace std;
 
+#ifndef __SWITCH__
+typedef std::uint32_t Result;
+#endif
+
 enum class LogLevel
 {
     ERROR   = 0,
@@ -33,6 +38,8 @@ void setLogLevel(LogLevel logLevel);
 
 void printLine(string prefix, string line);
 
-void error(const char * format, ...);
-void info(const char * format, ...);
-void debug(const char * format, ...);
+void error(const char *format, ...);
+void info(const char *format, ...);
+void debug(const char *format, ...);
+
+void errorResult(Result rc);

@@ -1,6 +1,7 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2019  natinusala
+    Copyright (C) 2019  p-sam
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -37,7 +38,7 @@ void printLine(string prefix, string line)
 #endif
 }
 
-void error(const char * format, ...)
+void error(const char *format, ...)
 {
     if (logLevel < LogLevel::ERROR)
         return;
@@ -51,7 +52,7 @@ void error(const char * format, ...)
     printLine("ERROR", string(line));
 }
 
-void info(const char * format, ...)
+void info(const char *format, ...)
 {
     if (logLevel < LogLevel::INFO)
         return;
@@ -65,7 +66,7 @@ void info(const char * format, ...)
     printLine("INFO", string(line));
 }
 
-void debug(const char * format, ...)
+void debug(const char *format, ...)
 {
     if (logLevel < LogLevel::DEBUG)
         return;
@@ -77,4 +78,13 @@ void debug(const char * format, ...)
     va_end(ap);
 
     printLine("DEBUG", string(line));
+}
+
+void errorResult(Result rc)
+{
+#ifdef __SWITCH__
+    error("[0x%x] %04d-%04d", rc, R_MODULE(rc), R_DESCRIPTION(rc));
+#else
+    error("[0x%x] xxxx-xxxx", rc);
+#endif
 }
