@@ -58,15 +58,18 @@ class BoxLayout : public View
         float scrollY = 0.0f; // all childrens are offset by this value
 
         View* updateFocus(FocusDirection direction, View *oldFocus, bool fromUp);
-        void updateScroll();
+        void updateScroll(bool animated = true);
 
         void scrollAnimationTick();
         void prebakeScrolling();
 
+        bool firstLayout = true;
+
     protected:
         vector<BoxLayoutChild*> children;
 
-        unsigned focusedIndex = 0;
+        size_t defaultFocusedIndex  = 0;
+        size_t focusedIndex         = 0;
 
         unsigned marginTop      = 0;
         unsigned marginRight    = 0;
@@ -82,7 +85,7 @@ class BoxLayout : public View
         virtual View* defaultFocus(View *oldFocus);
 
     public:
-        BoxLayout(BoxLayoutOrientation orientation);
+        BoxLayout(BoxLayoutOrientation orientation, size_t defaultFocus = 0);
 
         void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;

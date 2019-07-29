@@ -33,7 +33,7 @@
 
 // TODO: Scrollbar
 
-List::List() : BoxLayout(BoxLayoutOrientation::VERTICAL)
+List::List(size_t defaultFocus) : BoxLayout(BoxLayoutOrientation::VERTICAL, defaultFocus)
 {
     Style *style = Application::getStyle();
     this->setMargins(style->List.marginTopBottom, style->List.marginLeftRight, style->List.marginTopBottom, style->List.marginLeftRight);
@@ -116,10 +116,9 @@ void ListItem::setTextSize(unsigned textSize)
     this->textSize = textSize;
 }
 
-// TODO: Should we animate this?
-void ListItem::setSelected(bool selected)
+void ListItem::setChecked(bool checked)
 {
-    this->selected = selected;
+    this->checked = checked;
 }
 
 void ListItem::setParent(View *parent)
@@ -272,8 +271,8 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
         nvgText(vg, x + width - style->List.Item.padding, y + baseHeight / 2, this->value.c_str(), nullptr);
     }
 
-    // Selected marker
-    if (this->selected)
+    // Checked marker
+    if (this->checked)
     {
         unsigned radius     = style->List.Item.selectRadius;
         unsigned centerX    = x + width - radius - style->List.Item.padding;
@@ -429,7 +428,7 @@ ListItemGroupSpacing::ListItemGroupSpacing(bool separator) : Rectangle(nvgRGBA(0
         this->setColor(theme->listItemSeparatorColor);
 }
 
-SelectListItem::SelectListItem(string label, vector<string> values, unsigned selectedValue) :
+SelectListItem::SelectListItem(string label, vector<string> values, size_t selectedValue) :
     ListItem(label, ""),
     values(values),
     selectedValue(selectedValue)
@@ -437,13 +436,21 @@ SelectListItem::SelectListItem(string label, vector<string> values, unsigned sel
     this->setValue(values[selectedValue], false, false);
 
     this->setClickListener([this](View *view){
-        SelectListener selectListener = [this](int result){
+        DropdownListener dropdownListener = [this](int result){
             if (result == -1)
                 return;
 
             this->setValue(this->values[result], false, false);
             this->selectedValue = result;
+
+            if (this->listener != nullptr)
+                this->listener(result);
         };
-        Dropdown::open(this->getLabel(), this->values, selectListener, this->selectedValue);
+        Dropdown::open(this->getLabel(), this->values, dropdownListener, this->selectedValue);
     });
+}
+
+void SelectListItem::setListener(SelectListener listener)
+{
+    this->listener = listener;
 }

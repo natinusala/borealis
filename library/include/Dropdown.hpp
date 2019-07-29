@@ -32,7 +32,7 @@ using namespace std;
 //
 // Assume that the Dropdown is deleted
 // as soon as this function is called
-typedef function<void(int)> SelectListener;
+typedef function<void(int)> DropdownListener;
 
 // Allows the user to select between multiple
 // values
@@ -40,14 +40,14 @@ typedef function<void(int)> SelectListener;
 class Dropdown : public View
 {
     private:
-        Dropdown(string title, vector<string> values, SelectListener listener, unsigned selected = 0);
+        Dropdown(string title, vector<string> values, DropdownListener listener, size_t selected = 0);
 
         string title;
 
         int valuesCount;
         unsigned selectedValue;
 
-        SelectListener listener;
+        DropdownListener listener;
 
         List *list;
 
@@ -64,8 +64,9 @@ class Dropdown : public View
         View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override;
         bool onCancel() override;
         void show(function<void(void)> cb) override;
+        void willAppear() override;
 
-        static void open(string title, vector<string> values, SelectListener listener, int selected = -1);
+        static void open(string title, vector<string> values, DropdownListener listener, int selected = -1);
 
         bool isTranslucent() override
         {

@@ -23,7 +23,10 @@
 #include <stdio.h>
 #include <math.h>
 
-BoxLayout::BoxLayout(BoxLayoutOrientation orientation) : orientation(orientation)
+BoxLayout::BoxLayout(BoxLayoutOrientation orientation, size_t defaultFocus) :
+    orientation(orientation),
+    defaultFocusedIndex(defaultFocus),
+    focusedIndex(defaultFocus)
 {
 
 }
@@ -156,7 +159,7 @@ void BoxLayout::removeView(int index, bool free)
     this->children.erase(this->children.begin() + index);
 }
 
-void BoxLayout::updateScroll()
+void BoxLayout::updateScroll(bool animated)
 {
     // Don't scroll if layout hasn't been called yet
     if (this->entriesHeight == 0.0f)
@@ -179,20 +182,26 @@ void BoxLayout::updateScroll()
 
     //Start animation
     menu_animation_ctx_tag tag = (uintptr_t)&this->scrollY;
-
     menu_animation_kill_by_tag(&tag);
 
-    menu_animation_ctx_entry_t entry;
-    entry.cb            = [](void *userdata){};
-    entry.duration      = VIEW_HIGHLIGHT_ANIMATION_DURATION;
-    entry.easing_enum   = EASING_OUT_QUAD;
-    entry.subject       = &this->scrollY;
-    entry.tag           = tag;
-    entry.target_value  = newScroll;
-    entry.tick          = [this](void *userdata) { this->scrollAnimationTick(); };
-    entry.userdata      = nullptr;
+    if (animated)
+    {
+        menu_animation_ctx_entry_t entry;
+        entry.cb            = [](void *userdata){};
+        entry.duration      = VIEW_HIGHLIGHT_ANIMATION_DURATION;
+        entry.easing_enum   = EASING_OUT_QUAD;
+        entry.subject       = &this->scrollY;
+        entry.tag           = tag;
+        entry.target_value  = newScroll;
+        entry.tick          = [this](void *userdata) { this->scrollAnimationTick(); };
+        entry.userdata      = nullptr;
 
-    menu_animation_push(&entry);
+        menu_animation_push(&entry);
+    }
+    else
+    {
+        this->scrollY = newScroll;
+    }
 
     this->invalidate();
 }
@@ -292,6 +301,12 @@ void BoxLayout::layout(NVGcontext* vg, Style *style, FontStash *stash)
             xAdvance += spacing + childWidth;
         }
     }
+
+    // Setup initial scrolling
+    if (this->firstLayout)
+        this->updateScroll(false);
+
+    this->firstLayout = false;
 }
 
 void BoxLayout::addView(View *view, bool fill)
@@ -326,12 +341,11 @@ BoxLayout::~BoxLayout()
 
 void BoxLayout::willAppear()
 {
-    this->focusedIndex = 0;
+    this->focusedIndex = this->defaultFocusedIndex;
     this->prebakeScrolling();
+
     for (BoxLayoutChild *child : this->children)
-    {
         child->view->willAppear();
-    }
 }
 
 void BoxLayout::willDisappear()

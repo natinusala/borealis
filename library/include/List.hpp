@@ -39,7 +39,7 @@ class ListItem : public View
         bool oldValueFaint;
         float valueAnimation = 0.0f;
 
-        bool selected = false; // check mark on the right
+        bool checked = false; // check mark on the right
 
         unsigned textSize;
 
@@ -70,7 +70,7 @@ class ListItem : public View
 
         void setTextSize(unsigned textSize);
 
-        void setSelected(bool selected);
+        void setChecked(bool checked);
 
         string getLabel();
 
@@ -97,14 +97,20 @@ class ListItemGroupSpacing : public Rectangle
 
 // A list item with mutliple choices for its value
 // (will open a Dropdown)
+typedef function<void(size_t result)> SelectListener;
+
 class SelectListItem : public ListItem
 {
     public:
-        SelectListItem(string label, vector<string> values, unsigned selectedValue = 0);
+        SelectListItem(string label, vector<string> values, size_t selectedValue = 0);
+
+        void setListener(SelectListener listener);
 
     private:
         vector<string> values;
-        unsigned selectedValue;
+        size_t selectedValue;
+
+        SelectListener listener = [](size_t result){};
 };
 
 
@@ -153,7 +159,7 @@ class IntegerInputListItem : public InputListItem
 class List : public BoxLayout
 {
     public:
-        List();
+        List(size_t defaultFocus = 0);
 
         View* defaultFocus(View *oldFocus) override;
 

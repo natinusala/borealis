@@ -27,10 +27,9 @@
 
 #define min(a, b) ((a < b) ? a : b)
 
-// TODO: Default selection (focus the right list item)
 // TODO: Fix wonky scrolling near the end of list
 
-Dropdown::Dropdown(string title, vector<string> values, SelectListener listener, unsigned selected) :
+Dropdown::Dropdown(string title, vector<string> values, DropdownListener listener, size_t selected) :
     title(title),
     selectedValue(selected),
     listener(listener)
@@ -41,7 +40,7 @@ Dropdown::Dropdown(string title, vector<string> values, SelectListener listener,
 
     this->valuesCount = values.size();
 
-    this->list = new List();
+    this->list = new List(selected);
     this->list->setParent(this);
     this->list->setMargins(1, 0, 1, 0);
 
@@ -52,7 +51,7 @@ Dropdown::Dropdown(string title, vector<string> values, SelectListener listener,
         ListItem *item = new ListItem(value);
 
         if (i == selected)
-            item->setSelected(true);
+            item->setChecked(true);
 
         item->setHeight(style->Dropdown.listItemHeight);
         item->setTextSize(style->Dropdown.listItemTextSize);
@@ -170,10 +169,16 @@ View* Dropdown::requestFocus(FocusDirection direction, View *oldFocus, bool from
     return nullptr;
 }
 
-void Dropdown::open(string title, vector<string> values, SelectListener listener, int selected)
+void Dropdown::open(string title, vector<string> values, DropdownListener listener, int selected)
 {
     Dropdown *dropdown = new Dropdown(title, values, listener, selected);
     Application::pushView(dropdown);
+}
+
+void Dropdown::willAppear()
+{
+    if (this->list)
+        this->list->willAppear();
 }
 
 Dropdown::~Dropdown()
