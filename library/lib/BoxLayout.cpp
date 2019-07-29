@@ -225,7 +225,7 @@ void BoxLayout::prebakeScrolling()
 {
     // Prebaked values for scrolling
     this->middleY       = this->y + this->height/2;
-    this->bottomY       = this->y + this->height;
+    this->bottomY       = this->y + this->height + this->spacing;
     this->entriesHeight = 0.0f;
 }
 
