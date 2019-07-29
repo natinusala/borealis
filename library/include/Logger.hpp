@@ -23,7 +23,9 @@
 
 using namespace std;
 
-#ifndef __SWITCH__
+#ifdef __SWITCH__
+#include <switch.h>
+#else
 typedef std::uint32_t Result;
 #endif
 
