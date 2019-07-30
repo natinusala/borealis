@@ -99,8 +99,8 @@ typedef struct
             unsigned valueSize;
             unsigned padding;
 
-            unsigned sublabelIndent;
-            unsigned sublabelSpacing;
+            unsigned descriptionIndent;
+            unsigned descriptionSpacing;
 
             unsigned indent;
 
@@ -114,7 +114,7 @@ typedef struct
         unsigned regularFontSize;
         unsigned mediumFontSize;
         unsigned smallFontSize;
-        unsigned sublabelFontSize;
+        unsigned descriptionFontSize;
         unsigned crashFontSize;
         unsigned buttonFontSize;
         float lineHeight;

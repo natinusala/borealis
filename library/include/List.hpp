@@ -45,7 +45,7 @@ class ListItem : public View
 
         bool drawTopSeparator = true;
 
-        Label *sublabelView = nullptr;
+        Label *descriptionView = nullptr;
 
         EventListener clickListener = nullptr;
 
@@ -54,7 +54,7 @@ class ListItem : public View
         void resetValueAnimation();
 
     public:
-        ListItem(string label, string sublabel = "");
+        ListItem(string label, string description = "");
 
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
         View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp) override;
@@ -63,7 +63,7 @@ class ListItem : public View
         void setParent(View *parent) override;
         bool onClick() override;
 
-        bool hasSubLabel();
+        bool hasDescription();
         void setDrawTopSeparator(bool draw);
 
         void setIndented(bool indented);
@@ -127,13 +127,15 @@ class ToggleListItem : public ListItem
         void updateValue();
 
     public:
-        ToggleListItem(string label, bool initialValue, string sublabel = "", string onValue = "On", string offValue = "Off");
+        ToggleListItem(string label, bool initialValue, string description = "", string onValue = "On", string offValue = "Off");
 
         bool onClick() override;
 
         bool getToggleState();
 };
 
+// A list item which spawns the swkbd
+// to input its value (string)
 class InputListItem : public ListItem
 {
     protected:
@@ -141,15 +143,17 @@ class InputListItem : public ListItem
         int maxInputLength;
 
     public:
-        InputListItem(string label, string initialValue, string helpText, string sublabel = "", int maxInputLength = 32);
+        InputListItem(string label, string initialValue, string helpText, string description = "", int maxInputLength = 32);
 
         bool onClick() override;
 };
 
+// A list item which spawns the swkbd
+// to input its value (integer)
 class IntegerInputListItem : public InputListItem
 {
     public:
-        IntegerInputListItem(string label, int initialValue, string helpText, string sublabel = "", int maxInputLength = 32);
+        IntegerInputListItem(string label, int initialValue, string helpText, string description = "", int maxInputLength = 32);
 
         bool onClick() override;
 };

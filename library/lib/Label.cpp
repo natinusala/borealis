@@ -33,8 +33,8 @@ Label::Label(LabelStyle labelStyle, string text, bool multiline) : text(text), m
         case LabelStyle::SMALL:
             this->fontSize = style->Label.smallFontSize;
             break;
-        case LabelStyle::SUBLABEL:
-            this->fontSize = style->Label.sublabelFontSize;
+        case LabelStyle::DESCRIPTION:
+            this->fontSize = style->Label.descriptionFontSize;
             break;
         case LabelStyle::CRASH:
             this->fontSize = style->Label.crashFontSize;
@@ -98,8 +98,8 @@ void Label::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, 
             case LabelStyle::BUTTON:
                 nvgFillColor(vg, a(ctx->theme->textColor));
                 break;
-            case LabelStyle::SUBLABEL:
-                nvgFillColor(vg, a(ctx->theme->sublabelColor));
+            case LabelStyle::DESCRIPTION:
+                nvgFillColor(vg, a(ctx->theme->descriptionColor));
                 break;
             case LabelStyle::CRASH:
                 nvgFillColor(vg, RGB(255, 255, 255));

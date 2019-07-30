@@ -82,8 +82,8 @@ Style styleAccurate = {
             valueSize          : 20,
             padding            : 15,
 
-            sublabelIndent     : 20,
-            sublabelSpacing    : 16,
+            descriptionIndent     : 20,
+            descriptionSpacing    : 16,
 
             indent : 40,
 
@@ -92,13 +92,13 @@ Style styleAccurate = {
     },
 
     Label : {
-        regularFontSize     : 20,
-        mediumFontSize      : 18,
-        smallFontSize       : 16,
-        sublabelFontSize    : 16,
-        crashFontSize       : 24,
-        buttonFontSize      : 24,
-        lineHeight          : 1.65f
+        regularFontSize         : 20,
+        mediumFontSize          : 18,
+        smallFontSize           : 16,
+        descriptionFontSize     : 16,
+        crashFontSize           : 24,
+        buttonFontSize          : 24,
+        lineHeight              : 1.65f
     },
 
     CrashFrame : {

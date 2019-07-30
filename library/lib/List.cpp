@@ -43,14 +43,14 @@ List::List(size_t defaultFocus) : BoxLayout(BoxLayoutOrientation::VERTICAL, defa
 void List::customSpacing(View *current, View *next, int *spacing)
 {
     // Don't add spacing to the first list item
-    // if it doesn't have a sublabel and the second one is a
+    // if it doesn't have a description and the second one is a
     // list item too
     // Or if the next item is a ListItemGroupSpacing
     if (ListItem *currentItem = dynamic_cast<ListItem*>(current))
     {
         if (ListItem *nextItem = dynamic_cast<ListItem*>(next))
         {
-            if (!currentItem->hasSubLabel())
+            if (!currentItem->hasDescription())
             {
                 *spacing = 2;
                 nextItem->setDrawTopSeparator(false);
@@ -95,15 +95,15 @@ View* List::defaultFocus(View *oldFocus)
     return BoxLayout::defaultFocus(oldFocus);
 }
 
-ListItem::ListItem(string label, string sublabel) : label(label)
+ListItem::ListItem(string label, string description) : label(label)
 {
     Style *style = Application::getStyle();
 
     this->setHeight(style->List.Item.height);
     this->setTextSize(style->List.Item.textSize);
 
-    if (sublabel != "")
-        this->sublabelView = new Label(LabelStyle::SUBLABEL, sublabel, true);
+    if (description != "")
+        this->descriptionView = new Label(LabelStyle::DESCRIPTION, description, true);
 }
 
 void ListItem::setIndented(bool indented)
@@ -124,8 +124,8 @@ void ListItem::setChecked(bool checked)
 void ListItem::setParent(View *parent)
 {
     View::setParent(parent);
-    if (this->sublabelView)
-        this->sublabelView->setParent(parent);
+    if (this->descriptionView)
+        this->descriptionView->setParent(parent);
 }
 
 bool ListItem::onClick()
@@ -143,17 +143,17 @@ void ListItem::setClickListener(EventListener listener)
 
 void ListItem::layout(NVGcontext *vg, Style *style, FontStash *stash)
 {
-    if (this->sublabelView)
+    if (this->descriptionView)
     {
-        unsigned indent = style->List.Item.sublabelIndent;
+        unsigned indent = style->List.Item.descriptionIndent;
 
         if (this->indented)
             indent += style->List.Item.indent;
 
         this->height = style->List.Item.height;
-        this->sublabelView->setBoundaries(this->x + indent, this->y + this->height + style->List.Item.sublabelSpacing, this->width - indent * 2, 0);
-        this->sublabelView->layout(vg, style, stash); // we must call layout directly
-        this->height += this->sublabelView->getHeight() + style->List.Item.sublabelSpacing;
+        this->descriptionView->setBoundaries(this->x + indent, this->y + this->height + style->List.Item.descriptionSpacing, this->width - indent * 2, 0);
+        this->descriptionView->layout(vg, style, stash); // we must call layout directly
+        this->height += this->descriptionView->getHeight() + style->List.Item.descriptionSpacing;
     }
 }
 
@@ -162,8 +162,8 @@ void ListItem::getHighlightInsets(unsigned *top, unsigned *right, unsigned *bott
     Style *style = Application::getStyle();
     View::getHighlightInsets(top, right, bottom, left);
 
-    if (sublabelView)
-        *bottom = -(sublabelView->getHeight() + style->List.Item.sublabelSpacing);
+    if (descriptionView)
+        *bottom = -(descriptionView->getHeight() + style->List.Item.descriptionSpacing);
 
     if (indented)
         *left = -style->List.Item.indent;
@@ -233,11 +233,11 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
         width   -= style->List.Item.indent;
     }
 
-    // Sublabel
-    if (this->sublabelView) {
-        // Don't count sublabel as part of list item
-        baseHeight -= this->sublabelView->getHeight() + style->List.Item.sublabelSpacing;
-        this->sublabelView->frame(ctx);
+    // Description
+    if (this->descriptionView) {
+        // Don't count description as part of list item
+        baseHeight -= this->descriptionView->getHeight() + style->List.Item.descriptionSpacing;
+        this->descriptionView->frame(ctx);
     }
 
     // Value
@@ -339,9 +339,9 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
     nvgFill(vg);
 }
 
-bool ListItem::hasSubLabel()
+bool ListItem::hasDescription()
 {
-    return this->sublabelView;
+    return this->descriptionView;
 }
 
 string ListItem::getLabel()
@@ -351,14 +351,14 @@ string ListItem::getLabel()
 
 ListItem::~ListItem()
 {
-    if (this->sublabelView)
-        delete this->sublabelView;
+    if (this->descriptionView)
+        delete this->descriptionView;
 
     this->resetValueAnimation();
 }
 
-ToggleListItem::ToggleListItem(string label, bool initialValue, string sublabel, string onValue, string offValue) :
-    ListItem(label, sublabel),
+ToggleListItem::ToggleListItem(string label, bool initialValue, string description, string onValue, string offValue) :
+    ListItem(label, description),
     toggleState(initialValue),
     onValue(onValue),
     offValue(offValue)
@@ -388,8 +388,8 @@ bool ToggleListItem::getToggleState()
     return this->toggleState;
 }
 
-InputListItem::InputListItem(string label, string initialValue, string helpText, string sublabel, int maxInputLength) :
-    ListItem(label, sublabel),
+InputListItem::InputListItem(string label, string initialValue, string helpText, string description, int maxInputLength) :
+    ListItem(label, description),
     helpText(helpText),
     maxInputLength(maxInputLength)
 {
@@ -405,8 +405,8 @@ bool InputListItem::onClick() {
     return true;
 }
 
-IntegerInputListItem::IntegerInputListItem(string label, int initialValue, string helpText, string sublabel, int maxInputLength) :
-    InputListItem(label, to_string(initialValue), helpText, sublabel, maxInputLength)
+IntegerInputListItem::IntegerInputListItem(string label, int initialValue, string helpText, string description, int maxInputLength) :
+    InputListItem(label, to_string(initialValue), helpText, description, maxInputLength)
 {
     
 }

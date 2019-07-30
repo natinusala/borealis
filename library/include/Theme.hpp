@@ -26,7 +26,7 @@ typedef struct
     NVGcolor backgroundColorRGB;
 
     NVGcolor textColor;
-    NVGcolor sublabelColor;
+    NVGcolor descriptionColor;
 
     NVGcolor separatorColor;
 

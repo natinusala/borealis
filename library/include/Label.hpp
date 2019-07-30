@@ -27,7 +27,7 @@ enum class LabelStyle
     REGULAR = 0,
     MEDIUM,
     SMALL,
-    SUBLABEL,
+    DESCRIPTION,
     CRASH,
     BUTTON
 };
