@@ -32,6 +32,7 @@ class ListItem : public View
 {
     private:
         string label;
+        string subLabel;
         string value;
         bool valueFaint;
 
@@ -54,7 +55,7 @@ class ListItem : public View
         void resetValueAnimation();
 
     public:
-        ListItem(string label, string description = "");
+        ListItem(string label, string description = "", string subLabel = "");
 
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
         View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp) override;

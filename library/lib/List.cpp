@@ -95,11 +95,13 @@ View* List::defaultFocus(View *oldFocus)
     return BoxLayout::defaultFocus(oldFocus);
 }
 
-ListItem::ListItem(string label, string description) : label(label)
+ListItem::ListItem(string label, string description, string subLabel) :
+    label(label),
+    subLabel(subLabel)
 {
     Style *style = Application::getStyle();
 
-    this->setHeight(style->List.Item.height);
+    this->setHeight(subLabel != "" ? style->List.Item.heightWithSubLabel : style->List.Item.height);
     this->setTextSize(style->List.Item.textSize);
 
     if (description != "")
@@ -226,6 +228,7 @@ View* ListItem::requestFocus(FocusDirection direction, View *oldFocus, bool from
 void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
 {
     unsigned baseHeight = this->height;
+    bool hasSubLabel    = this->subLabel != "";
 
     if (this->indented)
     {
@@ -319,7 +322,18 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
     nvgFontFaceId(vg, ctx->fontStash->regular);
     nvgBeginPath(vg);
-    nvgText(vg, x + style->List.Item.padding, y + baseHeight / 2, this->label.c_str(), nullptr);
+    nvgText(vg, x + style->List.Item.padding, y + baseHeight / (hasSubLabel ? 3 : 2), this->label.c_str(), nullptr);
+
+    // Sub Label
+    if (hasSubLabel)
+    {
+        nvgFillColor(vg, a(ctx->theme->descriptionColor));
+        nvgFontSize(vg, style->Label.descriptionFontSize);
+        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+        nvgFontFaceId(vg, ctx->fontStash->regular);
+        nvgBeginPath(vg);
+        nvgText(vg, x + style->List.Item.padding, y + baseHeight - baseHeight / 3, this->subLabel.c_str(), nullptr);
+    }
 
     // Separators
     // Offset by one to be hidden by highlight

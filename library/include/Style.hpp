@@ -95,6 +95,7 @@ typedef struct
         struct
         {
             unsigned height;
+            unsigned heightWithSubLabel;
             unsigned textSize;
             unsigned valueSize;
             unsigned padding;

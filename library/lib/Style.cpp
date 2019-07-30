@@ -77,10 +77,11 @@ Style styleAccurate = {
         spacing            : 61,
 
         Item : {
-            height             : 69, // offset by 1 to have the highlight hide the separator
-            textSize           : 24,
-            valueSize          : 20,
-            padding            : 15,
+            height              : 69, // offset by 1 to have the highlight hide the separator
+            heightWithSubLabel  : 99,
+            textSize            : 24,
+            valueSize           : 20,
+            padding             : 15,
 
             descriptionIndent     : 20,
             descriptionSpacing    : 16,
