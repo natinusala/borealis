@@ -310,7 +310,7 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
     else
     {
         nvgFillColor(vg, a(this->valueFaint ? ctx->theme->listItemFaintValueColor : ctx->theme->listItemValueColor));
-        nvgFontSize(vg, hasSubLabel ? style->Label.descriptionFontSize : style->List.Item.valueSize);
+        nvgFontSize(vg, style->List.Item.valueSize);
         nvgTextAlign(vg, NVG_ALIGN_RIGHT | (hasSubLabel ? NVG_ALIGN_TOP : NVG_ALIGN_MIDDLE));
         nvgFontFaceId(vg, ctx->fontStash->regular);
         nvgBeginPath(vg);
