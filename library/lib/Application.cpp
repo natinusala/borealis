@@ -197,7 +197,7 @@ bool Application::init(StyleEnum style)
         if(R_SUCCEEDED(rc))
         {
             info("Using Switch shared symbols font");
-            Application::fontStash.symbols = nvgCreateFontMem(Application::vg, "symbols", (unsigned char*)font.address, font.size, 0);
+            Application::fontStash.sharedSymbols = nvgCreateFontMem(Application::vg, "symbols", (unsigned char*)font.address, font.size, 0);
         }
     }
 #else
