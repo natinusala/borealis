@@ -208,23 +208,34 @@ bool Application::init(StyleEnum style)
         Application::fontStash.regular = nvgCreateFont(Application::vg, "regular", ASSET("inter/Inter-Switch.ttf"));
 
     if (access(ASSET("Wingdings.ttf"), F_OK) != -1)
-    {
-        Application::fontStash.symbols = nvgCreateFont(Application::vg, "symbols", ASSET("Wingdings.ttf"));
-    }
+        Application::fontStash.sharedSymbols = nvgCreateFont(Application::vg, "sharedSymbols", ASSET("Wingdings.ttf"));
 #endif
 
+    // Material font
+    if (access(ASSET("material/MaterialIcons-Regular.ttf"), F_OK) != -1)
+        Application::fontStash.material = nvgCreateFont(Application::vg, "material", ASSET("material/MaterialIcons-Regular.ttf"));
+
     // Set symbols font as fallback
-    if (Application::fontStash.symbols)
+    if (Application::fontStash.sharedSymbols)
     {
-        info("Using symbols font");
-        nvgAddFallbackFontId(Application::vg, Application::fontStash.regular, Application::fontStash.symbols);
+        info("Using shared symbols font");
+        nvgAddFallbackFontId(Application::vg, Application::fontStash.regular, Application::fontStash.sharedSymbols);
     }
     else
     {
-        error("No symbols font found");
+        error("Shared symbols font not found");
     }
 
-    // TODO: Font Awesome as fallback too?
+    // Set Material as fallback
+    if (Application::fontStash.material)
+    {
+        info("Using Material font");
+        nvgAddFallbackFontId(Application::vg, Application::fontStash.regular, Application::fontStash.material);
+    }
+    else
+    {
+        error("Material font not found");
+    }
 
     // Load theme
 #ifdef __SWITCH__
