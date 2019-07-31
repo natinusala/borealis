@@ -108,6 +108,29 @@ ListItem::ListItem(string label, string description, string subLabel) :
         this->descriptionView = new Label(LabelStyle::DESCRIPTION, description, true);
 }
 
+void ListItem::setThumbnail(string imagePath)
+{
+    if (this->thumbnailView)
+        this->thumbnailView->setImage(imagePath);
+    else
+        this->thumbnailView = new Image(imagePath);
+
+    this->thumbnailView->setBackground(Background::DEBUG);
+    this->thumbnailView->setImageScaleType(ImageScaleType::FIT);
+    this->invalidate();
+}
+
+void ListItem::setThumbnail(unsigned char *buffer, size_t bufferSize)
+{
+    if (this->thumbnailView)
+        this->thumbnailView->setImage(buffer, bufferSize);
+    else
+        this->thumbnailView = new Image(buffer, bufferSize);
+
+    this->thumbnailView->setImageScaleType(ImageScaleType::FIT);
+    this->invalidate();
+}
+
 void ListItem::setIndented(bool indented)
 {
     this->indented = indented;
@@ -145,6 +168,7 @@ void ListItem::setClickListener(EventListener listener)
 
 void ListItem::layout(NVGcontext *vg, Style *style, FontStash *stash)
 {
+    // Description
     if (this->descriptionView)
     {
         unsigned indent = style->List.Item.descriptionIndent;
@@ -156,6 +180,20 @@ void ListItem::layout(NVGcontext *vg, Style *style, FontStash *stash)
         this->descriptionView->setBoundaries(this->x + indent, this->y + this->height + style->List.Item.descriptionSpacing, this->width - indent * 2, 0);
         this->descriptionView->layout(vg, style, stash); // we must call layout directly
         this->height += this->descriptionView->getHeight() + style->List.Item.descriptionSpacing;
+    }
+
+    // Thumbnail
+    if (this->thumbnailView)
+    {
+        Style *style = Application::getStyle();
+        unsigned thumbnailSize = height - style->List.Item.thumbnailPadding * 2;
+
+        this->thumbnailView->setBoundaries(
+            x + style->List.Item.thumbnailPadding,
+            y + style->List.Item.thumbnailPadding,
+            thumbnailSize,
+            thumbnailSize);
+        this->thumbnailView->invalidate();
     }
 }
 
@@ -229,6 +267,11 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
 {
     unsigned baseHeight = this->height;
     bool hasSubLabel    = this->subLabel != "";
+    bool hasThumbnail   = this->thumbnailView;
+
+    unsigned leftPadding = hasThumbnail ?
+        this->thumbnailView->getWidth() + style->List.Item.thumbnailPadding * 2 :
+        style->List.Item.padding;
 
     if (this->indented)
     {
@@ -322,7 +365,7 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
     nvgFontFaceId(vg, ctx->fontStash->regular);
     nvgBeginPath(vg);
-    nvgText(vg, x + style->List.Item.padding, y + baseHeight / (hasSubLabel ? 3 : 2), this->label.c_str(), nullptr);
+    nvgText(vg, x + leftPadding, y + baseHeight / (hasSubLabel ? 3 : 2), this->label.c_str(), nullptr);
 
     // Sub Label
     if (hasSubLabel)
@@ -332,8 +375,12 @@ void ListItem::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned heigh
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
         nvgFontFaceId(vg, ctx->fontStash->regular);
         nvgBeginPath(vg);
-        nvgText(vg, x + style->List.Item.padding, y + baseHeight - baseHeight / 3, this->subLabel.c_str(), nullptr);
+        nvgText(vg, x + leftPadding, y + baseHeight - baseHeight / 3, this->subLabel.c_str(), nullptr);
     }
+
+    // Thumbnail
+    if (hasThumbnail)
+        this->thumbnailView->frame(ctx);
 
     // Separators
     // Offset by one to be hidden by highlight
@@ -367,6 +414,9 @@ ListItem::~ListItem()
 {
     if (this->descriptionView)
         delete this->descriptionView;
+
+    if (this->thumbnailView)
+        delete this->thumbnailView;
 
     this->resetValueAnimation();
 }

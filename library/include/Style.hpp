@@ -92,6 +92,7 @@ typedef struct
         unsigned marginTopBottom;
         unsigned spacing;
 
+        // Item
         struct
         {
             unsigned height;
@@ -99,6 +100,7 @@ typedef struct
             unsigned textSize;
             unsigned valueSize;
             unsigned padding;
+            unsigned thumbnailPadding;
 
             unsigned descriptionIndent;
             unsigned descriptionSpacing;

@@ -351,5 +351,5 @@ void BoxLayout::willAppear()
 void BoxLayout::willDisappear()
 {
     for (BoxLayoutChild *child : this->children)
-        child-> view->willDisappear();
+        child->view->willDisappear();
 }

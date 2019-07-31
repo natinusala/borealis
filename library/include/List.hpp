@@ -23,6 +23,7 @@
 #include <BoxLayout.hpp>
 #include <Label.hpp>
 #include <Rectangle.hpp>
+#include <Image.hpp>
 
 #define LIST_ITEM_VALUE_ANIMATION_DURATION 100
 
@@ -46,7 +47,8 @@ class ListItem : public View
 
         bool drawTopSeparator = true;
 
-        Label *descriptionView = nullptr;
+        Label *descriptionView  = nullptr;
+        Image *thumbnailView    = nullptr;
 
         EventListener clickListener = nullptr;
 
@@ -63,6 +65,9 @@ class ListItem : public View
         void getHighlightInsets(unsigned *top, unsigned *right, unsigned *bottom, unsigned *left) override;
         void setParent(View *parent) override;
         bool onClick() override;
+
+        void setThumbnail(string imagePath);
+        void setThumbnail(unsigned char *buffer, size_t bufferSize);
 
         bool hasDescription();
         void setDrawTopSeparator(bool draw);

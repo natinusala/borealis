@@ -54,7 +54,7 @@ void TabFrame::switchToView(View *view)
 
     if (view != nullptr)
     {
-        this->layout->addView(view, true);
+        this->layout->addView(view, true); //addView() calls willAppear()
         this->rightPane = view;
     }
 }

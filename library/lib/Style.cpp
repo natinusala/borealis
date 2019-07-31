@@ -82,6 +82,7 @@ Style styleAccurate = {
             textSize            : 24,
             valueSize           : 20,
             padding             : 15,
+            thumbnailPadding    : 11,
 
             descriptionIndent     : 20,
             descriptionSpacing    : 16,
