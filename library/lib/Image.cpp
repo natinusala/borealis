@@ -54,10 +54,9 @@ void Image::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, 
     nvgRestore(vg);
 }
 
-void Image::layout(NVGcontext* vg, Style *style, FontStash *stash)
+void Image::reloadTexture()
 {
-    static int origViewWidth = getWidth();
-    static int origViewHeight = getHeight();
+    NVGcontext *vg = Application::getNVGContext();
 
     if (this->texture != -1)
         nvgDeleteImage(vg, this->texture);
@@ -66,6 +65,12 @@ void Image::layout(NVGcontext* vg, Style *style, FontStash *stash)
         this->texture = nvgCreateImage(vg, this->imagePath.c_str(), 0);
     else if (this->imageBuffer != nullptr)
         this->texture = nvgCreateImageMem(vg, 0, this->imageBuffer, this->imageBufferSize);
+}
+
+void Image::layout(NVGcontext* vg, Style *style, FontStash *stash)
+{
+    static int origViewWidth = getWidth();
+    static int origViewHeight = getHeight();
 
     nvgImageSize(vg, this->texture, &this->imageWidth, &this->imageHeight);
 
@@ -129,8 +134,8 @@ void Image::setImage(unsigned char *buffer, size_t bufferSize)
     std::memcpy(this->imageBuffer, buffer, bufferSize);
     this->imageBufferSize = bufferSize;
 
-    this->texture = -1;
-    invalidate();
+    this->reloadTexture();
+    this->invalidate();
 }
 
 void Image::setImage(string imagePath)
@@ -141,14 +146,16 @@ void Image::setImage(string imagePath)
         delete[] this->imageBuffer;
 
     this->imageBuffer = nullptr;
-    this->texture = -1;
-    invalidate();
+
+    this->reloadTexture();
+
+    this->invalidate();
 }
 
 void Image::setOpacity(float opacity)
 {
     this->opacity = opacity;
-    invalidate();
+    this->invalidate();
 }
 
 void Image::setImageScaleType(ImageScaleType imageScaleType) {

@@ -61,4 +61,6 @@ class Image : public View
         int imageX = 0, imageY = 0;
         int imageWidth = 0, imageHeight = 0;
         float opacity = 1.0F;
+
+        void reloadTexture();
 };
