@@ -526,7 +526,6 @@ void Application::pushView(View *view)
         Application::focusStack.push_back(Application::currentFocus);
     }
 
-
     view->willAppear();
     Application::requestFocus(view, FocusDirection::NONE);
 
