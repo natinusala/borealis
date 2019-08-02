@@ -80,11 +80,11 @@ void debug(const char *format, ...)
     printLine("DEBUG", string(line));
 }
 
-void errorResult(Result rc)
+void errorResult(string tag, Result rc)
 {
 #ifdef __SWITCH__
-    error("[0x%x] %04d-%04d", rc, R_MODULE(rc), R_DESCRIPTION(rc));
+    error("[0x%x] %s failed - %04d-%04d", tag.c_str(), rc, R_MODULE(rc), R_DESCRIPTION(rc));
 #else
-    error("[0x%x] xxxx-xxxx", rc);
+    error("[0x%x] %s failed - xxxx-xxxx", tag.c_str(), rc);
 #endif
 }

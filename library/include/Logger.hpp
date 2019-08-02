@@ -44,4 +44,4 @@ void error(const char *format, ...);
 void info(const char *format, ...);
 void debug(const char *format, ...);
 
-void errorResult(Result rc);
+void errorResult(string tag, Result rc);
