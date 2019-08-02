@@ -28,6 +28,7 @@
 #define min(a, b) ((a < b) ? a : b)
 
 // TODO: Fix wonky scrolling near the end of list
+// TODO: Turns out the fade out animation is the same as the fade in (top -> bottom)
 
 Dropdown::Dropdown(string title, vector<string> values, DropdownListener listener, size_t selected) :
     title(title),
