@@ -266,7 +266,8 @@ void BoxLayout::layout(NVGcontext* vg, Style *style, FontStash *stash)
             if (child->view->isCollapsed())
                 spacing = 0;
 
-            this->entriesHeight += spacing + childHeight;
+            if (!child->view->isHidden())
+                this->entriesHeight += spacing + childHeight;
             yAdvance            += spacing + childHeight;
         }
     }
