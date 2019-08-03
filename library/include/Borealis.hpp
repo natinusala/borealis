@@ -20,7 +20,7 @@
 
 // Useful macros
 #ifndef __SWITCH__
-#define ASSET(_str) "./resources/" _str
+#define ASSET(_str) BOREALIS_RESOURCES _str
 #else
 #define ASSET(_str) "romfs:/" _str
 #endif

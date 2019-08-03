@@ -19,5 +19,5 @@ borealis_example = executable(
     dependencies : borealis_dependencies,
     install: true,
     include_directories: [ borealis_include, include_directories('example')],
-    cpp_args: [ '-g', '-O2' ]
+    cpp_args: [ '-g', '-O2', '-DBOREALIS_RESOURCES="./resources/"' ]
 )
