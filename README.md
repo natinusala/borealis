@@ -48,5 +48,5 @@ ninja -C build
 2. For PC (meson) : use `subdir` to import the library folder, then use the `borealis_files`, `borealis_dependencies` and `borealis_include` variables to link and add the dependencies and the includes of the library
 3. For Switch : take a standard homebrew makefile and use include to load `borealis.mk` (after the `LIBDIRS` definition). Add a `BOREALIS_PATH` variable before the include, specifying the subfolder you put the library in
 4. Then, add a `WINDOW_NAME` define that will be, you guessed it, the title of your window
-5. Finally, add a `BOREALIS_RESOURCES` define pointing to the resources folder
+5. Finally, add a `BOREALIS_RESOURCES` define pointing to the resources folder, and do the same for the `ROMFS` definition on the Switch makefile
 5. Finally, copy the resources folder to the root of your project
