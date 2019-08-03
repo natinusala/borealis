@@ -350,6 +350,9 @@ void BoxLayout::willAppear()
 
 void BoxLayout::willDisappear()
 {
+    this->focusedIndex = this->defaultFocusedIndex;
+    this->updateScroll(false);
+
     for (BoxLayoutChild *child : this->children)
         child->view->willDisappear();
 }
