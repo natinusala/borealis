@@ -87,7 +87,7 @@ void View::frame(FrameContext *ctx)
         if (this->collapseState < 1.0f)
         {
             nvgSave(ctx->vg);
-            nvgScissor(ctx->vg, x, y, this->width, this->height * this->collapseState);
+            nvgIntersectScissor(ctx->vg, x, y, this->width, this->height * this->collapseState);
         }
 
         // Draw the view
