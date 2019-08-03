@@ -238,6 +238,8 @@ class View
          */
         void collapse(bool animated = true);
 
+        bool isCollapsed();
+
         /**
          * Shows the view in a expand animation (opposite
          * of collapse)

@@ -53,7 +53,8 @@ void List::customSpacing(View *current, View *next, int *spacing)
             if (!currentItem->hasDescription())
             {
                 *spacing = 2;
-                nextItem->setDrawTopSeparator(false);
+
+                nextItem->setDrawTopSeparator(!currentItem->isCollapsed());
             }
         }
         else if (dynamic_cast<ListItemGroupSpacing*>(next))

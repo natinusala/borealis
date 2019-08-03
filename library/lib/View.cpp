@@ -134,6 +134,11 @@ void View::collapse(bool animated)
     }
 }
 
+bool View::isCollapsed()
+{
+    return this->collapseState > 0.0f;
+}
+
 void View::expand(bool animated)
 {
     menu_animation_ctx_tag tag = (uintptr_t) &this->collapseState;
