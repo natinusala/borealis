@@ -339,7 +339,7 @@ class View
          */
         virtual bool onCancel() { return false; };
 
-        //TODO: Play click animation here
+        // TODO: Play click animation here
         void click();
         void cancel();
 

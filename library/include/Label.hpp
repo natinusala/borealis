@@ -20,8 +20,6 @@
 
 #include <View.hpp>
 
-// TODO: setText, which calls getParent()->invalidate()
-
 enum class LabelStyle
 {
     REGULAR = 0,
