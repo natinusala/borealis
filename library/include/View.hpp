@@ -231,7 +231,7 @@ class View
          *
          * Not recursive
          */
-        virtual void show(function<void(void)> cb);
+        virtual void show(function<void(void)> cb, bool animate = true);
 
         /**
          * Hides the view in a collapse animation

@@ -67,7 +67,7 @@ Dropdown::Dropdown(string title, vector<string> values, DropdownListener listene
     }
 }
 
-void Dropdown::show(function<void(void)> cb)
+void Dropdown::show(function<void(void)> cb, bool animate)
 {
     View::show(cb);
 

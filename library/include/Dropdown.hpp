@@ -63,7 +63,7 @@ class Dropdown : public View
         void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
         View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override;
         bool onCancel() override;
-        void show(function<void(void)> cb) override;
+        void show(function<void(void)> cb, bool animate = true) override;
         void willAppear() override;
 
         static void open(string title, vector<string> values, DropdownListener listener, int selected = -1);

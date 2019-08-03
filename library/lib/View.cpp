@@ -136,7 +136,7 @@ void View::collapse(bool animated)
 
 bool View::isCollapsed()
 {
-    return this->collapseState > 0.0f;
+    return this->collapseState < 1.0f;
 }
 
 void View::expand(bool animated)
@@ -504,31 +504,43 @@ unsigned View::getShowAnimationDuration()
     return VIEW_SHOW_ANIMATION_DURATION;
 }
 
-void View::show(function<void(void)> cb)
+void View::show(function<void(void)> cb, bool animate)
 {
     this->hidden = false;
 
     menu_animation_ctx_tag tag = (uintptr_t) &this->alpha;
     menu_animation_kill_by_tag(&tag);
 
-    this->alpha     = 0.0f;
     this->fadeIn    = true;
 
-    menu_animation_ctx_entry_t entry;
-    entry.cb            = [this, cb](void *userdata) {
+    if (animate)
+    {
+        this->alpha     = 0.0f;
+
+        menu_animation_ctx_entry_t entry;
+        entry.cb            = [this, cb](void *userdata) {
+            this->fadeIn = false;
+            this->onShowAnimationEnd();
+            cb();
+        };
+        entry.duration      = this->getShowAnimationDuration();
+        entry.easing_enum   = EASING_OUT_QUAD;
+        entry.subject       = &this->alpha;
+        entry.tag           = tag;
+        entry.target_value  = 1.0f;
+        entry.tick          = [](void *userdata){};
+        entry.userdata      = nullptr;
+
+        menu_animation_push(&entry);
+    }
+    else
+    {
+        this->alpha = 1.0f;
         this->fadeIn = false;
         this->onShowAnimationEnd();
         cb();
-    };
-    entry.duration      = this->getShowAnimationDuration();
-    entry.easing_enum   = EASING_OUT_QUAD;
-    entry.subject       = &this->alpha;
-    entry.tag           = tag;
-    entry.target_value  = 1.0f;
-    entry.tick          = [](void *userdata){};
-    entry.userdata      = nullptr;
-
-    menu_animation_push(&entry);
+    }
+    
 }
 
 void View::hide(function<void(void)> cb, bool animated)
