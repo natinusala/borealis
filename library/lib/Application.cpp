@@ -24,7 +24,6 @@
 #include <unistd.h>
 
 #include <Borealis.hpp>
-#include <Animations.hpp>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -47,16 +46,19 @@
 #include <switch.h>
 #endif
 
+#include <thread>
+#include <chrono>
+
 constexpr uint32_t WINDOW_WIDTH = 1280;
 constexpr uint32_t WINDOW_HEIGHT = 720;
 constexpr const char* WINDOW_TITLE = WINDOW_NAME;
+
+#define DEFAULT_FPS 60
 
 using namespace std;
 
 // glfw code from the glfw hybrid app by fincs
 // https://github.com/fincs/hybrid_app
-
-// TODO: Add a framerate counter
 
 // TODO: Use this instead of a glViewport each frame
 static void windowFramebufferSizeCallback(GLFWwindow* window, int width, int height)
@@ -267,11 +269,19 @@ bool Application::init(StyleEnum style)
     // Init tasks manager
     Application::taskManager = new TaskManager();
 
+    // Default FPS cap
+    Application::setMaximumFPS(DEFAULT_FPS);
+
     return true;
 }
 
 bool Application::mainLoop()
 {
+    // Frame start
+    retro_time_t frameStart = 0;
+    if (Application::frameTime > 0.0f)
+        frameStart = cpu_features_get_time_usec();
+
     // glfw events
     bool is_active;
     do
@@ -337,6 +347,19 @@ bool Application::mainLoop()
     // Render
     Application::frame();
     glfwSwapBuffers(window);
+
+    // Sleep if necessary
+    if (Application::frameTime > 0.0f)
+    {
+        retro_time_t currentFrameTime = cpu_features_get_time_usec() - frameStart;
+        retro_time_t frameTime = (retro_time_t) (Application::frameTime * 1000);
+
+        if (frameTime > currentFrameTime)
+        {
+            retro_time_t toSleep = frameTime - currentFrameTime;
+            this_thread::sleep_for(chrono::microseconds(toSleep));
+        }        
+    }
 
     return true;
 }
@@ -704,4 +727,16 @@ void FramerateCounter::frame(FrameContext *ctx)
 
     // Regular frame
     Label::frame(ctx);
+}
+
+void Application::setMaximumFPS(unsigned fps)
+{
+    if (fps == 0)
+        Application::frameTime = 0.0f;
+    else
+    {
+        Application::frameTime = 1000 / (float) fps;
+    }
+
+    info("Maximum FPS set to %d - using a frame time of %.2f ms", fps, Application::frameTime);
 }

@@ -167,7 +167,7 @@ Style styleAccurate = {
     },
 
     FramerateCounter : {
-        width  : 100,
+        width  : 125,
         height : 26
     }
 };

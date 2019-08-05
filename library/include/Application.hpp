@@ -107,6 +107,8 @@ class Application
         static void setDisplayFramerate(bool enabled);
         static void toggleFramerateDisplay();
 
+        static void setMaximumFPS(unsigned fps);
+
     private:
         inline static GLFWwindow* window;
         inline static NVGcontext *vg;
@@ -134,6 +136,8 @@ class Application
         inline static string commonFooter = "";
 
         inline static FramerateCounter *framerateCounter = nullptr;
+
+        static inline float frameTime = 0.0f;
 
         static void onWindowSizeChanged();
 
