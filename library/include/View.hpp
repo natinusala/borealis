@@ -41,7 +41,8 @@ enum class Background
 {
     NONE = 0,
     SIDEBAR,
-    DEBUG
+    DEBUG,
+    BACKDROP
 };
 
 #define VIEW_HIGHLIGHT_ANIMATION_DURATION   100
@@ -174,8 +175,10 @@ class View
 
         /**
          * Called each frame
+         * Do not override it to draw your view,
+         * override draw() instead
          */
-        void frame(FrameContext *ctx);
+        virtual void frame(FrameContext *ctx);
 
         /**
          * Called by frame() to draw

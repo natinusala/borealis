@@ -327,7 +327,14 @@ void View::drawBackground(NVGcontext* vg, FrameContext *ctx, Style *style)
             nvgFill(vg);
             break;
         }
-        default:
+        case Background::BACKDROP:
+        {
+            nvgFillColor(vg, RGBA(0, 0, 0, 127));
+            nvgBeginPath(vg);
+            nvgRect(vg, this->x, this->y, this->width, this->height);
+            nvgFill(vg);
+        }
+        case Background::NONE:
             break;
     }
 }

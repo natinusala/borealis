@@ -298,6 +298,7 @@ bool Application::mainLoop()
         Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP]    = glfwGetKey(window, GLFW_KEY_UP);
         Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN]  = glfwGetKey(window, GLFW_KEY_DOWN);
         Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_START]      = glfwGetKey(window, GLFW_KEY_ESCAPE);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_GUIDE]     = glfwGetKey(window, GLFW_KEY_F1);
         Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_A]          = glfwGetKey(window, GLFW_KEY_ENTER);
         Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_B]          = glfwGetKey(window, GLFW_KEY_BACKSPACE);
     }
@@ -355,6 +356,9 @@ void Application::onGamepadButtonPressed(char button)
         // Exit by pressing Start (aka Plus)
         case GLFW_GAMEPAD_BUTTON_START:
             Application::quit();
+            break;
+        case GLFW_GAMEPAD_BUTTON_GUIDE:
+            Application::toggleFramerateDisplay();
             break;
         case GLFW_GAMEPAD_BUTTON_DPAD_DOWN:
             if (Application::currentFocus && Application::currentFocus->getParent())
@@ -426,6 +430,10 @@ void Application::frame()
         view->frame(&frameContext);
     }
 
+    // Framerate counter
+    if (Application::framerateCounter)
+        Application::framerateCounter->frame(&frameContext);
+
     // End frame
     nvgEndFrame(Application::vg);
 }
@@ -443,6 +451,48 @@ void Application::exit()
 
     if (Application::taskManager)
         delete Application::taskManager;
+
+    if (Application::framerateCounter)
+        delete Application::framerateCounter;
+}
+
+void Application::setDisplayFramerate(bool enabled)
+{
+    if (!Application::framerateCounter && enabled)
+    {
+        info("Enabling framerate counter");
+        Application::framerateCounter = new FramerateCounter();
+        Application::resizeFramerateCounter();
+    }
+    else if (Application::framerateCounter && !enabled)
+    {
+        info("Disabling framerate counter");
+        delete Application::framerateCounter;
+        Application::framerateCounter = nullptr;
+    }
+}
+
+void Application::toggleFramerateDisplay()
+{
+    Application::setDisplayFramerate(!Application::framerateCounter);
+}
+
+void Application::resizeFramerateCounter()
+{
+    if (!Application::framerateCounter)
+        return;
+
+    Style *style = Application::getStyle();
+    unsigned windowWidth            = Application::windowWidth;
+    unsigned framerateCounterWidth  = style->FramerateCounter.width;
+
+    Application::framerateCounter->setBoundaries(
+        windowWidth - framerateCounterWidth,
+        0,
+        framerateCounterWidth,
+        style->FramerateCounter.height
+    );
+    Application::framerateCounter->invalidate();
 }
 
 void Application::requestFocus(View *view, FocusDirection direction)
@@ -552,6 +602,8 @@ void Application::onWindowSizeChanged()
         view->setBoundaries(0, 0, Application::windowWidth, Application::windowHeight);
         view->invalidate();
     }
+
+    Application::resizeFramerateCounter();
 }
 
 void Application::clear()
@@ -621,4 +673,35 @@ void Application::setCommonFooter(string footer)
 string* Application::getCommonFooter()
 {
     return &Application::commonFooter;
+}
+
+FramerateCounter::FramerateCounter() : Label(LabelStyle::LIST_ITEM, "FPS: ---")
+{
+    this->setColor(nvgRGB(255, 255, 255));
+    this->setVerticalAlign(NVG_ALIGN_MIDDLE);
+    this->setHorizontalAlign(NVG_ALIGN_CENTER);
+    this->setBackground(Background::BACKDROP);
+
+    this->lastSecond = cpu_features_get_time_usec() / 1000;
+}
+
+void FramerateCounter::frame(FrameContext *ctx)
+{
+    // Update counter
+    retro_time_t current = cpu_features_get_time_usec() / 1000;
+
+    if (current - this->lastSecond >= 1000)
+    {
+        char fps[10];
+        snprintf(fps, sizeof(fps), "FPS: %03d", this->frames);
+        this->setText(string(fps));
+
+        this->frames        = 0;
+        this->lastSecond    = current;
+    }
+    
+    this->frames++;
+
+    // Regular frame
+    Label::frame(ctx);
 }

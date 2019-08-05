@@ -29,12 +29,27 @@
 #include <View.hpp>
 #include <Theme.hpp>
 #include <Style.hpp>
+#include <Label.hpp>
 
 #include <TaskManager.hpp>
 
 #include <Logger.hpp>
 
+#include <Animations.hpp>
+
 using namespace std;
+
+class FramerateCounter : public Label
+{
+    private:
+        retro_time_t lastSecond = 0;
+        unsigned frames         = 0;
+
+    public:
+        FramerateCounter();
+
+        void frame(FrameContext *ctx) override;
+};
 
 class Application
 {
@@ -89,6 +104,9 @@ class Application
         static void setCommonFooter(string footer);
         static string* getCommonFooter();
 
+        static void setDisplayFramerate(bool enabled);
+        static void toggleFramerateDisplay();
+
     private:
         inline static GLFWwindow* window;
         inline static NVGcontext *vg;
@@ -115,9 +133,13 @@ class Application
 
         inline static string commonFooter = "";
 
+        inline static FramerateCounter *framerateCounter = nullptr;
+
         static void onWindowSizeChanged();
 
         static void setStyle(StyleEnum style);
+
+        static void resizeFramerateCounter();
 
         static void frame();
         static void clear();

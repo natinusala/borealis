@@ -103,7 +103,7 @@ ListItem::ListItem(string label, string description, string subLabel) :
     Style *style = Application::getStyle();
 
     this->setHeight(subLabel != "" ? style->List.Item.heightWithSubLabel : style->List.Item.height);
-    this->setTextSize(style->List.Item.textSize);
+    this->setTextSize(style->Label.listItemFontSize);
 
     if (description != "")
         this->descriptionView = new Label(LabelStyle::DESCRIPTION, description, true);

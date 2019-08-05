@@ -97,7 +97,6 @@ typedef struct
         {
             unsigned height;
             unsigned heightWithSubLabel;
-            unsigned textSize;
             unsigned valueSize;
             unsigned padding;
             unsigned thumbnailPadding;
@@ -120,6 +119,7 @@ typedef struct
         unsigned descriptionFontSize;
         unsigned crashFontSize;
         unsigned buttonFontSize;
+        unsigned listItemFontSize;
         float lineHeight;
     } Label;
 
@@ -201,6 +201,13 @@ typedef struct
 
         unsigned fontSize;
     } Header;
+
+    // FramerateCounter
+    struct
+    {
+        unsigned width;
+        unsigned height;
+    } FramerateCounter;
 } Style;
 
 // TODO: Make a condensed style

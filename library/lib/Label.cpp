@@ -42,6 +42,9 @@ Label::Label(LabelStyle labelStyle, string text, bool multiline) : text(text), m
         case LabelStyle::BUTTON:
             this->fontSize = style->Label.buttonFontSize;
             break;
+        case LabelStyle::LIST_ITEM:
+            this->fontSize = style->Label.listItemFontSize;
+            break;
     }
 }
 
@@ -96,6 +99,7 @@ void Label::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, 
             case LabelStyle::MEDIUM:
             case LabelStyle::SMALL:
             case LabelStyle::BUTTON:
+            case LabelStyle::LIST_ITEM:
                 nvgFillColor(vg, a(ctx->theme->textColor));
                 break;
             case LabelStyle::DESCRIPTION:
@@ -127,8 +131,11 @@ void Label::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, 
 
         if (this->horizontalAlign == NVG_ALIGN_RIGHT)
             x += width;
+        else if (this->horizontalAlign == NVG_ALIGN_CENTER)
+            x += width / 2;
 
         // TODO: Ticker
+
         if (this->verticalAlign == NVG_ALIGN_BOTTOM)
             nvgText(vg, x, y + height, this->text.c_str(), nullptr);
         else

@@ -27,7 +27,8 @@ enum class LabelStyle
     SMALL,
     DESCRIPTION,
     CRASH,
-    BUTTON
+    BUTTON,
+    LIST_ITEM
 };
 
 // A Label, multiline or with a ticker
