@@ -125,7 +125,7 @@ View* BoxLayout::updateFocus(FocusDirection direction, View *oldFocus, bool from
         {
             if (this->focusedIndex > 0)
             {
-                for (unsigned i = this->focusedIndex - 1; i >= 0; i--)
+                for (int i = this->focusedIndex - 1; i >= 0; i--)
                 {
                     newFocus = this->children[i]->view->requestFocus(FocusDirection::NONE, oldFocus);
                     if (newFocus && newFocus != oldFocus)
