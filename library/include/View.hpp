@@ -124,6 +124,7 @@ class View
 
         // Helper functions to apply this view's alpha to a color
         NVGcolor a(NVGcolor color);
+        NVGpaint a(NVGpaint paint);
 
         NVGcolor RGB(unsigned r, unsigned g, unsigned b)
         {

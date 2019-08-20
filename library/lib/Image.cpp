@@ -47,7 +47,7 @@ void Image::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, 
     if (this->texture != -1) {
         nvgBeginPath(vg);
         nvgRect(vg, x + this->imageX, y + this->imageY, this->imageWidth, this->imageHeight);
-        nvgFillPaint(vg, this->imgPaint);
+        nvgFillPaint(vg, a(this->imgPaint));
         nvgFill(vg);
     }
 
@@ -123,7 +123,7 @@ void Image::layout(NVGcontext* vg, Style *style, FontStash *stash)
             break;
     }
 
-    this->imgPaint = nvgImagePattern(vg, getX() + this->imageX, getY() + this->imageY, this->imageWidth, this->imageHeight, 0, this->texture, this->opacity);
+    this->imgPaint = nvgImagePattern(vg, getX() + this->imageX, getY() + this->imageY, this->imageWidth, this->imageHeight, 0, this->texture, this->alpha);
 }
 
 void Image::setImage(unsigned char *buffer, size_t bufferSize)
@@ -157,7 +157,7 @@ void Image::setImage(string imagePath)
 
 void Image::setOpacity(float opacity)
 {
-    this->opacity = opacity;
+    this->alpha = opacity;
     this->invalidate();
 }
 

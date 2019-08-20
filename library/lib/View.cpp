@@ -55,6 +55,13 @@ NVGcolor View::a(NVGcolor color)
     return newColor;
 }
 
+NVGpaint View::a(NVGpaint paint) {
+    NVGpaint newPaint = paint;
+    newPaint.innerColor.a *= this->getAlpha();
+    newPaint.outerColor.a *= this->getAlpha();
+    return newPaint;
+}
+
 // TODO: Only draw views that are onscreen (w/ some margins)
 void View::frame(FrameContext *ctx)
 {
@@ -352,7 +359,7 @@ void View::drawHint(FrameContext *ctx, unsigned x, unsigned y, unsigned width, u
 
     unsigned middle = y + height / 2;
 
-    nvgFillColor(vg, ctx->theme->textColor);
+    nvgFillColor(vg, a(ctx->theme->textColor));
     nvgTextAlign(ctx->vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
     string okText   = "OK";

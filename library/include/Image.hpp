@@ -45,8 +45,13 @@ class Image : public View
         void setImage(unsigned char *buffer, size_t bufferSize);
         void setImage(string imagePath);
 
-        void setOpacity(float opacity);
         void setImageScaleType(ImageScaleType imageScaleType);
+        void setOpacity(float opacity);
+        
+        bool isTranslucent() override
+        {
+            return true;
+        }
 
     private:
         string imagePath;
@@ -61,7 +66,6 @@ class Image : public View
         int imageX = 0, imageY = 0;
         int imageWidth = 0, imageHeight = 0;
         int origViewWidth = 0, origViewHeight = 0;
-        float opacity = 1.0F;
 
         void reloadTexture();
 };
