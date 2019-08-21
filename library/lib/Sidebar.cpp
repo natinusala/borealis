@@ -66,9 +66,7 @@ bool Sidebar::onCancel()
     if (this->isEmpty())
         return false;
 
-    Application::requestFocus(this->children[0]->view, FocusDirection::NONE);
-    this->focusedIndex = 0;
-    return true;
+    return this->parent->onCancel();
 }
 
 void Sidebar::setActive(SidebarItem *active)

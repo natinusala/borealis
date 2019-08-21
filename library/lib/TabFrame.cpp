@@ -36,6 +36,7 @@ TabFrame::TabFrame() : AppletFrame(false, true)
 
 bool TabFrame::onCancel()
 {
+    AppletFrame::onCancel();
     Application::onGamepadButtonPressed(GLFW_GAMEPAD_BUTTON_DPAD_LEFT);
     return true;
 }

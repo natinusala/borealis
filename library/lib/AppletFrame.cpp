@@ -28,6 +28,8 @@ AppletFrame::AppletFrame(bool padLeft, bool padRight)
 
     if (padRight)
         this->rightPadding = style->AppletFrame.separatorSpacing;
+
+    headerHeight = style->AppletFrame.headerHeight;
 }
 
 void AppletFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
@@ -40,7 +42,7 @@ void AppletFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned he
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
     nvgFontFaceId(vg, ctx->fontStash->regular);
     nvgBeginPath(vg);
-    nvgText(vg, x + style->AppletFrame.titleStart, y + style->AppletFrame.headerHeight / 2 + style->AppletFrame.titleOffset, this->title.c_str(), nullptr);
+    nvgText(vg, x + style->AppletFrame.titleStart, y + this->headerHeight / 2 + style->AppletFrame.titleOffset, this->title.c_str(), nullptr);
 
     // Footer
     string *text = &this->subtitle;
@@ -63,7 +65,7 @@ void AppletFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned he
 
     // Header
     nvgBeginPath(vg);
-    nvgRect(vg, x + style->AppletFrame.separatorSpacing, y + style->AppletFrame.headerHeight - 1, width - style->AppletFrame.separatorSpacing * 2, 1);
+    nvgRect(vg, x + style->AppletFrame.separatorSpacing, y + this->headerHeight - 1, width - style->AppletFrame.separatorSpacing * 2, 1);
     nvgFill(vg);
 
     // Footer
@@ -89,7 +91,7 @@ void AppletFrame::layout(NVGcontext* vg, Style *style, FontStash *stash)
 {
     if (this->contentView)
     {
-        this->contentView->setBoundaries(this->x + leftPadding, this->y + style->AppletFrame.headerHeight, this->width - this->leftPadding - this->rightPadding, this->height - style->AppletFrame.footerHeight - style->AppletFrame.headerHeight);
+        this->contentView->setBoundaries(this->x + leftPadding, this->y + this->headerHeight, this->width - this->leftPadding - this->rightPadding, this->height - style->AppletFrame.footerHeight - this->headerHeight);
         this->contentView->invalidate();
     }
 }
@@ -112,6 +114,11 @@ void AppletFrame::setSubtitle(string subtitle)
     this->subtitle = subtitle;
 }
 
+void AppletFrame::setHeaderHeight(unsigned headerHeight)
+{
+    this->headerHeight = headerHeight;
+}
+
 AppletFrame::~AppletFrame()
 {
     if (this->contentView)
@@ -131,4 +138,12 @@ void AppletFrame::willDisappear()
 {
     if (this->contentView)
         this->contentView->willDisappear();
+}
+
+bool AppletFrame::onCancel()
+{
+    if (this->parent != nullptr)
+        return this->parent->onCancel();
+    
+    return true;
 }

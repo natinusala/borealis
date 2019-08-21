@@ -37,6 +37,8 @@ class AppletFrame : public View
         unsigned leftPadding    = 0;
         unsigned rightPadding   = 0;
 
+        unsigned headerHeight = 0;
+
     protected:
         void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
 
@@ -47,10 +49,12 @@ class AppletFrame : public View
         View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override;
         void willAppear() override;
         void willDisappear() override;
+        bool onCancel() override;
 
         void setTitle(string title);
         void setSubtitle(string subtitle);
         void setContentView(View *view);
+        void setHeaderHeight(unsigned headerHeight);
 
         ~AppletFrame();
 };
