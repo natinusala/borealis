@@ -47,11 +47,6 @@ class Image : public View
 
         void setImageScaleType(ImageScaleType imageScaleType);
         void setOpacity(float opacity);
-        
-        bool isTranslucent() override
-        {
-            return true;
-        }
 
     private:
         string imagePath;
