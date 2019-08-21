@@ -23,7 +23,8 @@ typedef struct
     // AppletFrame
     struct
     {
-        unsigned headerHeight;
+        unsigned headerHeightRegular;
+        unsigned headerHeightLarge;
         unsigned footerHeight;
 
         unsigned separatorSpacing;

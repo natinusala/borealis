@@ -28,8 +28,8 @@ AppletFrame::AppletFrame(bool padLeft, bool padRight)
 
     if (padRight)
         this->rightPadding = style->AppletFrame.separatorSpacing;
-
-    headerHeight = style->AppletFrame.headerHeight;
+    
+    setHeaderStyle(HeaderStyle::REGULAR);
 }
 
 void AppletFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
@@ -114,9 +114,23 @@ void AppletFrame::setSubtitle(string subtitle)
     this->subtitle = subtitle;
 }
 
-void AppletFrame::setHeaderHeight(unsigned headerHeight)
-{
-    this->headerHeight = headerHeight;
+void AppletFrame::setHeaderStyle(HeaderStyle headerStyle)
+{   
+    Style *style = Application::getStyle();
+
+    switch (headerStyle)
+    {
+        case HeaderStyle::REGULAR:
+            this->headerHeight = style->AppletFrame.headerHeightRegular;
+            break;
+        case HeaderStyle::LARGE:
+            this->headerHeight = style->AppletFrame.headerHeightLarge;
+            break;
+    }
+}
+
+bool AppletFrame::onCancel() {
+    return View::onCancel();
 }
 
 AppletFrame::~AppletFrame()
@@ -138,12 +152,4 @@ void AppletFrame::willDisappear()
 {
     if (this->contentView)
         this->contentView->willDisappear();
-}
-
-bool AppletFrame::onCancel()
-{
-    if (this->parent != nullptr)
-        return this->parent->onCancel();
-    
-    return true;
 }
