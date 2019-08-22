@@ -124,6 +124,7 @@ class View
 
         // Helper functions to apply this view's alpha to a color
         NVGcolor a(NVGcolor color);
+        NVGpaint a(NVGpaint paint);
 
         NVGcolor RGB(unsigned r, unsigned g, unsigned b)
         {
@@ -346,7 +347,10 @@ class View
          * This is the method to override to add custom
          * cancel behavior
          */
-        virtual bool onCancel() { return false; };
+        virtual bool onCancel()
+        {            
+            return false;
+        }
 
         /**
          * Function to be called when the view is clicked

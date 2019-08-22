@@ -20,8 +20,9 @@
 
 Style styleAccurate = {
     AppletFrame : {
-        headerHeight      : 88,
-        footerHeight      : 73,
+        headerHeightRegular     : 88,
+        headerHeightLarge       : 129,
+        footerHeight            : 73,
 
         separatorSpacing  : 30,
 

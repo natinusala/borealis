@@ -1,6 +1,7 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2019  natinusala
+    Copyright (C) 2019  WerWolv
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -36,8 +37,12 @@ TabFrame::TabFrame() : AppletFrame(false, true)
 
 bool TabFrame::onCancel()
 {
-    Application::onGamepadButtonPressed(GLFW_GAMEPAD_BUTTON_DPAD_LEFT);
-    return true;
+    if (!this->sidebar->isChildFocused()) {
+        Application::onGamepadButtonPressed(GLFW_GAMEPAD_BUTTON_DPAD_LEFT);
+        return true;
+    }
+
+    return false;
 }
 
 void TabFrame::switchToView(View *view)
@@ -66,10 +71,6 @@ void TabFrame::addTab(string label, View *view)
         if (SidebarItem *item = dynamic_cast<SidebarItem*>(view))
             this->switchToView(item->getAssociatedView());
     });
-
-    // Switch to first tab
-    if (view != nullptr && this->layout->getViewsCount() == 1)
-        this->switchToView(view);
 }
 
 void TabFrame::addSeparator()

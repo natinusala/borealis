@@ -1,6 +1,7 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2019  natinusala
+    Copyright (C) 2019  WerWolv
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -59,16 +60,6 @@ void Sidebar::addSeparator()
 {
     SidebarSeparator *separator = new SidebarSeparator();
     this->addView(separator);
-}
-
-bool Sidebar::onCancel()
-{
-    if (this->isEmpty())
-        return false;
-
-    Application::requestFocus(this->children[0]->view, FocusDirection::NONE);
-    this->focusedIndex = 0;
-    return true;
 }
 
 void Sidebar::setActive(SidebarItem *active)

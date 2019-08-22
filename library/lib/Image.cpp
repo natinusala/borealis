@@ -47,7 +47,7 @@ void Image::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, 
     if (this->texture != -1) {
         nvgBeginPath(vg);
         nvgRect(vg, x + this->imageX, y + this->imageY, this->imageWidth, this->imageHeight);
-        nvgFillPaint(vg, this->imgPaint);
+        nvgFillPaint(vg, a(this->imgPaint));
         nvgFill(vg);
     }
 
@@ -69,13 +69,16 @@ void Image::reloadTexture()
 
 void Image::layout(NVGcontext* vg, Style *style, FontStash *stash)
 {
-    static int origViewWidth = getWidth();
-    static int origViewHeight = getHeight();
+    if (this->origViewWidth == 0 || this->origViewHeight == 0) {
+        this->origViewWidth = getWidth();
+        this->origViewHeight = getHeight();
+    }
+
 
     nvgImageSize(vg, this->texture, &this->imageWidth, &this->imageHeight);
 
-    setWidth(origViewWidth);
-    setHeight(origViewHeight);
+    setWidth(this->origViewWidth);
+    setHeight(this->origViewHeight);
 
     this->imageX = 0;
     this->imageY = 0;
@@ -85,29 +88,29 @@ void Image::layout(NVGcontext* vg, Style *style, FontStash *stash)
 
     switch (imageScaleType) {
         case ImageScaleType::NO_RESIZE:
-            this->imageX = (origViewWidth - this->imageWidth) / 2.0F;
-            this->imageY = (origViewHeight - this->imageHeight) / 2.0F;
+            this->imageX = (this->origViewWidth - this->imageWidth) / 2.0F;
+            this->imageY = (this->origViewHeight - this->imageHeight) / 2.0F;
             break;
         case ImageScaleType::FIT:
             if (viewAspectRatio >= imageAspectRatio) {
                 this->imageHeight = getHeight();
                 this->imageWidth = this->imageHeight * imageAspectRatio;
-                this->imageX = (origViewWidth - this->imageWidth) / 2.0F;
+                this->imageX = (this->origViewWidth - this->imageWidth) / 2.0F;
             } else {
                 this->imageWidth = getWidth();
                 this->imageHeight = this->imageWidth * imageAspectRatio;
-                this->imageY = (origViewHeight - this->imageHeight) / 2.0F;
+                this->imageY = (this->origViewHeight - this->imageHeight) / 2.0F;
             }
             break;
         case ImageScaleType::CROP:
             if (viewAspectRatio < imageAspectRatio) {
                 this->imageHeight = getHeight();
                 this->imageWidth = this->imageHeight * imageAspectRatio;
-                this->imageX = (origViewWidth - this->imageWidth) / 2.0F;
+                this->imageX = (this->origViewWidth - this->imageWidth) / 2.0F;
             } else {
                 this->imageWidth = getWidth();
                 this->imageHeight = this->imageWidth * imageAspectRatio;
-                this->imageY = (origViewHeight - this->imageHeight) / 2.0F;
+                this->imageY = (this->origViewHeight - this->imageHeight) / 2.0F;
             }
             break;
         case ImageScaleType::SCALE:
@@ -120,7 +123,7 @@ void Image::layout(NVGcontext* vg, Style *style, FontStash *stash)
             break;
     }
 
-    this->imgPaint = nvgImagePattern(vg, getX() + this->imageX, getY() + this->imageY, this->imageWidth, this->imageHeight, 0, this->texture, this->opacity);
+    this->imgPaint = nvgImagePattern(vg, getX() + this->imageX, getY() + this->imageY, this->imageWidth, this->imageHeight, 0, this->texture, this->alpha);
 }
 
 void Image::setImage(unsigned char *buffer, size_t bufferSize)
@@ -154,7 +157,7 @@ void Image::setImage(string imagePath)
 
 void Image::setOpacity(float opacity)
 {
-    this->opacity = opacity;
+    this->alpha = opacity;
     this->invalidate();
 }
 

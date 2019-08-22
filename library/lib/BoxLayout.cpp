@@ -1,6 +1,7 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2019  natinusala
+    Copyright (C) 2019  WerWolv
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -125,7 +126,7 @@ View* BoxLayout::updateFocus(FocusDirection direction, View *oldFocus, bool from
         {
             if (this->focusedIndex > 0)
             {
-                for (unsigned i = this->focusedIndex - 1; i >= 0; i--)
+                for (int i = this->focusedIndex - 1; i >= 0; i--)
                 {
                     newFocus = this->children[i]->view->requestFocus(FocusDirection::NONE, oldFocus);
                     if (newFocus && newFocus != oldFocus)
@@ -334,6 +335,15 @@ void BoxLayout::addView(View *view, bool fill)
 bool BoxLayout::isEmpty()
 {
     return this->children.size() == 0;
+}
+
+bool BoxLayout::isChildFocused()
+{
+    for (auto child : this->children)
+        if (child->view->isFocused())
+            return true;
+
+    return false;
 }
 
 BoxLayout::~BoxLayout()

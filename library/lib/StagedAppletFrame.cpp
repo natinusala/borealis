@@ -74,7 +74,7 @@ void StagedAppletFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsig
 
         nvgBeginPath(vg);
         nvgCircle(vg, x + width - style->AppletFrame.separatorSpacing * (style->StagedAppletFrame.progressIndicatorSpacing + i) + style->AppletFrame.separatorSpacing + style->AppletFrame.separatorSpacing / 2,
-                  y + style->AppletFrame.headerHeight / 2, current ? style->StagedAppletFrame.progressIndicatorRadiusSelected :
+                  y + this->headerHeight / 2, current ? style->StagedAppletFrame.progressIndicatorRadiusSelected :
                   style->StagedAppletFrame.progressIndicatorRadiusUnselected);
 
         // Current stage

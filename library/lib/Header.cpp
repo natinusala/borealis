@@ -20,7 +20,7 @@
 
 #include <Application.hpp>
 
-Header::Header(string label) : label(label)
+Header::Header(string label, bool separator) : label(label), separator(separator)
 {
     Style *style = Application::getStyle();
     this->setHeight(style->Header.height);
@@ -45,8 +45,10 @@ void Header::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height,
     nvgText(vg, x + style->Header.rectangleWidth + padding, y + height / 2, this->label.c_str(), nullptr);
 
     // Separator
-    nvgBeginPath(vg);
-    nvgFillColor(vg, ctx->theme->listItemSeparatorColor);
-    nvgRect(vg, x, y + height, width, 1);
-    nvgFill(vg);
+    if (this->separator) {
+        nvgBeginPath(vg);
+        nvgFillColor(vg, ctx->theme->listItemSeparatorColor);
+        nvgRect(vg, x, y + height, width, 1);
+        nvgFill(vg);
+    }
 }

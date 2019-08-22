@@ -26,9 +26,10 @@ class Header : public View
 {
     private:
         string label;
+        bool separator;
 
     public:
-        Header(string label);
+        Header(string label, bool separator = true);
 
         void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
 

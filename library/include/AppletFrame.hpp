@@ -25,6 +25,12 @@
 
 using namespace std;
 
+enum class HeaderStyle
+{
+    REGULAR,
+    LARGE
+};
+
 // A Horizon settings-like frame, with header and footer (no sidebar)
 class AppletFrame : public View
 {
@@ -37,7 +43,10 @@ class AppletFrame : public View
         unsigned leftPadding    = 0;
         unsigned rightPadding   = 0;
 
+
     protected:
+        unsigned headerHeight = 0;
+        
         void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
 
     public:
@@ -51,6 +60,7 @@ class AppletFrame : public View
         void setTitle(string title);
         void setSubtitle(string subtitle);
         void setContentView(View *view);
+        void setHeaderStyle(HeaderStyle headerStyle);
 
         ~AppletFrame();
 };
