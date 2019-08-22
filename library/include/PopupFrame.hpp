@@ -33,11 +33,6 @@ class PopupFrame : public View
         PopupFrame(string title, unsigned char *imageBuffer, size_t imageBufferSize, AppletFrame *contentView, string subTitleLeft = "", string subTitleRight = "");
         PopupFrame(string title, string imagePath, AppletFrame *contentView, string subTitleLeft = "", string subTitleRight = "");
 
-        string title;
-        string subTitleLeft, subTitleRight;
-
-        Image *image;
-
         AppletFrame *contentView = nullptr;
 
     protected:

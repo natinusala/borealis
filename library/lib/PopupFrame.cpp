@@ -1,6 +1,7 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2019  natinusala
+    Copyright (C) 2019  WerWolv
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,41 +25,28 @@
 #include <Logger.hpp>
 
 
-PopupFrame::PopupFrame(string title, unsigned char *imageBuffer, size_t imageBufferSize, AppletFrame *contentView, string subTitleLeft, string subTitleRight)
-    : title(title),
-      subTitleLeft(subTitleLeft),
-      subTitleRight(subTitleRight),
-      contentView(contentView)
-{
-    this->image = new Image(imageBuffer, imageBufferSize);
-    this->image->setImageScaleType(ImageScaleType::SCALE);
-    this->image->setParent(this);
-    this->image->invalidate();
-    
+PopupFrame::PopupFrame(string title, unsigned char *imageBuffer, size_t imageBufferSize, AppletFrame *contentView, string subTitleLeft, string subTitleRight) : contentView(contentView)
+{    
     if (this->contentView)
     {
         this->contentView->setParent(this);
-        this->contentView->setHeaderStyle(HeaderStyle::LARGE);
+        this->contentView->setHeaderStyle(HeaderStyle::POPUP);
+        this->contentView->setTitle(title);
+        this->contentView->setSubtitle(subTitleLeft, subTitleRight);
+        this->contentView->setIcon(imageBuffer, imageBufferSize);
         this->contentView->invalidate();
     }
-
 }
 
-PopupFrame::PopupFrame(string title, string imagePath, AppletFrame *contentView, string subTitleLeft, string subTitleRight)
-    : title(title),
-      subTitleLeft(subTitleLeft),
-      subTitleRight(subTitleRight),
-      contentView(contentView)
+PopupFrame::PopupFrame(string title, string imagePath, AppletFrame *contentView, string subTitleLeft, string subTitleRight) : contentView(contentView)
 {
-    this->image = new Image(imagePath);
-    this->image->setImageScaleType(ImageScaleType::SCALE);
-    this->image->setParent(this);
-    this->image->invalidate();
-    
     if (this->contentView)
     {
         this->contentView->setParent(this);
-        this->contentView->setHeaderStyle(HeaderStyle::LARGE);
+        this->contentView->setHeaderStyle(HeaderStyle::POPUP);
+        this->contentView->setTitle(title);
+        this->contentView->setSubtitle(subTitleLeft, subTitleRight);
+        this->contentView->setIcon(imagePath);
         this->contentView->invalidate();
     }
 }
@@ -76,72 +64,21 @@ void PopupFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned hei
     nvgRect(vg, 0, y, width, height);
     nvgFill(vg);
 
-    // TODO: Shadow
-
     // Background
-    nvgFillColor(vg, a(ctx->theme->sidebarColor));
+    nvgFillColor(vg, a(ctx->theme->backgroundColorRGB));
     nvgBeginPath(vg);
-    nvgRect(vg, x + style->PopupFrame.edgePadding, y, width - 2 * style->PopupFrame.edgePadding, height);
+    nvgRect(vg, style->PopupFrame.edgePadding, y, width - style->PopupFrame.edgePadding * 2, height);
     nvgFill(vg);
 
-    // Image
-    this->image->frame(ctx);
-
-    // Header Text
-    nvgBeginPath(vg);
-    nvgFillColor(vg, a(ctx->theme->textColor));
-    nvgFontFaceId(vg, ctx->fontStash->regular);
-    nvgFontSize(vg, style->PopupFrame.headerFontSize);
-    nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-    nvgText(vg, x + style->PopupFrame.edgePadding + style->PopupFrame.headerTextLeftPadding,
-        y + style->PopupFrame.headerTextTopPadding,
-        this->title.c_str(),
-        nullptr);
-
-    // Sub title text 1
-    nvgBeginPath(vg);
-    nvgFillColor(vg, a(ctx->theme->descriptionColor));
-    nvgFontFaceId(vg, ctx->fontStash->regular);
-    nvgFontSize(vg, style->PopupFrame.subTitleFontSize);
-    nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-    nvgText(vg, x + style->PopupFrame.edgePadding + style->PopupFrame.subTitleLeftPadding,
-        y + style->PopupFrame.subTitleTopPadding,
-        this->subTitleLeft.c_str(),
-        nullptr);
-
-    float bounds[4];
-    nvgTextBounds(vg, x, y, this->subTitleLeft.c_str(), nullptr, bounds);
-
-    // Sub title separator
-    nvgFillColor(vg, a(ctx->theme->descriptionColor)); // we purposely don't apply opacity
-    nvgBeginPath(vg);
-    nvgRect(vg, x + style->PopupFrame.edgePadding + style->PopupFrame.subTitleLeftPadding + (bounds[2] - bounds[0]) + style->PopupFrame.subTitleSpacing,
-        y + style->PopupFrame.subTitleSeparatorTopPadding,
-        1,
-        style->PopupFrame.subTitleSeparatorHeight);
-    nvgFill(vg);
-
-    // Sub title text 2
-    nvgBeginPath(vg);
-    nvgFillColor(vg, a(ctx->theme->descriptionColor));
-    nvgFontFaceId(vg, ctx->fontStash->regular);
-    nvgFontSize(vg, style->PopupFrame.subTitleFontSize);
-    nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-    nvgText(vg, x + style->PopupFrame.edgePadding + style->PopupFrame.subTitleLeftPadding + (bounds[2] - bounds[0]) + (style->PopupFrame.subTitleSpacing * 2),
-        y + style->PopupFrame.subTitleTopPadding,
-        this->subTitleRight.c_str(),
-        nullptr);
+    // TODO: Shadow
     
     // Content view
-    if (this->contentView)
-    {
-        nvgSave(vg);
-        nvgScissor(vg, style->PopupFrame.edgePadding, 0, style->PopupFrame.contentWidth, height);
+    nvgSave(vg);
+    nvgScissor(vg, style->PopupFrame.edgePadding, 0, style->PopupFrame.contentWidth, height);
 
-        this->contentView->frame(ctx);
+    this->contentView->frame(ctx);
 
-        nvgRestore(vg);
-    }
+    nvgRestore(vg);
 }
 
 bool PopupFrame::onCancel()
@@ -157,14 +94,8 @@ unsigned PopupFrame::getShowAnimationDuration()
 
 void PopupFrame::layout(NVGcontext* vg, Style *style, FontStash *stash)
 {
-    this->image->setBoundaries(style->PopupFrame.edgePadding + style->PopupFrame.imageLeftPadding, style->PopupFrame.imageTopPadding, style->PopupFrame.imageSize, style->PopupFrame.imageSize);
-    this->image->invalidate();
-
-    if (this->contentView)
-    {
-        this->contentView->setBoundaries(style->PopupFrame.edgePadding, 0, style->PopupFrame.contentWidth, 720);
-        this->contentView->invalidate();
-    }
+    this->contentView->setBoundaries(style->PopupFrame.edgePadding, 0, style->PopupFrame.contentWidth, 720);
+    this->contentView->invalidate();
 }
 
 View* PopupFrame::requestFocus(FocusDirection direction, View *oldFocus, bool fromUp)
@@ -189,18 +120,12 @@ void PopupFrame::open(string title, string imagePath, AppletFrame *contentView, 
 
 void PopupFrame::willAppear()
 {
-    this->image->willAppear();
-
-    if (this->contentView)
-        this->contentView->willAppear();
+    this->contentView->willAppear();
 }
 
 void PopupFrame::willDisappear()
-{
-    this->image->willDisappear();
-    
-    if (this->contentView)
-        this->contentView->willAppear();
+{    
+    this->contentView->willAppear();
 }
 
 PopupFrame::~PopupFrame()

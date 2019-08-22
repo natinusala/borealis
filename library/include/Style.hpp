@@ -25,7 +25,7 @@ typedef struct
     struct
     {
         unsigned headerHeightRegular;
-        unsigned headerHeightLarge;
+        unsigned headerHeightPopup;
         unsigned footerHeight;
 
         unsigned separatorSpacing;

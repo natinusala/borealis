@@ -22,13 +22,14 @@
 
 #include <View.hpp>
 #include <FrameContext.hpp>
+#include <Image.hpp>
 
 using namespace std;
 
 enum class HeaderStyle
 {
     REGULAR,
-    LARGE
+    POPUP       // Only meant for PopupFrames. Using it in other contexts might cause weird behaviour
 };
 
 // A Horizon settings-like frame, with header and footer (no sidebar)
@@ -36,7 +37,11 @@ class AppletFrame : public View
 {
     private:
         string title = "";
-        string subtitle = "";
+        string footerText = "";
+
+        string subTitleLeft = "", subTitleRight = "";
+
+        Image *icon = nullptr;
 
         View *contentView = nullptr;
 
@@ -45,7 +50,7 @@ class AppletFrame : public View
 
 
     protected:
-        unsigned headerHeight = 0;
+        HeaderStyle headerStyle;
         
         void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
 
@@ -58,7 +63,10 @@ class AppletFrame : public View
         void willDisappear() override;
 
         void setTitle(string title);
-        void setSubtitle(string subtitle);
+        void setFooterText(string footerText);
+        void setSubtitle(string left, string right);
+        void setIcon(unsigned char *buffer, size_t bufferSize);
+        void setIcon(string imagePath);
         void setContentView(View *view);
         void setHeaderStyle(HeaderStyle headerStyle);
 
