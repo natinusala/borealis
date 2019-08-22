@@ -61,14 +61,6 @@ void Sidebar::addSeparator()
     this->addView(separator);
 }
 
-bool Sidebar::onCancel()
-{
-    if (this->isEmpty())
-        return false;
-
-    return this->parent->onCancel();
-}
-
 void Sidebar::setActive(SidebarItem *active)
 {
     if (currentActive)

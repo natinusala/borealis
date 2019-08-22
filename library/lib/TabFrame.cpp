@@ -32,12 +32,17 @@ TabFrame::TabFrame() : AppletFrame(false, true)
     layout->addView(sidebar);
 
     this->setContentView(layout);
+
 }
 
 bool TabFrame::onCancel()
 {
-    Application::onGamepadButtonPressed(GLFW_GAMEPAD_BUTTON_DPAD_LEFT);
-    return View::onCancel();
+    if (!this->sidebar->isChildFocused()) {
+        Application::onGamepadButtonPressed(GLFW_GAMEPAD_BUTTON_DPAD_LEFT);
+        return true;
+    }
+
+    return false;
 }
 
 void TabFrame::switchToView(View *view)

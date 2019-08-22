@@ -88,6 +88,4 @@ class Sidebar : public BoxLayout
         void addSeparator();
 
         void setActive(SidebarItem *item);
-
-        bool onCancel() override;
 };

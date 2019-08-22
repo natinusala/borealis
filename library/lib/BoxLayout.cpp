@@ -336,6 +336,15 @@ bool BoxLayout::isEmpty()
     return this->children.size() == 0;
 }
 
+bool BoxLayout::isChildFocused()
+{
+    for (auto child : this->children)
+        if (child->view->isFocused())
+            return true;
+
+    return false;
+}
+
 BoxLayout::~BoxLayout()
 {
     for (BoxLayoutChild *child : this->children)

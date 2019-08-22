@@ -342,10 +342,7 @@ class View
          * was consumed, false otherwise
          */
         virtual bool onCancel()
-        {
-            if (this->parent != nullptr)
-                return this->parent->onCancel();
-            
+        {            
             return false;
         }
 

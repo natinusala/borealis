@@ -56,7 +56,6 @@ class AppletFrame : public View
         View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override;
         void willAppear() override;
         void willDisappear() override;
-        bool onCancel() override;
 
         void setTitle(string title);
         void setSubtitle(string subtitle);

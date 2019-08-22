@@ -129,10 +129,6 @@ void AppletFrame::setHeaderStyle(HeaderStyle headerStyle)
     }
 }
 
-bool AppletFrame::onCancel() {
-    return View::onCancel();
-}
-
 AppletFrame::~AppletFrame()
 {
     if (this->contentView)
