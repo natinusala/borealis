@@ -325,25 +325,41 @@ class View
         virtual float getAlpha(bool child = false);
 
         /**
-         * Fires when the user "clicks" on the view
+         * Fired when the user "clicks" on the view
          * either via touch or pressing A
          *
          * Should return true if the event
          * was consumed, false otherwise
+         *
+         * This is the method to override to add custom
+         * click behavior
          */
         virtual bool onClick() { return false; };
 
         /**
-         * Fires when the user presses "Back" on the view
+         * Fired when the user presses "Back" on the view
          * either via touch (on hint) or pressing B
          *
          * Should return true if the event
          * was consumed, false otherwise
+         *
+         * This is the method to override to add custom
+         * cancel behavior
          */
         virtual bool onCancel() { return false; };
 
+        /**
+         * Function to be called when the view is clicked
+         * (calls onClick internally)
+         */
         // TODO: Play click animation here
         void click();
+
+        /**
+         * Function to be called when
+         * the cancel button is pressed on this view
+         * (calls onCancel internally)
+         */
         void cancel();
 
         /**
