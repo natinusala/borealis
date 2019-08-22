@@ -71,10 +71,6 @@ void TabFrame::addTab(string label, View *view)
         if (SidebarItem *item = dynamic_cast<SidebarItem*>(view))
             this->switchToView(item->getAssociatedView());
     });
-
-    // Switch to first tab
-    if (view != nullptr && this->layout->getViewsCount() == 1)
-        this->switchToView(view);
 }
 
 void TabFrame::addSeparator()
