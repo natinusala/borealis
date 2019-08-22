@@ -1,6 +1,7 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2019  natinusala
+    Copyright (C) 2019  WerWolv
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,7 +33,6 @@ TabFrame::TabFrame() : AppletFrame(false, true)
     layout->addView(sidebar);
 
     this->setContentView(layout);
-
 }
 
 bool TabFrame::onCancel()
