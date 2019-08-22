@@ -1,6 +1,7 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2019  natinusala
+    Copyright (C) 2019  WerWolv
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -169,6 +170,32 @@ typedef struct
         unsigned headerFontSize;
         unsigned headerPadding;
     } Dropdown;
+
+    struct
+    {
+        unsigned edgePadding;
+        unsigned separatorSpacing;
+        unsigned footerHeight;
+        unsigned imageLeftPadding;
+        unsigned imageTopPadding;
+        unsigned imageSize;
+        unsigned contentWidth;
+        unsigned contentHeight;
+
+        unsigned headerTextLeftPadding;
+        unsigned headerTextTopPadding;
+
+        unsigned subTitleLeftPadding;
+        unsigned subTitleTopPadding;
+        unsigned subTitleSpacing;
+
+        unsigned subTitleSeparatorLeftPadding;
+        unsigned subTitleSeparatorTopPadding;
+        unsigned subTitleSeparatorHeight;
+
+        unsigned headerFontSize;
+        unsigned subTitleFontSize;
+    } PopupFrame;
 
     // StagedAppletFrame
     struct
