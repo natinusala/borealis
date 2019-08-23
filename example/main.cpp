@@ -52,6 +52,15 @@ int main(int argc, char* argv[])
     ListItem *crashItem = new ListItem("Divide by 0", "Can the Switch do it?");
     crashItem->setClickListener([](View *view){ Application::crash("The software was closed because an error occured:\nSIGABRT (signal 6)"); });
 
+    ListItem *popupItem = new ListItem("Open popup");
+    popupItem->setClickListener([](View *view){ 
+        TabFrame *popupTabFrame = new TabFrame();
+        popupTabFrame->addTab("Red", new Rectangle(nvgRGB(0xFF, 0x00, 0x00)));
+        popupTabFrame->addTab("Green", new Rectangle(nvgRGB(0x00, 0xFF, 0x00)));
+        popupTabFrame->addTab("Blue", new Rectangle(nvgRGB(0x00, 0x00, 0xFF)));
+        PopupFrame::open("Shrek", "romfs:/icon/shrek.png", popupTabFrame, "Shrek", "Shrek"); 
+    });
+
     ListItem *installerItem = new ListItem("Open example installer");
     installerItem->setClickListener([](View *view) {
         StagedAppletFrame *stagedFrame = new StagedAppletFrame();
@@ -68,6 +77,7 @@ int main(int argc, char* argv[])
     testList->addView(jankItem);
     testList->addView(crashItem);
     testList->addView(installerItem);
+    testList->addView(popupItem);
 
     Label *testLabel = new Label(LabelStyle::REGULAR, "For more information about how to use Nintendo Switch and its features, please refer to the Nintendo Support Website on your smart device or PC.", true);
     testList->addView(testLabel);
