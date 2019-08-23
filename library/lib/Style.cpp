@@ -20,11 +20,6 @@
 #include <Style.hpp>
 
 Style styleAccurate = {
-    Common : {
-        screenWidth     : 1280,
-        screenHeight    : 720
-    },
-
     AppletFrame : {
         headerHeightRegular     : 88,
         headerHeightPopup       : 129,

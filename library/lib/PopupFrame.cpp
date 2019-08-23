@@ -101,7 +101,7 @@ unsigned PopupFrame::getShowAnimationDuration()
 
 void PopupFrame::layout(NVGcontext* vg, Style *style, FontStash *stash)
 {
-    this->contentView->setBoundaries(style->PopupFrame.edgePadding, 0, style->PopupFrame.contentWidth, style->Common.screenHeight);
+    this->contentView->setBoundaries(style->PopupFrame.edgePadding, 0, style->PopupFrame.contentWidth, this->getHeight());
     this->contentView->invalidate();
 }
 
