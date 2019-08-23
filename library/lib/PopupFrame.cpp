@@ -51,9 +51,16 @@ PopupFrame::PopupFrame(string title, string imagePath, AppletFrame *contentView,
     }
 }
 
-void PopupFrame::show(function<void(void)> cb, bool animate)
+PopupFrame::PopupFrame(string title, AppletFrame *contentView, string subTitleLeft, string subTitleRight) : contentView(contentView)
 {
-    View::show(cb);
+    if (this->contentView)
+    {
+        this->contentView->setParent(this);
+        this->contentView->setHeaderStyle(HeaderStyle::POPUP);
+        this->contentView->setTitle(title);
+        this->contentView->setSubtitle(subTitleLeft, subTitleRight);
+        this->contentView->invalidate();
+    }
 }
 
 void PopupFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
@@ -94,7 +101,7 @@ unsigned PopupFrame::getShowAnimationDuration()
 
 void PopupFrame::layout(NVGcontext* vg, Style *style, FontStash *stash)
 {
-    this->contentView->setBoundaries(style->PopupFrame.edgePadding, 0, style->PopupFrame.contentWidth, 720);
+    this->contentView->setBoundaries(style->PopupFrame.edgePadding, 0, style->PopupFrame.contentWidth, style->Common.screenHeight);
     this->contentView->invalidate();
 }
 
@@ -104,7 +111,8 @@ View* PopupFrame::requestFocus(FocusDirection direction, View *oldFocus, bool fr
         if (this->contentView)
             return this->contentView->requestFocus(direction, oldFocus, fromUp);
             
-    return nullptr;}
+    return nullptr;
+}
 
 void PopupFrame::open(string title, unsigned char *imageBuffer, size_t imageBufferSize, AppletFrame *contentView, string subTitleLeft, string subTitleRight)
 {
@@ -115,6 +123,12 @@ void PopupFrame::open(string title, unsigned char *imageBuffer, size_t imageBuff
 void PopupFrame::open(string title, string imagePath, AppletFrame *contentView, string subTitleLeft, string subTitleRight)
 {
     PopupFrame *popupFrame = new PopupFrame(title, imagePath, contentView, subTitleLeft, subTitleRight);
+    Application::pushView(popupFrame);
+}
+
+void PopupFrame::open(string title, AppletFrame *contentView, string subTitleLeft, string subTitleRight)
+{
+    PopupFrame *popupFrame = new PopupFrame(title, contentView, subTitleLeft, subTitleRight);
     Application::pushView(popupFrame);
 }
 

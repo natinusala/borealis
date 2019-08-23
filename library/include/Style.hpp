@@ -21,11 +21,17 @@
 
 typedef struct
 {
+    // Common
+    struct
+    {
+        unsigned screenWidth;
+        unsigned screenHeight;
+    } Common;
     // AppletFrame
     struct
     {
         unsigned headerHeightRegular;
-        unsigned headerHeightPopup;
+        unsigned headerHeightPopup;     // PopupFrame
         unsigned footerHeight;
 
         unsigned separatorSpacing;

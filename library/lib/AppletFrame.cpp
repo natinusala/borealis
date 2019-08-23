@@ -119,7 +119,7 @@ void AppletFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned he
     this->drawHint(ctx, x, y, width, height);
 
     // Icon
-    if (this->icon != nullptr)
+    if (this->icon)
         this->icon->frame(ctx);
 
     // Separators
@@ -146,12 +146,13 @@ View* AppletFrame::requestFocus(FocusDirection direction, View *oldFocus, bool f
 
 void AppletFrame::layout(NVGcontext* vg, Style *style, FontStash *stash)
 {
-    if (this->icon != nullptr)
+    if (this->icon)
     {
         if (this->headerStyle == HeaderStyle::REGULAR)
         {
             // TODO: Icon
-        } else if (this->headerStyle == HeaderStyle::POPUP)
+        }
+        else if (this->headerStyle == HeaderStyle::POPUP)
         {
             this->icon->setBoundaries(style->PopupFrame.edgePadding + style->PopupFrame.imageLeftPadding, style->PopupFrame.imageTopPadding, style->PopupFrame.imageSize, style->PopupFrame.imageSize);
             this->icon->invalidate();     
@@ -195,7 +196,7 @@ void AppletFrame::setSubtitle(string left, string right)
 
 void AppletFrame::setIcon(unsigned char *buffer, size_t bufferSize)
 {
-    if (this->icon == nullptr)
+    if (!this->icon)
     {
         this->icon = new Image(buffer, bufferSize);
         this->icon->setImageScaleType(ImageScaleType::SCALE);
@@ -211,7 +212,7 @@ void AppletFrame::setIcon(unsigned char *buffer, size_t bufferSize)
 
 void AppletFrame::setIcon(string imagePath)
 {
-    if (this->icon == nullptr)
+    if (!this->icon)
     {
         this->icon = new Image(imagePath);
         this->icon->setImageScaleType(ImageScaleType::SCALE);
@@ -227,8 +228,6 @@ void AppletFrame::setIcon(string imagePath)
 
 void AppletFrame::setHeaderStyle(HeaderStyle headerStyle)
 {   
-    Style *style = Application::getStyle();
-
     this->headerStyle = headerStyle;
 
     this->invalidate();

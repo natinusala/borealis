@@ -32,6 +32,7 @@ class PopupFrame : public View
     private:
         PopupFrame(string title, unsigned char *imageBuffer, size_t imageBufferSize, AppletFrame *contentView, string subTitleLeft = "", string subTitleRight = "");
         PopupFrame(string title, string imagePath, AppletFrame *contentView, string subTitleLeft = "", string subTitleRight = "");
+        PopupFrame(string title, AppletFrame *contentView, string subTitleLeft = "", string subTitleRight = "");
 
         AppletFrame *contentView = nullptr;
 
@@ -45,12 +46,12 @@ class PopupFrame : public View
         void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
         View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp = false) override;
         bool onCancel() override;
-        void show(function<void(void)> cb, bool animate = true) override;
         void willAppear() override;
         void willDisappear() override;
 
         static void open(string title, unsigned char *imageBuffer, size_t imageBufferSize, AppletFrame *contentView, string subTitleLeft = "", string subTitleRight = "");
         static void open(string title, string imagePath, AppletFrame *contentView, string subTitleLeft = "", string subTitleRight = "");
+        static void open(string title, AppletFrame *contentView, string subTitleLeft = "", string subTitleRight = "");
 
         bool isTranslucent() override
         {
