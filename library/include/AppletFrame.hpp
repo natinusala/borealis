@@ -50,7 +50,7 @@ class AppletFrame : public View
 
 
     protected:
-        HeaderStyle headerStyle;
+        HeaderStyle headerStyle = HeaderStyle::REGULAR;
         
         void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
 

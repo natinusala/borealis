@@ -28,8 +28,6 @@ AppletFrame::AppletFrame(bool padLeft, bool padRight)
 
     if (padRight)
         this->rightPadding = style->AppletFrame.separatorSpacing;
-    
-    setHeaderStyle(HeaderStyle::REGULAR);
 }
 
 void AppletFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
