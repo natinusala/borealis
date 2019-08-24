@@ -308,7 +308,7 @@ bool Application::mainLoop()
         Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP]    = glfwGetKey(window, GLFW_KEY_UP);
         Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN]  = glfwGetKey(window, GLFW_KEY_DOWN);
         Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_START]      = glfwGetKey(window, GLFW_KEY_ESCAPE);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_GUIDE]     = glfwGetKey(window, GLFW_KEY_F1);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_BACK]       = glfwGetKey(window, GLFW_KEY_F1);
         Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_A]          = glfwGetKey(window, GLFW_KEY_ENTER);
         Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_B]          = glfwGetKey(window, GLFW_KEY_BACKSPACE);
     }
@@ -380,7 +380,7 @@ void Application::onGamepadButtonPressed(char button)
         case GLFW_GAMEPAD_BUTTON_START:
             Application::quit();
             break;
-        case GLFW_GAMEPAD_BUTTON_GUIDE:
+        case GLFW_GAMEPAD_BUTTON_BACK:
             Application::toggleFramerateDisplay();
             break;
         case GLFW_GAMEPAD_BUTTON_DPAD_DOWN:
