@@ -1,6 +1,7 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2019  natinusala
+    Copyright (C) 2019  WerWolv
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,7 +22,7 @@
 Style styleAccurate = {
     AppletFrame : {
         headerHeightRegular     : 88,
-        headerHeightLarge       : 129,
+        headerHeightPopup       : 129,
         footerHeight            : 73,
 
         separatorSpacing  : 30,
@@ -140,6 +141,31 @@ Style styleAccurate = {
         headerHeight    : 71,
         headerFontSize  : 24,
         headerPadding   : 70
+    },
+
+    PopupFrame : {
+        edgePadding         : 120,
+        separatorSpacing    : 30,
+        footerHeight        : 73,
+        imageLeftPadding    : 60,
+        imageTopPadding     : 17,
+        imageSize           : 100,
+        contentWidth        : 1040,
+        contentHeight       : 518,
+
+        headerTextLeftPadding   : 180,
+        headerTextTopPadding    : 64,
+
+        subTitleLeftPadding     : 182,
+        subTitleTopPadding      : 95,
+        subTitleSpacing         : 20,
+
+        subTitleSeparatorLeftPadding    : 280,
+        subTitleSeparatorTopPadding     : 92,
+        subTitleSeparatorHeight         : 20,
+
+        headerFontSize      : 28,
+        subTitleFontSize    : 16
     },
 
     StagedAppletFrame : {

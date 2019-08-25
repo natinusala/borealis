@@ -30,6 +30,7 @@
 #include <View.hpp>
 #include <AppletFrame.hpp>
 #include <TabFrame.hpp>
+#include <PopupFrame.hpp>
 #include <Rectangle.hpp>
 #include <BoxLayout.hpp>
 #include <Theme.hpp>

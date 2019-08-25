@@ -28,24 +28,82 @@ AppletFrame::AppletFrame(bool padLeft, bool padRight)
 
     if (padRight)
         this->rightPadding = style->AppletFrame.separatorSpacing;
-    
-    setHeaderStyle(HeaderStyle::REGULAR);
 }
 
 void AppletFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
-{
+{   
     // Text
-    // Title
-    nvgFillColor(vg, a(ctx->theme->textColor));
-    nvgFontSize(vg, style->AppletFrame.titleSize);
-    nvgFontFaceId(vg, ctx->fontStash->regular);
-    nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-    nvgFontFaceId(vg, ctx->fontStash->regular);
-    nvgBeginPath(vg);
-    nvgText(vg, x + style->AppletFrame.titleStart, y + this->headerHeight / 2 + style->AppletFrame.titleOffset, this->title.c_str(), nullptr);
+    if (this->headerStyle == HeaderStyle::REGULAR)
+    {
+        // Title
+        nvgFillColor(vg, a(ctx->theme->textColor));
+        nvgFontSize(vg, style->AppletFrame.titleSize);
+        nvgFontFaceId(vg, ctx->fontStash->regular);
+        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+        nvgFontFaceId(vg, ctx->fontStash->regular);
+        nvgBeginPath(vg);
+        nvgText(vg, x + style->AppletFrame.titleStart, y + style->AppletFrame.headerHeightRegular / 2 + style->AppletFrame.titleOffset, this->title.c_str(), nullptr);
+    
+        // Header
+        nvgBeginPath(vg);
+        nvgRect(vg, x + style->AppletFrame.separatorSpacing, y + style->AppletFrame.headerHeightRegular - 1, width - style->AppletFrame.separatorSpacing * 2, 1);
+        nvgFill(vg);
+    }
+    else if (this->headerStyle == HeaderStyle::POPUP)
+    {
+        // Header Text
+        nvgBeginPath(vg);
+        nvgFillColor(vg, a(ctx->theme->textColor));
+        nvgFontFaceId(vg, ctx->fontStash->regular);
+        nvgFontSize(vg, style->PopupFrame.headerFontSize);
+        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+        nvgText(vg, x + style->PopupFrame.headerTextLeftPadding,
+            y + style->PopupFrame.headerTextTopPadding,
+            this->title.c_str(),
+            nullptr);
+
+        // Sub title text 1
+        nvgBeginPath(vg);
+        nvgFillColor(vg, a(ctx->theme->descriptionColor));
+        nvgFontFaceId(vg, ctx->fontStash->regular);
+        nvgFontSize(vg, style->PopupFrame.subTitleFontSize);
+        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+        nvgText(vg, x + style->PopupFrame.subTitleLeftPadding,
+            y + style->PopupFrame.subTitleTopPadding,
+            this->subTitleLeft.c_str(),
+            nullptr);
+
+        float bounds[4];
+        nvgTextBounds(vg, x, y, this->subTitleLeft.c_str(), nullptr, bounds);
+
+        // Sub title separator
+        nvgFillColor(vg, a(ctx->theme->descriptionColor)); // we purposely don't apply opacity
+        nvgBeginPath(vg);
+        nvgRect(vg, x + style->PopupFrame.subTitleLeftPadding + (bounds[2] - bounds[0]) + style->PopupFrame.subTitleSpacing,
+            y + style->PopupFrame.subTitleSeparatorTopPadding,
+            1,
+            style->PopupFrame.subTitleSeparatorHeight);
+        nvgFill(vg);
+
+        // Sub title text 2
+        nvgBeginPath(vg);
+        nvgFillColor(vg, a(ctx->theme->descriptionColor));
+        nvgFontFaceId(vg, ctx->fontStash->regular);
+        nvgFontSize(vg, style->PopupFrame.subTitleFontSize);
+        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+        nvgText(vg, x + style->PopupFrame.subTitleLeftPadding + (bounds[2] - bounds[0]) + (style->PopupFrame.subTitleSpacing * 2),
+            y + style->PopupFrame.subTitleTopPadding,
+            this->subTitleRight.c_str(),
+            nullptr);
+
+        // Header
+        nvgBeginPath(vg);
+        nvgRect(vg, x + style->AppletFrame.separatorSpacing, y + style->AppletFrame.headerHeightPopup - 1, width - style->AppletFrame.separatorSpacing * 2, 1);
+        nvgFill(vg);
+    }
 
     // Footer
-    string *text = &this->subtitle;
+    string *text = &this->footerText;
 
     if (*text == "")
         text = Application::getCommonFooter();
@@ -58,15 +116,12 @@ void AppletFrame::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned he
     // Hint
     this->drawHint(ctx, x, y, width, height);
 
-    // TODO: Icon
+    // Icon
+    if (this->icon)
+        this->icon->frame(ctx);
 
     // Separators
     nvgFillColor(vg, a(ctx->theme->separatorColor));
-
-    // Header
-    nvgBeginPath(vg);
-    nvgRect(vg, x + style->AppletFrame.separatorSpacing, y + this->headerHeight - 1, width - style->AppletFrame.separatorSpacing * 2, 1);
-    nvgFill(vg);
 
     // Footer
     nvgBeginPath(vg);
@@ -89,9 +144,26 @@ View* AppletFrame::requestFocus(FocusDirection direction, View *oldFocus, bool f
 
 void AppletFrame::layout(NVGcontext* vg, Style *style, FontStash *stash)
 {
+    if (this->icon)
+    {
+        if (this->headerStyle == HeaderStyle::REGULAR)
+        {
+            // TODO: Icon
+        }
+        else if (this->headerStyle == HeaderStyle::POPUP)
+        {
+            this->icon->setBoundaries(style->PopupFrame.edgePadding + style->PopupFrame.imageLeftPadding, style->PopupFrame.imageTopPadding, style->PopupFrame.imageSize, style->PopupFrame.imageSize);
+            this->icon->invalidate();     
+        }
+    }
+
     if (this->contentView)
     {
-        this->contentView->setBoundaries(this->x + leftPadding, this->y + this->headerHeight, this->width - this->leftPadding - this->rightPadding, this->height - style->AppletFrame.footerHeight - this->headerHeight);
+        if (this->headerStyle == HeaderStyle::REGULAR)
+            this->contentView->setBoundaries(this->x + leftPadding, this->y + style->AppletFrame.headerHeightRegular, this->width - this->leftPadding - this->rightPadding, this->height - style->AppletFrame.footerHeight - style->AppletFrame.headerHeightRegular);
+        else if (this->headerStyle == HeaderStyle::POPUP)
+            this->contentView->setBoundaries(this->x + leftPadding, this->y + style->AppletFrame.headerHeightPopup, this->width - this->leftPadding - this->rightPadding, this->height - style->AppletFrame.footerHeight - style->AppletFrame.headerHeightPopup);
+        
         this->contentView->invalidate();
     }
 }
@@ -109,24 +181,54 @@ void AppletFrame::setTitle(string title)
     this->title = title;
 }
 
-void AppletFrame::setSubtitle(string subtitle)
+void AppletFrame::setFooterText(string footerText)
 {
-    this->subtitle = subtitle;
+    this->footerText = footerText;
+}
+
+void AppletFrame::setSubtitle(string left, string right)
+{
+    this->subTitleLeft = left;
+    this->subTitleRight = right;
+}
+
+void AppletFrame::setIcon(unsigned char *buffer, size_t bufferSize)
+{
+    if (!this->icon)
+    {
+        this->icon = new Image(buffer, bufferSize);
+        this->icon->setImageScaleType(ImageScaleType::SCALE);
+        this->icon->setParent(this);
+    }
+    else
+    {
+        this->icon->setImage(buffer, bufferSize);
+    }
+
+    this->icon->invalidate();
+}
+
+void AppletFrame::setIcon(string imagePath)
+{
+    if (!this->icon)
+    {
+        this->icon = new Image(imagePath);
+        this->icon->setImageScaleType(ImageScaleType::SCALE);
+        this->icon->setParent(this);
+    }
+    else
+    {
+        this->icon->setImage(imagePath);
+    }
+
+    this->icon->invalidate();
 }
 
 void AppletFrame::setHeaderStyle(HeaderStyle headerStyle)
 {   
-    Style *style = Application::getStyle();
+    this->headerStyle = headerStyle;
 
-    switch (headerStyle)
-    {
-        case HeaderStyle::REGULAR:
-            this->headerHeight = style->AppletFrame.headerHeightRegular;
-            break;
-        case HeaderStyle::LARGE:
-            this->headerHeight = style->AppletFrame.headerHeightLarge;
-            break;
-    }
+    this->invalidate();
 }
 
 AppletFrame::~AppletFrame()
@@ -136,16 +238,25 @@ AppletFrame::~AppletFrame()
         this->contentView->willDisappear();
         delete this->contentView;
     }
+
+    if (this->icon)
+        delete this->icon;
 }
 
 void AppletFrame::willAppear()
 {
+    if (this->icon)
+        this->icon->willAppear();
+
     if (this->contentView)
         this->contentView->willAppear();
 }
 
 void AppletFrame::willDisappear()
 {
+    if (this->icon)
+        this->icon->willDisappear();
+
     if (this->contentView)
         this->contentView->willDisappear();
 }
