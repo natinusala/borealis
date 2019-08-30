@@ -23,6 +23,7 @@ borealis_files = files(
     'lib/Dropdown.cpp',
     'lib/Logger.cpp',
     'lib/StagedAppletFrame.cpp',
+    'lib/PopupFrame.cpp',
     'lib/ProgressDisplay.cpp',
     'lib/ProgressSpinner.cpp',
     'lib/Image.cpp',
