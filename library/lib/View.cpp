@@ -35,6 +35,14 @@ static int shakeAnimation(float t, float a) // a = amplitude
     return roundf(a * exp(-(c * t)) * sin(w * t));
 }
 
+string id() {
+    return this->id;
+}
+
+void setId(string id) {
+    this->id = id;
+}
+
 void View::shakeHighlight(FocusDirection direction)
 {
     this->highlightShaking          = true;
