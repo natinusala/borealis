@@ -91,6 +91,8 @@ class View
         int x = 0;
         int y = 0;
 
+        string id = "";
+    
         unsigned width  = 0;
         unsigned height = 0;
 
@@ -152,7 +154,8 @@ class View
         void drawHint(FrameContext *ctx, unsigned x, unsigned y, unsigned width, unsigned height);
 
     public:
-        string id;    
+        string id();
+        void setId(string id);
     
         void setBoundaries(int x, int y, unsigned width, unsigned height);
 
