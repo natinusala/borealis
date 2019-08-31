@@ -27,6 +27,7 @@ borealis_files = files(
     'lib/ProgressSpinner.cpp',
     'lib/Image.cpp',
     'lib/Header.cpp',
+    'lib/PopupFrame.cpp',
 
     'lib/TaskManager.cpp',
     'lib/RepeatingTask.cpp',

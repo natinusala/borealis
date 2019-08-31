@@ -21,6 +21,7 @@
 #include <View.hpp>
 
 #include <string>
+#include <vector>
 
 // The type of a Table Row
 enum class TableRowType

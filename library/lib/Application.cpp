@@ -82,6 +82,11 @@ static void joystickCallback(int jid, int event)
         info("Joystick %d disconnected", jid);
 }
 
+static void errorCallback(int errorCode, const char* description)
+{
+    error("[GLFW:%d] %s", errorCode, description);
+}
+
 static void windowKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (action == GLFW_PRESS)
@@ -120,6 +125,7 @@ bool Application::init(StyleEnum style)
     Application::gamepad        = {};
 
     // Init glfw
+    glfwSetErrorCallback(errorCallback);
     glfwInitHint(GLFW_JOYSTICK_HAT_BUTTONS, GLFW_FALSE);
     if (!glfwInit())
     {

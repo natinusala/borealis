@@ -41,6 +41,7 @@ TARGET		:=	borealis_example
 BUILD		:=	build.nx
 SOURCES		:=	example
 DATA		:=	data
+ICON		:=	resources/icon/borealis.jpg
 INCLUDES	:=	example
 ROMFS		:=	resources
 APP_TITLE	:=	borealis example

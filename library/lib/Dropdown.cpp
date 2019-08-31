@@ -31,7 +31,6 @@
 
 Dropdown::Dropdown(string title, vector<string> values, DropdownListener listener, size_t selected) :
     title(title),
-    selectedValue(selected),
     listener(listener)
 {
     Style *style = Application::getStyle();

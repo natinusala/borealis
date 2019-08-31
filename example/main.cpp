@@ -55,10 +55,10 @@ int main(int argc, char* argv[])
     ListItem *popupItem = new ListItem("Open popup");
     popupItem->setClickListener([](View *view){ 
         TabFrame *popupTabFrame = new TabFrame();
-        popupTabFrame->addTab("Red", new Rectangle(nvgRGB(0xFF, 0x00, 0x00)));
-        popupTabFrame->addTab("Green", new Rectangle(nvgRGB(0x00, 0xFF, 0x00)));
-        popupTabFrame->addTab("Blue", new Rectangle(nvgRGB(0x00, 0x00, 0xFF)));
-        PopupFrame::open("Shrek", "romfs:/icon/shrek.png", popupTabFrame, "Shrek", "Shrek"); 
+        popupTabFrame->addTab("Red", new Rectangle(nvgRGB(255, 0, 0)));
+        popupTabFrame->addTab("Green", new Rectangle(nvgRGB(0, 255, 0)));
+        popupTabFrame->addTab("Blue", new Rectangle(nvgRGB(0, 0, 255)));
+        PopupFrame::open("Popup title", ASSET("icon/borealis.jpg"), popupTabFrame, "Subtitle left", "Subtitle right"); 
     });
 
     ListItem *installerItem = new ListItem("Open example installer");

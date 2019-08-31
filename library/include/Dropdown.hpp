@@ -45,7 +45,6 @@ class Dropdown : public View
         string title;
 
         int valuesCount;
-        unsigned selectedValue;
 
         DropdownListener listener;
 

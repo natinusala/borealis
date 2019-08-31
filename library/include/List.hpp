@@ -54,8 +54,6 @@ class ListItem : public View
 
         bool indented = false;
 
-        bool valueIsIcon = false;
-
         void resetValueAnimation();
 
     public:
