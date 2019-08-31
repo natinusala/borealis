@@ -152,6 +152,8 @@ class View
         void drawHint(FrameContext *ctx, unsigned x, unsigned y, unsigned width, unsigned height);
 
     public:
+        string id;    
+    
         void setBoundaries(int x, int y, unsigned width, unsigned height);
 
         void setBackground(Background background);
