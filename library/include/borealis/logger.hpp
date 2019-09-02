@@ -1,7 +1,6 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2019  natinusala
-    Copyright (C) 2019  WerWolv
     Copyright (C) 2019  p-sam
 
     This program is free software: you can redistribute it and/or modify
@@ -18,26 +17,33 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <switch.h>
-#include <unistd.h>
+#pragma once
 
-static int nxlink_sock = -1;
+#include <stdarg.h>
 
-void userAppInit()
+#include <string>
+
+namespace brls
 {
-    romfsInit();
-    socketInitializeDefault();
-    nxlink_sock = nxlinkStdio();
-    plInitialize();
-    setsysInitialize();
-}
 
-void userAppExit()
+enum class LogLevel
 {
-    if (nxlink_sock != -1)
-        close(nxlink_sock);
-    socketExit();
-    romfsExit();
-    plExit();
-    setsysExit();
-}
+    ERROR = 0,
+    INFO,
+    DEBUG
+};
+
+class Logger
+{
+  public:
+    static void setLogLevel(LogLevel logLevel);
+
+    static void error(const char* format, ...);
+    static void info(const char* format, ...);
+    static void debug(const char* format, ...);
+
+  protected:
+    static void log(LogLevel logLevel, const char* prefix, const char* format, va_list ap);
+};
+
+} // namespace brls

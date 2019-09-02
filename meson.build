@@ -9,8 +9,8 @@ subdir('library')
 
 example_files = files(
     'example/main.cpp',
-    'example/SampleInstallerPage.cpp',
-    'example/SampleLoadingPage.cpp'
+    'example/sample_installer_page.cpp',
+    'example/sample_loading_page.cpp'
 )
 
 borealis_example = executable(

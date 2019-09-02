@@ -1,6 +1,5 @@
 /*
     Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2019  natinusala
     Copyright (C) 2019  WerWolv
     Copyright (C) 2019  p-sam
 
@@ -18,26 +17,19 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <switch.h>
-#include <unistd.h>
+#pragma once
 
-static int nxlink_sock = -1;
+#include <functional>
+#include <string>
 
-void userAppInit()
+namespace brls
 {
-    romfsInit();
-    socketInitializeDefault();
-    nxlink_sock = nxlinkStdio();
-    plInitialize();
-    setsysInitialize();
-}
 
-void userAppExit()
+class Swkbd
 {
-    if (nxlink_sock != -1)
-        close(nxlink_sock);
-    socketExit();
-    romfsExit();
-    plExit();
-    setsysExit();
-}
+  public:
+    static bool openForText(std::function<void(std::string)> f, std::string headerText = "", std::string subText = "", int maxStringLength = 32, std::string initialText = "");
+    static bool openForNumber(std::function<void(int)> f, std::string headerText = "", std::string subText = "", int maxStringLength = 32, std::string initialText = "", std::string leftButton = "", std::string rightButton = "");
+};
+
+} // namespace brls

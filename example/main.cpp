@@ -1,6 +1,7 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2019  natinusala
+    Copyright (C) 2019  p-sam
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,59 +19,58 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#include <borealis.hpp>
 #include <string>
 
-#include <Borealis.hpp>
-
-#include <SampleInstallerPage.hpp>
-#include <SampleLoadingPage.hpp>
-
-using namespace std;
+#include "sample_installer_page.hpp"
+#include "sample_loading_page.hpp"
 
 int main(int argc, char* argv[])
 {
     // Init the app
-    setLogLevel(LogLevel::DEBUG);
+    brls::Logger::setLogLevel(brls::LogLevel::DEBUG);
 
-    if (!Application::init(StyleEnum::ACCURATE))
+    if (!brls::Application::init(brls::StyleEnum::ACCURATE))
     {
-        error("Unable to init Borealis application");
+        brls::Logger::error("Unable to init Borealis application");
         return EXIT_FAILURE;
     }
 
     // Create a sample view
-    TabFrame *rootFrame = new TabFrame();
+    brls::TabFrame* rootFrame = new brls::TabFrame();
     rootFrame->setTitle("Borealis Example App");
 
-    List *testList = new List();
-    ListItem *themeItem = new ListItem("TV Resolution");
+    brls::List* testList = new brls::List();
+
+    brls::ListItem* themeItem = new brls::ListItem("TV Resolution");
     themeItem->setValue("Automatic");
 
-    ListItem *jankItem = new ListItem("User Interface Jank", "Some people believe homebrews to have a jank user interface. Set to Minimal to have a native look and feel, set to Maximal to have a SX OS look and feel.");
+    brls::ListItem* jankItem = new brls::ListItem("User Interface Jank", "Some people believe homebrews to have a jank user interface. Set to Minimal to have a native look and feel, set to Maximal to have a SX OS look and feel.");
     jankItem->setValue("Minimal");
 
-    ListItem *crashItem = new ListItem("Divide by 0", "Can the Switch do it?");
-    crashItem->setClickListener([](View *view){ Application::crash("The software was closed because an error occured:\nSIGABRT (signal 6)"); });
+    brls::ListItem* crashItem = new brls::ListItem("Divide by 0", "Can the Switch do it?");
+    crashItem->setClickListener([](brls::View* view) { brls::Application::crash("The software was closed because an error occured:\nSIGABRT (signal 6)"); });
 
-    ListItem *popupItem = new ListItem("Open popup");
-    popupItem->setClickListener([](View *view){ 
-        TabFrame *popupTabFrame = new TabFrame();
-        popupTabFrame->addTab("Red", new Rectangle(nvgRGB(255, 0, 0)));
-        popupTabFrame->addTab("Green", new Rectangle(nvgRGB(0, 255, 0)));
-        popupTabFrame->addTab("Blue", new Rectangle(nvgRGB(0, 0, 255)));
-        PopupFrame::open("Popup title", ASSET("icon/borealis.jpg"), popupTabFrame, "Subtitle left", "Subtitle right"); 
+    brls::ListItem* popupItem = new brls::ListItem("Open popup");
+    popupItem->setClickListener([](brls::View* view) {
+        brls::TabFrame* popupTabFrame = new brls::TabFrame();
+        popupTabFrame->addTab("Red", new brls::Rectangle(nvgRGB(255, 0, 0)));
+        popupTabFrame->addTab("Green", new brls::Rectangle(nvgRGB(0, 255, 0)));
+        popupTabFrame->addTab("Blue", new brls::Rectangle(nvgRGB(0, 0, 255)));
+        brls::PopupFrame::open("Popup title", ASSET("icon/borealis.jpg"), popupTabFrame, "Subtitle left", "Subtitle right");
     });
 
-    ListItem *installerItem = new ListItem("Open example installer");
-    installerItem->setClickListener([](View *view) {
-        StagedAppletFrame *stagedFrame = new StagedAppletFrame();
+    brls::ListItem* installerItem = new brls::ListItem("Open example installer");
+    installerItem->setClickListener([](brls::View* view) {
+        brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
         stagedFrame->setTitle("My great installer");
 
         stagedFrame->addStage(new SampleInstallerPage(stagedFrame, "Go to step 2"));
         stagedFrame->addStage(new SampleLoadingPage(stagedFrame));
         stagedFrame->addStage(new SampleInstallerPage(stagedFrame, "Finish"));
 
-        Application::pushView(stagedFrame);
+        brls::Application::pushView(stagedFrame);
     });
 
     testList->addView(themeItem);
@@ -79,20 +79,21 @@ int main(int argc, char* argv[])
     testList->addView(installerItem);
     testList->addView(popupItem);
 
-    Label *testLabel = new Label(LabelStyle::REGULAR, "For more information about how to use Nintendo Switch and its features, please refer to the Nintendo Support Website on your smart device or PC.", true);
+    brls::Label* testLabel = new brls::Label(brls::LabelStyle::REGULAR, "For more information about how to use Nintendo Switch and its features, please refer to the Nintendo Support Website on your smart device or PC.", true);
     testList->addView(testLabel);
 
     rootFrame->addTab("First tab", testList);
-    rootFrame->addTab("Second tab", new Rectangle(nvgRGB(0, 0, 255)));
+    rootFrame->addTab("Second tab", new brls::Rectangle(nvgRGB(0, 0, 255)));
     rootFrame->addSeparator();
-    rootFrame->addTab("Third tab", new Rectangle(nvgRGB(255, 0, 0)));
-    rootFrame->addTab("Fourth tab", new Rectangle(nvgRGB(0, 255, 0)));
+    rootFrame->addTab("Third tab", new brls::Rectangle(nvgRGB(255, 0, 0)));
+    rootFrame->addTab("Fourth tab", new brls::Rectangle(nvgRGB(0, 255, 0)));
 
     // Add the root view to the stack
-    Application::pushView(rootFrame);
+    brls::Application::pushView(rootFrame);
 
     // Run the app
-    while (Application::mainLoop());
+    while (brls::Application::mainLoop())
+        ;
 
     // Exit
     return EXIT_SUCCESS;

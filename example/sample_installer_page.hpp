@@ -1,7 +1,7 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2019  natinusala
-    Copyright (C) 2019  WerWolv
+    Copyright (C) 2019  Billy Laws
     Copyright (C) 2019  p-sam
 
     This program is free software: you can redistribute it and/or modify
@@ -18,26 +18,20 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <switch.h>
-#include <unistd.h>
+#pragma once
 
-static int nxlink_sock = -1;
+#include <borealis.hpp>
 
-void userAppInit()
+class SampleInstallerPage : public brls::View
 {
-    romfsInit();
-    socketInitializeDefault();
-    nxlink_sock = nxlinkStdio();
-    plInitialize();
-    setsysInitialize();
-}
+  private:
+    brls::Button* button;
+    brls::Label* label;
 
-void userAppExit()
-{
-    if (nxlink_sock != -1)
-        close(nxlink_sock);
-    socketExit();
-    romfsExit();
-    plExit();
-    setsysExit();
-}
+  public:
+    SampleInstallerPage(brls::StagedAppletFrame* frame, std::string label);
+
+    void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, brls::Style* style, brls::FrameContext* ctx) override;
+    void layout(NVGcontext* vg, brls::Style* style, brls::FontStash* stash) override;
+    brls::View* requestFocus(brls::FocusDirection direction, brls::View* oldFocus, bool fromUp = false) override;
+};

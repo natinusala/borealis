@@ -1,7 +1,6 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2019  natinusala
-    Copyright (C) 2019  WerWolv
     Copyright (C) 2019  p-sam
 
     This program is free software: you can redistribute it and/or modify
@@ -18,26 +17,31 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <switch.h>
-#include <unistd.h>
+#pragma once
 
-static int nxlink_sock = -1;
+#include <nanovg.h>
 
-void userAppInit()
+#include <borealis/style.hpp>
+#include <borealis/theme.hpp>
+
+namespace brls
 {
-    romfsInit();
-    socketInitializeDefault();
-    nxlink_sock = nxlinkStdio();
-    plInitialize();
-    setsysInitialize();
-}
 
-void userAppExit()
+class FontStash
 {
-    if (nxlink_sock != -1)
-        close(nxlink_sock);
-    socketExit();
-    romfsExit();
-    plExit();
-    setsysExit();
-}
+  public:
+    int regular       = 0;
+    int material      = 0;
+    int sharedSymbols = 0;
+};
+
+class FrameContext
+{
+  public:
+    NVGcontext* vg       = nullptr;
+    float pixelRatio     = 0.0;
+    FontStash* fontStash = nullptr;
+    Theme* theme         = nullptr;
+};
+
+} // namespace brls

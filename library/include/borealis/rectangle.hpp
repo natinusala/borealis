@@ -1,7 +1,6 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2019  natinusala
-    Copyright (C) 2019  WerWolv
     Copyright (C) 2019  p-sam
 
     This program is free software: you can redistribute it and/or modify
@@ -18,26 +17,31 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <switch.h>
-#include <unistd.h>
+#pragma once
 
-static int nxlink_sock = -1;
+#include <borealis/frame_context.hpp>
+#include <borealis/view.hpp>
 
-void userAppInit()
+namespace brls
 {
-    romfsInit();
-    socketInitializeDefault();
-    nxlink_sock = nxlinkStdio();
-    plInitialize();
-    setsysInitialize();
-}
 
-void userAppExit()
+// A solid color rectangle
+class Rectangle : public View
 {
-    if (nxlink_sock != -1)
-        close(nxlink_sock);
-    socketExit();
-    romfsExit();
-    plExit();
-    setsysExit();
-}
+  protected:
+    void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
+
+  public:
+    Rectangle(NVGcolor color);
+
+    void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
+
+    void setColor(NVGcolor color);
+
+    ~Rectangle() {}
+
+  private:
+    NVGcolor color = nvgRGB(0, 0, 255);
+};
+
+} // namespace brls
