@@ -104,20 +104,21 @@ class ListItemGroupSpacing : public Rectangle
 
 // A list item with mutliple choices for its value
 // (will open a Dropdown)
-typedef std::function<void(size_t result)> SelectListener;
+typedef std::function<void(int result)> SelectListener;
 
 class SelectListItem : public ListItem
 {
   public:
-    SelectListItem(std::string label, std::vector<std::string> values, size_t selectedValue = 0);
+    SelectListItem(std::string label, std::vector<std::string> values, unsigned selectedValue = 0);
 
     void setListener(SelectListener listener);
+    void setSelectedValue(unsigned value);
 
   private:
     std::vector<std::string> values;
-    size_t selectedValue;
+    unsigned selectedValue;
 
-    SelectListener listener = [](size_t result) {};
+    SelectListener listener = [](unsigned result) {};
 };
 
 // A list item with a ON/OFF value
