@@ -33,6 +33,9 @@ class Style
         unsigned headerHeightPopup; // PopupFrame
         unsigned footerHeight;
 
+        unsigned imageLeftPadding;
+        unsigned imageTopPadding;
+        unsigned imageSize;
         unsigned separatorSpacing;
 
         unsigned titleSize;

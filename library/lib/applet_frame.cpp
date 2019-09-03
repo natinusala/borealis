@@ -185,7 +185,8 @@ void AppletFrame::layout(NVGcontext* vg, Style* style, FontStash* stash)
     {
         if (this->headerStyle == HeaderStyle::REGULAR)
         {
-            // TODO: Icon
+            this->icon->setBoundaries(style->AppletFrame.imageLeftPadding, style->AppletFrame.imageTopPadding, style->AppletFrame.imageSize, style->AppletFrame.imageSize);
+            this->icon->invalidate();
         }
         else if (this->headerStyle == HeaderStyle::POPUP)
         {
