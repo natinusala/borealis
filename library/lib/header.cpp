@@ -37,7 +37,7 @@ void Header::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height,
 
     // Rectangle
     nvgBeginPath(vg);
-    nvgFillColor(vg, ctx->theme->headerRectangleColor);
+    nvgFillColor(vg, a(ctx->theme->headerRectangleColor));
     nvgRect(vg, x, y + padding, style->Header.rectangleWidth, height - padding * 2);
     nvgFill(vg);
 
@@ -45,7 +45,7 @@ void Header::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height,
     nvgBeginPath(vg);
     nvgFontFaceId(vg, ctx->fontStash->regular);
     nvgFontSize(vg, style->Header.fontSize);
-    nvgFillColor(vg, ctx->theme->textColor);
+    nvgFillColor(vg, a(ctx->theme->textColor));
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
     nvgText(vg, x + style->Header.rectangleWidth + padding, y + height / 2, this->label.c_str(), nullptr);
 
@@ -53,7 +53,7 @@ void Header::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height,
     if (this->separator)
     {
         nvgBeginPath(vg);
-        nvgFillColor(vg, ctx->theme->listItemSeparatorColor);
+        nvgFillColor(vg, a(ctx->theme->listItemSeparatorColor));
         nvgRect(vg, x, y + height, width, 1);
         nvgFill(vg);
     }

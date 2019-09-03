@@ -117,7 +117,7 @@ void ListItem::setThumbnail(std::string imagePath)
     else
         this->thumbnailView = new Image(imagePath);
 
-    this->thumbnailView->setBackground(Background::DEBUG);
+    this->thumbnailView->setParent(this);
     this->thumbnailView->setImageScaleType(ImageScaleType::FIT);
     this->invalidate();
 }
@@ -129,6 +129,7 @@ void ListItem::setThumbnail(unsigned char* buffer, size_t bufferSize)
     else
         this->thumbnailView = new Image(buffer, bufferSize);
 
+    this->thumbnailView->setParent(this);
     this->thumbnailView->setImageScaleType(ImageScaleType::FIT);
     this->invalidate();
 }
