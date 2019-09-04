@@ -36,11 +36,11 @@ class TabFrame : public AppletFrame
     TabFrame();
 
     /**
-         * Adds a tab with given label and view
-         * All tabs and separators must be added
-         * before the TabFrame is itself added to
-         * the view hierarchy
-         */
+     * Adds a tab with given label and view
+     * All tabs and separators must be added
+     * before the TabFrame is itself added to
+     * the view hierarchy
+     */
     void addTab(std::string label, View* view);
     void addSeparator();
 

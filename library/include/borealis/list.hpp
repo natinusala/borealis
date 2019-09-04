@@ -82,11 +82,11 @@ class ListItem : public View
     std::string getLabel();
 
     /**
-         * Sets the value of this list item
-         * (the text on the right)
-         * Set faint to true to have the new value
-         * use a darker color (typically "OFF" labels)
-         */
+     * Sets the value of this list item
+     * (the text on the right)
+     * Set faint to true to have the new value
+     * use a darker color (typically "OFF" labels)
+     */
     void setValue(std::string value, bool faint = false, bool animate = true);
     std::string getValue();
 

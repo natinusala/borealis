@@ -145,8 +145,8 @@ class View
     }
 
     /**
-         * Draws the bottom-right buttons hint
-         */
+      * Draws the bottom-right buttons hint
+      */
     void drawHint(FrameContext* ctx, unsigned x, unsigned y, unsigned width, unsigned height);
 
   public:
@@ -173,108 +173,108 @@ class View
     std::string name() const { return typeid(*this).name(); }
 
     /**
-         * Called each frame
-         * Do not override it to draw your view,
-         * override draw() instead
-         */
+      * Called each frame
+      * Do not override it to draw your view,
+      * override draw() instead
+      */
     virtual void frame(FrameContext* ctx);
 
     /**
-         * Called by frame() to draw
-         * the view onscreen
-         */
+      * Called by frame() to draw
+      * the view onscreen
+      */
     virtual void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) = 0;
 
     /**
-         * Triggered when the view has been
-         * resized and needs to layout its
-         * children
-         */
+      * Triggered when the view has been
+      * resized and needs to layout its
+      * children
+      */
     virtual void layout(NVGcontext* vg, Style* style, FontStash* stash)
     {
         // Nothing to do
     }
 
     /**
-         * Called when the view will appear
-         * on screen, before or after layout()
-         *
-         * Can be called if the view has
-         * already appeared, so be careful
-         */
+      * Called when the view will appear
+      * on screen, before or after layout()
+      *
+      * Can be called if the view has
+      * already appeared, so be careful
+      */
     virtual void willAppear()
     {
         // Nothing to do
     }
 
     /**
-         * Called when the view will disappear
-         * from the screen
-         *
-         * Can be called if the view has
-         * already disappeared, so be careful
-         */
+      * Called when the view will disappear
+      * from the screen
+      *
+      * Can be called if the view has
+      * already disappeared, so be careful
+      */
     virtual void willDisappear()
     {
         // Nothing to do
     }
 
     /**
-         * Called when the show() animation (fade in)
-         * ends
-         */
-    virtual void onShowAnimationEnd(){};
+      * Called when the show() animation (fade in)
+      * ends
+      */
+    virtual void onShowAnimationEnd() {};
 
     /**
-         * Shows the view (fade in animation)
-         *
-         * Called once when the view is
-         * pushed to the view stack
-         *
-         * Not recursive
-         */
+      * Shows the view (fade in animation)
+      *
+      * Called once when the view is
+      * pushed to the view stack
+      *
+      * Not recursive
+      */
     virtual void show(std::function<void(void)> cb, bool animate = true);
 
     /**
-         * Hides the view in a collapse animation
-         */
+      * Hides the view in a collapse animation
+      */
     void collapse(bool animated = true);
 
     bool isCollapsed();
 
     /**
-         * Shows the view in a expand animation (opposite
-         * of collapse)
-         */
+      * Shows the view in a expand animation (opposite
+      * of collapse)
+      */
     void expand(bool animated = true);
 
     /**
-         * Hides the view (fade out animation)
-         *
-         * Called if another view is pushed
-         * on top of this one
-         *
-         * Not recursive
-         */
+      * Hides the view (fade out animation)
+      *
+      * Called if another view is pushed
+      * on top of this one
+      *
+      * Not recursive
+      */
     void hide(std::function<void(void)> cb, bool animated = true);
 
     bool isHidden();
 
     /**
-         * Calls layout() on next frame
-         */
+      * Calls layout() on next frame
+      */
     void invalidate()
     {
         this->dirty = true;
     }
 
     /**
-         * Is this view translucent?
-         *
-         * If you override it please return
-         * <value> || View::isTranslucent()
-         * to keep the fadeIn transition
-         */
+      * Is this view translucent?
+      *
+      * If you override it please return
+      * <value> || View::isTranslucent()
+      * to keep the fadeIn transition
+      */
     virtual bool isTranslucent()
     {
         return fadeIn || forceTranslucent;
@@ -283,22 +283,22 @@ class View
     bool isFocused();
 
     /**
-         * Used to change focus based on controller
-         * directions (up, down, left, right)
-         *
-         * Should return the view that is to be
-         * focused or nullptr if no focusable
-         * view exists in that direction
-         * or if the view itself isn't focusable
-         *
-         * Should return this to give focus
-         * to that one view, or traverse and
-         * return a pointer to a child view
-         *
-         * This method should not be called
-         * directly by the user, use
-         * Application::requestFocus(View*) instead
-         */
+      * Used to change focus based on controller
+      * directions (up, down, left, right)
+      *
+      * Should return the view that is to be
+      * focused or nullptr if no focusable
+      * view exists in that direction
+      * or if the view itself isn't focusable
+      *
+      * Should return this to give focus
+      * to that one view, or traverse and
+      * return a pointer to a child view
+      *
+      * This method should not be called
+      * directly by the user, use
+      * Application::requestFocus(View*) instead
+      */
     virtual View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false)
     {
         if (this->parent)
@@ -308,13 +308,13 @@ class View
     }
 
     /**
-         * Fired when focus is gained
-         */
+      * Fired when focus is gained
+      */
     virtual void onFocusGained();
 
     /**
-         * Fired when focus is lost
-         */
+      * Fired when focus is lost
+      */
     virtual void onFocusLost();
 
     void setFocusListener(EventListener listener);
@@ -324,50 +324,50 @@ class View
     virtual float getAlpha(bool child = false);
 
     /**
-         * Fired when the user "clicks" on the view
-         * either via touch or pressing A
-         *
-         * Should return true if the event
-         * was consumed, false otherwise
-         *
-         * This is the method to override to add custom
-         * click behavior
-         */
+      * Fired when the user "clicks" on the view
+      * either via touch or pressing A
+      *
+      * Should return true if the event
+      * was consumed, false otherwise
+      *
+      * This is the method to override to add custom
+      * click behavior
+      */
     virtual bool onClick() { return false; };
 
     /**
-         * Fired when the user presses "Back" on the view
-         * either via touch (on hint) or pressing B
-         *
-         * Should return true if the event
-         * was consumed, false otherwise
-         *
-         * This is the method to override to add custom
-         * cancel behavior
-         */
+      * Fired when the user presses "Back" on the view
+      * either via touch (on hint) or pressing B
+      *
+      * Should return true if the event
+      * was consumed, false otherwise
+      *
+      * This is the method to override to add custom
+      * cancel behavior
+      */
     virtual bool onCancel()
     {
         return false;
     }
 
     /**
-         * Function to be called when the view is clicked
-         * (calls onClick internally)
-         */
+      * Function to be called when the view is clicked
+      * (calls onClick internally)
+      */
     // TODO: Play click animation here
     void click();
 
     /**
-         * Function to be called when
-         * the cancel button is pressed on this view
-         * (calls onCancel internally)
-         */
+      * Function to be called when
+      * the cancel button is pressed on this view
+      * (calls onCancel internally)
+      */
     void cancel();
 
     /**
-         * Forces this view and its children to use
-         * the specified theme variant
-         */
+      * Forces this view and its children to use
+      * the specified theme variant
+      */
     void overrideThemeVariant(ThemeColors* newTheme);
 
     virtual ~View();

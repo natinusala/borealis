@@ -79,9 +79,9 @@ class BoxLayout : public View
     unsigned marginLeft   = 0;
 
     /**
-         * Should the BoxLayout apply spacing after
-         * this view?
-         */
+      * Should the BoxLayout apply spacing after
+      * this view?
+      */
     virtual void customSpacing(View* current, View* next, int* spacing) {}
 
     virtual View* defaultFocus(View* oldFocus);
@@ -96,37 +96,37 @@ class BoxLayout : public View
     void willDisappear() override;
 
     /**
-         * Sets spacing between views
-         */
+      * Sets spacing between views
+      */
     void setSpacing(unsigned spacing);
     unsigned getSpacing();
 
     /**
-         * Sets margins around views
-         * Bottom (vertical) or right (horizontal) are
-         * only effective if the last child is set to fill
-         */
+      * Sets margins around views
+      * Bottom (vertical) or right (horizontal) are
+      * only effective if the last child is set to fill
+      */
     void setMargins(unsigned top, unsigned right, unsigned bottom, unsigned left);
     void setMarginBottom(unsigned bottom);
 
     /**
-         * Adds a view to this box layout
-         * If fill is set to true, the child will
-         * fill the remaining space
-         */
+      * Adds a view to this box layout
+      * If fill is set to true, the child will
+      * fill the remaining space
+      */
     void addView(View* view, bool fill = false);
 
     /**
-         * Removes the view at specified 
-         * The view will be freed if free
-         * is set to true (defaults to true)
-         */
+      * Removes the view at specified 
+      * The view will be freed if free
+      * is set to true (defaults to true)
+      */
     void removeView(int index, bool free = true);
 
     /**
-         * Returns true if this layout
-         * doesn't contain any views
-         */
+      * Returns true if this layout
+      * doesn't contain any views
+      */
     bool isEmpty();
 
     bool isChildFocused();

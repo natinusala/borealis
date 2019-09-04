@@ -41,40 +41,40 @@ class RepeatingTask
     virtual ~RepeatingTask();
 
     /**
-         * Actual code to run by the task
-         * Must call RepeatingTask::run() !
-         */
+      * Actual code to run by the task
+      * Must call RepeatingTask::run() !
+      */
     virtual void run(retro_time_t currentTime);
 
     /**
-         * Fired when the task starts
-         */
-    virtual void onStart(){};
+      * Fired when the task starts
+      */
+    virtual void onStart() {};
 
     /**
-         * Fired when the task stops
-         */
-    virtual void onStop(){};
+      * Fired when the task stops
+      */
+    virtual void onStop() {};
 
     /**
-         * Starts the task
-         */
+      * Starts the task
+      */
     void start();
 
     /**
-         * Fires the task immediately and delays the
-         * next run
-         */
+      * Fires the task immediately and delays the
+      * next run
+      */
     void fireNow();
 
     /**
-         * Pauses the task without deleting it
-         */
+      * Pauses the task without deleting it
+      */
     void pause();
 
     /**
-         * Stops and deletes the task
-         */
+      * Stops and deletes the task
+      */
     void stop();
 
     retro_time_t getInterval();

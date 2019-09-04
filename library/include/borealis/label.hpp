@@ -67,15 +67,15 @@ class Label : public View
     void setText(std::string text);
 
     /**
-         * Sets the label color
-         */
+     * Sets the label color
+     */
     void setColor(NVGcolor color);
 
     /**
-         * Unsets the label color - it
-         * will now use the default one
-         * for the label style
-         */
+     * Unsets the label color - it
+     * will now use the default one
+     * for the label style
+     */
     void unsetColor();
 };
 

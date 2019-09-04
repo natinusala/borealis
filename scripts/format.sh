@@ -16,6 +16,7 @@ done
 
 function clang_format_run() {
     python ./scripts/run-clang-format.py -r \
+        --clang-format-executable="clang-format-8" \
         --color="$COLOR" \
         --exclude ./library/include/borealis/extern \
         --exclude ./library/lib/extern \

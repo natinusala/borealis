@@ -55,19 +55,19 @@ class Application
     static bool mainLoop();
 
     /**
-         * Pushes a view on this applications's view stack
-         *
-         * The view will automatically be resized to take
-         * the whole screen and layout() will be called
-         *
-         * The view will gain focus if applicable
-         */
+      * Pushes a view on this applications's view stack
+      *
+      * The view will automatically be resized to take
+      * the whole screen and layout() will be called
+      *
+      * The view will gain focus if applicable
+      */
     static void pushView(View* view);
 
     /**
-         * Pops the last pushed view from the stack
-         * and gives focus back where it was before
-         */
+      * Pops the last pushed view from the stack
+      * and gives focus back where it was before
+      */
     static void popView();
 
     static void requestFocus(View* view, FocusDirection direction);
@@ -80,21 +80,21 @@ class Application
     static void onGamepadButtonPressed(char button);
 
     /**
-         * "Crashes" the app (displays a fullscreen CrashFrame)
-         */
+      * "Crashes" the app (displays a fullscreen CrashFrame)
+      */
     static void crash(std::string text);
 
     static void quit();
 
     /**
-         * Blocks any and all user inputs
-         */
+      * Blocks any and all user inputs
+      */
     static void blockInputs();
 
     /**
-         * Unblocks inputs after a call to
-         * blockInputs()
-         */
+      * Unblocks inputs after a call to
+      * blockInputs()
+      */
     static void unblockInputs();
 
     static NVGcontext* getNVGContext();
