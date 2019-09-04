@@ -427,7 +427,6 @@ void Application::onGamepadButtonPressed(char button)
     }
 }
 
-// TODO: Scale properly on docked Switch
 void Application::frame()
 {
     // Frame context
