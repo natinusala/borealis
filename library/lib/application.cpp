@@ -49,6 +49,8 @@
 #include <chrono>
 #include <thread>
 
+// Constants used for scaling as well as
+// creating a window of the right size on PC
 constexpr uint32_t WINDOW_WIDTH    = 1280;
 constexpr uint32_t WINDOW_HEIGHT   = 720;
 constexpr const char* WINDOW_TITLE = WINDOW_NAME;
@@ -67,8 +69,11 @@ static void windowFramebufferSizeCallback(GLFWwindow* window, int width, int hei
     if (!width || !height)
         return;
 
-    Logger::info("Window size changed to %dx%d", width, height);
     glViewport(0, 0, width, height);
+    Application::windowScale = (float)width / (float)WINDOW_WIDTH;
+
+    Logger::info("Window size changed to %dx%d", width, height);
+    Logger::info("New scale factor is %f", Application::windowScale);
 }
 
 static void joystickCallback(int jid, int event)
@@ -161,7 +166,6 @@ bool Application::init(StyleEnum style)
     }
 
     // Configure window
-    glfwSwapInterval(1);
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE);
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, windowFramebufferSizeCallback);
@@ -170,6 +174,7 @@ bool Application::init(StyleEnum style)
 
     // Load OpenGL routines using glad
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+    glfwSwapInterval(1);
 
     Logger::info("GL Vendor: %s", glGetString(GL_VENDOR));
     Logger::info("GL Renderer: %s", glGetString(GL_RENDERER));
@@ -434,6 +439,7 @@ void Application::frame()
     frameContext.theme      = Application::getThemeColors();
 
     nvgBeginFrame(Application::vg, Application::windowWidth, Application::windowHeight, frameContext.pixelRatio);
+    nvgScale(Application::vg, Application::windowScale, Application::windowScale);
 
     // GL Clear
     glClearColor(
@@ -468,6 +474,7 @@ void Application::frame()
         Application::framerateCounter->frame(&frameContext);
 
     // End frame
+    nvgResetTransform(Application::vg); // scale
     nvgEndFrame(Application::vg);
 }
 
@@ -631,7 +638,8 @@ void Application::onWindowSizeChanged()
 
     for (View* view : Application::viewStack)
     {
-        view->setBoundaries(0, 0, Application::windowWidth, Application::windowHeight);
+        float height = ((float)Application::windowWidth / (Application::windowScale * (float)WINDOW_HEIGHT)) * (float)WINDOW_HEIGHT;
+        view->setBoundaries(0, 0, WINDOW_WIDTH, (unsigned)roundf(height));
         view->invalidate();
     }
 

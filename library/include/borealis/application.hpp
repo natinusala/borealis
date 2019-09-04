@@ -108,6 +108,8 @@ class Application
 
     static void setMaximumFPS(unsigned fps);
 
+    inline static float windowScale; // public so that the glfw callback can access it
+
   private:
     inline static GLFWwindow* window;
     inline static NVGcontext* vg;
