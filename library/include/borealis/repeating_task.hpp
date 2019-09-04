@@ -49,12 +49,12 @@ class RepeatingTask
     /**
          * Fired when the task starts
          */
-    virtual void onStart() {};
+    virtual void onStart(){};
 
     /**
          * Fired when the task stops
          */
-    virtual void onStop() {};
+    virtual void onStop(){};
 
     /**
          * Starts the task

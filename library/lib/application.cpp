@@ -125,6 +125,9 @@ bool Application::init(StyleEnum style)
     Application::oldGamepad   = {};
     Application::gamepad      = {};
 
+    // Init theme to defaults
+    Application::setTheme(Theme());
+
     // Init glfw
     glfwSetErrorCallback(errorCallback);
     glfwInitHint(GLFW_JOYSTICK_HAT_BUTTONS, GLFW_FALSE);
@@ -252,15 +255,15 @@ bool Application::init(StyleEnum style)
     setsysGetColorSetId(&theme);
 
     if (theme == ColorSetId_Dark)
-        Application::currentTheme = &themeDark;
+        Application::currentThemeVariant = ThemeVariant_DARK;
     else
-        Application::currentTheme = &themeLight;
+        Application::currentThemeVariant = ThemeVariant_LIGHT;
 #else
     char* themeEnv = getenv("BOREALIS_THEME");
     if (themeEnv != nullptr && !strcasecmp(themeEnv, "DARK"))
-        Application::currentTheme = &themeDark;
+        Application::currentThemeVariant = ThemeVariant_DARK;
     else
-        Application::currentTheme = &themeLight;
+        Application::currentThemeVariant = ThemeVariant_LIGHT;
 #endif
 
     // Init window size
@@ -428,15 +431,15 @@ void Application::frame()
     frameContext.pixelRatio = (float)Application::windowWidth / (float)Application::windowHeight;
     frameContext.vg         = Application::vg;
     frameContext.fontStash  = &Application::fontStash;
-    frameContext.theme      = Application::currentTheme;
+    frameContext.theme      = Application::getThemeColors();
 
     nvgBeginFrame(Application::vg, Application::windowWidth, Application::windowHeight, frameContext.pixelRatio);
 
     // GL Clear
     glClearColor(
-        Application::currentTheme->backgroundColor[0],
-        Application::currentTheme->backgroundColor[1],
-        Application::currentTheme->backgroundColor[2],
+        frameContext.theme->backgroundColor[0],
+        frameContext.theme->backgroundColor[1],
+        frameContext.theme->backgroundColor[2],
         1.0f);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -660,9 +663,19 @@ Style* Application::getStyle()
     return Application::currentStyle;
 }
 
-Theme* Application::getTheme()
+void Application::setTheme(Theme theme)
 {
-    return Application::currentTheme;
+    Application::currentTheme = theme;
+}
+
+ThemeColors* Application::getThemeColors()
+{
+    return &Application::currentTheme.colors[Application::currentThemeVariant];
+}
+
+ThemeColors* Application::getThemeColorsForVariant(ThemeVariant variant)
+{
+    return &Application::currentTheme.colors[variant];
 }
 
 void Application::crash(std::string text)

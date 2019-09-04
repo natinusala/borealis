@@ -24,6 +24,18 @@
 namespace brls
 {
 
+// Theme variants
+// (used in Application)
+//
+// Not an enum class because it's used
+// as an array index in Theme
+enum ThemeVariant
+{
+    ThemeVariant_LIGHT = 0,
+    ThemeVariant_DARK,
+    ThemeVariant_NUMBER_OF_VARIANTS
+};
+
 typedef struct
 {
     float backgroundColor[3]; // gl color
@@ -56,9 +68,15 @@ typedef struct
     NVGcolor spinnerBarColor;
 
     NVGcolor headerRectangleColor;
-} Theme;
+} ThemeColors;
 
-extern Theme themeLight;
-extern Theme themeDark;
+// A theme contains colors for all variants
+class Theme
+{
+  public:
+    ThemeColors colors[ThemeVariant_NUMBER_OF_VARIANTS];
+
+    Theme();
+};
 
 } // namespace brls

@@ -38,7 +38,7 @@ CrashFrame::CrashFrame(std::string text)
     this->button->setParent(this);
     this->button->alpha = 0.0f;
     this->button->setClickListener([](View* view) { Application::quit(); });
-    this->button->overrideTheme(&themeDark);
+    this->button->overrideThemeVariant(Application::getThemeColorsForVariant(ThemeVariant_DARK));
 }
 
 void CrashFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)

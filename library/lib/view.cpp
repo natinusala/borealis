@@ -67,8 +67,8 @@ NVGpaint View::a(NVGpaint paint)
 // TODO: Only draw views that are onscreen (w/ some margins)
 void View::frame(FrameContext* ctx)
 {
-    Style* style    = Application::getStyle();
-    Theme* oldTheme = ctx->theme;
+    Style* style          = Application::getStyle();
+    ThemeColors* oldTheme = ctx->theme;
 
     nvgSave(ctx->vg);
 
@@ -179,7 +179,7 @@ void View::expand(bool animated)
 }
 
 // TODO: Slight glow all around
-void View::drawHighlight(NVGcontext* vg, Theme* theme, float alpha, Style* style, bool background)
+void View::drawHighlight(NVGcontext* vg, ThemeColors* theme, float alpha, Style* style, bool background)
 {
     nvgSave(vg);
     nvgResetScissor(vg);
@@ -613,7 +613,7 @@ void View::cancel()
         this->getParent()->cancel();
 }
 
-void View::overrideTheme(Theme* theme)
+void View::overrideThemeVariant(ThemeColors* theme)
 {
     this->themeOverride = theme;
 }

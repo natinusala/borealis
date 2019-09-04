@@ -73,7 +73,9 @@ class Application
     static void requestFocus(View* view, FocusDirection direction);
 
     static Style* getStyle();
-    static Theme* getTheme();
+    static void setTheme(Theme theme);
+    static ThemeColors* getThemeColors();
+    static ThemeColors* getThemeColorsForVariant(ThemeVariant variant);
 
     static void onGamepadButtonPressed(char button);
 
@@ -121,7 +123,8 @@ class Application
 
     inline static View* currentFocus;
 
-    inline static Theme* currentTheme;
+    inline static Theme currentTheme;
+    inline static ThemeVariant currentThemeVariant;
 
     inline static GLFWgamepadstate oldGamepad;
     inline static GLFWgamepadstate gamepad;
