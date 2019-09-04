@@ -638,7 +638,7 @@ void Application::onWindowSizeChanged()
 
     for (View* view : Application::viewStack)
     {
-        float height = ((float)Application::windowWidth / (Application::windowScale * (float)WINDOW_HEIGHT)) * (float)WINDOW_HEIGHT;
+        float height = ((float)Application::windowHeight / (Application::windowScale * (float)WINDOW_HEIGHT)) * (float)WINDOW_HEIGHT;
         view->setBoundaries(0, 0, WINDOW_WIDTH, (unsigned)roundf(height));
         view->invalidate();
     }
