@@ -43,6 +43,8 @@ CrashFrame::CrashFrame(std::string text)
 
 void CrashFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
+    nvgSave(vg);
+
     // Background
     nvgFillColor(vg, RGB(0, 0, 0));
     nvgBeginPath(vg);
@@ -91,6 +93,8 @@ void CrashFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned hei
 
     // Hint
     this->drawHint(ctx, x, y, width, height);
+
+    nvgRestore(vg);
 }
 
 void CrashFrame::onShowAnimationEnd()
