@@ -77,6 +77,7 @@ void CrashFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned hei
 
     // End scale
     nvgResetTransform(vg);
+    nvgRestore(vg);
 
     // Footer
     nvgBeginPath(vg);
@@ -93,8 +94,6 @@ void CrashFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned hei
 
     // Hint
     this->drawHint(ctx, x, y, width, height);
-
-    nvgRestore(vg);
 }
 
 void CrashFrame::onShowAnimationEnd()
