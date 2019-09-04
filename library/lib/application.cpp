@@ -526,7 +526,7 @@ void Application::resizeFramerateCounter()
     unsigned width                 = WINDOW_WIDTH;
 
     Application::framerateCounter->setBoundaries(
-        width- framerateCounterWidth,
+        width - framerateCounterWidth,
         0,
         framerateCounterWidth,
         style->FramerateCounter.height);
