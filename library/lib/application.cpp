@@ -72,6 +72,11 @@ static void windowFramebufferSizeCallback(GLFWwindow* window, int width, int hei
     glViewport(0, 0, width, height);
     Application::windowScale = (float)width / (float)WINDOW_WIDTH;
 
+    float contentHeight = ((float)height / (Application::windowScale * (float)WINDOW_HEIGHT)) * (float)WINDOW_HEIGHT;
+
+    Application::contentWidth   = WINDOW_WIDTH;
+    Application::contentHeight  = (unsigned) roundf(contentHeight);
+
     Logger::info("Window size changed to %dx%d", width, height);
     Logger::info("New scale factor is %f", Application::windowScale);
 }
@@ -611,7 +616,7 @@ void Application::pushView(View* view)
         });
     }
 
-    view->setBoundaries(0, 0, Application::windowWidth, Application::windowHeight);
+    view->setBoundaries(0, 0, Application::contentWidth, Application::contentHeight);
 
     if (!fadeOutAnimation)
         view->show([]() { Application::unblockInputs(); });
@@ -637,8 +642,7 @@ void Application::onWindowSizeChanged()
 
     for (View* view : Application::viewStack)
     {
-        float height = ((float)Application::windowHeight / (Application::windowScale * (float)WINDOW_HEIGHT)) * (float)WINDOW_HEIGHT;
-        view->setBoundaries(0, 0, WINDOW_WIDTH, (unsigned)roundf(height));
+        view->setBoundaries(0, 0, Application::contentWidth, Application::contentHeight);
         view->invalidate();
     }
 
