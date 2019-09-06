@@ -51,7 +51,12 @@ class FramerateCounter : public Label
 class Application
 {
   public:
-    static bool init(StyleEnum style);
+    //Init with default style and theme (as close to HOS as possible)
+    static bool init();
+
+    // Init with given style and theme
+    static bool init(Style style, Theme theme);
+
     static bool mainLoop();
 
     /**
@@ -133,7 +138,7 @@ class Application
     inline static GLFWgamepadstate oldGamepad;
     inline static GLFWgamepadstate gamepad;
 
-    inline static Style* currentStyle;
+    inline static Style currentStyle;
 
     inline static unsigned blockInputsTokens = 0; // any value > 0 means inputs are blocked
 
@@ -144,8 +149,6 @@ class Application
     static inline float frameTime = 0.0f;
 
     static void onWindowSizeChanged();
-
-    static void setStyle(StyleEnum style);
 
     static void resizeFramerateCounter();
 

@@ -23,192 +23,194 @@
 namespace brls
 {
 
-Style styleAccurate = {
-    AppletFrame : {
-        headerHeightRegular : 88,
-        headerHeightPopup : 129,
-        footerHeight : 73,
+Style Style::horizon()
+{
+    Style style = Style();
 
-        separatorSpacing : 30,
+    style.AppletFrame = {
+        .headerHeightRegular = 88,
+        .headerHeightPopup   = 129,
+        .footerHeight        = 73,
 
-        titleSize : 28,
-        titleStart : 130,
-        titleOffset : 5,
+        .separatorSpacing = 30,
 
-        footerTextSize : 22,
-        footerHintSize : 26,
-        footerTextSpacing : 30
-    },
+        .titleSize   = 28,
+        .titleStart  = 130,
+        .titleOffset = 5,
 
-    Highlight : {
-        strokeWidth : 5,
-        cornerRadius : 0.5f,
+        .footerTextSize    = 22,
+        .footerHintSize    = 26,
+        .footerTextSpacing = 30
+    };
 
-        shadowWidth : 2,
-        shadowOffset : 10,
-        shadowFeather : 10,
-        shadowOpacity : 128
-    },
+    style.Highlight = {
+        .strokeWidth  = 5,
+        .cornerRadius = 0.5f,
 
-    Background : {
-        sidebarBorderHeight : 16
-    },
+        .shadowWidth   = 2,
+        .shadowOffset  = 10,
+        .shadowFeather = 10,
+        .shadowOpacity = 128
+    };
 
-    Sidebar : {
-        width : 410,
-        spacing : 0,
+    style.Background = {
+        .sidebarBorderHeight = 16
+    };
 
-        marginLeft : 88,
-        marginRight : 30,
-        marginTop : 40,
-        marginBottom : 40,
+    style.Sidebar = {
+        .width   = 410,
+        .spacing = 0,
 
-        Item : {
-            height : 70,
-            textSize : 22,
-            padding : 9,
+        .marginLeft   = 88,
+        .marginRight  = 30,
+        .marginTop    = 40,
+        .marginBottom = 40,
 
-            textOffsetX : 14,
-            activeMarkerWidth : 4,
+        .Item = {
+            .height   = 70,
+            .textSize = 22,
+            .padding  = 9,
+
+            .textOffsetX       = 14,
+            .activeMarkerWidth = 4,
         },
 
-        Separator : {
-            height : 28
-        }
-    },
+        .Separator = { .height = 28 }
+    };
 
-    List : {
-        marginLeftRight : 60,
-        marginTopBottom : 42,
-        spacing : 61,
+    style.List = {
+        .marginLeftRight = 60,
+        .marginTopBottom = 42,
+        .spacing         = 61,
 
-        Item : {
-            height : 69, // offset by 1 to have the highlight hide the separator
-            heightWithSubLabel : 99,
-            valueSize : 20,
-            padding : 15,
-            thumbnailPadding : 11,
+        .Item = {
+            .height             = 69, // offset by 1 to have the highlight hide the separator
+            .heightWithSubLabel = 99,
+            .valueSize          = 20,
+            .padding            = 15,
+            .thumbnailPadding   = 11,
 
-            descriptionIndent : 20,
-            descriptionSpacing : 16,
+            .descriptionIndent  = 20,
+            .descriptionSpacing = 16,
 
-            indent : 40,
+            .indent = 40,
 
-            selectRadius : 15
-        }
-    },
+            .selectRadius = 15 }
+    };
 
-    Label : {
-        regularFontSize : 20,
-        mediumFontSize : 18,
-        smallFontSize : 16,
-        descriptionFontSize : 16,
-        crashFontSize : 24,
-        buttonFontSize : 24,
-        listItemFontSize : 24,
-        lineHeight : 1.65f
-    },
+    style.Label = {
+        .regularFontSize     = 20,
+        .mediumFontSize      = 18,
+        .smallFontSize       = 16,
+        .descriptionFontSize = 16,
+        .crashFontSize       = 24,
+        .buttonFontSize      = 24,
+        .listItemFontSize    = 24,
+        .lineHeight          = 1.65f
+    };
 
-    CrashFrame : {
-        labelWidth : 0.60f,
-        boxStrokeWidth : 5,
-        boxSize : 64,
-        boxSpacing : 90,
-        buttonWidth : 356,
-        buttonHeight : 60,
-        buttonSpacing : 47
-    },
+    style.CrashFrame = {
+        .labelWidth     = 0.60f,
+        .boxStrokeWidth = 5,
+        .boxSize        = 64,
+        .boxSpacing     = 90,
+        .buttonWidth    = 356,
+        .buttonHeight   = 60,
+        .buttonSpacing  = 47
+    };
 
-    Button : {
-        cornerRadius : 0.5f, // TODO: Adjust that
-        crashCornerRadius : 5.0f
-    },
+    style.Button = {
+        .cornerRadius      = 0.5f, // TODO: Adjust that
+        .crashCornerRadius = 5.0f
+    };
 
-    TableRow : {
-        headerHeight : 60,
-        headerTextSize : 22,
+    style.TableRow = {
+        .headerHeight   = 60,
+        .headerTextSize = 22,
 
-        bodyHeight : 38,
-        bodyIndent : 40,
-        bodyTextSize : 18,
+        .bodyHeight   = 38,
+        .bodyIndent   = 40,
+        .bodyTextSize = 18,
 
-        padding : 15
-    },
+        .padding = 15
+    };
 
-    Dropdown : {
-        listWidth : 720,
-        listPadding : 40,
+    style.Dropdown = {
+        .listWidth   = 720,
+        .listPadding = 40,
 
-        listItemHeight : 60,
-        listItemTextSize : 20,
+        .listItemHeight   = 60,
+        .listItemTextSize = 20,
 
-        headerHeight : 71,
-        headerFontSize : 24,
-        headerPadding : 70
-    },
+        .headerHeight   = 71,
+        .headerFontSize = 24,
+        .headerPadding  = 70
+    };
 
-    PopupFrame : {
-        edgePadding : 120,
-        separatorSpacing : 30,
-        footerHeight : 73,
-        imageLeftPadding : 60,
-        imageTopPadding : 17,
-        imageSize : 100,
-        contentWidth : 1040,
-        contentHeight : 518,
+    style.PopupFrame = {
+        .edgePadding      = 120,
+        .separatorSpacing = 30,
+        .footerHeight     = 73,
+        .imageLeftPadding = 60,
+        .imageTopPadding  = 17,
+        .imageSize        = 100,
+        .contentWidth     = 1040,
+        .contentHeight    = 518,
 
-        headerTextLeftPadding : 180,
-        headerTextTopPadding : 64,
+        .headerTextLeftPadding = 180,
+        .headerTextTopPadding  = 64,
 
-        subTitleLeftPadding : 182,
-        subTitleTopPadding : 95,
-        subTitleSpacing : 20,
+        .subTitleLeftPadding = 182,
+        .subTitleTopPadding  = 95,
+        .subTitleSpacing     = 20,
 
-        subTitleSeparatorLeftPadding : 280,
-        subTitleSeparatorTopPadding : 92,
-        subTitleSeparatorHeight : 20,
+        .subTitleSeparatorLeftPadding = 280,
+        .subTitleSeparatorTopPadding  = 92,
+        .subTitleSeparatorHeight      = 20,
 
-        headerFontSize : 28,
-        subTitleFontSize : 16
-    },
+        .headerFontSize   = 28,
+        .subTitleFontSize = 16
+    };
 
-    StagedAppletFrame : {
-        progressIndicatorSpacing : 4,
-        progressIndicatorRadiusUnselected : 5 - 1, // minus half of border width
-        progressIndicatorRadiusSelected : 8,
-        progressIndicatorBorderWidth : 2
-    },
+    style.StagedAppletFrame = {
+        .progressIndicatorSpacing          = 4,
+        .progressIndicatorRadiusUnselected = 5 - 1, // minus half of border width
+        .progressIndicatorRadiusSelected   = 8,
+        .progressIndicatorBorderWidth      = 2
+    };
 
-    ProgressSpinner : {
-        centerGapMultiplier : 0.2f,
-        barWidthMultiplier : 0.06f
-    },
+    style.ProgressSpinner = {
+        .centerGapMultiplier = 0.2f,
+        .barWidthMultiplier  = 0.06f
+    };
 
-    ProgressDisplay : {
-        percentageLabelWidth : 70
-    },
+    style.ProgressDisplay = {
+        .percentageLabelWidth = 70
+    };
 
-    Header : {
-        height : 44,
-        padding : 11,
+    style.Header = {
+        .height  = 44,
+        .padding = 11,
 
-        rectangleWidth : 5,
+        .rectangleWidth = 5,
 
-        fontSize : 18
-    },
+        .fontSize = 18
+    };
 
-    FramerateCounter : {
-        width : 125,
-        height : 26
-    },
+    style.FramerateCounter = {
+        .width  = 125,
+        .height = 26
+    };
 
-    AnimationDuration : {
-        show : 250,
-        highlight : 100,
-        shake : 15,
-        collapse : 100,
-        progress : 1000
-    }
-};
+    style.AnimationDuration = {
+        .show      = 250,
+        .highlight = 100,
+        .shake     = 15,
+        .collapse  = 100,
+        .progress  = 1000
+    };
+
+    return style;
+}
 
 } // namespace brls

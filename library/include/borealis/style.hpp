@@ -23,8 +23,9 @@
 namespace brls
 {
 
-typedef struct
+class Style
 {
+  public:
     // AppletFrame
     struct
     {
@@ -251,14 +252,11 @@ typedef struct
         unsigned collapse;
         unsigned progress;
     } AnimationDuration;
-} Style;
 
-// TODO: Make a condensed style
-enum class StyleEnum
-{
-    ACCURATE = 0 // as close to HOS as possible
+    // As close to HOS as possible
+    static Style horizon();
+
+    // TODO: Make a condensed style
 };
-
-extern Style styleAccurate;
 
 } // namespace brls

@@ -74,8 +74,8 @@ static void windowFramebufferSizeCallback(GLFWwindow* window, int width, int hei
 
     float contentHeight = ((float)height / (Application::windowScale * (float)WINDOW_HEIGHT)) * (float)WINDOW_HEIGHT;
 
-    Application::contentWidth   = WINDOW_WIDTH;
-    Application::contentHeight  = (unsigned) roundf(contentHeight);
+    Application::contentWidth  = WINDOW_WIDTH;
+    Application::contentHeight = (unsigned)roundf(contentHeight);
 
     Logger::info("Window size changed to %dx%d", width, height);
     Logger::info("New scale factor is %f", Application::windowScale);
@@ -127,16 +127,21 @@ static void windowKeyCallback(GLFWwindow* window, int key, int scancode, int act
     }
 }
 
-bool Application::init(StyleEnum style)
+bool Application::init()
+{
+    return Application::init(Style::horizon(), Theme::horizon());
+}
+
+bool Application::init(Style style, Theme theme)
 {
     // Init static variables
-    setStyle(style);
+    Application::currentStyle = style;
     Application::currentFocus = nullptr;
     Application::oldGamepad   = {};
     Application::gamepad      = {};
 
     // Init theme to defaults
-    Application::setTheme(Theme());
+    Application::setTheme(theme);
 
     // Init glfw
     glfwSetErrorCallback(errorCallback);
@@ -261,10 +266,10 @@ bool Application::init(StyleEnum style)
 
     // Load theme
 #ifdef __SWITCH__
-    ColorSetId theme;
-    setsysGetColorSetId(&theme);
+    ColorSetId nxTheme;
+    setsysGetColorSetId(&nxTheme);
 
-    if (theme == ColorSetId_Dark)
+    if (nxTheme == ColorSetId_Dark)
         Application::currentThemeVariant = ThemeVariant_DARK;
     else
         Application::currentThemeVariant = ThemeVariant_LIGHT;
@@ -660,18 +665,9 @@ void Application::clear()
     Application::viewStack.clear();
 }
 
-void Application::setStyle(StyleEnum style)
-{
-    switch (style)
-    {
-        case StyleEnum::ACCURATE:
-            Application::currentStyle = &styleAccurate;
-    }
-}
-
 Style* Application::getStyle()
 {
-    return Application::currentStyle;
+    return &Application::currentStyle;
 }
 
 void Application::setTheme(Theme theme)

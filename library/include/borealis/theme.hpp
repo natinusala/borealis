@@ -76,7 +76,8 @@ class Theme
   public:
     ThemeValues colors[ThemeVariant_NUMBER_OF_VARIANTS];
 
-    Theme();
+    // As close to HOS as possible
+    static Theme horizon();
 };
 
 } // namespace brls
