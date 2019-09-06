@@ -68,13 +68,13 @@ typedef struct
     NVGcolor spinnerBarColor;
 
     NVGcolor headerRectangleColor;
-} ThemeColors;
+} ThemeValues;
 
 // A theme contains colors for all variants
 class Theme
 {
   public:
-    ThemeColors colors[ThemeVariant_NUMBER_OF_VARIANTS];
+    ThemeValues colors[ThemeVariant_NUMBER_OF_VARIANTS];
 
     Theme();
 };

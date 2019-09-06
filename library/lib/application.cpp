@@ -440,7 +440,7 @@ void Application::frame()
     frameContext.pixelRatio = (float)Application::windowWidth / (float)Application::windowHeight;
     frameContext.vg         = Application::vg;
     frameContext.fontStash  = &Application::fontStash;
-    frameContext.theme      = Application::getThemeColors();
+    frameContext.theme      = Application::getThemeValues();
 
     nvgBeginFrame(Application::vg, Application::windowWidth, Application::windowHeight, frameContext.pixelRatio);
     nvgScale(Application::vg, Application::windowScale, Application::windowScale);
@@ -679,12 +679,12 @@ void Application::setTheme(Theme theme)
     Application::currentTheme = theme;
 }
 
-ThemeColors* Application::getThemeColors()
+ThemeValues* Application::getThemeValues()
 {
     return &Application::currentTheme.colors[Application::currentThemeVariant];
 }
 
-ThemeColors* Application::getThemeColorsForVariant(ThemeVariant variant)
+ThemeValues* Application::getThemeValuesForVariant(ThemeVariant variant)
 {
     return &Application::currentTheme.colors[variant];
 }

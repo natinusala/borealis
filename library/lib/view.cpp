@@ -68,7 +68,7 @@ NVGpaint View::a(NVGpaint paint)
 void View::frame(FrameContext* ctx)
 {
     Style* style          = Application::getStyle();
-    ThemeColors* oldTheme = ctx->theme;
+    ThemeValues* oldTheme = ctx->theme;
 
     nvgSave(ctx->vg);
 
@@ -179,7 +179,7 @@ void View::expand(bool animated)
 }
 
 // TODO: Slight glow all around
-void View::drawHighlight(NVGcontext* vg, ThemeColors* theme, float alpha, Style* style, bool background)
+void View::drawHighlight(NVGcontext* vg, ThemeValues* theme, float alpha, Style* style, bool background)
 {
     nvgSave(vg);
     nvgResetScissor(vg);
@@ -613,7 +613,7 @@ void View::cancel()
         this->getParent()->cancel();
 }
 
-void View::overrideThemeVariant(ThemeColors* theme)
+void View::overrideThemeVariant(ThemeValues* theme)
 {
     this->themeOverride = theme;
 }

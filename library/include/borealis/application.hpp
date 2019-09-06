@@ -74,8 +74,8 @@ class Application
 
     static Style* getStyle();
     static void setTheme(Theme theme);
-    static ThemeColors* getThemeColors();
-    static ThemeColors* getThemeColorsForVariant(ThemeVariant variant);
+    static ThemeValues* getThemeValues();
+    static ThemeValues* getThemeValuesForVariant(ThemeVariant variant);
 
     static void onGamepadButtonPressed(char button);
 

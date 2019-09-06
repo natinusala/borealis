@@ -31,7 +31,7 @@ TableRow* Table::addRow(TableRowType type, std::string label, std::string value)
 
 void Table::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
-    ThemeColors* theme = ctx->theme;
+    ThemeValues* theme = ctx->theme;
     unsigned yAdvance  = 0;
 
     for (size_t i = 0; i < this->rows.size(); i++)
