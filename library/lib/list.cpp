@@ -18,7 +18,6 @@
 */
 
 #include <math.h>
-#include <retro_math.h>
 
 #include <borealis/animations.hpp>
 #include <borealis/application.hpp>
