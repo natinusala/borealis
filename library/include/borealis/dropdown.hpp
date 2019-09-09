@@ -54,7 +54,7 @@ class Dropdown : public View
     float topOffset; // for slide in animation
 
   protected:
-    unsigned getShowAnimationDuration() override;
+    unsigned getShowAnimationDuration(ViewAnimation animation) override;
 
   public:
     ~Dropdown();
@@ -63,7 +63,7 @@ class Dropdown : public View
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
     View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override;
     bool onCancel() override;
-    void show(std::function<void(void)> cb, bool animate = true) override;
+    void show(std::function<void(void)> cb, bool animate = true, ViewAnimation animation = ViewAnimation::FADE) override;
     void willAppear() override;
 
     static void open(std::string title, std::vector<std::string> values, DropdownListener listener, int selected = -1);

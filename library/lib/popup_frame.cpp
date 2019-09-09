@@ -98,9 +98,9 @@ bool PopupFrame::onCancel()
     return true;
 }
 
-unsigned PopupFrame::getShowAnimationDuration()
+unsigned PopupFrame::getShowAnimationDuration(ViewAnimation animation)
 {
-    return View::getShowAnimationDuration() / 2;
+    return View::getShowAnimationDuration(animation) / 2;
 }
 
 void PopupFrame::layout(NVGcontext* vg, Style* style, FontStash* stash)

@@ -17,6 +17,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <borealis/logger.hpp>
 #include <borealis/rectangle.hpp>
 
 namespace brls
@@ -29,7 +30,12 @@ Rectangle::Rectangle(NVGcolor color)
 
 void Rectangle::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
-    nvgFillColor(vg, a(this->color));
+    NVGcolor color = a(this->color);
+
+    if (color.a == 0.0f)
+        return;
+
+    nvgFillColor(vg, color);
 
     nvgBeginPath(vg);
     nvgRect(vg, x, y, width, height);

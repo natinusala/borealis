@@ -42,6 +42,8 @@ class Style
         unsigned footerTextSize;
         unsigned footerHintSize;
         unsigned footerTextSpacing;
+
+        unsigned slideAnimation;
     } AppletFrame;
 
     // Highlight
@@ -247,9 +249,13 @@ class Style
     struct
     {
         unsigned show;
+        unsigned showSlide;
+
         unsigned highlight;
         unsigned shake;
+
         unsigned collapse;
+
         unsigned progress;
     } AnimationDuration;
 

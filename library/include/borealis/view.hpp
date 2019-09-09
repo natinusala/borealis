@@ -29,6 +29,17 @@
 namespace brls
 {
 
+// The animation to play when
+// pushing or popping a view
+// (implemented in Application)
+enum class ViewAnimation
+{
+    FADE, // the old view fades away and the new one fades in
+    SLIDE_LEFT, // the old view slides out to the left and the new one slides in from the right
+    SLIDE_RIGHT // inverted SLIDE_LEFT
+};
+
+// Focus direction when navigating
 enum class FocusDirection
 {
     NONE = 0,
@@ -38,6 +49,7 @@ enum class FocusDirection
     RIGHT
 };
 
+// View background
 enum class Background
 {
     NONE = 0,
@@ -100,7 +112,7 @@ class View
 
     EventListener focusListener = nullptr;
 
-    virtual unsigned getShowAnimationDuration();
+    virtual unsigned getShowAnimationDuration(ViewAnimation animation);
 
     virtual void getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom, unsigned* left)
     {
@@ -147,7 +159,7 @@ class View
     /**
       * Draws the bottom-right buttons hint
       */
-    void drawHint(FrameContext* ctx, unsigned x, unsigned y, unsigned width, unsigned height);
+    void drawHint(FrameContext* ctx, unsigned x, unsigned y, unsigned width, unsigned height, NVGcolor color);
 
   public:
     void setBoundaries(int x, int y, unsigned width, unsigned height);
@@ -233,7 +245,7 @@ class View
       *
       * Not recursive
       */
-    virtual void show(std::function<void(void)> cb, bool animate = true);
+    virtual void show(std::function<void(void)> cb, bool animate = true, ViewAnimation animation = ViewAnimation::FADE);
 
     /**
       * Hides the view in a collapse animation
@@ -256,7 +268,7 @@ class View
       *
       * Not recursive
       */
-    void hide(std::function<void(void)> cb, bool animated = true);
+    virtual void hide(std::function<void(void)> cb, bool animated = true, ViewAnimation animation = ViewAnimation::FADE);
 
     bool isHidden();
 

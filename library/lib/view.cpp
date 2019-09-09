@@ -114,6 +114,7 @@ void View::frame(FrameContext* ctx)
     // Cleanup
     if (this->themeOverride)
         ctx->theme = oldTheme;
+
     nvgRestore(ctx->vg);
 }
 
@@ -353,7 +354,7 @@ void View::drawBackground(NVGcontext* vg, FrameContext* ctx, Style* style)
 }
 
 // TODO: Make it dynamic somehow
-void View::drawHint(FrameContext* ctx, unsigned x, unsigned y, unsigned width, unsigned height)
+void View::drawHint(FrameContext* ctx, unsigned x, unsigned y, unsigned width, unsigned height, NVGcolor color)
 {
     NVGcontext* vg = ctx->vg;
     Style* style   = Application::getStyle();
@@ -365,7 +366,7 @@ void View::drawHint(FrameContext* ctx, unsigned x, unsigned y, unsigned width, u
 
     unsigned middle = y + height / 2;
 
-    nvgFillColor(vg, a(ctx->theme->textColor));
+    nvgFillColor(vg, color);
     nvgTextAlign(ctx->vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
     std::string okText   = "OK";
@@ -522,14 +523,20 @@ void View::setForceTranslucent(bool translucent)
     this->forceTranslucent = translucent;
 }
 
-unsigned View::getShowAnimationDuration()
+unsigned View::getShowAnimationDuration(ViewAnimation animation)
 {
     Style* style = Application::getStyle();
+
+    if (animation == ViewAnimation::SLIDE_LEFT || animation == ViewAnimation::SLIDE_RIGHT)
+        return style->AnimationDuration.showSlide;
+
     return style->AnimationDuration.show;
 }
 
-void View::show(std::function<void(void)> cb, bool animate)
+void View::show(std::function<void(void)> cb, bool animate, ViewAnimation animation)
 {
+    brls::Logger::debug("Showing %s with animation %d", this->name().c_str(), animation);
+
     this->hidden = false;
 
     menu_animation_ctx_tag tag = (uintptr_t) & this->alpha;
@@ -547,7 +554,7 @@ void View::show(std::function<void(void)> cb, bool animate)
             this->onShowAnimationEnd();
             cb();
         };
-        entry.duration     = this->getShowAnimationDuration();
+        entry.duration     = this->getShowAnimationDuration(animation);
         entry.easing_enum  = EASING_OUT_QUAD;
         entry.subject      = &this->alpha;
         entry.tag          = tag;
@@ -566,8 +573,10 @@ void View::show(std::function<void(void)> cb, bool animate)
     }
 }
 
-void View::hide(std::function<void(void)> cb, bool animated)
+void View::hide(std::function<void(void)> cb, bool animated, ViewAnimation animation)
 {
+    brls::Logger::debug("Hiding %s with animation", this->name().c_str(), animation);
+
     this->hidden = true;
     this->fadeIn = false;
 
@@ -580,7 +589,7 @@ void View::hide(std::function<void(void)> cb, bool animated)
 
         menu_animation_ctx_entry_t entry;
         entry.cb           = [cb](void* userdata) { cb(); };
-        entry.duration     = this->getShowAnimationDuration();
+        entry.duration     = this->getShowAnimationDuration(animation);
         entry.easing_enum  = EASING_OUT_QUAD;
         entry.subject      = &this->alpha;
         entry.tag          = tag;
@@ -593,6 +602,7 @@ void View::hide(std::function<void(void)> cb, bool animated)
     else
     {
         this->alpha = 0.0f;
+        cb();
     }
 }
 

@@ -40,7 +40,12 @@ void AppletFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned he
     if (this->headerStyle == HeaderStyle::REGULAR)
     {
         // Title
-        nvgFillColor(vg, a(ctx->theme->textColor));
+        NVGcolor titleColor = a(ctx->theme->textColor);
+
+        if (this->contentView)
+            titleColor.a *= this->contentView->getAlpha();
+
+        nvgFillColor(vg, titleColor);
         nvgFontSize(vg, style->AppletFrame.titleSize);
         nvgFontFaceId(vg, ctx->fontStash->regular);
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
@@ -50,6 +55,7 @@ void AppletFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned he
 
         // Header
         nvgBeginPath(vg);
+        nvgFillColor(vg, a(ctx->theme->textColor));
         nvgRect(vg, x + style->AppletFrame.separatorSpacing, y + style->AppletFrame.headerHeightRegular - 1, width - style->AppletFrame.separatorSpacing * 2, 1);
         nvgFill(vg);
     }
@@ -107,6 +113,15 @@ void AppletFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned he
     }
 
     // Footer
+    NVGcolor footerColor = a(ctx->theme->textColor);
+
+    if (this->slideIn)
+        footerColor.a = 0.0f;
+    else if (this->slideOut)
+        footerColor.a = 1.0f;
+
+    nvgFillColor(vg, footerColor);
+
     std::string* text = &this->footerText;
 
     if (*text == "")
@@ -118,7 +133,7 @@ void AppletFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned he
     nvgText(vg, x + style->AppletFrame.separatorSpacing + style->AppletFrame.footerTextSpacing, y + height - style->AppletFrame.footerHeight / 2, text->c_str(), nullptr);
 
     // Hint
-    this->drawHint(ctx, x, y, width, height);
+    this->drawHint(ctx, x, y, width, height, footerColor);
 
     // Icon
     if (this->icon)
@@ -134,7 +149,25 @@ void AppletFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned he
 
     // Content view
     if (contentView)
+    {
+        float slideAlpha = 1.0f - this->contentView->alpha;
+
+        if ((this->slideIn && this->animation == ViewAnimation::SLIDE_LEFT) || (this->slideOut && this->animation == ViewAnimation::SLIDE_RIGHT))
+            slideAlpha = 1.0f - slideAlpha;
+
+        int translation = (int)((float)style->AppletFrame.slideAnimation * slideAlpha);
+
+        if ((this->slideIn && this->animation == ViewAnimation::SLIDE_LEFT) || (this->slideOut && this->animation == ViewAnimation::SLIDE_RIGHT))
+            translation -= style->AppletFrame.slideAnimation;
+
+        if (this->slideOut || this->slideIn)
+            nvgTranslate(vg, -translation, 0);
+
         contentView->frame(ctx);
+
+        if (this->slideOut || this->slideIn)
+            nvgTranslate(vg, translation, 0);
+    }
 }
 
 View* AppletFrame::requestFocus(FocusDirection direction, View* oldFocus, bool fromUp)
@@ -263,6 +296,48 @@ void AppletFrame::willDisappear()
 
     if (this->contentView)
         this->contentView->willDisappear();
+}
+
+void AppletFrame::show(std::function<void(void)> cb, bool animated, ViewAnimation animation)
+{
+    this->animation = animation;
+
+    if (animated && (animation == ViewAnimation::SLIDE_LEFT || animation == ViewAnimation::SLIDE_RIGHT) && this->contentView)
+    {
+        this->slideIn = true;
+
+        this->contentView->show([this]() {
+            this->slideIn = false;
+        },
+            true, animation);
+    }
+    else if (this->contentView->isHidden() && this->contentView)
+    {
+        this->contentView->show([]() {}, animated, animation);
+    }
+
+    View::show(cb, animated, animation);
+}
+
+void AppletFrame::hide(std::function<void(void)> cb, bool animated, ViewAnimation animation)
+{
+    this->animation = animation;
+
+    if (animated && (animation == ViewAnimation::SLIDE_LEFT || animation == ViewAnimation::SLIDE_RIGHT) && this->contentView)
+    {
+        this->slideOut = true;
+
+        this->contentView->hide([this, cb]() {
+            this->slideOut = false;
+        },
+            true, animation);
+    }
+    else if (!this->contentView->isHidden() && this->contentView)
+    {
+        this->contentView->hide([]() {}, animated, animation);
+    }
+
+    View::hide(cb, animated, animation);
 }
 
 } // namespace brls

@@ -67,13 +67,13 @@ Dropdown::Dropdown(std::string title, std::vector<std::string> values, DropdownL
     }
 }
 
-void Dropdown::show(std::function<void(void)> cb, bool animate)
+void Dropdown::show(std::function<void(void)> cb, bool animate, ViewAnimation animation)
 {
     View::show(cb);
 
     menu_animation_ctx_entry_t entry;
 
-    entry.duration     = this->getShowAnimationDuration();
+    entry.duration     = this->getShowAnimationDuration(animation);
     entry.easing_enum  = EASING_OUT_QUAD;
     entry.subject      = &this->topOffset;
     entry.tag          = (uintptr_t) nullptr;
@@ -106,7 +106,7 @@ void Dropdown::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heigh
     this->list->frame(ctx);
 
     // Footer
-    this->drawHint(ctx, x, y, width, height);
+    this->drawHint(ctx, x, y, width, height, ctx->theme->textColor); // we purposely don't apply opacity
 
     nvgFillColor(vg, ctx->theme->separatorColor); // we purposely don't apply opacity
 
@@ -143,9 +143,9 @@ bool Dropdown::onCancel()
     return true;
 }
 
-unsigned Dropdown::getShowAnimationDuration()
+unsigned Dropdown::getShowAnimationDuration(ViewAnimation animation)
 {
-    return View::getShowAnimationDuration() / 2;
+    return View::getShowAnimationDuration(animation) / 2;
 }
 
 void Dropdown::layout(NVGcontext* vg, Style* style, FontStash* stash)

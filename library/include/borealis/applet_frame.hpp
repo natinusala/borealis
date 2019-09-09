@@ -49,6 +49,11 @@ class AppletFrame : public View
     unsigned leftPadding  = 0;
     unsigned rightPadding = 0;
 
+    bool slideOut = false;
+    bool slideIn  = false;
+
+    ViewAnimation animation;
+
   protected:
     HeaderStyle headerStyle = HeaderStyle::REGULAR;
 
@@ -61,6 +66,8 @@ class AppletFrame : public View
     View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override;
     void willAppear() override;
     void willDisappear() override;
+    void show(std::function<void(void)> cb, bool animate = true, ViewAnimation animation = ViewAnimation::FADE) override;
+    void hide(std::function<void(void)> cb, bool animated = true, ViewAnimation animation = ViewAnimation::FADE) override;
 
     void setTitle(std::string title);
     void setFooterText(std::string footerText);

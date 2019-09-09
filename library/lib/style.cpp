@@ -40,7 +40,9 @@ Style Style::horizon()
 
         .footerTextSize    = 22,
         .footerHintSize    = 26,
-        .footerTextSpacing = 30
+        .footerTextSpacing = 30,
+
+        .slideAnimation = 20
     };
 
     style.Highlight = {
@@ -204,10 +206,14 @@ Style Style::horizon()
 
     style.AnimationDuration = {
         .show      = 250,
+        .showSlide = 125,
+
         .highlight = 100,
         .shake     = 15,
-        .collapse  = 100,
-        .progress  = 1000
+
+        .collapse = 100,
+
+        .progress = 1000
     };
 
     return style;

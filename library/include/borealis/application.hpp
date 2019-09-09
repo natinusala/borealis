@@ -36,6 +36,7 @@
 namespace brls
 {
 
+// The top-right framerate counter
 class FramerateCounter : public Label
 {
   private:
@@ -67,13 +68,13 @@ class Application
       *
       * The view will gain focus if applicable
       */
-    static void pushView(View* view);
+    static void pushView(View* view, ViewAnimation animation = ViewAnimation::FADE);
 
     /**
       * Pops the last pushed view from the stack
       * and gives focus back where it was before
       */
-    static void popView();
+    static void popView(ViewAnimation animation = ViewAnimation::FADE);
 
     static void requestFocus(View* view, FocusDirection direction);
 

@@ -38,7 +38,7 @@ class PopupFrame : public View
     AppletFrame* contentView = nullptr;
 
   protected:
-    unsigned getShowAnimationDuration() override;
+    unsigned getShowAnimationDuration(ViewAnimation animation) override;
 
   public:
     ~PopupFrame();

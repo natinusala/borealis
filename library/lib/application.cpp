@@ -560,7 +560,7 @@ void Application::requestFocus(View* view, FocusDirection direction)
         oldFocus->shakeHighlight(direction);
 }
 
-void Application::popView()
+void Application::popView(ViewAnimation animation)
 {
     if (Application::viewStack.size() == 0)
         return;
@@ -570,21 +570,36 @@ void Application::popView()
     View* last = Application::viewStack[Application::viewStack.size() - 1];
     last->willDisappear();
 
+    last->setForceTranslucent(true);
+
+    bool wait = animation == ViewAnimation::FADE; // wait for the new view animation to be done before showing the old one?
+
     // Hide animation (and show previous view, if any)
-    last->hide([last]() {
+    last->hide([last, animation, wait]() {
+        last->setForceTranslucent(false);
         Application::viewStack.pop_back();
         delete last;
 
-        if (Application::viewStack.size() > 0)
+        // Animate the old view once the old one
+        // has ended its animation
+        if (Application::viewStack.size() > 0 && wait)
         {
             View* newLast = Application::viewStack[Application::viewStack.size() - 1];
 
             if (newLast->isHidden())
-                newLast->show([]() {});
+                newLast->show([]() {}, true, animation);
         }
 
         Application::unblockInputs();
-    });
+    },
+        true, animation);
+
+    // Animate the old view immediately
+    if (!wait && Application::viewStack.size() > 1)
+    {
+        View* toShow = Application::viewStack[Application::viewStack.size() - 2];
+        toShow->show([]() {}, true, animation);
+    }
 
     // Focus
     if (Application::focusStack.size() > 0)
@@ -598,7 +613,7 @@ void Application::popView()
     }
 }
 
-void Application::pushView(View* view)
+void Application::pushView(View* view, ViewAnimation animation)
 {
     Application::blockInputs();
 
@@ -608,23 +623,39 @@ void Application::pushView(View* view)
     if (Application::viewStack.size() > 0)
         last = Application::viewStack[Application::viewStack.size() - 1];
 
-    bool fadeOutAnimation = last && !last->isTranslucent() && !view->isTranslucent();
+    bool fadeOut = last && !last->isTranslucent() && !view->isTranslucent(); // play the fade out animation?
+    bool wait    = animation == ViewAnimation::FADE; // wait for the old view animation to be done before showing the new one?
 
     // Fade out animation
-    if (fadeOutAnimation)
+    if (fadeOut)
     {
         view->setForceTranslucent(true); // set the new view translucent until the fade out animation is done playing
-        last->hide([]() {
+
+        // Animate the new view directly
+        if (!wait)
+        {
+            view->show([]() {
+                Application::unblockInputs();
+            },
+                true, animation);
+        }
+
+        last->hide([animation, wait]() {
             View* newLast = Application::viewStack[Application::viewStack.size() - 1];
             newLast->setForceTranslucent(false);
-            newLast->show([]() { Application::unblockInputs(); });
-        });
+
+            // Animate the new view once the old one
+            // has ended its animation
+            if (wait)
+                newLast->show([]() { Application::unblockInputs(); }, true, animation);
+        },
+            true, animation);
     }
 
     view->setBoundaries(0, 0, Application::contentWidth, Application::contentHeight);
 
-    if (!fadeOutAnimation)
-        view->show([]() { Application::unblockInputs(); });
+    if (!fadeOut)
+        view->show([]() { Application::unblockInputs(); }, true, animation);
     else
         view->alpha = 0.0f;
 

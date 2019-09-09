@@ -93,7 +93,7 @@ void CrashFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned hei
     this->button->frame(ctx);
 
     // Hint
-    this->drawHint(ctx, x, y, width, height);
+    this->drawHint(ctx, x, y, width, height, ctx->theme->textColor); // we purposely don't apply opacity
 }
 
 void CrashFrame::onShowAnimationEnd()
