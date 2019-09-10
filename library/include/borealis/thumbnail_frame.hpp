@@ -1,7 +1,6 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2019  natinusala
-    Copyright (C) 2019  p-sam
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,43 +16,39 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#pragma once
-
 #include <borealis/applet_frame.hpp>
-#include <borealis/sidebar.hpp>
-#include <string>
-#include <vector>
+#include <borealis/box_layout.hpp>
 
 namespace brls
 {
 
-// An applet frame containing a sidebar on the left with multiple tabs
-class TabFrame : public AppletFrame
+// The sidebar used in ThumbnailFrame
+class ThumbnailSidebar : public View
 {
-  public:
-    TabFrame();
+    public:
+        ThumbnailSidebar();
 
-    /**
-     * Adds a tab with given label and view
-     * All tabs and separators must be added
-     * before the TabFrame is itself added to
-     * the view hierarchy
-     */
-    void addTab(std::string label, View* view);
-    void addSeparator();
+        void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
+};
 
-    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override;
+// An applet frame with a sidebar on the right, containing a thumbnail
+// and a button (similar to the Wi-Fi settings in HOS)
+class ThumbnailFrame : public AppletFrame
+{
+    private:
+        ThumbnailSidebar* sidebar   = nullptr;
+        BoxLayout* boxLayout        = nullptr;
 
-    bool onCancel() override;
+        View* thumbnailContentView = nullptr;
 
-    ~TabFrame();
+    public:
+        ThumbnailFrame();
+        ~ThumbnailFrame();
 
-  private:
-    Sidebar* sidebar;
-    BoxLayout* layout;
-    View* rightPane;
+        void setContentView(View* view) override;
 
-    void switchToView(View* view);
+    protected:
+        void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
 };
 
 } // namespace brls

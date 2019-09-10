@@ -32,6 +32,7 @@ borealis_files = files(
     'lib/image.cpp',
     'lib/header.cpp',
     'lib/popup_frame.cpp',
+    'lib/thumbnail_frame.cpp',
 
     'lib/task_manager.cpp',
     'lib/repeating_task.cpp',

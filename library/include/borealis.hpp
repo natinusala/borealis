@@ -50,3 +50,4 @@
 #include <borealis/table.hpp>
 #include <borealis/theme.hpp>
 #include <borealis/view.hpp>
+#include <borealis/thumbnail_frame.hpp>

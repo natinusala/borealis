@@ -80,8 +80,15 @@ void List::customSpacing(View* current, View* next, int* spacing)
     // Header custom spacing
     else if (dynamic_cast<Header*>(current) || dynamic_cast<Header*>(next))
     {
-        Style* style = Application::getStyle();
-        *spacing     = style->Header.padding;
+        if (dynamic_cast<Header*>(current) && dynamic_cast<ListItem*>(next))
+        {
+            *spacing = 1;
+        }
+        else
+        {
+            Style* style = Application::getStyle();
+            *spacing     = style->Header.padding;
+        }
     }
 }
 

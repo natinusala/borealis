@@ -162,6 +162,12 @@ void BoxLayout::removeView(int index, bool free)
     this->children.erase(this->children.begin() + index);
 }
 
+void BoxLayout::clear(bool free)
+{
+    for (size_t i = 0; i < this->children.size(); i++)
+        this->removeView(i, free);
+}
+
 void BoxLayout::updateScroll(bool animated)
 {
     // Don't scroll if layout hasn't been called yet

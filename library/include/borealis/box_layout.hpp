@@ -124,6 +124,12 @@ class BoxLayout : public View
     void removeView(int index, bool free = true);
 
     /**
+     * Removes all views
+     * from this layout
+     */
+    void clear(bool free = true);
+
+    /**
       * Returns true if this layout
       * doesn't contain any views
       */
