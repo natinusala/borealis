@@ -25,30 +25,30 @@ namespace brls
 // The sidebar used in ThumbnailFrame
 class ThumbnailSidebar : public View
 {
-    public:
-        ThumbnailSidebar();
+  public:
+    ThumbnailSidebar();
 
-        void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
+    void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
 };
 
 // An applet frame with a sidebar on the right, containing a thumbnail
 // and a button (similar to the Wi-Fi settings in HOS)
 class ThumbnailFrame : public AppletFrame
 {
-    private:
-        ThumbnailSidebar* sidebar   = nullptr;
-        BoxLayout* boxLayout        = nullptr;
+  private:
+    ThumbnailSidebar* sidebar = nullptr;
+    BoxLayout* boxLayout      = nullptr;
 
-        View* thumbnailContentView = nullptr;
+    View* thumbnailContentView = nullptr;
 
-    public:
-        ThumbnailFrame();
-        ~ThumbnailFrame();
+  public:
+    ThumbnailFrame();
+    ~ThumbnailFrame();
 
-        void setContentView(View* view) override;
+    void setContentView(View* view) override;
 
-    protected:
-        void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
+  protected:
+    void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
 };
 
 } // namespace brls

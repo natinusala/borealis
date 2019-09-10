@@ -16,13 +16,14 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <borealis/thumbnail_frame.hpp>
 #include <borealis/application.hpp>
+#include <borealis/thumbnail_frame.hpp>
 
 namespace brls
 {
 
-ThumbnailFrame::ThumbnailFrame() : AppletFrame(true, false)
+ThumbnailFrame::ThumbnailFrame()
+    : AppletFrame(true, false)
 {
     // Create the ThumbnailSidebar
     this->sidebar = new ThumbnailSidebar();
@@ -77,9 +78,6 @@ ThumbnailSidebar::ThumbnailSidebar()
 
 void ThumbnailSidebar::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
-
 }
 
 } // namespace brls
-
-
