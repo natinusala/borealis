@@ -246,6 +246,14 @@ class Style
         unsigned height;
     } FramerateCounter;
 
+    // ThumbnailSidebar
+    struct
+    {
+        unsigned marginLeftRight;
+        unsigned marginTopBottom;
+    } ThumbnailSidebar;
+
+    // AnimationDuration
     struct
     {
         unsigned show;

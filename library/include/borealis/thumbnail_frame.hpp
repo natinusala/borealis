@@ -18,6 +18,8 @@
 
 #include <borealis/applet_frame.hpp>
 #include <borealis/box_layout.hpp>
+#include <borealis/button.hpp>
+#include <borealis/image.hpp>
 
 namespace brls
 {
@@ -25,10 +27,19 @@ namespace brls
 // The sidebar used in ThumbnailFrame
 class ThumbnailSidebar : public View
 {
+  private:
+    Image* image   = nullptr;
+    Button* button = nullptr;
+
   public:
     ThumbnailSidebar();
+    ~ThumbnailSidebar();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
+    void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
+
+    void setThumbnail(std::string imagePath);
+    void setThumbnail(unsigned char* buffer, size_t bufferSize);
 };
 
 // An applet frame with a sidebar on the right, containing a thumbnail
@@ -49,6 +60,8 @@ class ThumbnailFrame : public AppletFrame
 
   protected:
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
+
+    ThumbnailSidebar* getSidebar();
 };
 
 } // namespace brls

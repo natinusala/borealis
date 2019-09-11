@@ -204,6 +204,11 @@ Style Style::horizon()
         .height = 26
     };
 
+    style.ThumbnailSidebar = {
+        .marginLeftRight = 109, // = (410 - 192) / 2, image size is 192*192 with a 410px wide sidebar
+        .marginTopBottom = 47
+    };
+
     style.AnimationDuration = {
         .show      = 250,
         .showSlide = 125,

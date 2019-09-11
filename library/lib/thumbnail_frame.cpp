@@ -54,11 +54,16 @@ void ThumbnailFrame::layout(NVGcontext* vg, Style* style, FontStash* stash)
     if (this->thumbnailContentView)
     {
         unsigned sidebarWidth = this->sidebar->getWidth();
-        this->thumbnailContentView->setWidth(this->getWidth() - sidebarWidth);
+        this->thumbnailContentView->setWidth(this->getWidth() - sidebarWidth - this->leftPadding - this->rightPadding);
     }
 
     // Layout the rest
     AppletFrame::layout(vg, style, stash);
+}
+
+ThumbnailSidebar* ThumbnailFrame::getSidebar()
+{
+    return this->sidebar;
 }
 
 ThumbnailFrame::~ThumbnailFrame()
@@ -78,6 +83,58 @@ ThumbnailSidebar::ThumbnailSidebar()
 
 void ThumbnailSidebar::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
+    if (this->image)
+        this->image->frame(ctx);
+}
+
+void ThumbnailSidebar::layout(NVGcontext* vg, Style* style, FontStash* stash)
+{
+    if (this->image)
+    {
+        unsigned size = getWidth() - style->ThumbnailSidebar.marginLeftRight * 2;
+        this->image->setBoundaries(
+            getX() + style->ThumbnailSidebar.marginLeftRight,
+            getY() + style->ThumbnailSidebar.marginTopBottom,
+            size,
+            size
+        );
+    }
+}
+
+void ThumbnailSidebar::setThumbnail(std::string imagePath)
+{
+    if (this->image)
+    {
+        this->image->setImage(imagePath);
+    }
+    else
+    {
+        this->image = new Image(imagePath);
+        this->image->setImageScaleType(ImageScaleType::FIT);
+        this->image->setParent(this);
+        this->invalidate();
+    }
+}
+
+void ThumbnailSidebar::setThumbnail(unsigned char* buffer, size_t bufferSize)
+{
+    if (this->image)
+    {
+        this->image->setImage(buffer, bufferSize);
+    }
+    else
+    {
+        this->image = new Image(buffer, bufferSize);
+        //this->image->setImageScaleType(ImageScaleType::FIT);
+        this->image->setParent(this);
+        this->invalidate();
+    }
+}
+
+ThumbnailSidebar::~ThumbnailSidebar()
+{
+    if (this->image)
+        delete this->image;
 }
 
 } // namespace brls

@@ -46,9 +46,6 @@ class AppletFrame : public View
 
     View* contentView = nullptr;
 
-    unsigned leftPadding  = 0;
-    unsigned rightPadding = 0;
-
     bool slideOut = false;
     bool slideIn  = false;
 
@@ -58,6 +55,9 @@ class AppletFrame : public View
     HeaderStyle headerStyle = HeaderStyle::REGULAR;
 
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
+
+    unsigned leftPadding  = 0;
+    unsigned rightPadding = 0;
 
   public:
     AppletFrame(bool padLeft, bool padRight);
