@@ -37,8 +37,6 @@ Style Style::horizon()
         .imageSize           = 52,
         .separatorSpacing    = 30,
 
-        .separatorSpacing = 30,
-
         .titleSize   = 28,
         .titleStart  = 130,
         .titleOffset = 5,
