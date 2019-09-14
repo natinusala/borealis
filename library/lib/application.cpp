@@ -716,6 +716,11 @@ ThemeValues* Application::getThemeValuesForVariant(ThemeVariant variant)
     return &Application::currentTheme.colors[variant];
 }
 
+ThemeVariant Application::getThemeVariant()
+{
+    return Application::currentThemeVariant;
+}
+
 void Application::crash(std::string text)
 {
     CrashFrame* crashFrame = new CrashFrame(text);
