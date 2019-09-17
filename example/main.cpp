@@ -40,6 +40,7 @@ int main(int argc, char* argv[])
     // Create a sample view
     brls::TabFrame* rootFrame = new brls::TabFrame();
     rootFrame->setTitle("Borealis Example App");
+    rootFrame->setIcon(ASSET("icon/borealis.jpg"));
 
     brls::List* testList = new brls::List();
 
