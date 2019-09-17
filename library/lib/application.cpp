@@ -24,6 +24,9 @@
 #include <algorithm>
 #include <borealis.hpp>
 #include <string>
+#include <cmath>
+#include <fstream>
+#include <sstream>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -41,6 +44,7 @@
 #include <glm/vec4.hpp>
 #define NANOVG_GL3_IMPLEMENTATION
 #include <nanovg_gl.h>
+#include "nanovg_gl_utils.h"
 
 #ifdef __SWITCH__
 #include <switch.h>
@@ -64,6 +68,49 @@ constexpr const char* WINDOW_TITLE = WINDOW_NAME;
 
 namespace brls
 {
+
+static struct NVGLUframebuffer *framebufferA = nullptr, *framebufferB = nullptr;
+static GLuint blurShaderProgram;
+static GLuint vao, vbo;
+
+struct Vertex
+{
+    float position[3];
+    float color[3];
+};
+
+static const Vertex vertices[] =
+{
+    { { -1.0f, -1.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } },
+    { {  3.0f, -1.0f, 0.0f }, { 2.0f, 0.0f, 0.0f } },
+    { {  -1.0f,  3.0f, 0.0f }, { 0.0f, 2.0f, 1.0f } },
+};
+
+static GLuint createAndCompileShader(GLenum type, const char* source)
+{
+    GLint success;
+    GLchar msg[512];
+
+    GLuint handle = glCreateShader(type);
+    if (!handle)
+    {
+        Logger::error("%u: cannot create shader", type);
+        return 0;
+    }
+    glShaderSource(handle, 1, &source, nullptr);
+    glCompileShader(handle);
+    glGetShaderiv(handle, GL_COMPILE_STATUS, &success);
+
+    if (!success)
+    {
+        glGetShaderInfoLog(handle, sizeof(msg), nullptr, msg);
+        Logger::error("%u: %s\n", type, msg);
+        glDeleteShader(handle);
+        return 0;
+    }
+
+    return handle;
+}
 
 // TODO: Use this instead of a glViewport each frame
 static void windowFramebufferSizeCallback(GLFWwindow* window, int width, int height)
@@ -164,18 +211,15 @@ bool Application::init(Style style, Theme theme)
     }
 
     // Create window
-#ifdef __APPLE__
-    // Explicitly ask for a 3.2 context on OS X
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+#ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     // Force scaling off to keep desired framebuffer size
-    glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
-#else
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_TRUE);
 #endif
 
     Application::window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, nullptr, nullptr);
@@ -219,6 +263,17 @@ bool Application::init(Style style, Theme theme)
 
     windowFramebufferSizeCallback(window, WINDOW_WIDTH, WINDOW_HEIGHT);
     glfwSetTime(0.0);
+
+    // Create Framebuffer for blurring
+    framebufferA = nvgluCreateFramebuffer(vg, WINDOW_WIDTH, WINDOW_HEIGHT, NVG_IMAGE_REPEATX | NVG_IMAGE_REPEATY);
+    framebufferB = nvgluCreateFramebuffer(vg, WINDOW_WIDTH, WINDOW_HEIGHT, NVG_IMAGE_REPEATX | NVG_IMAGE_REPEATY);
+
+    if (!framebufferA || !framebufferA)
+    {
+        Logger::error("Unable to create framebuffer");
+        glfwTerminate();
+        return false;
+    }
 
     // Load fonts
 #ifdef __SWITCH__
@@ -304,6 +359,9 @@ bool Application::init(Style style, Theme theme)
 
     // Default FPS cap
     Application::setMaximumFPS(DEFAULT_FPS);
+
+    // Initialize shaders
+    Application::initShaders();
 
     return true;
 }
@@ -481,13 +539,19 @@ void Application::onGamepadButtonPressed(char button, bool repeating)
 
 void Application::frame()
 {
+    int blurThreshold = Application::viewStack.size();
+
     // Frame context
     FrameContext frameContext = FrameContext();
+    NVGLUframebuffer *readBuffer = framebufferA, *writeBuffer = framebufferB;
+    unsigned int iterations = 8;
 
     frameContext.pixelRatio = (float)Application::windowWidth / (float)Application::windowHeight;
     frameContext.vg         = Application::vg;
     frameContext.fontStash  = &Application::fontStash;
     frameContext.theme      = Application::getThemeValues();
+
+    nvgluBindFramebuffer(framebufferA);
 
     nvgBeginFrame(Application::vg, Application::windowWidth, Application::windowHeight, frameContext.pixelRatio);
     nvgScale(Application::vg, Application::windowScale, Application::windowScale);
@@ -510,19 +574,88 @@ void Application::frame()
         View* view = Application::viewStack[Application::viewStack.size() - 1 - i];
         viewsToDraw.push_back(view);
 
-        if (!view->isTranslucent())
-            break;
+        if (blurThreshold == Application::viewStack.size() && view->shouldBlurBackground())
+            blurThreshold = Application::viewStack.size() - i;
     }
 
-    for (size_t i = 0; i < viewsToDraw.size(); i++)
+    for (int i = 0; i < blurThreshold - 1; i++)
     {
         View* view = viewsToDraw[viewsToDraw.size() - 1 - i];
+
         view->frame(&frameContext);
     }
+
+    // End frame
+    nvgResetTransform(Application::vg); // scale
+    nvgEndFrame(Application::vg);
+
+    nvgluBindFramebuffer(nullptr);
+
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_SCISSOR_TEST);
+    glDisable(GL_STENCIL_TEST);
+
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBindVertexArray(vao);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+    glEnableVertexAttribArray(1);
+    glUseProgram(blurShaderProgram);
+
+    GLint textureLoc = glGetUniformLocation(blurShaderProgram, "texture");
+    glUniform1i(textureLoc, 0);
+
+    GLint iResolutionLoc = glGetUniformLocation(blurShaderProgram, "iResolution");
+    GLint flipLoc = glGetUniformLocation(blurShaderProgram, "flip");
+    GLint directionLoc = glGetUniformLocation(blurShaderProgram, "direction");
+    GLint blurLoc = glGetUniformLocation(blurShaderProgram, "doesBlur");
+
+    glUniform1i(blurLoc, 1);
+
+    for (unsigned int i = 0; i < iterations; i++)
+    {
+        glBindTexture(GL_TEXTURE_2D, readBuffer->texture);
+        nvgluBindFramebuffer(writeBuffer);
+        glUniform2f(iResolutionLoc, 1280.0F, 720.0F);
+        glUniform1i(flipLoc, 1);
+
+        float radius = (iterations - i - 1);
+        glUniform2f(directionLoc, i % 2 == 0 ? radius : 0, i % 2 == 0 ? 0 : radius);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
+        NVGLUframebuffer *tmp = readBuffer;
+        readBuffer = writeBuffer;
+        writeBuffer = tmp;
+    }
+
+    glUniform2f(directionLoc, 0.0F, 0.0F);
+    glUniform1i(flipLoc, 0);
+    glUniform1i(blurLoc, 0);
 
     // Framerate counter
     if (Application::framerateCounter)
         Application::framerateCounter->frame(&frameContext);
+
+    nvgluBindFramebuffer(nullptr);
+    nvgBeginFrame(Application::vg, Application::windowWidth, Application::windowHeight, frameContext.pixelRatio);
+    nvgScale(Application::vg, Application::windowScale, Application::windowScale);
+    glBindTexture(GL_TEXTURE_2D, readBuffer->texture);
+
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    for (int i = blurThreshold - 1; i < viewsToDraw.size(); i++)
+    {
+        View* view = viewsToDraw[viewsToDraw.size() - 1 - i];
+
+        view->frame(&frameContext);
+    }
 
     // Notifications
     Application::notificationManager->frame(&frameContext);
@@ -530,6 +663,7 @@ void Application::frame()
     // End frame
     nvgResetTransform(Application::vg); // scale
     nvgEndFrame(Application::vg);
+
 }
 
 void Application::exit()
@@ -870,6 +1004,49 @@ void Application::setMaximumFPS(unsigned fps)
     }
 
     Logger::info("Maximum FPS set to %d - using a frame time of %.2f ms", fps, Application::frameTime);
+}
+
+void Application::initShaders()
+{   
+    std::stringstream blurVertShaderSrc, blurFragShaderSrc;
+    blurVertShaderSrc << std::ifstream(ASSET("shaders/gaussian_blur/vert.glsl")).rdbuf();
+    blurFragShaderSrc << std::ifstream(ASSET("shaders/gaussian_blur/frag.glsl")).rdbuf();
+
+    GLint vsh = createAndCompileShader(GL_VERTEX_SHADER, blurVertShaderSrc.str().c_str());
+    GLint fsh = createAndCompileShader(GL_FRAGMENT_SHADER, blurFragShaderSrc.str().c_str());
+
+    blurShaderProgram = glCreateProgram();
+    glAttachShader(blurShaderProgram, vsh);
+    glAttachShader(blurShaderProgram, fsh);
+    glLinkProgram(blurShaderProgram);
+    glValidateProgram(blurShaderProgram);
+
+    GLint success;
+    glGetProgramiv(blurShaderProgram, GL_LINK_STATUS, &success);
+    if (!success)
+    {
+        char buf[512];
+        glGetProgramInfoLog(blurShaderProgram, sizeof(buf), nullptr, buf);
+        Logger::error("Link error: %s", buf);
+    }
+    glDeleteShader(vsh);
+    glDeleteShader(fsh);
+
+    glGenVertexArrays(1, &vao);
+    glGenBuffers(1, &vbo);
+    glBindVertexArray(vao);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 }
 
 } // namespace brls

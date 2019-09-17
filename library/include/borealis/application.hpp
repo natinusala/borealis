@@ -161,6 +161,8 @@ class Application
 
     inline static View* repetitionOldFocus = nullptr;
 
+    static void initShaders();
+
     static void onWindowSizeChanged();
 
     static void frame();
