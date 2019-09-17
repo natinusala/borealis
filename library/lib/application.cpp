@@ -534,6 +534,9 @@ void Application::frame()
 
         if (blurThreshold == Application::viewStack.size() && view->shouldBlurBackground())
             blurThreshold = Application::viewStack.size() - i;
+
+        if (!view->isTranslucent())
+            break;
     }
 
     for (int i = 0; i < blurThreshold - 1; i++)
