@@ -74,6 +74,9 @@ int main(int argc, char* argv[])
         brls::Application::pushView(stagedFrame);
     });
 
+    brls::SelectListItem *layerSelectItem = new brls::SelectListItem("Select Layer", { "Layer 1", "Layer 2" });
+
+
     testList->addView(themeItem);
     testList->addView(jankItem);
     testList->addView(crashItem);
@@ -83,8 +86,31 @@ int main(int argc, char* argv[])
     brls::Label* testLabel = new brls::Label(brls::LabelStyle::REGULAR, "For more information about how to use Nintendo Switch and its features, please refer to the Nintendo Support Website on your smart device or PC.", true);
     testList->addView(testLabel);
 
+    brls::LayerView *testLayers = new brls::LayerView();
+    brls::List *layerList1 = new brls::List();
+    brls::List *layerList2 = new brls::List();
+
+    layerList1->addView(new brls::Header("Layer 1", false));
+    layerList1->addView(new brls::ListItem("Item 1"));
+    layerList1->addView(new brls::ListItem("Item 2"));
+    layerList1->addView(new brls::ListItem("Item 3"));
+
+    layerList2->addView(new brls::Header("Layer 2", false));
+    layerList2->addView(new brls::ListItem("Item 1"));
+    layerList2->addView(new brls::ListItem("Item 2"));
+    layerList2->addView(new brls::ListItem("Item 3"));
+
+    testLayers->addLayer(layerList1);
+    testLayers->addLayer(layerList2);
+
+    layerSelectItem->setListener([=](size_t selection){
+        testLayers->changeLayer(selection);
+    });
+
+    testList->addView(layerSelectItem);
+
     rootFrame->addTab("First tab", testList);
-    rootFrame->addTab("Second tab", new brls::Rectangle(nvgRGB(0, 0, 255)));
+    rootFrame->addTab("Second tab", testLayers);
     rootFrame->addSeparator();
     rootFrame->addTab("Third tab", new brls::Rectangle(nvgRGB(255, 0, 0)));
     rootFrame->addTab("Fourth tab", new brls::Rectangle(nvgRGB(0, 255, 0)));
