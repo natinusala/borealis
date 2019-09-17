@@ -84,7 +84,7 @@ class Application
     static ThemeValues* getThemeValuesForVariant(ThemeVariant variant);
     static ThemeVariant getThemeVariant();
 
-    static void onGamepadButtonPressed(char button);
+    static void onGamepadButtonPressed(char button, bool repeating);
 
     /**
       * "Crashes" the app (displays a fullscreen CrashFrame)
