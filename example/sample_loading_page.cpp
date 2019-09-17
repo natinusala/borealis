@@ -28,6 +28,7 @@ SampleLoadingPage::SampleLoadingPage(brls::StagedAppletFrame* frame)
     // Label
     this->progressDisp = new brls::ProgressDisplay();
     this->progressDisp->setProgress(this->progressValue, 1000);
+    this->progressDisp->setParent(this);
     this->label = new brls::Label(brls::LabelStyle::BUTTON, "Example loading display", true);
     this->label->setHorizontalAlign(NVG_ALIGN_CENTER);
     this->label->setParent(this);
@@ -65,4 +66,12 @@ void SampleLoadingPage::layout(NVGcontext* vg, brls::Style* style, brls::FontSta
         this->y + this->height / 2,
         style->CrashFrame.buttonWidth * 2,
         style->CrashFrame.buttonHeight);
+}
+
+void SampleLoadingPage::willAppear() {
+    this->progressDisp->willAppear();
+}
+
+void SampleLoadingPage::willDisappear() {
+    this->progressDisp->willDisappear();
 }
