@@ -75,6 +75,20 @@ void PopupFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned hei
     nvgRect(vg, 0, y, width, height);
     nvgFill(vg);
 
+    // Shadow
+    NVGpaint shadowPaint = nvgBoxGradient(vg,
+        style->PopupFrame.edgePadding, y, width - style->PopupFrame.edgePadding * 2, height,
+        0, style->Highlight.shadowFeather,
+        RGBA(0, 0, 0, style->Highlight.shadowOpacity * alpha), transparent);
+
+    nvgBeginPath(vg);
+    nvgRect(vg, x - style->Highlight.shadowOffset, y - style->Highlight.shadowOffset,
+        width + style->Highlight.shadowOffset * 2, height + style->Highlight.shadowOffset * 3);
+    nvgRect(vg, x, y, width, height);
+    nvgPathWinding(vg, NVG_HOLE);
+    nvgFillPaint(vg, shadowPaint);
+    nvgFill(vg);
+
     // Background
     nvgFillColor(vg, a(ctx->theme->backgroundColorRGB));
     nvgBeginPath(vg);
