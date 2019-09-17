@@ -360,6 +360,8 @@ bool Application::init(Style style, Theme theme)
 
 bool Application::mainLoop()
 {
+    static int repeatingButtonTimer = 0;
+
     // Frame start
     retro_time_t frameStart = 0;
     if (Application::frameTime > 0.0f)
@@ -399,11 +401,24 @@ bool Application::mainLoop()
     // Trigger gamepad events
     // TODO: Translate axis events to dpad events here
     // TODO: Handle key repetition
+    bool anyButtonPressed = false;
+    bool repeating = false;
     for (int i = GLFW_GAMEPAD_BUTTON_A; i <= GLFW_GAMEPAD_BUTTON_LAST; i++)
     {
-        if (Application::gamepad.buttons[i] == GLFW_PRESS && Application::oldGamepad.buttons[i] != GLFW_PRESS)
-            Application::onGamepadButtonPressed(i);
+        if (Application::gamepad.buttons[i] == GLFW_PRESS) {
+            anyButtonPressed = true;
+            repeating = (repeatingButtonTimer > 15 && repeatingButtonTimer % 8 == 0);
+
+            if (Application::oldGamepad.buttons[i] != GLFW_PRESS || repeating)
+                Application::onGamepadButtonPressed(i, repeating);
+        }
+
+        if (Application::gamepad.buttons[i] != Application::oldGamepad.buttons[i])
+            repeatingButtonTimer = 0;
     }
+
+    if (anyButtonPressed)
+        repeatingButtonTimer++;
 
     Application::oldGamepad = Application::gamepad;
 
@@ -452,10 +467,17 @@ void Application::quit()
     glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 
-void Application::onGamepadButtonPressed(char button)
+void Application::onGamepadButtonPressed(char button, bool repeating)
 {
+    static View *oldFocus = nullptr;
+
     if (Application::blockInputsTokens != 0)
         return;
+
+    if (repeating && oldFocus == Application::currentFocus)
+        return;
+    
+    oldFocus = Application::currentFocus;
 
     switch (button)
     {
