@@ -63,6 +63,8 @@ void LayerView::changeLayer(int index, bool focus)
         // Called twice to prevent rare focus glitchout when switching between views too fast
         if (focus)
             Application::requestFocus(this->layers[this->selectedIndex], FocusDirection::NONE);
+
+        this->layers[index]->invalidate();
     }
 
     if (index == -1)
@@ -75,8 +77,6 @@ void LayerView::changeLayer(int index, bool focus)
 
         this->selectedIndex = index;
     }
-
-    this->invalidate();
 }
 
 int LayerView::getLayerIndex()
@@ -111,9 +111,6 @@ void LayerView::layout(NVGcontext* vg, Style *style, FontStash *stash)
 {
     if (this->selectedIndex >= 0 && this->selectedIndex < static_cast<int>(this->layers.size()))
         this->layers[this->selectedIndex]->setBoundaries(this->getX(), this->getY(), this->getWidth(), this->getHeight());
-
-    for (unsigned int i = 0; i < this->layers.size(); i++)
-        this->layers[i]->invalidate();
 }
 
 }
