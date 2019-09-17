@@ -128,6 +128,14 @@ static void windowFramebufferSizeCallback(GLFWwindow* window, int width, int hei
 
     Application::resizeNotificationManager();
 
+    if (framebufferA)
+        nvgluDeleteFramebuffer(framebufferA);
+    if (framebufferB)
+        nvgluDeleteFramebuffer(framebufferB);    
+
+    framebufferA = nvgluCreateFramebuffer(Application::getNVGContext(), width, height, NVG_IMAGE_REPEATX | NVG_IMAGE_REPEATY);
+    framebufferB = nvgluCreateFramebuffer(Application::getNVGContext(), width, height, NVG_IMAGE_REPEATX | NVG_IMAGE_REPEATY);
+
     Logger::info("Window size changed to %dx%d", width, height);
     Logger::info("New scale factor is %f", Application::windowScale);
 }
@@ -265,8 +273,8 @@ bool Application::init(Style style, Theme theme)
     glfwSetTime(0.0);
 
     // Create Framebuffer for blurring
-    framebufferA = nvgluCreateFramebuffer(vg, WINDOW_WIDTH, WINDOW_HEIGHT, NVG_IMAGE_REPEATX | NVG_IMAGE_REPEATY);
-    framebufferB = nvgluCreateFramebuffer(vg, WINDOW_WIDTH, WINDOW_HEIGHT, NVG_IMAGE_REPEATX | NVG_IMAGE_REPEATY);
+    framebufferA = nvgluCreateFramebuffer(vg, Application::contentWidth, Application::contentHeight, NVG_IMAGE_REPEATX | NVG_IMAGE_REPEATY);
+    framebufferB = nvgluCreateFramebuffer(vg, Application::contentWidth, Application::contentHeight, NVG_IMAGE_REPEATX | NVG_IMAGE_REPEATY);
 
     if (!framebufferA || !framebufferA)
     {
@@ -539,7 +547,7 @@ void Application::onGamepadButtonPressed(char button, bool repeating)
 
 void Application::frame()
 {
-    size_t blurThreshold = Application::viewStack.size();
+    size_t blurThreshold = 0;
 
     // Frame context
     FrameContext frameContext = FrameContext();
@@ -574,14 +582,14 @@ void Application::frame()
         View* view = Application::viewStack[Application::viewStack.size() - 1 - i];
         viewsToDraw.push_back(view);
 
-        if (blurThreshold == Application::viewStack.size() && view->shouldBlurBackground())
+        if (view->shouldBlurBackground())
             blurThreshold = Application::viewStack.size() - i;
 
         if (!view->isTranslucent())
             break;
     }
 
-    for (size_t i = 0; i < blurThreshold - 1; i++)
+    for (size_t i = 0; i < blurThreshold; i++)
     {
         View* view = viewsToDraw[viewsToDraw.size() - 1 - i];
 
@@ -625,7 +633,7 @@ void Application::frame()
     {
         glBindTexture(GL_TEXTURE_2D, readBuffer->texture);
         nvgluBindFramebuffer(writeBuffer);
-        glUniform2f(iResolutionLoc, 1280.0F, 720.0F);
+        glUniform2f(iResolutionLoc, static_cast<float>(Application::windowWidth), static_cast<float>(Application::windowHeight));
         glUniform1i(flipLoc, 1);
 
         float radius = (iterations - i - 1);
