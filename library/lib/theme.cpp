@@ -53,7 +53,7 @@ Theme Theme::horizon()
     theme.colors[ThemeVariant_LIGHT].tableEvenBackgroundColor = nvgRGB(240, 240, 240);
     theme.colors[ThemeVariant_LIGHT].tableBodyTextColor       = nvgRGB(131, 131, 131);
 
-    theme.colors[ThemeVariant_LIGHT].dropdownBackgroundColor = nvgRGBA(0, 0, 0, 178);
+    theme.colors[ThemeVariant_LIGHT].dropdownBackgroundColor = nvgRGBA(0, 0, 0, 80);
 
     theme.colors[ThemeVariant_LIGHT].nextStageBulletColor = nvgRGB(165, 165, 165);
 
@@ -87,7 +87,7 @@ Theme Theme::horizon()
     theme.colors[ThemeVariant_DARK].tableEvenBackgroundColor = nvgRGB(57, 58, 60);
     theme.colors[ThemeVariant_DARK].tableBodyTextColor       = nvgRGB(155, 157, 156);
 
-    theme.colors[ThemeVariant_DARK].dropdownBackgroundColor = nvgRGBA(0, 0, 0, 178), // TODO: 178 may be too much for dark theme
+    theme.colors[ThemeVariant_DARK].dropdownBackgroundColor = nvgRGBA(0, 0, 0, 80), // TODO: 178 may be too much for dark theme
 
         theme.colors[ThemeVariant_DARK].nextStageBulletColor = nvgRGB(165, 165, 165);
 
