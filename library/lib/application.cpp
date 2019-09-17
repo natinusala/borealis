@@ -497,7 +497,7 @@ void Application::onGamepadButtonPressed(char button)
 
 void Application::frame()
 {
-    int blurThreshold = Application::viewStack.size();
+    size_t blurThreshold = Application::viewStack.size();
 
     // Frame context
     FrameContext frameContext = FrameContext();
@@ -539,7 +539,7 @@ void Application::frame()
             break;
     }
 
-    for (int i = 0; i < blurThreshold - 1; i++)
+    for (size_t i = 0; i < blurThreshold - 1; i++)
     {
         View* view = viewsToDraw[viewsToDraw.size() - 1 - i];
 
@@ -611,7 +611,7 @@ void Application::frame()
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    for (int i = blurThreshold - 1; i < viewsToDraw.size(); i++)
+    for (size_t i = std::max(static_cast<int>(blurThreshold) - 1, 0); i < viewsToDraw.size(); i++)
     {
         View* view = viewsToDraw[viewsToDraw.size() - 1 - i];
 
