@@ -56,6 +56,11 @@ class PopupFrame : public View
 
     bool isTranslucent() override
     {
+        return true || View::isTranslucent();
+    }
+
+    bool shouldBlurBackground() override
+    {
         return true;
     }
 };

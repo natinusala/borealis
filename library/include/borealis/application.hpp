@@ -150,6 +150,8 @@ class Application
 
     static inline float frameTime = 0.0f;
 
+    static void initShaders();
+
     static void onWindowSizeChanged();
 
     static void resizeFramerateCounter();
