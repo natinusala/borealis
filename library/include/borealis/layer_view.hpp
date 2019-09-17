@@ -32,7 +32,7 @@ public:
     ~LayerView();
 
     void addLayer(View *view);
-    void changeLayer(int index, bool focus = true);
+    void changeLayer(int index, bool focus = false);
     int getLayerIndex();
 
     View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp);
