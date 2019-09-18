@@ -306,15 +306,15 @@ class View
         return fadeIn || forceTranslucent;
     }
 
-	/**
-	 * Should views behind this one be blured?
-	 * 
-	 * Used for overlays that blur the background
-	 * before drawing themselves on top of the blured
-	 * background.
-	 * 
-	 * Override this and set it to true if needed.
-	 */
+    /**
+      * Should views behind this one be blured?
+      * 
+      * Used for overlays that blur the background
+      * before drawing themselves on top of the blured
+      * background.
+      * 
+      * Override this and set it to true if needed.
+      */
     virtual bool shouldBlurBackground()
     {
         return false;

@@ -23,10 +23,10 @@
 
 #include <algorithm>
 #include <borealis.hpp>
-#include <string>
 #include <cmath>
 #include <fstream>
 #include <sstream>
+#include <string>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -82,8 +82,8 @@ struct Vertex
 static const Vertex vertices[] =
 {
     { { -1.0f, -1.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } },
-    { {  3.0f, -1.0f, 0.0f }, { 2.0f, 0.0f, 0.0f } },
-    { {  -1.0f,  3.0f, 0.0f }, { 0.0f, 2.0f, 1.0f } },
+    { { 3.0f, -1.0f, 0.0f }, { 2.0f, 0.0f, 0.0f } },
+    { { -1.0f, 3.0f, 0.0f }, { 0.0f, 2.0f, 1.0f } },
 };
 
 static GLuint createAndCompileShader(GLenum type, const char* source)
@@ -550,7 +550,7 @@ void Application::frame()
     size_t blurThreshold = 0;
 
     // Frame context
-    FrameContext frameContext = FrameContext();
+    FrameContext frameContext    = FrameContext();
     NVGLUframebuffer *readBuffer = framebufferA, *writeBuffer = framebufferB;
     unsigned int iterations = 8;
 
@@ -619,14 +619,14 @@ void Application::frame()
     glEnableVertexAttribArray(1);
     glUseProgram(blurShaderProgram);
 
-    GLint textureLoc = glGetUniformLocation(blurShaderProgram, "texture");
-    glUniform1i(textureLoc, 0);
+    GLint textureLoc     = glGetUniformLocation(blurShaderProgram, "texture");
 
     GLint iResolutionLoc = glGetUniformLocation(blurShaderProgram, "iResolution");
-    GLint flipLoc = glGetUniformLocation(blurShaderProgram, "flip");
-    GLint directionLoc = glGetUniformLocation(blurShaderProgram, "direction");
-    GLint blurLoc = glGetUniformLocation(blurShaderProgram, "doesBlur");
+    GLint flipLoc        = glGetUniformLocation(blurShaderProgram, "flip");
+    GLint directionLoc   = glGetUniformLocation(blurShaderProgram, "direction");
+    GLint blurLoc        = glGetUniformLocation(blurShaderProgram, "doesBlur");
 
+    glUniform1i(textureLoc, 0);
     glUniform1i(blurLoc, 1);
 
     for (unsigned int i = 0; i < iterations; i++)
@@ -639,9 +639,9 @@ void Application::frame()
         float radius = (iterations - i - 1);
         glUniform2f(directionLoc, i % 2 == 0 ? radius : 0, i % 2 == 0 ? 0 : radius);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
-        NVGLUframebuffer *tmp = readBuffer;
-        readBuffer = writeBuffer;
-        writeBuffer = tmp;
+        NVGLUframebuffer* tmp = readBuffer;
+        readBuffer            = writeBuffer;
+        writeBuffer           = tmp;
     }
 
     glUniform2f(directionLoc, 0.0F, 0.0F);
@@ -1018,7 +1018,7 @@ void Application::setMaximumFPS(unsigned fps)
 }
 
 void Application::initShaders()
-{   
+{
     std::stringstream blurVertShaderSrc, blurFragShaderSrc;
     blurVertShaderSrc << std::ifstream(ASSET("shaders/gaussian_blur/vert.glsl")).rdbuf();
     blurFragShaderSrc << std::ifstream(ASSET("shaders/gaussian_blur/frag.glsl")).rdbuf();
