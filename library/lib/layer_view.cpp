@@ -16,8 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <borealis/layer_view.hpp>
 #include <borealis/application.hpp>
+#include <borealis/layer_view.hpp>
 
 namespace brls
 {
@@ -35,31 +35,32 @@ LayerView::~LayerView()
     this->layers.clear();
 }
 
-void LayerView::addLayer(View *view)
+void LayerView::addLayer(View* view)
 {
-    if (view) {
+    if (view)
+    {
         view->setParent(this);
         this->layers.push_back(view);
     }
 }
 
 void LayerView::changeLayer(int index, bool focus)
-{   
+{
     if (index >= 0 && index < static_cast<int>(this->layers.size()))
     {
         if (this->selectedIndex >= 0)
         {
             this->layers[this->selectedIndex]->willDisappear();
-            this->layers[this->selectedIndex]->hide([](){});
+            this->layers[this->selectedIndex]->hide([]() {});
         }
-    
+
         this->selectedIndex = index;
         this->layers[this->selectedIndex]->willAppear();
         this->layers[this->selectedIndex]->show([=]() {
             if (focus)
                 Application::requestFocus(this->layers[this->selectedIndex], FocusDirection::NONE);
         });
-        
+
         // Called twice to prevent rare focus glitchout when switching between views too fast
         if (focus)
             Application::requestFocus(this->layers[this->selectedIndex], FocusDirection::NONE);
@@ -72,7 +73,7 @@ void LayerView::changeLayer(int index, bool focus)
         if (this->selectedIndex > 0)
         {
             this->layers[this->selectedIndex]->willDisappear();
-            this->layers[this->selectedIndex]->hide([](){});
+            this->layers[this->selectedIndex]->hide([]() {});
         }
 
         this->selectedIndex = index;
@@ -85,13 +86,13 @@ int LayerView::getLayerIndex()
 }
 
 View* LayerView::requestFocus(FocusDirection direction, View *oldFocus, bool fromUp)
-{   
+{
     if (fromUp)
         return View::requestFocus(direction, oldFocus);
 
     if (this->selectedIndex >= 0 && this->selectedIndex < static_cast<int>(this->layers.size()))
     {
-        View *newFocus = this->layers[this->selectedIndex]->requestFocus(direction, oldFocus);
+        View* newFocus = this->layers[this->selectedIndex]->requestFocus(direction, oldFocus);
         if (newFocus)
         {
             return newFocus;
@@ -101,13 +102,13 @@ View* LayerView::requestFocus(FocusDirection direction, View *oldFocus, bool fro
     return nullptr;
 }
 
-void LayerView::draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx)
+void LayerView::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
     if (this->selectedIndex >= 0 && this->selectedIndex < static_cast<int>(this->layers.size()))
         this->layers[this->selectedIndex]->frame(ctx);
 }
 
-void LayerView::layout(NVGcontext* vg, Style *style, FontStash *stash)
+void LayerView::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
     if (this->selectedIndex >= 0 && this->selectedIndex < static_cast<int>(this->layers.size()))
         this->layers[this->selectedIndex]->setBoundaries(this->getX(), this->getY(), this->getWidth(), this->getHeight());

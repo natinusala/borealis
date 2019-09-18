@@ -74,7 +74,7 @@ int main(int argc, char* argv[])
         brls::Application::pushView(stagedFrame);
     });
 
-    brls::SelectListItem *layerSelectItem = new brls::SelectListItem("Select Layer", { "Layer 1", "Layer 2" });
+    brls::SelectListItem* layerSelectItem = new brls::SelectListItem("Select Layer", { "Layer 1", "Layer 2" });
 
 
     testList->addView(themeItem);
@@ -86,9 +86,9 @@ int main(int argc, char* argv[])
     brls::Label* testLabel = new brls::Label(brls::LabelStyle::REGULAR, "For more information about how to use Nintendo Switch and its features, please refer to the Nintendo Support Website on your smart device or PC.", true);
     testList->addView(testLabel);
 
-    brls::LayerView *testLayers = new brls::LayerView();
-    brls::List *layerList1 = new brls::List();
-    brls::List *layerList2 = new brls::List();
+    brls::LayerView* testLayers = new brls::LayerView();
+    brls::List* layerList1      = new brls::List();
+    brls::List* layerList2      = new brls::List();
 
     layerList1->addView(new brls::Header("Layer 1", false));
     layerList1->addView(new brls::ListItem("Item 1"));
@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
     testLayers->addLayer(layerList1);
     testLayers->addLayer(layerList2);
 
-    layerSelectItem->setListener([=](size_t selection){
+    layerSelectItem->setListener([=](size_t selection) {
         testLayers->changeLayer(selection);
     });
 
