@@ -25,6 +25,7 @@
 namespace brls
 {
 
+// A view containing multiple children views with the ability to freely switch between these layers
 class LayerView : public View
 {
 public:
