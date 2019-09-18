@@ -68,10 +68,12 @@ void SampleLoadingPage::layout(NVGcontext* vg, brls::Style* style, brls::FontSta
         style->CrashFrame.buttonHeight);
 }
 
-void SampleLoadingPage::willAppear() {
+void SampleLoadingPage::willAppear()
+{
     this->progressDisp->willAppear();
 }
 
-void SampleLoadingPage::willDisappear() {
+void SampleLoadingPage::willDisappear()
+{
     this->progressDisp->willDisappear();
 }
