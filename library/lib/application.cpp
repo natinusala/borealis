@@ -412,15 +412,13 @@ void Application::quit()
 
 void Application::onGamepadButtonPressed(char button, bool repeating)
 {
-    static View* oldFocus = nullptr;
-
     if (Application::blockInputsTokens != 0)
         return;
 
-    if (repeating && oldFocus == Application::currentFocus)
+    if (repeating && Application::repetitionOldFocus == Application::currentFocus)
         return;
     
-    oldFocus = Application::currentFocus;
+    Application::repetitionOldFocus = Application::currentFocus;
 
     switch (button)
     {

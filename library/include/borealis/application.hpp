@@ -148,7 +148,9 @@ class Application
 
     inline static FramerateCounter* framerateCounter = nullptr;
 
-    static inline float frameTime = 0.0f;
+    inline static float frameTime = 0.0f;
+
+    inline static View* repetitionOldFocus = nullptr;
 
     static void onWindowSizeChanged();
 
