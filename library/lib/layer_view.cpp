@@ -110,7 +110,10 @@ void LayerView::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heig
 void LayerView::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
     if (this->selectedIndex >= 0 && this->selectedIndex < static_cast<int>(this->layers.size()))
+    {
         this->layers[this->selectedIndex]->setBoundaries(this->getX(), this->getY(), this->getWidth(), this->getHeight());
+        this->layers[this->selectedIndex]->invalidate();
+    }
 }
 
 }
