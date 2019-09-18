@@ -48,6 +48,8 @@ void LayerView::changeLayer(int index, bool focus)
 {
     if (index >= 0 && index < static_cast<int>(this->layers.size()))
     {
+        Application::blockInputs();
+
         if (this->selectedIndex >= 0)
         {
             this->layers[this->selectedIndex]->willDisappear();
@@ -59,11 +61,8 @@ void LayerView::changeLayer(int index, bool focus)
         this->layers[this->selectedIndex]->show([=]() {
             if (focus)
                 Application::requestFocus(this->layers[this->selectedIndex], FocusDirection::NONE);
+            Application::unblockInputs();
         });
-
-        // Called twice to prevent rare focus glitchout when switching between views too fast
-        if (focus)
-            Application::requestFocus(this->layers[this->selectedIndex], FocusDirection::NONE);
 
         this->layers[index]->invalidate();
     }
