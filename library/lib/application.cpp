@@ -344,12 +344,13 @@ bool Application::mainLoop()
     // TODO: Translate axis events to dpad events here
     // TODO: Handle key repetition
     bool anyButtonPressed = false;
-    bool repeating = false;
+    bool repeating        = false;
     for (int i = GLFW_GAMEPAD_BUTTON_A; i <= GLFW_GAMEPAD_BUTTON_LAST; i++)
     {
-        if (Application::gamepad.buttons[i] == GLFW_PRESS) {
+        if (Application::gamepad.buttons[i] == GLFW_PRESS)
+        {
             anyButtonPressed = true;
-            repeating = (repeatingButtonTimer > 15 && repeatingButtonTimer % 8 == 0);
+            repeating        = (repeatingButtonTimer > 15 && repeatingButtonTimer % 8 == 0);
 
             if (Application::oldGamepad.buttons[i] != GLFW_PRESS || repeating)
                 Application::onGamepadButtonPressed(i, repeating);
@@ -411,7 +412,7 @@ void Application::quit()
 
 void Application::onGamepadButtonPressed(char button, bool repeating)
 {
-    static View *oldFocus = nullptr;
+    static View* oldFocus = nullptr;
 
     if (Application::blockInputsTokens != 0)
         return;

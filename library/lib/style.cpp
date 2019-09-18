@@ -32,11 +32,9 @@ Style Style::horizon()
         .headerHeightPopup   = 129,
         .footerHeight        = 73,
         
-        .imageLeftPadding    = 64,
-        .imageTopPadding     = 20,
-        .imageSize           = 52,
-        .separatorSpacing    = 30,
-
+        .imageLeftPadding = 64,
+        .imageTopPadding  = 20,
+        .imageSize        = 52,
         .separatorSpacing = 30,
 
         .titleSize   = 28,
