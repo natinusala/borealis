@@ -94,7 +94,19 @@ void Dropdown::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heigh
     nvgRect(vg, x, y, width, top);
     nvgFill(vg);
 
-    // TODO: Shadow
+    // Shadow
+    NVGpaint shadowPaint = nvgBoxGradient(vg,
+        x, top, width, height - top,
+        0, style->Highlight.shadowFeather,
+        RGBA(0, 0, 0, style->Highlight.shadowOpacity * alpha), transparent);
+
+    nvgBeginPath(vg);
+    nvgRect(vg, x - style->Highlight.shadowOffset, y - style->Highlight.shadowOffset,
+        width + style->Highlight.shadowOffset * 2, height + style->Highlight.shadowOffset * 3);
+    nvgRect(vg, x, top, width, height - top);
+    nvgPathWinding(vg, NVG_HOLE);
+    nvgFillPaint(vg, shadowPaint);
+    nvgFill(vg);
 
     // Background
     nvgFillColor(vg, a(ctx->theme->sidebarColor));

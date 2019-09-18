@@ -95,8 +95,6 @@ void PopupFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned hei
     nvgRect(vg, style->PopupFrame.edgePadding, y, width - style->PopupFrame.edgePadding * 2, height);
     nvgFill(vg);
 
-    // TODO: Shadow
-
     // Content view
     nvgSave(vg);
     nvgScissor(vg, style->PopupFrame.edgePadding, 0, style->PopupFrame.contentWidth, height);
