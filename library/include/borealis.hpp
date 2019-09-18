@@ -27,6 +27,7 @@
 // Library
 #include <borealis/applet_frame.hpp>
 #include <borealis/application.hpp>
+#include <borealis/blur_manager.hpp>
 #include <borealis/box_layout.hpp>
 #include <borealis/button.hpp>
 #include <borealis/crash_frame.hpp>
@@ -46,6 +47,7 @@
 #include <borealis/progress_spinner.hpp>
 #include <borealis/rectangle.hpp>
 #include <borealis/repeating_task.hpp>
+#include <borealis/shader_utils.hpp>
 #include <borealis/sidebar.hpp>
 #include <borealis/staged_applet_frame.hpp>
 #include <borealis/style.hpp>

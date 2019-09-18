@@ -1,7 +1,7 @@
 /*
     Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2019  natinusala
     Copyright (C) 2019  WerWolv
+    Copyright (C) 2019  natinusala
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,12 +17,30 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#version 330 core
-    layout (location = 0) in vec3 in_position;
-    layout (location = 1) in vec2 in_texcoord;
-    out vec2 texcoord;
-    void main()
+#pragma once
+
+#include <glad.h>
+
+namespace brls
+{
+
+    class ShaderUtils
     {
-        gl_Position = vec4(in_position.x, in_position.y, in_position.z, 1.0);
-        texcoord = in_texcoord;
-    }
+    public:
+        static GLuint createAndCompileShader(GLenum type, const char* source);
+
+        struct Vertex
+        {
+            float position[3];
+            float color[3];
+        };
+
+        static inline const Vertex rectVertices[] =
+        {
+            { { -1.0f, -1.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } },
+            { { 3.0f, -1.0f, 0.0f }, { 2.0f, 0.0f, 0.0f } },
+            { { -1.0f, 3.0f, 0.0f }, { 0.0f, 2.0f, 1.0f } },
+        };
+    };
+
+}
