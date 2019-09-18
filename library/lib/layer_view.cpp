@@ -116,4 +116,16 @@ void LayerView::layout(NVGcontext* vg, Style* style, FontStash* stash)
     }
 }
 
+void LayerView::willAppear()
+{
+    if (this->selectedIndex >= 0 && this->selectedIndex < static_cast<int>(this->layers.size()))
+        this->layers[this->selectedIndex]->willAppear();
+}
+
+void LayerView::willDisappear()
+{
+    if (this->selectedIndex >= 0 && this->selectedIndex < static_cast<int>(this->layers.size()))
+        this->layers[this->selectedIndex]->willDisappear();
+}
+
 }

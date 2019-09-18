@@ -41,6 +41,9 @@ public:
     void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
     void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
 
+    void willAppear() override;
+    void willDisappear() override;
+
 private:
     std::vector<View *> layers;
     int selectedIndex = 0;
