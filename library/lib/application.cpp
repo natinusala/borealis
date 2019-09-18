@@ -350,7 +350,7 @@ bool Application::mainLoop()
         if (Application::gamepad.buttons[i] == GLFW_PRESS)
         {
             anyButtonPressed = true;
-            repeating        = (repeatingButtonTimer > 15 && repeatingButtonTimer % 8 == 0);
+            repeating        = (repeatingButtonTimer > static_cast<int>((1000.0F / Application::frameTime) / 4.0F) && repeatingButtonTimer % static_cast<int>((1000.0F / Application::frameTime) / 8.0F) == 0);
 
             if (Application::oldGamepad.buttons[i] != GLFW_PRESS || repeating)
                 Application::onGamepadButtonPressed(i, repeating);
