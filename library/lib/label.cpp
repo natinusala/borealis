@@ -179,7 +179,7 @@ void Label::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, 
         if (this->textWidth > this->getWidth())
         {   
             nvgSave(vg);
-            nvgScissor(vg, x - 20, std::clamp(y, this->getParent()->getY(), this->getParent()->getY() + static_cast<int>(this->getParent()->getHeight())), width + 20, height);
+            nvgIntersectScissor(vg, x - 20, y, width + 20, height);
             NVGpaint paintLeft  = nvgLinearGradient(vg, x - 20, y, x, y, ctx->theme->backgroundColorRGB, RGBA(0, 0, 0, 0));
             NVGpaint paintRight = nvgLinearGradient(vg, x + width - 20, y, x + width, y, RGBA(0, 0, 0, 0), ctx->theme->backgroundColorRGB);
 
