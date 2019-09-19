@@ -25,6 +25,7 @@ namespace brls
 
 Label::Label(LabelStyle labelStyle, std::string text, bool multiline)
     : text(text)
+    , textTicker(text + "          " + text)
     , multiline(multiline)
     , labelStyle(labelStyle)
 {
@@ -114,6 +115,8 @@ void Label::layout(NVGcontext* vg, Style* style, FontStash* stash)
     if (this->multiline)
     {
         nvgTextBoxBounds(vg, this->x, this->y, this->width, this->text.c_str(), nullptr, bounds);
+    else
+        nvgTextBounds(vg, this->x, this->y, this->text.c_str(), nullptr, bounds);
 
         this->height = bounds[3] - bounds[1]; // ymax - ymin
     }
@@ -160,14 +163,94 @@ void Label::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, 
         else if (this->horizontalAlign == NVG_ALIGN_CENTER)
             x += width / 2;
 
-        // TODO: Ticker
+        if (this->textWidth == 0) {
+            float bounds[4];
+            nvgTextBounds(vg, x, y, this->text.c_str(), nullptr, bounds);
+            this->textWidth = bounds[2] - bounds[0];
+        }
 
-        if (this->verticalAlign == NVG_ALIGN_BOTTOM)
-            nvgText(vg, x, y + height, this->text.c_str(), nullptr);
-        else
-            nvgText(vg, x, y + height / 2, this->text.c_str(), nullptr);
+        if (this->textTickerWidth == 0 && this->textWidth != 0) {
+            float bounds[4];
+            nvgTextBounds(vg, x, y, this->textTicker.c_str(), nullptr, bounds);
+            this->textTickerWidth = (bounds[2] - bounds[0]) - this->textWidth;
+            this->startTickerAnimation();
+        }
+
+        if (this->textWidth > this->getWidth())
+        {   
+            nvgSave(vg);
+            nvgScissor(vg, x - 20, std::clamp(y, this->getParent()->getY(), this->getParent()->getY() + static_cast<int>(this->getParent()->getHeight())), width + 20, height);
+            NVGpaint paintLeft  = nvgLinearGradient(vg, x - 20, y, x, y, ctx->theme->backgroundColorRGB, RGBA(0, 0, 0, 0));
+            NVGpaint paintRight = nvgLinearGradient(vg, x + width - 20, y, x + width, y, RGBA(0, 0, 0, 0), ctx->theme->backgroundColorRGB);
+
+            if (this->verticalAlign == NVG_ALIGN_BOTTOM)
+                nvgText(vg, x - tickerOffset, y + height, this->textTicker.c_str(), nullptr);
+            else
+                nvgText(vg, x - tickerOffset, y + height / 2, this->textTicker.c_str(), nullptr);   
+
+            nvgBeginPath(vg);
+            nvgFillPaint(vg, paintLeft);
+            nvgRect(vg, x - 20, y, 20, height);
+            nvgFill(vg);
+
+            nvgBeginPath(vg);
+            nvgFillPaint(vg, paintRight);
+            nvgRect(vg, x + width - 20, y, 20, height);
+            nvgFill(vg);
+
+            nvgRestore(vg);
+        } 
+        else 
+        {
+            if (this->verticalAlign == NVG_ALIGN_BOTTOM)
+                nvgText(vg, x, y + height, this->text.c_str(), nullptr);
+            else
+                nvgText(vg, x, y + height / 2, this->text.c_str(), nullptr);
+        }
     }
 }
+
+void Label::willAppear()
+{
+
+}
+
+void Label::willDisappear()
+{
+
+}
+
+void Label::startTickerAnimation()
+{
+    this->waitTimerCtx.duration = 1500;
+    this->waitTimerCtx.cb = [&](void *userdata) {
+        menu_animation_ctx_tag tag = (uintptr_t) & this->tickerOffset;
+        menu_animation_kill_by_tag(&tag);
+
+        this->tickerOffset = 0.0f;
+
+        menu_animation_ctx_entry_t entry;
+        entry.cb           = [&](void *userdata) { menu_timer_start(&this->waitTimer, &this->waitTimerCtx); };
+        entry.duration     = this->textTickerWidth * 15;
+        entry.easing_enum  = EASING_LINEAR;
+        entry.subject      = &this->tickerOffset;
+        entry.tag          = tag;
+        entry.target_value = this->textTickerWidth;
+        entry.tick         = [](void* userdata) {};
+        entry.userdata     = nullptr;
+
+        menu_animation_push(&entry);
+    };
+
+    menu_timer_start(&this->waitTimer, &this->waitTimerCtx);
+}
+
+void Label::stopTickerAnimation()
+{
+    this->tickerOffset = 0.0f;
+    menu_timer_kill(&this->waitTimer);
+}
+
 
 void Label::setColor(NVGcolor color)
 {

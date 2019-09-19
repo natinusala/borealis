@@ -20,6 +20,7 @@
 #pragma once
 
 #include <borealis/view.hpp>
+#include <borealis/animations.hpp>
 
 namespace brls
 {
@@ -45,6 +46,12 @@ class Label : public View
 {
   private:
     std::string text;
+    std::string textTicker;
+
+    unsigned textWidth = 0;
+    unsigned textTickerWidth = 0;
+
+    float tickerOffset = 0.0f;
 
     bool multiline;
     unsigned fontSize;
@@ -59,6 +66,9 @@ class Label : public View
 
     int customFont;
     bool useCustomFont = false;
+
+    menu_timer_t waitTimer;
+    menu_timer_ctx_entry_t waitTimerCtx;
 
   public:
     Label(LabelStyle labelStyle, std::string text, bool multiline = false);
@@ -76,6 +86,12 @@ class Label : public View
     void setText(std::string text);
     void setStyle(LabelStyle style);
     void setFontSize(unsigned size);
+
+    void willAppear() override;
+    void willDisappear() override;
+
+    void startTickerAnimation();
+    void stopTickerAnimation();
 
     /**
      * Sets the label color
