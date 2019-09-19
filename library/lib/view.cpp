@@ -107,6 +107,23 @@ void View::frame(FrameContext* ctx)
         if (this->highlightAlpha > 0.0f)
             this->drawHighlight(ctx->vg, ctx->theme, this->highlightAlpha, style, false);
 
+        // Draw click animation
+        if (this->clickAnimationAlpha > 0.0f)
+        {
+            unsigned insetTop, insetRight, insetBottom, insetLeft;
+            this->getHighlightInsets(&insetTop, &insetRight, &insetBottom, &insetLeft);
+
+            unsigned x      = this->x - insetLeft;
+            unsigned y      = this->y - insetTop;
+            unsigned width  = this->width + insetLeft + insetRight;
+            unsigned height = this->height + insetTop + insetBottom;
+
+            nvgFillColor(ctx->vg, RGBAf(ctx->theme->highlightColor1.r, ctx->theme->highlightColor1.g, ctx->theme->highlightColor1.b, this->clickAnimationAlpha));
+            nvgBeginPath(ctx->vg);
+            nvgRect(ctx->vg, x, y, width, height);
+            nvgFill(ctx->vg);
+        }
+
         //Reset clipping
         if (this->collapseState < 1.0f)
             nvgRestore(ctx->vg);

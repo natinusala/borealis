@@ -86,6 +86,7 @@ class View
     void drawHighlight(NVGcontext* vg, ThemeValues* theme, float alpha, Style* style, bool background);
 
     float highlightAlpha = 0.0f;
+    float clickAnimationAlpha = 0.0f;
 
     bool dirty = true;
 
