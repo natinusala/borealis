@@ -32,12 +32,12 @@ void Logger::setLogLevel(LogLevel newLogLevel)
     g_logLevel = newLogLevel;
 }
 
-void Logger::log(LogLevel logLevel, const char* prefix, const char* format, va_list ap)
+void Logger::log(LogLevel logLevel, const char* prefix, const char* color, const char* format, va_list ap)
 {
     if (g_logLevel < logLevel)
         return;
 
-    printf("[%s] ", prefix);
+    printf("\033%s[%s]\033[0m ", color, prefix);
     vprintf(format, ap);
     printf("\n");
 
@@ -50,7 +50,7 @@ void Logger::error(const char* format, ...)
 {
     va_list ap;
     va_start(ap, format);
-    Logger::log(LogLevel::ERROR, "ERROR", format, ap);
+    Logger::log(LogLevel::ERROR, "ERROR", "[0;31m", format, ap);
     va_end(ap);
 }
 
@@ -58,7 +58,7 @@ void Logger::info(const char* format, ...)
 {
     va_list ap;
     va_start(ap, format);
-    Logger::log(LogLevel::INFO, "INFO", format, ap);
+    Logger::log(LogLevel::INFO, "INFO", "[0;34m", format, ap);
     va_end(ap);
 }
 
@@ -66,7 +66,7 @@ void Logger::debug(const char* format, ...)
 {
     va_list ap;
     va_start(ap, format);
-    Logger::log(LogLevel::DEBUG, "DEBUG", format, ap);
+    Logger::log(LogLevel::DEBUG, "DEBUG", "[0;32m", format, ap);
     va_end(ap);
 }
 

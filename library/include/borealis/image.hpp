@@ -27,11 +27,11 @@ namespace brls
 
 enum class ImageScaleType
 {
-    NO_RESIZE = 0,  // Nothing is resized
-    FIT,            // The image is shrinked to fit the view boundaries
-    CROP,           // The image is not resized but is cropped if bigger than the view
-    SCALE,          // The image is stretched to match the view boundaries
-    VIEW_RESIZE     // The view is resized to match the image
+    NO_RESIZE = 0, // Nothing is resized
+    FIT, // The image is shrinked to fit the view boundaries
+    CROP, // The image is not resized but is cropped if bigger than the view
+    SCALE, // The image is stretched to match the view boundaries
+    VIEW_RESIZE // The view is resized to match the image
 };
 
 // An image

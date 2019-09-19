@@ -82,8 +82,9 @@ class Application
     static void setTheme(Theme theme);
     static ThemeValues* getThemeValues();
     static ThemeValues* getThemeValuesForVariant(ThemeVariant variant);
+    static ThemeVariant getThemeVariant();
 
-    static void onGamepadButtonPressed(char button);
+    static void onGamepadButtonPressed(char button, bool repeating);
 
     /**
       * "Crashes" the app (displays a fullscreen CrashFrame)
@@ -147,7 +148,9 @@ class Application
 
     inline static FramerateCounter* framerateCounter = nullptr;
 
-    static inline float frameTime = 0.0f;
+    inline static float frameTime = 0.0f;
+
+    inline static View* repetitionOldFocus = nullptr;
 
     static void onWindowSizeChanged();
 

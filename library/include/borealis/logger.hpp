@@ -43,7 +43,7 @@ class Logger
     static void debug(const char* format, ...);
 
   protected:
-    static void log(LogLevel logLevel, const char* prefix, const char* format, va_list ap);
+    static void log(LogLevel logLevel, const char* prefix, const char* color, const char* format, va_list ap);
 };
 
 } // namespace brls

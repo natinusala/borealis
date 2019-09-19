@@ -507,7 +507,7 @@ ListItemGroupSpacing::ListItemGroupSpacing(bool separator)
         this->setColor(theme->listItemSeparatorColor);
 }
 
-SelectListItem::SelectListItem(std::string label, std::vector<std::string> values, size_t selectedValue)
+SelectListItem::SelectListItem(std::string label, std::vector<std::string> values, unsigned selectedValue)
     : ListItem(label, "")
     , values(values)
     , selectedValue(selectedValue)
@@ -527,6 +527,15 @@ SelectListItem::SelectListItem(std::string label, std::vector<std::string> value
         };
         Dropdown::open(this->getLabel(), this->values, dropdownListener, this->selectedValue);
     });
+}
+
+void SelectListItem::setSelectedValue(unsigned value)
+{
+    if (value >= 0 && value < this->values.size())
+    {
+        this->selectedValue = value;
+        this->setValue(this->values[value], false, false);
+    }
 }
 
 void SelectListItem::setListener(SelectListener listener)

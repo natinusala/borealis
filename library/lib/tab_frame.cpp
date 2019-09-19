@@ -44,7 +44,7 @@ bool TabFrame::onCancel()
 {
     if (!this->sidebar->isChildFocused())
     {
-        Application::onGamepadButtonPressed(GLFW_GAMEPAD_BUTTON_DPAD_LEFT);
+        Application::onGamepadButtonPressed(GLFW_GAMEPAD_BUTTON_DPAD_LEFT, false);
         return true;
     }
 

@@ -56,6 +56,8 @@ constexpr uint32_t WINDOW_HEIGHT   = 720;
 constexpr const char* WINDOW_TITLE = WINDOW_NAME;
 
 #define DEFAULT_FPS 60
+#define BUTTON_REPEAT_DELAY 15
+#define BUTTON_REPEAT_CADENCY 5
 
 // glfw code from the glfw hybrid app by fincs
 // https://github.com/fincs/hybrid_app
@@ -340,11 +342,31 @@ bool Application::mainLoop()
 
     // Trigger gamepad events
     // TODO: Translate axis events to dpad events here
-    // TODO: Handle key repetition
+
+    bool anyButtonPressed               = false;
+    bool repeating                      = false;
+    static retro_time_t buttonPressTime = 0;
+    static int repeatingButtonTimer     = 0;
+
     for (int i = GLFW_GAMEPAD_BUTTON_A; i <= GLFW_GAMEPAD_BUTTON_LAST; i++)
     {
-        if (Application::gamepad.buttons[i] == GLFW_PRESS && Application::oldGamepad.buttons[i] != GLFW_PRESS)
-            Application::onGamepadButtonPressed(i);
+        if (Application::gamepad.buttons[i] == GLFW_PRESS)
+        {
+            anyButtonPressed = true;
+            repeating        = (repeatingButtonTimer > BUTTON_REPEAT_DELAY && repeatingButtonTimer % BUTTON_REPEAT_CADENCY == 0);
+
+            if (Application::oldGamepad.buttons[i] != GLFW_PRESS || repeating)
+                Application::onGamepadButtonPressed(i, repeating);
+        }
+
+        if (Application::gamepad.buttons[i] != Application::oldGamepad.buttons[i])
+            buttonPressTime = repeatingButtonTimer = 0;
+    }
+
+    if (anyButtonPressed && cpu_features_get_time_usec() - buttonPressTime > 1000)
+    {
+        buttonPressTime = cpu_features_get_time_usec();
+        repeatingButtonTimer++; // Increased once every ~1ms
     }
 
     Application::oldGamepad = Application::gamepad;
@@ -394,10 +416,15 @@ void Application::quit()
     glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 
-void Application::onGamepadButtonPressed(char button)
+void Application::onGamepadButtonPressed(char button, bool repeating)
 {
     if (Application::blockInputsTokens != 0)
         return;
+
+    if (repeating && Application::repetitionOldFocus == Application::currentFocus)
+        return;
+
+    Application::repetitionOldFocus = Application::currentFocus;
 
     switch (button)
     {
@@ -714,6 +741,11 @@ ThemeValues* Application::getThemeValues()
 ThemeValues* Application::getThemeValuesForVariant(ThemeVariant variant)
 {
     return &Application::currentTheme.colors[variant];
+}
+
+ThemeVariant Application::getThemeVariant()
+{
+    return Application::currentThemeVariant;
 }
 
 void Application::crash(std::string text)
