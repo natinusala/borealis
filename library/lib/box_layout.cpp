@@ -48,6 +48,19 @@ void BoxLayout::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heig
 
     //Disable scissoring
     nvgRestore(vg);
+
+    unsigned viewHeight = height - 8;
+
+    if (this->orientation == BoxLayoutOrientation::VERTICAL && this->entriesHeight > viewHeight)
+    {
+        float scrollbarHeight = static_cast<double>(viewHeight * viewHeight) / this->entriesHeight;
+        float scrollbarPos    = (static_cast<double>(-this->scrollY)) / static_cast<double>(this->entriesHeight - viewHeight) * (viewHeight - std::ceil(scrollbarHeight));
+
+        nvgFillColor(vg, RGBA(ctx->theme->scrollBarColor.r, ctx->theme->scrollBarColor.g, ctx->theme->scrollBarColor.b, this->scrollBarAlpha * 0xFF));
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, this->getX() + this->getWidth() - style->List.scrollBarWidth, this->getY() + std::floor(scrollbarPos) + style->List.scrollBarPadding, style->List.scrollBarWidth, std::floor(scrollbarHeight) - style->List.scrollBarPadding * 2, style->List.scrollBarRadius);
+        nvgFill(vg);
+    }
 }
 
 void BoxLayout::setSpacing(unsigned spacing)
@@ -86,12 +99,14 @@ View* BoxLayout::defaultFocus(View* oldFocus)
     for (unsigned i = 0; i < this->children.size(); i++)
     {
         View* newFocus = this->children[i]->view->requestFocus(FocusDirection::NONE, oldFocus);
+
         if (newFocus)
         {
             this->focusedIndex = i;
             return newFocus;
         }
     }
+
 
     return nullptr;
 }
@@ -121,6 +136,9 @@ View* BoxLayout::updateFocus(FocusDirection direction, View* oldFocus, bool from
                     return newFocus;
                 }
             }
+
+            BoxLayout::animateScrollbar();
+
             return nullptr;
         }
         // Give focus to previous focusable view
@@ -139,12 +157,34 @@ View* BoxLayout::updateFocus(FocusDirection direction, View* oldFocus, bool from
                 }
             }
 
+            BoxLayout::animateScrollbar();
+
             return nullptr;
         }
     }
 
     // Fallback to parent
     return View::requestFocus(direction, oldFocus);
+}
+
+void BoxLayout::animateScrollbar()
+{
+    menu_animation_ctx_tag tag = (uintptr_t) & this->alpha;
+    menu_animation_kill_by_tag(&tag);
+
+    this->scrollBarAlpha = 0.5f;
+
+    menu_animation_ctx_entry_t entry;
+    entry.cb           = nullptr;
+    entry.duration     = 500;
+    entry.easing_enum  = EASING_LINEAR;
+    entry.subject      = &this->scrollBarAlpha;
+    entry.tag          = tag;
+    entry.target_value = 0.2f;
+    entry.tick         = [](void* userdata) {};
+    entry.userdata     = nullptr;
+
+    menu_animation_push(&entry);
 }
 
 void BoxLayout::setFocusedIndex(unsigned index)

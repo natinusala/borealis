@@ -77,6 +77,8 @@ Theme Theme::horizon()
     LIGHT.dialogButtonColor          = nvgRGB(46, 78, 255);
     LIGHT.dialogButtonSeparatorColor = nvgRGB(210, 210, 210);
 
+    LIGHT.scrollBarColor = nvgRGB(138, 138, 138);
+
     // Dark variant
     DARK.backgroundColor[0] = 0.176f;
     DARK.backgroundColor[1] = 0.176f;
@@ -107,10 +109,12 @@ Theme Theme::horizon()
     DARK.tableBodyTextColor       = nvgRGB(155, 157, 156);
 
     DARK.dropdownBackgroundColor = nvgRGBA(0, 0, 0, 178); // TODO: 178 may be too much for dark theme
+    DARK.nextStageBulletColor = nvgRGB(165, 165, 165);
 
     DARK.nextStageBulletColor = nvgRGB(165, 165, 165);
 
     DARK.spinnerBarColor = nvgRGBA(131, 131, 131, 102); // TODO: get this right
+    DARK.headerRectangleColor = nvgRGB(160, 160, 160);
 
     DARK.headerRectangleColor = nvgRGB(160, 160, 160);
 
@@ -123,6 +127,8 @@ Theme Theme::horizon()
     DARK.dialogBackdrop             = nvgRGBA(0, 0, 0, 100);
     DARK.dialogButtonColor          = nvgRGB(3, 251, 199);
     DARK.dialogButtonSeparatorColor = nvgRGB(103, 103, 103);
+
+    DARK.scrollBarColor = nvgRGB(153, 153, 153);
 
     return theme;
 }

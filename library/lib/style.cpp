@@ -88,6 +88,10 @@ Style Style::horizon()
         .marginTopBottom = 42,
         .spacing         = 61,
 
+        .scrollBarWidth   = 4,
+        .scrollBarRadius  = 2,
+        .scrollBarPadding = 3,
+
         .Item = {
             .height             = 69, // offset by 1 to have the highlight hide the separator
             .heightWithSubLabel = 99,

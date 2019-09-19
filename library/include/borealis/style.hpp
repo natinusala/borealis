@@ -105,6 +105,10 @@ class Style
         unsigned marginTopBottom;
         unsigned spacing;
 
+        unsigned scrollBarWidth;
+        unsigned scrollBarRadius;
+        unsigned scrollBarPadding;
+
         // Item
         struct
         {
