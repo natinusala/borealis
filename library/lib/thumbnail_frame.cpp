@@ -96,8 +96,7 @@ void ThumbnailSidebar::layout(NVGcontext* vg, Style* style, FontStash* stash)
             getX() + style->ThumbnailSidebar.marginLeftRight,
             getY() + style->ThumbnailSidebar.marginTopBottom,
             size,
-            size
-        );
+            size);
     }
 }
 

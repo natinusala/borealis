@@ -343,10 +343,10 @@ bool Application::mainLoop()
     // Trigger gamepad events
     // TODO: Translate axis events to dpad events here
 
-    bool anyButtonPressed = false;
-    bool repeating        = false;
-    static int repeatingButtonTimer = 0;
-    static int buttonPressTime = 0;
+    bool anyButtonPressed               = false;
+    bool repeating                      = false;
+    static retro_time_t buttonPressTime = 0;
+    static int repeatingButtonTimer     = 0;
 
     for (int i = GLFW_GAMEPAD_BUTTON_A; i <= GLFW_GAMEPAD_BUTTON_LAST; i++)
     {
@@ -366,7 +366,7 @@ bool Application::mainLoop()
     if (anyButtonPressed && cpu_features_get_time_usec() - buttonPressTime > 1000)
     {
         buttonPressTime = cpu_features_get_time_usec();
-        repeatingButtonTimer++;
+        repeatingButtonTimer++; // Increased once every ~1ms
     }
 
     Application::oldGamepad = Application::gamepad;
@@ -423,7 +423,7 @@ void Application::onGamepadButtonPressed(char button, bool repeating)
 
     if (repeating && Application::repetitionOldFocus == Application::currentFocus)
         return;
-    
+
     Application::repetitionOldFocus = Application::currentFocus;
 
     switch (button)
