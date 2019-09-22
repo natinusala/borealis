@@ -35,7 +35,7 @@ namespace brls
             float color[3];
         };
 
-        static inline const Vertex rectVertices[] =
+        static inline const Vertex fullscreenVertices[] =
         {
             { { -1.0f, -1.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } },
             { { 3.0f, -1.0f, 0.0f }, { 2.0f, 0.0f, 0.0f } },

@@ -56,7 +56,7 @@ namespace brls
         glBindVertexArray(vao);
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(ShaderUtils::rectVertices), ShaderUtils::rectVertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(ShaderUtils::fullscreenVertices), ShaderUtils::fullscreenVertices, GL_STATIC_DRAW);
 
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ShaderUtils::Vertex), (void*)offsetof(ShaderUtils::Vertex, position));
         glEnableVertexAttribArray(0);
