@@ -61,7 +61,7 @@ class Image : public View
     int texture = -1;
     NVGpaint imgPaint;
 
-    ImageScaleType imageScaleType = ImageScaleType::NO_RESIZE;
+    ImageScaleType imageScaleType = ImageScaleType::FIT;
 
     int imageX = 0, imageY = 0;
     int imageWidth = 0, imageHeight = 0;
