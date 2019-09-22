@@ -61,6 +61,9 @@ void BoxLayout::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heig
         nvgRoundedRect(vg, this->getX() + this->getWidth() - style->List.scrollBarWidth, this->getY() + std::floor(scrollbarPos) + style->List.scrollBarPadding, style->List.scrollBarWidth, std::floor(scrollbarHeight) - style->List.scrollBarPadding * 2, style->List.scrollBarRadius);
         nvgFill(vg);
     }
+
+    menu_animation_ctx_tag tag = (uintptr_t) & this->scrollY;
+    menu_animation_kill_by_tag(&tag);
 }
 
 void BoxLayout::setSpacing(unsigned spacing)
@@ -169,7 +172,7 @@ View* BoxLayout::updateFocus(FocusDirection direction, View* oldFocus, bool from
 
 void BoxLayout::animateScrollbar()
 {
-    menu_animation_ctx_tag tag = (uintptr_t) & this->alpha;
+    menu_animation_ctx_tag tag = (uintptr_t) & this->scrollBarAlpha;
     menu_animation_kill_by_tag(&tag);
 
     this->scrollBarAlpha = Application::getThemeValues()->scrollBarAlphaFull;

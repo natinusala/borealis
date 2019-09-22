@@ -72,6 +72,7 @@ class Label : public View
 
   public:
     Label(LabelStyle labelStyle, std::string text, bool multiline = false);
+    ~Label();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;

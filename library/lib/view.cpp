@@ -611,6 +611,9 @@ View::~View()
 
     menu_animation_ctx_tag collapseTag = (uintptr_t) & this->collapseState;
     menu_animation_kill_by_tag(&collapseTag);
+
+    menu_animation_ctx_tag tag = (uintptr_t) & this->clickAnimationAlpha;
+    menu_animation_kill_by_tag(&tag);
 }
 
 } // namespace brls

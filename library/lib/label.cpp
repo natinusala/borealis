@@ -68,6 +68,11 @@ Label::Label(LabelStyle labelStyle, std::string text, bool multiline)
     }
 }
 
+Label::~Label() {
+    menu_animation_ctx_tag tag = (uintptr_t) & this->tickerOffset;
+    menu_animation_kill_by_tag(&tag);
+}
+
 void Label::setHorizontalAlign(NVGalign align)
 {
     this->horizontalAlign = align;
