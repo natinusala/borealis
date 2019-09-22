@@ -172,7 +172,7 @@ void BoxLayout::animateScrollbar()
     menu_animation_ctx_tag tag = (uintptr_t) & this->alpha;
     menu_animation_kill_by_tag(&tag);
 
-    this->scrollBarAlpha = 0.5f;
+    this->scrollBarAlpha = Application::getThemeValues()->scrollBarAlphaFull;
 
     menu_animation_ctx_entry_t entry;
     entry.cb           = nullptr;
@@ -180,7 +180,7 @@ void BoxLayout::animateScrollbar()
     entry.easing_enum  = EASING_LINEAR;
     entry.subject      = &this->scrollBarAlpha;
     entry.tag          = tag;
-    entry.target_value = 0.2f;
+    entry.target_value = Application::getThemeValues()->scrollBarAlphaNormal;
     entry.tick         = [](void* userdata) {};
     entry.userdata     = nullptr;
 

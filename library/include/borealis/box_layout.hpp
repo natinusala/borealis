@@ -58,7 +58,7 @@ class BoxLayout : public View
 
     float scrollY = 0.0f; // all childrens are offset by this value
 
-    float scrollBarAlpha = 0.2f;
+    float scrollBarAlpha = Application::getThemeValues()->scrollBarAlphaNormal;
 
     View* updateFocus(FocusDirection direction, View* oldFocus, bool fromUp);
     void updateScroll(bool animated = true);

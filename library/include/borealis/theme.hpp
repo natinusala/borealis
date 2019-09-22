@@ -83,6 +83,10 @@ typedef struct
     NVGcolor dialogButtonSeparatorColor;
 
     NVGcolor scrollBarColor;
+    float scrollBarAlphaNormal;
+    float scrollBarAlphaFull;
+
+    float clickAnimationAlpha;
 } ThemeValues;
 
 // A theme contains colors for all variants

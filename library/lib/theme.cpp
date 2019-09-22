@@ -65,7 +65,12 @@ Theme Theme::horizon()
 
     LIGHT.spinnerBarColor = nvgRGBA(131, 131, 131, 102);
 
+    LIGHT.scrollBarColor = nvgRGB(138, 138, 138);
+    LIGHT.scrollBarAlphaNormal = 0.2f;
+    LIGHT.scrollBarAlphaFull = 0.5f;
     LIGHT.headerRectangleColor = nvgRGB(127, 127, 127);
+
+    LIGHT.clickAnimationAlpha = 0.3f;
 
     LIGHT.buttonPlainEnabledBackgroundColor  = nvgRGB(50, 79, 241);
     LIGHT.buttonPlainDisabledBackgroundColor = nvgRGB(201, 201, 209);
@@ -116,6 +121,11 @@ Theme Theme::horizon()
     DARK.spinnerBarColor = nvgRGBA(131, 131, 131, 102); // TODO: get this right
     DARK.headerRectangleColor = nvgRGB(160, 160, 160);
 
+    DARK.scrollBarColor = nvgRGB(153, 153, 153);
+    DARK.scrollBarAlphaNormal = 0.2f;
+    DARK.scrollBarAlphaFull = 0.5f;
+    
+    DARK.clickAnimationAlpha = 0.3f;
     DARK.headerRectangleColor = nvgRGB(160, 160, 160);
 
     DARK.buttonPlainEnabledBackgroundColor  = nvgRGB(1, 255, 201);
