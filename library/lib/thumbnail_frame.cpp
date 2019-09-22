@@ -85,18 +85,62 @@ void ThumbnailSidebar::draw(NVGcontext* vg, int x, int y, unsigned width, unsign
 {
     if (this->image)
         this->image->frame(ctx);
+
+    if (this->title)
+        this->title->frame(ctx);
+
+    if (this->subTitle)
+        this->subTitle->frame(ctx);
 }
 
 void ThumbnailSidebar::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
+    unsigned yAdvance = getY() + style->ThumbnailSidebar.marginTopBottom;
+    unsigned titleX     = getX() + style->ThumbnailSidebar.marginLeftRight / 2;
+    unsigned titleWidth = getWidth() - style->ThumbnailSidebar.marginLeftRight;
+
+    // Image
     if (this->image)
     {
-        unsigned size = getWidth() - style->ThumbnailSidebar.marginLeftRight * 2;
+        unsigned imageX     = getX() + style->ThumbnailSidebar.marginLeftRight;
+        unsigned imageWidth = getWidth() - style->ThumbnailSidebar.marginLeftRight * 2;
+
         this->image->setBoundaries(
-            getX() + style->ThumbnailSidebar.marginLeftRight,
-            getY() + style->ThumbnailSidebar.marginTopBottom,
-            size,
-            size);
+            imageX,
+            yAdvance,
+            imageWidth,
+            imageWidth);
+
+        yAdvance += this->image->getHeight() + style->ThumbnailSidebar.marginTopBottom;
+    }
+
+    // Title
+    if (this->title)
+    {
+        this->title->setBoundaries(
+            titleX,
+            yAdvance,
+            titleWidth,
+            0 // height is dynamic
+        );
+
+        // Call layout directly to update height
+        this->title->layout(vg, style, stash);
+
+        yAdvance += this->title->getHeight() + style->ThumbnailSidebar.marginTopBottom / 2;
+    }
+
+    // Subtitle
+    if (this->subTitle)
+    {
+        this->subTitle->setBoundaries(
+            titleX,
+            yAdvance,
+            titleWidth,
+            0 // height doesn't matter
+        );
+
+        this->subTitle->invalidate();
     }
 }
 
@@ -109,7 +153,6 @@ void ThumbnailSidebar::setThumbnail(std::string imagePath)
     else
     {
         this->image = new Image(imagePath);
-        this->image->setScaleType(ImageScaleType::FIT);
         this->image->setParent(this);
         this->invalidate();
     }
@@ -124,16 +167,42 @@ void ThumbnailSidebar::setThumbnail(unsigned char* buffer, size_t bufferSize)
     else
     {
         this->image = new Image(buffer, bufferSize);
-        //this->image->setScaleType(ImageScaleType::FIT);
         this->image->setParent(this);
         this->invalidate();
     }
+}
+
+void ThumbnailSidebar::setSubtitle(std::string subTitle)
+{
+    if (!this->subTitle)
+        this->subTitle = new Label(LabelStyle::DESCRIPTION, "");
+
+    this->subTitle->setText(subTitle);
+
+    this->invalidate();
+}
+
+// TODO: Add ellipsis if the title exceeds three lines
+void ThumbnailSidebar::setTitle(std::string title)
+{
+    if (!this->title)
+        this->title = new Label(LabelStyle::REGULAR, "", true);
+
+    this->title->setText(title);
+
+    this->invalidate();
 }
 
 ThumbnailSidebar::~ThumbnailSidebar()
 {
     if (this->image)
         delete this->image;
+
+    if (this->title)
+        delete this->title;
+
+    if (this->subTitle)
+        delete this->subTitle;
 }
 
 } // namespace brls

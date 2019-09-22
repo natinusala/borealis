@@ -31,6 +31,9 @@ class ThumbnailSidebar : public View
     Image* image   = nullptr;
     Button* button = nullptr;
 
+    Label* title    = nullptr;
+    Label* subTitle = nullptr;
+
   public:
     ThumbnailSidebar();
     ~ThumbnailSidebar();
@@ -40,6 +43,9 @@ class ThumbnailSidebar : public View
 
     void setThumbnail(std::string imagePath);
     void setThumbnail(unsigned char* buffer, size_t bufferSize);
+
+    void setTitle(std::string title);
+    void setSubtitle(std::string subTitle);
 };
 
 // An applet frame with a sidebar on the right, containing a thumbnail
