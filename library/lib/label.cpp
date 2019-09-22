@@ -227,15 +227,15 @@ void Label::willDisappear()
 
 void Label::startTickerAnimation()
 {
-    this->waitTimerCtx.duration = 1500;
-    this->waitTimerCtx.cb = [&](void *userdata) {
+    this->tickerWaitTimerCtx.duration = 1500;
+    this->tickerWaitTimerCtx.cb = [&](void *userdata) {
         menu_animation_ctx_tag tag = (uintptr_t) & this->tickerOffset;
         menu_animation_kill_by_tag(&tag);
 
         this->tickerOffset = 0.0f;
 
         menu_animation_ctx_entry_t entry;
-        entry.cb           = [&](void *userdata) { menu_timer_start(&this->waitTimer, &this->waitTimerCtx); };
+        entry.cb           = [&](void *userdata) { menu_timer_start(&this->tickerWaitTimer, &this->tickerWaitTimerCtx); };
         entry.duration     = this->textTickerWidth * 15;
         entry.easing_enum  = EASING_LINEAR;
         entry.subject      = &this->tickerOffset;
@@ -247,13 +247,13 @@ void Label::startTickerAnimation()
         menu_animation_push(&entry);
     };
 
-    menu_timer_start(&this->waitTimer, &this->waitTimerCtx);
+    menu_timer_start(&this->tickerWaitTimer, &this->tickerWaitTimerCtx);
 }
 
 void Label::stopTickerAnimation()
 {
     this->tickerOffset = 0.0f;
-    menu_timer_kill(&this->waitTimer);
+    menu_timer_kill(&this->tickerWaitTimer);
 }
 
 
