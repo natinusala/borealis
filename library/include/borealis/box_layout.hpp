@@ -117,9 +117,13 @@ class BoxLayout : public View
     void addView(View* view, bool fill = false);
 
     /**
-      * Removes the view at specified 
+      * Removes the view at specified
       * The view will be freed if free
       * is set to true (defaults to true)
+      *
+      * Warning: this method isn't correctly
+      * implemented - currently removing a view will
+      * most likely result in memory corruption
       */
     void removeView(int index, bool free = true);
 
