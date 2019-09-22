@@ -95,7 +95,7 @@ void ThumbnailSidebar::draw(NVGcontext* vg, int x, int y, unsigned width, unsign
 
 void ThumbnailSidebar::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
-    unsigned yAdvance = getY() + style->ThumbnailSidebar.marginTopBottom;
+    unsigned yAdvance   = getY() + style->ThumbnailSidebar.marginTopBottom;
     unsigned titleX     = getX() + style->ThumbnailSidebar.marginLeftRight / 2;
     unsigned titleWidth = getWidth() - style->ThumbnailSidebar.marginLeftRight;
 
