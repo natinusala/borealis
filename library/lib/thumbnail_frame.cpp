@@ -109,7 +109,7 @@ void ThumbnailSidebar::setThumbnail(std::string imagePath)
     else
     {
         this->image = new Image(imagePath);
-        this->image->setImageScaleType(ImageScaleType::FIT);
+        this->image->setScaleType(ImageScaleType::FIT);
         this->image->setParent(this);
         this->invalidate();
     }
@@ -124,7 +124,7 @@ void ThumbnailSidebar::setThumbnail(unsigned char* buffer, size_t bufferSize)
     else
     {
         this->image = new Image(buffer, bufferSize);
-        //this->image->setImageScaleType(ImageScaleType::FIT);
+        //this->image->setScaleType(ImageScaleType::FIT);
         this->image->setParent(this);
         this->invalidate();
     }

@@ -50,7 +50,7 @@ class Image : public View
     void setImage(unsigned char* buffer, size_t bufferSize);
     void setImage(std::string imagePath);
 
-    void setImageScaleType(ImageScaleType imageScaleType);
+    void setScaleType(ImageScaleType imageScaleType);
     void setOpacity(float opacity);
 
   private:

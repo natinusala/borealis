@@ -174,7 +174,7 @@ void Image::setOpacity(float opacity)
     this->invalidate();
 }
 
-void Image::setImageScaleType(ImageScaleType imageScaleType)
+void Image::setScaleType(ImageScaleType imageScaleType)
 {
     this->imageScaleType = imageScaleType;
     invalidate();
