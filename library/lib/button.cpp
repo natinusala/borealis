@@ -71,13 +71,15 @@ void Button::getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom
 
 void Button::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
+    float cornerRadius = (float) style->Button.cornerRadius;
+
     // Background
     switch (this->style)
     {
         case ButtonStyle::PLAIN:
         {
             nvgFillColor(vg, a(ctx->theme->buttonPlainEnabledBackgroundColor));
-            nvgRoundedRect(vg, x, y, width, height, style->Button.cornerRadius);
+            nvgRoundedRect(vg, x, y, width, height, cornerRadius);
             nvgFill(vg);
             break;
         }
@@ -85,7 +87,29 @@ void Button::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height,
             break;
     }
 
-    // TODO: Shadow (for plain style)
+    // Shadow
+    // TODO: no shadow if disabled
+    float shadowWidth   = style->Button.shadowWidth;
+    float shadowFeather = style->Button.shadowFeather;
+    float shadowOpacity = style->Button.shadowOpacity;
+    float shadowOffset  = style->Button.shadowOffset;
+    if (this->style == ButtonStyle::PLAIN)
+    {
+        NVGpaint shadowPaint = nvgBoxGradient(vg,
+            x, y + shadowWidth,
+            width, height,
+            cornerRadius * 2, shadowFeather,
+            RGBA(0, 0, 0, shadowOpacity * alpha), transparent);
+
+        nvgBeginPath(vg);
+        nvgRect(vg, x - shadowOffset, y - shadowOffset,
+            width + shadowOffset * 2, height + shadowOffset * 3);
+        nvgRoundedRect(vg, x, y, width, height, cornerRadius);
+        nvgPathWinding(vg, NVG_HOLE);
+        nvgFillPaint(vg, shadowPaint);
+        nvgFill(vg);
+
+    }
 
     // Label
     this->label->frame(ctx);

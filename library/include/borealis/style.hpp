@@ -154,6 +154,11 @@ class Style
         float cornerRadius;
 
         unsigned highlightInset;
+
+        float shadowWidth;
+        float shadowFeather;
+        float shadowOpacity;
+        float shadowOffset;
     } Button;
 
     // TableRow

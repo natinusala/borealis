@@ -127,7 +127,12 @@ Style Style::horizon()
     style.Button = {
         .cornerRadius = 5.0f,
 
-        .highlightInset = 2
+        .highlightInset = 2,
+
+        .shadowWidth   = 2.0f,
+        .shadowFeather = 10.0f,
+        .shadowOpacity = 63.75f,
+        .shadowOffset  = 10.0f
     };
 
     style.TableRow = {
