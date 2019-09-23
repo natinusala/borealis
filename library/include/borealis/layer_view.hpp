@@ -18,9 +18,8 @@
 
 #pragma once
 
-#include <vector>
-
 #include <borealis/view.hpp>
+#include <vector>
 
 namespace brls
 {
@@ -28,24 +27,24 @@ namespace brls
 // A view containing multiple children views with the ability to freely switch between these layers
 class LayerView : public View
 {
-public:
+  public:
     LayerView();
     ~LayerView();
 
-    void addLayer(View *view);
+    void addLayer(View* view);
     void changeLayer(int index, bool focus = false);
     int getLayerIndex();
 
-    View* requestFocus(FocusDirection direction, View *oldFocus, bool fromUp);
+    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp);
 
-    void draw(NVGcontext *vg, int x, int y, unsigned width, unsigned height, Style *style, FrameContext *ctx) override;
-    void layout(NVGcontext* vg, Style *style, FontStash *stash) override;
+    void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
+    void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
 
     void willAppear() override;
     void willDisappear() override;
 
-private:
-    std::vector<View *> layers;
+  private:
+    std::vector<View*> layers;
     int selectedIndex = 0;
 };
 

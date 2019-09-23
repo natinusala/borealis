@@ -100,10 +100,10 @@ void ThumbnailSidebar::draw(NVGcontext* vg, int x, int y, unsigned width, unsign
 
 void ThumbnailSidebar::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
-    unsigned sidebarWidth   = getWidth() - style->AppletFrame.separatorSpacing;
-    unsigned yAdvance       = getY() + style->ThumbnailSidebar.marginTopBottom;
-    unsigned titleX         = getX() + style->ThumbnailSidebar.marginLeftRight / 2;
-    unsigned titleWidth     = sidebarWidth - style->ThumbnailSidebar.marginLeftRight;
+    unsigned sidebarWidth = getWidth() - style->AppletFrame.separatorSpacing;
+    unsigned yAdvance     = getY() + style->ThumbnailSidebar.marginTopBottom;
+    unsigned titleX       = getX() + style->ThumbnailSidebar.marginLeftRight / 2;
+    unsigned titleWidth   = sidebarWidth - style->ThumbnailSidebar.marginLeftRight;
 
     // Image
     if (this->image)
@@ -150,15 +150,14 @@ void ThumbnailSidebar::layout(NVGcontext* vg, Style* style, FontStash* stash)
     }
 
     //Button
-    unsigned buttonWidth    = sidebarWidth - style->ThumbnailSidebar.buttonMargin * 2;
-    unsigned buttonHeight   = style->ThumbnailSidebar.buttonHeight;
+    unsigned buttonWidth  = sidebarWidth - style->ThumbnailSidebar.buttonMargin * 2;
+    unsigned buttonHeight = style->ThumbnailSidebar.buttonHeight;
 
     this->button->setBoundaries(
         getX() + style->ThumbnailSidebar.buttonMargin,
         getY() + getHeight() - style->ThumbnailSidebar.marginTopBottom - buttonHeight,
         buttonWidth,
-        buttonHeight
-    );
+        buttonHeight);
 }
 
 View* ThumbnailSidebar::requestFocus(FocusDirection direction, View* oldFocus, bool fromUp)

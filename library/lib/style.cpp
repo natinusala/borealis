@@ -211,8 +211,8 @@ Style Style::horizon()
         .marginLeftRight = 109, // used for the image only = (410 - 192) / 2, image size is 192*192 with a 410px wide sidebar
         .marginTopBottom = 47,
 
-        .buttonHeight   = 70,
-        .buttonMargin   = 60
+        .buttonHeight = 70,
+        .buttonMargin = 60
     };
 
     style.AnimationDuration = {

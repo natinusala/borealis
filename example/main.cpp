@@ -76,7 +76,6 @@ int main(int argc, char* argv[])
 
     brls::SelectListItem* layerSelectItem = new brls::SelectListItem("Select Layer", { "Layer 1", "Layer 2" });
 
-
     testList->addView(themeItem);
     testList->addView(jankItem);
     testList->addView(crashItem);

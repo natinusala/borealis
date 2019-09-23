@@ -24,7 +24,6 @@ namespace brls
 
 LayerView::LayerView()
 {
-
 }
 
 LayerView::~LayerView()
@@ -84,7 +83,7 @@ int LayerView::getLayerIndex()
     return this->selectedIndex;
 }
 
-View* LayerView::requestFocus(FocusDirection direction, View *oldFocus, bool fromUp)
+View* LayerView::requestFocus(FocusDirection direction, View* oldFocus, bool fromUp)
 {
     if (fromUp)
         return View::requestFocus(direction, oldFocus);
