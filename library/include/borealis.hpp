@@ -36,6 +36,7 @@
 #include <borealis/header.hpp>
 #include <borealis/image.hpp>
 #include <borealis/label.hpp>
+#include <borealis/layer_view.hpp>
 #include <borealis/list.hpp>
 #include <borealis/logger.hpp>
 #include <borealis/popup_frame.hpp>
