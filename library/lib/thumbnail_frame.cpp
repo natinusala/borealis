@@ -84,6 +84,11 @@ ThumbnailSidebar::ThumbnailSidebar()
     this->button->setParent(this);
 }
 
+Button* ThumbnailSidebar::getButton()
+{
+    return this->button;
+}
+
 void ThumbnailSidebar::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
     if (this->image)

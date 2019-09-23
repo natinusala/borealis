@@ -33,6 +33,12 @@ enum class ButtonStyle
     CRASH // same as borderless but with an increased corner radius
 };
 
+enum class ButtonState
+{
+    ENABLED = 0,
+    DISABLED
+};
+
 // A button
 class Button : public View
 {
@@ -44,6 +50,8 @@ class Button : public View
 
     LabelStyle getLabelStyle();
 
+    ButtonState state = ButtonState::ENABLED;
+
   public:
     Button(ButtonStyle style, std::string label);
     ~Button();
@@ -52,6 +60,8 @@ class Button : public View
     bool onClick() override;
     void layout(NVGcontext* vg, Style* style, FontStash* stash);
     void getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom, unsigned* left) override;
+
+    void setState(ButtonState state);
 
     View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp) override
     {

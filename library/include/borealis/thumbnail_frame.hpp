@@ -47,6 +47,8 @@ class ThumbnailSidebar : public View
 
     void setTitle(std::string title);
     void setSubtitle(std::string subTitle);
+
+    Button* getButton();
 };
 
 // An applet frame with a sidebar on the right, containing a thumbnail

@@ -46,6 +46,7 @@ Label::Label(LabelStyle labelStyle, std::string text, bool multiline)
         case LabelStyle::CRASH:
             this->fontSize = style->Label.crashFontSize;
             break;
+        case LabelStyle::BUTTON_DISABLED:
         case LabelStyle::BUTTON:
         case LabelStyle::CRASH_BUTTON:
             this->fontSize = style->Label.buttonFontSize;
@@ -72,6 +73,11 @@ void Label::setText(std::string text)
 
     if (this->hasParent())
         this->getParent()->invalidate();
+}
+
+void Label::setStyle(LabelStyle style)
+{
+    this->labelStyle = style;
 }
 
 void Label::layout(NVGcontext* vg, Style* style, FontStash* stash)
@@ -119,6 +125,9 @@ void Label::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, 
                 break;
             case LabelStyle::BUTTON:
                 nvgFillColor(vg, a(ctx->theme->buttonPlainEnabledTextColor));
+                break;
+            case LabelStyle::BUTTON_DISABLED:
+                nvgFillColor(vg, a(ctx->theme->buttonPlainDisabledTextColor));
                 break;
         }
     }

@@ -70,7 +70,9 @@ typedef struct
     NVGcolor headerRectangleColor;
 
     NVGcolor buttonPlainEnabledBackgroundColor;
+    NVGcolor buttonPlainDisabledBackgroundColor;
     NVGcolor buttonPlainEnabledTextColor;
+    NVGcolor buttonPlainDisabledTextColor;
 } ThemeValues;
 
 // A theme contains colors for all variants

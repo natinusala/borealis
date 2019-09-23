@@ -32,6 +32,7 @@ enum class LabelStyle
     DESCRIPTION,
     CRASH,
     BUTTON,
+    BUTTON_DISABLED,
     CRASH_BUTTON,
     LIST_ITEM
 };
@@ -66,6 +67,7 @@ class Label : public View
     void setVerticalAlign(NVGalign align);
     void setHorizontalAlign(NVGalign align);
     void setText(std::string text);
+    void setStyle(LabelStyle style);
 
     /**
      * Sets the label color

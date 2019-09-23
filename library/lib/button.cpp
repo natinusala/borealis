@@ -23,8 +23,6 @@
 namespace brls
 {
 
-// TODO: Add a DISABLED state
-
 Button::Button(ButtonStyle style, std::string text)
     : style(style)
 {
@@ -40,7 +38,10 @@ LabelStyle Button::getLabelStyle()
         case ButtonStyle::CRASH:
             return LabelStyle::CRASH_BUTTON;
         default:
-            return LabelStyle::BUTTON;
+            if (this->state == ButtonState::DISABLED)
+                return LabelStyle::BUTTON_DISABLED;
+            else
+                return LabelStyle::BUTTON;
     }
 }
 
@@ -58,6 +59,13 @@ void Button::layout(NVGcontext* vg, Style* style, FontStash* stash)
         this->y + this->height / 2 - this->label->getHeight() / 2,
         this->label->getWidth(),
         this->label->getHeight());
+}
+
+// TODO: Animate that
+void Button::setState(ButtonState state)
+{
+    this->state = state;
+    this->label->setStyle(this->getLabelStyle());
 }
 
 void Button::getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom, unsigned* left)
@@ -78,7 +86,7 @@ void Button::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height,
     {
         case ButtonStyle::PLAIN:
         {
-            nvgFillColor(vg, a(ctx->theme->buttonPlainEnabledBackgroundColor));
+            nvgFillColor(vg, a(this->state == ButtonState::DISABLED ? ctx->theme->buttonPlainDisabledBackgroundColor : ctx->theme->buttonPlainEnabledBackgroundColor));
             nvgRoundedRect(vg, x, y, width, height, cornerRadius);
             nvgFill(vg);
             break;
@@ -88,27 +96,28 @@ void Button::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height,
     }
 
     // Shadow
-    // TODO: no shadow if disabled
-    float shadowWidth   = style->Button.shadowWidth;
-    float shadowFeather = style->Button.shadowFeather;
-    float shadowOpacity = style->Button.shadowOpacity;
-    float shadowOffset  = style->Button.shadowOffset;
-    if (this->style == ButtonStyle::PLAIN)
+    if (this->state == ButtonState::ENABLED)
     {
-        NVGpaint shadowPaint = nvgBoxGradient(vg,
-            x, y + shadowWidth,
-            width, height,
-            cornerRadius * 2, shadowFeather,
-            RGBA(0, 0, 0, shadowOpacity * alpha), transparent);
+        float shadowWidth   = style->Button.shadowWidth;
+        float shadowFeather = style->Button.shadowFeather;
+        float shadowOpacity = style->Button.shadowOpacity;
+        float shadowOffset  = style->Button.shadowOffset;
+        if (this->style == ButtonStyle::PLAIN)
+        {
+            NVGpaint shadowPaint = nvgBoxGradient(vg,
+                x, y + shadowWidth,
+                width, height,
+                cornerRadius * 2, shadowFeather,
+                RGBA(0, 0, 0, shadowOpacity * alpha), transparent);
 
-        nvgBeginPath(vg);
-        nvgRect(vg, x - shadowOffset, y - shadowOffset,
-            width + shadowOffset * 2, height + shadowOffset * 3);
-        nvgRoundedRect(vg, x, y, width, height, cornerRadius);
-        nvgPathWinding(vg, NVG_HOLE);
-        nvgFillPaint(vg, shadowPaint);
-        nvgFill(vg);
-
+            nvgBeginPath(vg);
+            nvgRect(vg, x - shadowOffset, y - shadowOffset,
+                width + shadowOffset * 2, height + shadowOffset * 3);
+            nvgRoundedRect(vg, x, y, width, height, cornerRadius);
+            nvgPathWinding(vg, NVG_HOLE);
+            nvgFillPaint(vg, shadowPaint);
+            nvgFill(vg);
+        }
     }
 
     // Label
@@ -117,6 +126,9 @@ void Button::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height,
 
 bool Button::onClick()
 {
+    if (this->state == ButtonState::DISABLED)
+        return false;
+
     if (this->clickListener)
         this->clickListener(this);
 
