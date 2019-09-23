@@ -125,8 +125,9 @@ Style Style::horizon()
     };
 
     style.Button = {
-        .cornerRadius      = 0.5f, // TODO: Adjust that
-        .crashCornerRadius = 5.0f
+        .cornerRadius = 5.0f,
+
+        .highlightInset = 2
     };
 
     style.TableRow = {

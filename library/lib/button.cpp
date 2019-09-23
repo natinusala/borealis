@@ -18,16 +18,30 @@
 */
 
 #include <borealis/button.hpp>
+#include <borealis/application.hpp>
 
 namespace brls
 {
 
+// TODO: Add a DISABLED state
+
 Button::Button(ButtonStyle style, std::string text)
     : style(style)
 {
-    this->label = new Label(LabelStyle::BUTTON, text, true);
+    this->label = new Label(this->getLabelStyle(), text, true);
     this->label->setHorizontalAlign(NVG_ALIGN_CENTER);
     this->label->setParent(this);
+}
+
+LabelStyle Button::getLabelStyle()
+{
+    switch (this->style)
+    {
+        case ButtonStyle::CRASH:
+            return LabelStyle::CRASH_BUTTON;
+        default:
+            return LabelStyle::BUTTON;
+    }
 }
 
 Button::~Button()
@@ -46,9 +60,33 @@ void Button::layout(NVGcontext* vg, Style* style, FontStash* stash)
         this->label->getHeight());
 }
 
+void Button::getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom, unsigned* left)
+{
+    Style* style = Application::getStyle();
+    *top    = style->Button.highlightInset;
+    *right  = style->Button.highlightInset;
+    *bottom = style->Button.highlightInset;
+    *left   = style->Button.highlightInset;
+}
+
 void Button::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
-    // TODO: The rest
+    // Background
+    switch (this->style)
+    {
+        case ButtonStyle::PLAIN:
+        {
+            nvgFillColor(vg, a(ctx->theme->buttonPlainEnabledBackgroundColor));
+            nvgRoundedRect(vg, x, y, width, height, style->Button.cornerRadius);
+            nvgFill(vg);
+            break;
+        }
+        default:
+            break;
+    }
+
+    // TODO: Shadow (for plain style)
+
     // Label
     this->label->frame(ctx);
 }

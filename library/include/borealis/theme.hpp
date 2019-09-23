@@ -68,6 +68,9 @@ typedef struct
     NVGcolor spinnerBarColor;
 
     NVGcolor headerRectangleColor;
+
+    NVGcolor buttonPlainEnabledBackgroundColor;
+    NVGcolor buttonPlainEnabledTextColor;
 } ThemeValues;
 
 // A theme contains colors for all variants

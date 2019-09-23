@@ -42,6 +42,8 @@ class Button : public View
 
     EventListener clickListener = nullptr;
 
+    LabelStyle getLabelStyle();
+
   public:
     Button(ButtonStyle style, std::string label);
     ~Button();
@@ -49,6 +51,7 @@ class Button : public View
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     bool onClick() override;
     void layout(NVGcontext* vg, Style* style, FontStash* stash);
+    void getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom, unsigned* left) override;
 
     View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp) override
     {
@@ -57,7 +60,7 @@ class Button : public View
 
     void getHighlightMetrics(Style* style, float* cornerRadius) override
     {
-        *cornerRadius = this->style == ButtonStyle::CRASH ? style->Button.crashCornerRadius : style->Button.cornerRadius;
+        *cornerRadius = style->Button.cornerRadius;
     }
 
     bool isHighlightBackgroundEnabled() override
@@ -66,6 +69,7 @@ class Button : public View
     }
 
     void setClickListener(EventListener listener);
+
 };
 
 } // namespace brls

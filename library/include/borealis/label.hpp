@@ -32,6 +32,7 @@ enum class LabelStyle
     DESCRIPTION,
     CRASH,
     BUTTON,
+    CRASH_BUTTON,
     LIST_ITEM
 };
 

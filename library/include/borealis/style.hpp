@@ -152,7 +152,8 @@ class Style
     struct
     {
         float cornerRadius;
-        float crashCornerRadius;
+
+        unsigned highlightInset;
     } Button;
 
     // TableRow
