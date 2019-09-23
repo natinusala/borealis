@@ -79,7 +79,6 @@ class Button : public View
     }
 
     void setClickListener(EventListener listener);
-
 };
 
 } // namespace brls

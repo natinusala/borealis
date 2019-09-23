@@ -17,8 +17,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <borealis/button.hpp>
 #include <borealis/application.hpp>
+#include <borealis/button.hpp>
 
 namespace brls
 {
@@ -71,15 +71,15 @@ void Button::setState(ButtonState state)
 void Button::getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom, unsigned* left)
 {
     Style* style = Application::getStyle();
-    *top    = style->Button.highlightInset;
-    *right  = style->Button.highlightInset;
-    *bottom = style->Button.highlightInset;
-    *left   = style->Button.highlightInset;
+    *top         = style->Button.highlightInset;
+    *right       = style->Button.highlightInset;
+    *bottom      = style->Button.highlightInset;
+    *left        = style->Button.highlightInset;
 }
 
 void Button::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
-    float cornerRadius = (float) style->Button.cornerRadius;
+    float cornerRadius = (float)style->Button.cornerRadius;
 
     // Background
     switch (this->style)
