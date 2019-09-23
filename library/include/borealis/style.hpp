@@ -254,6 +254,9 @@ class Style
     {
         unsigned marginLeftRight;
         unsigned marginTopBottom;
+
+        unsigned buttonHeight;
+        unsigned buttonMargin;
     } ThumbnailSidebar;
 
     // AnimationDuration

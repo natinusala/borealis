@@ -79,6 +79,9 @@ ThumbnailSidebar::ThumbnailSidebar()
 
     this->setBackground(Background::SIDEBAR);
     this->setWidth(style->Sidebar.width);
+
+    this->button = new Button(ButtonStyle::CRASH, "Save"); // TODO: Use a regular button here
+    this->button->setParent(this);
 }
 
 void ThumbnailSidebar::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
@@ -91,19 +94,22 @@ void ThumbnailSidebar::draw(NVGcontext* vg, int x, int y, unsigned width, unsign
 
     if (this->subTitle)
         this->subTitle->frame(ctx);
+
+    this->button->frame(ctx);
 }
 
 void ThumbnailSidebar::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
-    unsigned yAdvance   = getY() + style->ThumbnailSidebar.marginTopBottom;
-    unsigned titleX     = getX() + style->ThumbnailSidebar.marginLeftRight / 2;
-    unsigned titleWidth = getWidth() - style->ThumbnailSidebar.marginLeftRight;
+    unsigned sidebarWidth   = getWidth() - style->AppletFrame.separatorSpacing;
+    unsigned yAdvance       = getY() + style->ThumbnailSidebar.marginTopBottom;
+    unsigned titleX         = getX() + style->ThumbnailSidebar.marginLeftRight / 2;
+    unsigned titleWidth     = sidebarWidth - style->ThumbnailSidebar.marginLeftRight;
 
     // Image
     if (this->image)
     {
         unsigned imageX     = getX() + style->ThumbnailSidebar.marginLeftRight;
-        unsigned imageWidth = getWidth() - style->ThumbnailSidebar.marginLeftRight * 2;
+        unsigned imageWidth = sidebarWidth - style->ThumbnailSidebar.marginLeftRight * 2;
 
         this->image->setBoundaries(
             imageX,
@@ -142,6 +148,25 @@ void ThumbnailSidebar::layout(NVGcontext* vg, Style* style, FontStash* stash)
 
         this->subTitle->invalidate();
     }
+
+    //Button
+    unsigned buttonWidth    = sidebarWidth - style->ThumbnailSidebar.buttonMargin * 2;
+    unsigned buttonHeight   = style->ThumbnailSidebar.buttonHeight;
+
+    this->button->setBoundaries(
+        getX() + style->ThumbnailSidebar.buttonMargin,
+        getY() + getHeight() - style->ThumbnailSidebar.marginTopBottom - buttonHeight,
+        buttonWidth,
+        buttonHeight
+    );
+}
+
+View* ThumbnailSidebar::requestFocus(FocusDirection direction, View* oldFocus, bool fromUp)
+{
+    if (direction == FocusDirection::NONE)
+        return this->button->requestFocus(direction, oldFocus, fromUp);
+
+    return View::requestFocus(direction, oldFocus, fromUp);
 }
 
 void ThumbnailSidebar::setThumbnail(std::string imagePath)
@@ -203,6 +228,8 @@ ThumbnailSidebar::~ThumbnailSidebar()
 
     if (this->subTitle)
         delete this->subTitle;
+
+    delete this->button;
 }
 
 } // namespace brls
