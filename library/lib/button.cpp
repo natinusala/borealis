@@ -61,7 +61,6 @@ void Button::layout(NVGcontext* vg, Style* style, FontStash* stash)
         this->label->getHeight());
 }
 
-// TODO: Animate that
 void Button::setState(ButtonState state)
 {
     this->state = state;
