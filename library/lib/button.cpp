@@ -68,6 +68,11 @@ void Button::setState(ButtonState state)
     this->label->setStyle(this->getLabelStyle());
 }
 
+ButtonState Button::getState()
+{
+    return this->state;
+}
+
 void Button::getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom, unsigned* left)
 {
     Style* style = Application::getStyle();

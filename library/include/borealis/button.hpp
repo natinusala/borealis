@@ -61,6 +61,7 @@ class Button : public View
     void layout(NVGcontext* vg, Style* style, FontStash* stash);
     void getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom, unsigned* left) override;
 
+    ButtonState getState();
     void setState(ButtonState state);
 
     View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp) override
