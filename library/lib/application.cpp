@@ -614,7 +614,10 @@ void Application::popView(ViewAnimation animation)
             View* newLast = Application::viewStack[Application::viewStack.size() - 1];
 
             if (newLast->isHidden())
+            {
+                newLast->willAppear();
                 newLast->show([]() {}, true, animation);
+            }
         }
 
         Application::unblockInputs();
@@ -625,6 +628,7 @@ void Application::popView(ViewAnimation animation)
     if (!wait && Application::viewStack.size() > 1)
     {
         View* toShow = Application::viewStack[Application::viewStack.size() - 2];
+        toShow->willAppear();
         toShow->show([]() {}, true, animation);
     }
 
