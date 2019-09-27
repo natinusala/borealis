@@ -204,7 +204,10 @@ void ThumbnailSidebar::setThumbnail(unsigned char* buffer, size_t bufferSize)
 void ThumbnailSidebar::setSubtitle(std::string subTitle)
 {
     if (!this->subTitle)
+    {
         this->subTitle = new Label(LabelStyle::DESCRIPTION, "");
+        this->subTitle->setParent(this);
+    }
 
     this->subTitle->setText(subTitle);
 
@@ -215,7 +218,10 @@ void ThumbnailSidebar::setSubtitle(std::string subTitle)
 void ThumbnailSidebar::setTitle(std::string title)
 {
     if (!this->title)
+    {
         this->title = new Label(LabelStyle::REGULAR, "", true);
+        this->title->setParent(this);
+    }
 
     this->title->setText(title);
 
