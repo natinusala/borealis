@@ -366,11 +366,15 @@ void View::drawHint(FrameContext* ctx, unsigned x, unsigned y, unsigned width, u
 
     unsigned middle = y + height / 2;
 
-    nvgFillColor(vg, color);
+    if (this->animateHint())
+        nvgFillColor(vg, a(color));
+    else
+        nvgFillColor(vg, color);
+
     nvgTextAlign(ctx->vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
     std::string okText   = "OK";
-    std::string backText = "Back";
+    std::string backText = this->backHint;
 
     std::string okIcon   = "\uE0E0";
     std::string backIcon = "\uE0E1";
@@ -405,6 +409,11 @@ void View::drawHint(FrameContext* ctx, unsigned x, unsigned y, unsigned width, u
     nvgBeginPath(vg);
     nvgFontSize(vg, style->AppletFrame.footerHintSize);
     nvgText(vg, xAdvance, middle, backIcon.c_str(), nullptr);
+}
+
+void View::setBackHint(std::string hint)
+{
+    this->backHint = hint;
 }
 
 void View::setBoundaries(int x, int y, unsigned width, unsigned height)

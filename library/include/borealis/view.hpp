@@ -97,6 +97,8 @@ class View
 
     bool hidden = false;
 
+    std::string backHint = "Back";
+
   protected:
     int x = 0;
     int y = 0;
@@ -157,9 +159,20 @@ class View
     }
 
     /**
+     * Should the hint alpha be animated when
+     * pushing the view?
+     */
+    virtual bool animateHint()
+    {
+        return false;
+    }
+
+    /**
       * Draws the bottom-right buttons hint
       */
     void drawHint(FrameContext* ctx, unsigned x, unsigned y, unsigned width, unsigned height, NVGcolor color);
+
+    void setBackHint(std::string hint);
 
   public:
     void setBoundaries(int x, int y, unsigned width, unsigned height);

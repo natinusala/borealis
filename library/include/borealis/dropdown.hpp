@@ -56,6 +56,11 @@ class Dropdown : public View
   protected:
     unsigned getShowAnimationDuration(ViewAnimation animation) override;
 
+    bool animateHint() override
+    {
+        return true;
+    }
+
   public:
     ~Dropdown();
 
