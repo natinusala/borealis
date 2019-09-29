@@ -26,6 +26,17 @@
 #include "sample_installer_page.hpp"
 #include "sample_loading_page.hpp"
 
+std::vector<std::string> NOTIFICATIONS = {
+    "You have cool hair",
+    "I like your shoes",
+    "borealis is powered by nanovg",
+    "The Triforce is an inside job",
+    "Pozznx will trigger in one day and twelve hours",
+    "Aurora Borealis? At this time of day, at this time of year, in this part of the gaming market, located entirely within your Switch?!",
+    "May I see it?",
+    "Hmm, Steamed Hams!"
+};
+
 int main(int argc, char* argv[])
 {
     // Init the app
@@ -43,6 +54,12 @@ int main(int argc, char* argv[])
     rootFrame->setIcon(ASSET("icon/borealis.jpg"));
 
     brls::List* testList = new brls::List();
+
+    brls::ListItem* notificationItem = new brls::ListItem("Post a random notification");
+    notificationItem->setClickListener([](brls::View* view) {
+        std::string notification = NOTIFICATIONS[std::rand() % NOTIFICATIONS.size()];
+        brls::Application::notify(notification);
+    });
 
     brls::ListItem* themeItem = new brls::ListItem("TV Resolution");
     themeItem->setValue("Automatic");
@@ -76,6 +93,7 @@ int main(int argc, char* argv[])
 
     brls::SelectListItem* layerSelectItem = new brls::SelectListItem("Select Layer", { "Layer 1", "Layer 2" });
 
+    testList->addView(notificationItem);
     testList->addView(themeItem);
     testList->addView(jankItem);
     testList->addView(crashItem);

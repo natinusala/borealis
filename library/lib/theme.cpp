@@ -36,6 +36,9 @@ Theme Theme::horizon()
     theme.colors[ThemeVariant_LIGHT].textColor        = nvgRGB(51, 51, 51);
     theme.colors[ThemeVariant_LIGHT].descriptionColor = nvgRGB(140, 140, 140);
 
+    theme.colors[ThemeVariant_LIGHT].notificationTextColor = nvgRGB(255, 255, 255);
+    theme.colors[ThemeVariant_LIGHT].backdropColor         = nvgRGBA(0, 0, 0, 178);
+
     theme.colors[ThemeVariant_LIGHT].separatorColor = nvgRGB(45, 45, 45);
 
     theme.colors[ThemeVariant_LIGHT].sidebarColor          = nvgRGB(240, 240, 240);
@@ -75,6 +78,9 @@ Theme Theme::horizon()
     theme.colors[ThemeVariant_DARK].textColor        = nvgRGB(255, 255, 255);
     theme.colors[ThemeVariant_DARK].descriptionColor = nvgRGB(163, 163, 163);
 
+    theme.colors[ThemeVariant_DARK].notificationTextColor = nvgRGB(255, 255, 255);
+    theme.colors[ThemeVariant_DARK].backdropColor         = nvgRGBA(0, 0, 0, 178);
+
     theme.colors[ThemeVariant_DARK].separatorColor = nvgRGB(255, 255, 255);
 
     theme.colors[ThemeVariant_DARK].sidebarColor          = nvgRGB(50, 50, 50);
@@ -92,13 +98,13 @@ Theme Theme::horizon()
     theme.colors[ThemeVariant_DARK].tableEvenBackgroundColor = nvgRGB(57, 58, 60);
     theme.colors[ThemeVariant_DARK].tableBodyTextColor       = nvgRGB(155, 157, 156);
 
-    theme.colors[ThemeVariant_DARK].dropdownBackgroundColor = nvgRGBA(0, 0, 0, 178), // TODO: 178 may be too much for dark theme
+    theme.colors[ThemeVariant_DARK].dropdownBackgroundColor = nvgRGBA(0, 0, 0, 178); // TODO: 178 may be too much for dark theme
 
-        theme.colors[ThemeVariant_DARK].nextStageBulletColor = nvgRGB(165, 165, 165);
+    theme.colors[ThemeVariant_DARK].nextStageBulletColor = nvgRGB(165, 165, 165);
 
-    theme.colors[ThemeVariant_DARK].spinnerBarColor = nvgRGBA(131, 131, 131, 102), // TODO: get this right
+    theme.colors[ThemeVariant_DARK].spinnerBarColor = nvgRGBA(131, 131, 131, 102); // TODO: get this right
 
-        theme.colors[ThemeVariant_DARK].headerRectangleColor = nvgRGB(160, 160, 160);
+    theme.colors[ThemeVariant_DARK].headerRectangleColor = nvgRGB(160, 160, 160);
 
     theme.colors[ThemeVariant_DARK].buttonPlainEnabledBackgroundColor  = nvgRGB(1, 255, 201);
     theme.colors[ThemeVariant_DARK].buttonPlainDisabledBackgroundColor = nvgRGB(83, 87, 86);

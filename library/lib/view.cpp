@@ -41,7 +41,7 @@ void View::shakeHighlight(FocusDirection direction)
     this->highlightShaking        = true;
     this->highlightShakeStart     = cpu_features_get_time_usec() / 1000;
     this->highlightShakeDirection = direction;
-    this->highlightShakeAmplitude = rand() % 15 + 10;
+    this->highlightShakeAmplitude = std::rand() % 15 + 10;
 }
 
 float View::getAlpha(bool child)
@@ -343,7 +343,7 @@ void View::drawBackground(NVGcontext* vg, FrameContext* ctx, Style* style)
         }
         case Background::BACKDROP:
         {
-            nvgFillColor(vg, RGBA(0, 0, 0, 127));
+            nvgFillColor(vg, a(ctx->theme->backdropColor));
             nvgBeginPath(vg);
             nvgRect(vg, this->x, this->y, this->width, this->height);
             nvgFill(vg);

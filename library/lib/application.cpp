@@ -79,6 +79,8 @@ static void windowFramebufferSizeCallback(GLFWwindow* window, int width, int hei
     Application::contentWidth  = WINDOW_WIDTH;
     Application::contentHeight = (unsigned)roundf(contentHeight);
 
+    Application::resizeNotificationManager();
+
     Logger::info("Window size changed to %dx%d", width, height);
     Logger::info("New scale factor is %f", Application::windowScale);
 }
@@ -136,6 +138,13 @@ bool Application::init()
 
 bool Application::init(Style style, Theme theme)
 {
+    // Init rng
+    std::srand(std::time(nullptr));
+
+    // Init managers
+    Application::taskManager         = new TaskManager();
+    Application::notificationManager = new NotificationManager();
+
     // Init static variables
     Application::currentStyle = style;
     Application::currentFocus = nullptr;
@@ -292,9 +301,6 @@ bool Application::init(Style style, Theme theme)
 
     // Init animations engine
     menu_animation_init();
-
-    // Init tasks manager
-    Application::taskManager = new TaskManager();
 
     // Default FPS cap
     Application::setMaximumFPS(DEFAULT_FPS);
@@ -509,6 +515,9 @@ void Application::frame()
     if (Application::framerateCounter)
         Application::framerateCounter->frame(&frameContext);
 
+    // Notifications
+    Application::notificationManager->frame(&frameContext);
+
     // End frame
     nvgResetTransform(Application::vg); // scale
     nvgEndFrame(Application::vg);
@@ -525,11 +534,11 @@ void Application::exit()
 
     menu_animation_free();
 
-    if (Application::taskManager)
-        delete Application::taskManager;
-
     if (Application::framerateCounter)
         delete Application::framerateCounter;
+
+    delete Application::taskManager;
+    delete Application::notificationManager;
 }
 
 void Application::setDisplayFramerate(bool enabled)
@@ -568,6 +577,22 @@ void Application::resizeFramerateCounter()
         framerateCounterWidth,
         style->FramerateCounter.height);
     Application::framerateCounter->invalidate();
+}
+
+void Application::resizeNotificationManager()
+{
+    Application::notificationManager->setBoundaries(0, 0, Application::contentWidth, Application::contentHeight);
+    Application::notificationManager->invalidate();
+}
+
+void Application::notify(std::string text)
+{
+    Application::notificationManager->notify(text);
+}
+
+NotificationManager* Application::getNotificationManager()
+{
+    return Application::notificationManager;
 }
 
 void Application::requestFocus(View* view, FocusDirection direction)
@@ -713,6 +738,7 @@ void Application::onWindowSizeChanged()
         view->invalidate();
     }
 
+    Application::resizeNotificationManager();
     Application::resizeFramerateCounter();
 }
 

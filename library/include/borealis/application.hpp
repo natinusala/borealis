@@ -27,6 +27,7 @@
 #include <borealis/frame_context.hpp>
 #include <borealis/label.hpp>
 #include <borealis/logger.hpp>
+#include <borealis/notification_manager.hpp>
 #include <borealis/style.hpp>
 #include <borealis/task_manager.hpp>
 #include <borealis/theme.hpp>
@@ -84,6 +85,8 @@ class Application
     static ThemeValues* getThemeValuesForVariant(ThemeVariant variant);
     static ThemeVariant getThemeVariant();
 
+    static void notify(std::string text);
+
     static void onGamepadButtonPressed(char button, bool repeating);
 
     /**
@@ -106,6 +109,7 @@ class Application
 
     static NVGcontext* getNVGContext();
     static TaskManager* getTaskManager();
+    static NotificationManager* getNotificationManager();
 
     static void setCommonFooter(std::string footer);
     static std::string* getCommonFooter();
@@ -119,11 +123,15 @@ class Application
     inline static unsigned contentWidth, contentHeight;
     inline static float windowScale;
 
+    static void resizeFramerateCounter();
+    static void resizeNotificationManager();
+
   private:
     inline static GLFWwindow* window;
     inline static NVGcontext* vg;
 
     inline static TaskManager* taskManager;
+    inline static NotificationManager* notificationManager;
 
     inline static FontStash fontStash;
 
@@ -153,8 +161,6 @@ class Application
     inline static View* repetitionOldFocus = nullptr;
 
     static void onWindowSizeChanged();
-
-    static void resizeFramerateCounter();
 
     static void frame();
     static void clear();

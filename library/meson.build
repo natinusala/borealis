@@ -36,6 +36,8 @@ borealis_files = files(
     'lib/layer_view.cpp',
 
     'lib/task_manager.cpp',
+    'lib/notification_manager.cpp',
+
     'lib/repeating_task.cpp',
 
     'lib/swkbd.cpp'

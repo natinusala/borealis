@@ -44,6 +44,9 @@ typedef struct
     NVGcolor textColor;
     NVGcolor descriptionColor;
 
+    NVGcolor notificationTextColor;
+    NVGcolor backdropColor;
+
     NVGcolor separatorColor;
 
     NVGcolor sidebarColor;

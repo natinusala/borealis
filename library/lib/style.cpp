@@ -104,14 +104,16 @@ Style Style::horizon()
     };
 
     style.Label = {
-        .regularFontSize     = 20,
-        .mediumFontSize      = 18,
-        .smallFontSize       = 16,
-        .descriptionFontSize = 16,
-        .crashFontSize       = 24,
-        .buttonFontSize      = 24,
-        .listItemFontSize    = 24,
-        .lineHeight          = 1.65f
+        .regularFontSize      = 20,
+        .mediumFontSize       = 18,
+        .smallFontSize        = 16,
+        .descriptionFontSize  = 16,
+        .crashFontSize        = 24,
+        .buttonFontSize       = 24,
+        .listItemFontSize     = 24,
+        .notificationFontSize = 18,
+
+        .lineHeight = 1.65f
     };
 
     style.CrashFrame = {
@@ -230,7 +232,16 @@ Style Style::horizon()
 
         .collapse = 100,
 
-        .progress = 1000
+        .progress = 1000,
+
+        .notificationTimeout = 4000
+    };
+
+    style.Notification = {
+        .width   = 280,
+        .padding = 15,
+
+        .slideAnimation = 40
     };
 
     return style;

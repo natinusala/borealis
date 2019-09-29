@@ -39,6 +39,7 @@
 #include <borealis/layer_view.hpp>
 #include <borealis/list.hpp>
 #include <borealis/logger.hpp>
+#include <borealis/notification_manager.hpp>
 #include <borealis/popup_frame.hpp>
 #include <borealis/progress_display.hpp>
 #include <borealis/progress_spinner.hpp>

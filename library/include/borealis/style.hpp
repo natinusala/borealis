@@ -133,6 +133,8 @@ class Style
         unsigned crashFontSize;
         unsigned buttonFontSize;
         unsigned listItemFontSize;
+        unsigned notificationFontSize;
+
         float lineHeight;
     } Label;
 
@@ -277,7 +279,18 @@ class Style
         unsigned collapse;
 
         unsigned progress;
+
+        unsigned notificationTimeout;
     } AnimationDuration;
+
+    // Notification
+    struct
+    {
+        unsigned width;
+        unsigned padding;
+
+        unsigned slideAnimation;
+    } Notification;
 
     // As close to HOS as possible
     static Style horizon();
