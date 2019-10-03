@@ -35,7 +35,8 @@ enum class LabelStyle
     BUTTON_DISABLED,
     CRASH_BUTTON,
     LIST_ITEM,
-    NOTIFICATION
+    NOTIFICATION,
+    DIALOG
 };
 
 // A Label, multiline or with a ticker

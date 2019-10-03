@@ -112,6 +112,7 @@ Style Style::horizon()
         .buttonFontSize       = 24,
         .listItemFontSize     = 24,
         .notificationFontSize = 18,
+        .dialogFontSize       = 24,
 
         .lineHeight = 1.65f
     };
@@ -242,6 +243,19 @@ Style Style::horizon()
         .padding = 15,
 
         .slideAnimation = 40
+    };
+
+    style.Dialog = {
+        .width      = 770,
+        .height     = 220,
+
+        .paddingTopBottom   = 65,
+        .paddingLeftRight   = 115,
+
+        .cornerRadius = 5.0f,
+
+        .buttonHeight           = 72,
+        .buttonSeparatorHeight  = 2
     };
 
     return style;

@@ -134,6 +134,7 @@ class Style
         unsigned buttonFontSize;
         unsigned listItemFontSize;
         unsigned notificationFontSize;
+        unsigned dialogFontSize;
 
         float lineHeight;
     } Label;
@@ -291,6 +292,21 @@ class Style
 
         unsigned slideAnimation;
     } Notification;
+
+    // Dialog
+    struct
+    {
+        unsigned width;
+        unsigned height;
+
+        unsigned paddingTopBottom;
+        unsigned paddingLeftRight;
+
+        float cornerRadius;
+
+        unsigned buttonHeight;
+        unsigned buttonSeparatorHeight;
+    } Dialog;
 
     // As close to HOS as possible
     static Style horizon();

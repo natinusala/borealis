@@ -76,6 +76,9 @@ typedef struct
     NVGcolor buttonPlainDisabledBackgroundColor;
     NVGcolor buttonPlainEnabledTextColor;
     NVGcolor buttonPlainDisabledTextColor;
+
+    NVGcolor dialogColor;
+    NVGcolor dialogBackdrop;
 } ThemeValues;
 
 // A theme contains colors for all variants

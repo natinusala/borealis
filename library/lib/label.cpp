@@ -57,6 +57,9 @@ Label::Label(LabelStyle labelStyle, std::string text, bool multiline)
         case LabelStyle::NOTIFICATION:
             this->fontSize = style->Label.notificationFontSize;
             break;
+        case LabelStyle::DIALOG:
+            this->fontSize = style->Label.dialogFontSize;
+            break;
     }
 }
 
@@ -118,6 +121,7 @@ void Label::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, 
             case LabelStyle::SMALL:
             case LabelStyle::CRASH_BUTTON:
             case LabelStyle::LIST_ITEM:
+            case LabelStyle::DIALOG:
                 nvgFillColor(vg, a(ctx->theme->textColor));
                 break;
             case LabelStyle::DESCRIPTION:
@@ -147,6 +151,7 @@ void Label::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, 
         nvgTextAlign(vg, this->horizontalAlign | NVG_ALIGN_TOP);
         nvgFontFaceId(vg, ctx->fontStash->regular);
         nvgBeginPath(vg);
+
         nvgTextBox(vg, x, y, width, this->text.c_str(), nullptr);
     }
     else
