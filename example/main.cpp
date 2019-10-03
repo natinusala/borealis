@@ -55,6 +55,11 @@ int main(int argc, char* argv[])
 
     brls::List* testList = new brls::List();
 
+    brls::ListItem* dialogItem = new brls::ListItem("Open a dialog");
+    dialogItem->setClickListener([](brls::View* view) {
+        brls::Dialog::openWithText("Warning: PozzNX will wipe all data on your Switch and render it inoperable, do you want to proceed?");
+    });
+
     brls::ListItem* notificationItem = new brls::ListItem("Post a random notification");
     notificationItem->setClickListener([](brls::View* view) {
         std::string notification = NOTIFICATIONS[std::rand() % NOTIFICATIONS.size()];
@@ -93,6 +98,7 @@ int main(int argc, char* argv[])
 
     brls::SelectListItem* layerSelectItem = new brls::SelectListItem("Select Layer", { "Layer 1", "Layer 2" });
 
+    testList->addView(dialogItem);
     testList->addView(notificationItem);
     testList->addView(themeItem);
     testList->addView(jankItem);

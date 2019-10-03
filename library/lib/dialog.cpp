@@ -20,7 +20,6 @@
 #include <borealis/application.hpp>
 
 // TODO: different open animation?
-// TODO: dynamic height (be careful: BoxLayout doesn't resize itself)
 
 namespace brls
 {
@@ -90,23 +89,28 @@ void Dialog::layout(NVGcontext* vg, Style* style, FontStash* stash)
         this->contentView->layout(vg, style, stash); // layout directly to get height
 
         // Center the content view in the dialog
+        // or resize it if needed
         unsigned newContentHeight = this->contentView->getHeight();
 
         int difference = contentHeight - newContentHeight;
 
         if (difference < 0)
-            difference = -difference;
+        {
+            this->frameHeight += -difference;
+        }
+        else
+        {
+            contentY += difference / 2;
 
-        contentY += difference / 2;
+            this->contentView->setBoundaries(
+                contentX,
+                contentY,
+                contentWidth,
+                contentHeight
+            );
 
-        this->contentView->setBoundaries(
-            contentX,
-            contentY,
-            contentWidth,
-            contentHeight
-        );
-
-        this->contentView->invalidate();
+            this->contentView->invalidate();
+        }
     }
 }
 
