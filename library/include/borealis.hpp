@@ -32,6 +32,7 @@
 #include <borealis/box_layout.hpp>
 #include <borealis/button.hpp>
 #include <borealis/crash_frame.hpp>
+#include <borealis/dialog.hpp>
 #include <borealis/dropdown.hpp>
 #include <borealis/header.hpp>
 #include <borealis/image.hpp>
@@ -53,4 +54,3 @@
 #include <borealis/theme.hpp>
 #include <borealis/thumbnail_frame.hpp>
 #include <borealis/view.hpp>
-#include <borealis/dialog.hpp>

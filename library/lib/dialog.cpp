@@ -16,15 +16,16 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <borealis/dialog.hpp>
 #include <borealis/application.hpp>
+#include <borealis/dialog.hpp>
 
 // TODO: different open animation?
 
 namespace brls
 {
 
-Dialog::Dialog(View* contentView) : contentView(contentView)
+Dialog::Dialog(View* contentView)
+    : contentView(contentView)
 {
     if (contentView)
         contentView->setParent(this);
@@ -65,16 +66,16 @@ void Dialog::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
     // TODO: change frameY and frameHeight if there are buttons
 
-    this->frameWidth    = style->Dialog.width;
-    this->frameHeight   = style->Dialog.height;
+    this->frameWidth  = style->Dialog.width;
+    this->frameHeight = style->Dialog.height;
 
-    this->frameX = getWidth()  / 2 - this->frameWidth  / 2;
+    this->frameX = getWidth() / 2 - this->frameWidth / 2;
     this->frameY = getHeight() / 2 - this->frameHeight / 2;
 
-    unsigned contentX       = this->frameX + style->Dialog.paddingLeftRight;
-    unsigned contentY       = this->frameY + style->Dialog.paddingTopBottom;
-    unsigned contentWidth   = this->frameWidth - style->Dialog.paddingLeftRight * 2;
-    unsigned contentHeight  = this->frameHeight - style->Dialog.paddingTopBottom * 2;
+    unsigned contentX      = this->frameX + style->Dialog.paddingLeftRight;
+    unsigned contentY      = this->frameY + style->Dialog.paddingTopBottom;
+    unsigned contentWidth  = this->frameWidth - style->Dialog.paddingLeftRight * 2;
+    unsigned contentHeight = this->frameHeight - style->Dialog.paddingTopBottom * 2;
 
     if (this->contentView)
     {
@@ -83,8 +84,7 @@ void Dialog::layout(NVGcontext* vg, Style* style, FontStash* stash)
             contentX,
             contentY,
             contentWidth,
-            contentHeight
-        );
+            contentHeight);
 
         this->contentView->layout(vg, style, stash); // layout directly to get height
 
@@ -106,8 +106,7 @@ void Dialog::layout(NVGcontext* vg, Style* style, FontStash* stash)
                 contentX,
                 contentY,
                 contentWidth,
-                contentHeight
-            );
+                contentHeight);
 
             this->contentView->invalidate();
         }
@@ -121,4 +120,3 @@ Dialog::~Dialog()
 }
 
 } // namespace brls
-

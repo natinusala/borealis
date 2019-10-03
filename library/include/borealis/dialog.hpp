@@ -30,25 +30,25 @@ namespace brls
 // Use the Dialog::openWith... methods
 class Dialog : public View
 {
-    private:
-        Dialog(View* contentView);
-        ~Dialog();
+  private:
+    Dialog(View* contentView);
+    ~Dialog();
 
-        View* contentView = nullptr;
+    View* contentView = nullptr;
 
-        unsigned frameX, frameY, frameWidth, frameHeight;
+    unsigned frameX, frameY, frameWidth, frameHeight;
 
-    public:
-        static void openWithView(View* contentView);
-        static void openWithText(std::string text);
+  public:
+    static void openWithView(View* contentView);
+    static void openWithText(std::string text);
 
-        void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-        void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
+    void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
+    void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
 
-        bool isTranslucent() override
-        {
-            return true;
-        }
+    bool isTranslucent() override
+    {
+        return true;
+    }
 };
 
 } // namespace brls

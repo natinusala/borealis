@@ -246,16 +246,16 @@ Style Style::horizon()
     };
 
     style.Dialog = {
-        .width      = 770,
-        .height     = 220,
+        .width  = 770,
+        .height = 220,
 
-        .paddingTopBottom   = 65,
-        .paddingLeftRight   = 115,
+        .paddingTopBottom = 65,
+        .paddingLeftRight = 115,
 
         .cornerRadius = 5.0f,
 
-        .buttonHeight           = 72,
-        .buttonSeparatorHeight  = 2
+        .buttonHeight          = 72,
+        .buttonSeparatorHeight = 2
     };
 
     return style;
