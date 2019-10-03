@@ -20,6 +20,7 @@
 #include <borealis/dialog.hpp>
 
 // TODO: different open animation?
+// TODO: block inputs if the dialog doesn't take focus
 
 namespace brls
 {
