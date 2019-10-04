@@ -171,26 +171,49 @@ void BoxLayout::clear(bool free)
 void BoxLayout::updateScroll(bool animated)
 {
     // Don't scroll if layout hasn't been called yet
-    if (this->entriesHeight == 0.0f)
+    if (this->entriesHeight == 0.0f && this->orientation == BoxLayoutOrientation::VERTICAL)
+        return;
+    else if (this->entriesWidth == 0.0f && this->orientation == BoxLayoutOrientation::HORIZONTAL)
         return;
 
-    View* selectedView                 = this->children[this->focusedIndex]->view;
-    int currentSelectionMiddleOnScreen = selectedView->getY() + selectedView->getHeight() / 2;
-    float newScroll                    = this->scrollY - ((float)currentSelectionMiddleOnScreen - (float)this->middleY);
+    View* selectedView = this->children[this->focusedIndex]->view;
+    float newScroll;
+    float* scroll;
 
-    // Bottom boundary
-    if ((float)this->y + newScroll + (float)this->entriesHeight < (float)this->bottomY)
-        newScroll = (float)this->height - (float)this->entriesHeight + (float)this->spacing - (float)this->marginTop - (float)this->marginBottom;
+    if (this->orientation == BoxLayoutOrientation::VERTICAL)
+    {
+        int currentSelectionMiddleOnScreen = selectedView->getY() + selectedView->getHeight() / 2;
+        newScroll                          = this->scrollY - ((float)currentSelectionMiddleOnScreen - (float)this->middleY);
+        scroll                             = &this->scrollY;
 
-    // Top boundary
+        if ((float)this->y + newScroll + (float)this->entriesHeight < (float)this->bottomY)
+            newScroll = (float)this->height - (float)this->entriesHeight + (float)this->spacing - (float)this->marginTop - (float)this->marginBottom;
+    }
+    else if (this->orientation == BoxLayoutOrientation::HORIZONTAL)
+    {
+        if ((int)selectedView->getX() - (int)selectedView->getWidth() < (int)this->x) // If selection is out of view on the left
+            newScroll = this->scrollX + ((float)this->x - (float)selectedView->getX()) + (float)selectedView->getWidth();
+        else if (selectedView->getX() + selectedView->getWidth() * 2 > this->rightX) // If selection is out of view on right
+            newScroll = this->scrollX + ((float)this->rightX - (float)selectedView->getX()) - (float)selectedView->getWidth() * 2;
+        else
+            return;
+
+        scroll = &this->scrollX;
+    }
+    else
+    {
+        return;
+    }
+
+    // Top/Right boundary
     if (newScroll > 0.0f)
         newScroll = 0.0f;
 
-    if (newScroll == this->scrollY)
+    if (newScroll == *scroll)
         return;
 
     //Start animation
-    menu_animation_ctx_tag tag = (uintptr_t) & this->scrollY;
+    menu_animation_ctx_tag tag = (uintptr_t)scroll;
     menu_animation_kill_by_tag(&tag);
 
     if (animated)
@@ -201,7 +224,7 @@ void BoxLayout::updateScroll(bool animated)
         entry.cb           = [](void* userdata) {};
         entry.duration     = style->AnimationDuration.highlight;
         entry.easing_enum  = EASING_OUT_QUAD;
-        entry.subject      = &this->scrollY;
+        entry.subject      = scroll;
         entry.tag          = tag;
         entry.target_value = newScroll;
         entry.tick         = [this](void* userdata) { this->scrollAnimationTick(); };
@@ -211,7 +234,7 @@ void BoxLayout::updateScroll(bool animated)
     }
     else
     {
-        this->scrollY = newScroll;
+        *scroll = newScroll;
     }
 
     this->invalidate();
@@ -237,7 +260,9 @@ void BoxLayout::prebakeScrolling()
     // Prebaked values for scrolling
     this->middleY       = this->y + this->height / 2;
     this->bottomY       = this->y + this->height + this->spacing;
+    this->rightX        = this->x + this->width + this->spacing;
     this->entriesHeight = 0.0f;
+    this->entriesWidth  = 0.0f;
 }
 
 void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
@@ -291,12 +316,12 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
             unsigned childWidth   = child->view->getWidth();
 
             if (child->fill)
-                child->view->setBoundaries(xAdvance,
+                child->view->setBoundaries(xAdvance + roundf(scrollX),
                     this->y + this->marginTop,
                     this->x + this->width - xAdvance - this->marginRight,
                     this->height - this->marginTop - this->marginBottom);
             else
-                child->view->setBoundaries(xAdvance,
+                child->view->setBoundaries(xAdvance + roundf(scrollX),
                     this->y + this->marginTop,
                     childWidth,
                     this->height - this->marginTop - this->marginBottom);
@@ -312,6 +337,9 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
 
             if (child->view->isCollapsed())
                 spacing = 0;
+
+            if (!child->view->isHidden())
+                this->entriesWidth += spacing + childWidth;
 
             xAdvance += spacing + childWidth;
         }

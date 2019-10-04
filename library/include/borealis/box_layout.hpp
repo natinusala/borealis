@@ -53,11 +53,15 @@ class BoxLayout : public View
 
     unsigned spacing = 0;
 
-    unsigned middleY       = 0; // y + height/2
-    unsigned bottomY       = 0; // y + height
+    unsigned middleY = 0; // y + height/2
+    unsigned bottomY = 0; // y + height
+    unsigned rightX  = 0; // x + width
+
     unsigned entriesHeight = 0; // sum of all entries heights (with spacing) + bottom margin
+    unsigned entriesWidth  = 0; // sum of all entries heights (with spacing) + bottom margin
 
     float scrollY = 0.0f; // all childrens are offset by this value
+    float scrollX = 0.0f; // all childrens are offset by this value
 
     View* updateFocus(FocusDirection direction, View* oldFocus, bool fromUp);
     void updateScroll(bool animated = true);
