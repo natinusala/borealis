@@ -314,17 +314,21 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
         {
             BoxLayoutChild* child = this->children[i];
             unsigned childWidth   = child->view->getWidth();
+            unsigned childHeight  = child->view->getHeight();
+
+            if (!childHeight || child->fill)
+                childHeight = this->height - this->marginTop - this->marginBottom;
 
             if (child->fill)
                 child->view->setBoundaries(xAdvance + roundf(scrollX),
-                    this->y + this->marginTop,
+                    this->y + this->marginTop + (this->height / 2) - (childHeight / 2),
                     this->x + this->width - xAdvance - this->marginRight,
-                    this->height - this->marginTop - this->marginBottom);
+                    childHeight);
             else
                 child->view->setBoundaries(xAdvance + roundf(scrollX),
-                    this->y + this->marginTop,
+                    this->y + this->marginTop + (this->height / 2) - (childHeight / 2),
                     childWidth,
-                    this->height - this->marginTop - this->marginBottom);
+                    childHeight);
 
             child->view->layout(vg, style, stash); // call layout directly in case width is updated
             childWidth = child->view->getWidth();
