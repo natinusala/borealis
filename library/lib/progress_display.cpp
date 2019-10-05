@@ -26,7 +26,7 @@ namespace brls
 ProgressDisplay::ProgressDisplay(ProgressDisplayFlags progressFlags)
 {
     if (progressFlags & ProgressDisplayFlags::PERCENTAGE)
-        this->label = new Label(LabelStyle::BUTTON, "0%", false);
+        this->label = new Label(LabelStyle::DIALOG, "0%", false);
     if (progressFlags & ProgressDisplayFlags::SPINNER)
         this->spinner = new ProgressSpinner();
 }

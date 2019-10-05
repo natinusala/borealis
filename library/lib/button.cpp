@@ -33,16 +33,13 @@ Button::Button(ButtonStyle style, std::string text)
 
 LabelStyle Button::getLabelStyle()
 {
-    switch (this->style)
-    {
-        case ButtonStyle::CRASH:
-            return LabelStyle::CRASH_BUTTON;
-        default:
-            if (this->state == ButtonState::DISABLED)
-                return LabelStyle::BUTTON_DISABLED;
-            else
-                return LabelStyle::BUTTON;
-    }
+    if (this->style == ButtonStyle::BORDERLESS)
+        return LabelStyle::BUTTON_BORDERLESS;
+
+    if (this->state == ButtonState::DISABLED)
+        return LabelStyle::BUTTON_PLAIN_DISABLED;
+    else
+        return LabelStyle::BUTTON_PLAIN;
 }
 
 Button::~Button()

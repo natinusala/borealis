@@ -29,7 +29,7 @@ SampleLoadingPage::SampleLoadingPage(brls::StagedAppletFrame* frame)
     this->progressDisp = new brls::ProgressDisplay();
     this->progressDisp->setProgress(this->progressValue, 1000);
     this->progressDisp->setParent(this);
-    this->label = new brls::Label(brls::LabelStyle::BUTTON, "Example loading display", true);
+    this->label = new brls::Label(brls::LabelStyle::DIALOG, "Example loading display", true);
     this->label->setHorizontalAlign(NVG_ALIGN_CENTER);
     this->label->setParent(this);
 }

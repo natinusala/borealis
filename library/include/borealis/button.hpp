@@ -30,7 +30,7 @@ enum class ButtonStyle
     PLAIN = 0, // regular, plain button
     BORDERED, // text and a border
     BORDERLESS, // only text
-    CRASH // same as borderless but with an increased corner radius
+    CRASH // same as borderless but with a different text color
 };
 
 enum class ButtonState

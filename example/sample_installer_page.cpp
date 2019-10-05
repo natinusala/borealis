@@ -25,7 +25,7 @@
 SampleInstallerPage::SampleInstallerPage(brls::StagedAppletFrame* frame, std::string label)
 {
     // Label
-    this->button = new brls::Button(brls::ButtonStyle::CRASH, label);
+    this->button = new brls::Button(brls::ButtonStyle::BORDERLESS, label);
     this->button->setParent(this);
     this->button->setClickListener([frame](View* view) {
         if (frame->isLastStage())
@@ -33,7 +33,7 @@ SampleInstallerPage::SampleInstallerPage(brls::StagedAppletFrame* frame, std::st
         else
             frame->nextStage();
     });
-    this->label = new brls::Label(brls::LabelStyle::BUTTON, "Here, you would normally do useful things", true);
+    this->label = new brls::Label(brls::LabelStyle::DIALOG, "Here, you would normally do useful things", true);
     this->label->setHorizontalAlign(NVG_ALIGN_CENTER);
     this->label->setParent(this);
 }

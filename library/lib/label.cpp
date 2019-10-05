@@ -46,9 +46,9 @@ Label::Label(LabelStyle labelStyle, std::string text, bool multiline)
         case LabelStyle::CRASH:
             this->fontSize = style->Label.crashFontSize;
             break;
-        case LabelStyle::BUTTON_DISABLED:
-        case LabelStyle::BUTTON:
-        case LabelStyle::CRASH_BUTTON:
+        case LabelStyle::BUTTON_PLAIN_DISABLED:
+        case LabelStyle::BUTTON_PLAIN:
+        case LabelStyle::BUTTON_BORDERLESS:
             this->fontSize = style->Label.buttonFontSize;
             break;
         case LabelStyle::LIST_ITEM:
@@ -119,9 +119,9 @@ void Label::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, 
             case LabelStyle::REGULAR:
             case LabelStyle::MEDIUM:
             case LabelStyle::SMALL:
-            case LabelStyle::CRASH_BUTTON:
             case LabelStyle::LIST_ITEM:
             case LabelStyle::DIALOG:
+            case LabelStyle::BUTTON_BORDERLESS:
                 nvgFillColor(vg, a(ctx->theme->textColor));
                 break;
             case LabelStyle::DESCRIPTION:
@@ -130,10 +130,10 @@ void Label::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, 
             case LabelStyle::CRASH:
                 nvgFillColor(vg, RGB(255, 255, 255));
                 break;
-            case LabelStyle::BUTTON:
+            case LabelStyle::BUTTON_PLAIN:
                 nvgFillColor(vg, a(ctx->theme->buttonPlainEnabledTextColor));
                 break;
-            case LabelStyle::BUTTON_DISABLED:
+            case LabelStyle::BUTTON_PLAIN_DISABLED:
                 nvgFillColor(vg, a(ctx->theme->buttonPlainDisabledTextColor));
                 break;
             case LabelStyle::NOTIFICATION:
