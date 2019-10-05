@@ -317,7 +317,7 @@ void AppletFrame::show(std::function<void(void)> cb, bool animated, ViewAnimatio
         },
             true, animation);
     }
-    else if (this->contentView->isHidden() && this->contentView)
+    else if (this->contentView && this->contentView->isHidden())
     {
         this->contentView->show([]() {}, animated, animation);
     }
@@ -338,7 +338,7 @@ void AppletFrame::hide(std::function<void(void)> cb, bool animated, ViewAnimatio
         },
             true, animation);
     }
-    else if (!this->contentView->isHidden() && this->contentView)
+    else if (this->contentView && !this->contentView->isHidden())
     {
         this->contentView->hide([]() {}, animated, animation);
     }

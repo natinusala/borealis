@@ -65,7 +65,8 @@ class BoxLayout : public View
     void scrollAnimationTick();
     void prebakeScrolling();
 
-    bool firstLayout = true;
+    bool firstLayout     = true;
+    bool firstAppearance = true;
 
   protected:
     std::vector<BoxLayoutChild*> children;

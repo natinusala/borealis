@@ -365,8 +365,13 @@ BoxLayout::~BoxLayout()
 
 void BoxLayout::willAppear()
 {
-    this->focusedIndex = this->defaultFocusedIndex;
-    this->prebakeScrolling();
+    if (this->firstAppearance)
+    {
+        this->focusedIndex = this->defaultFocusedIndex;
+        this->prebakeScrolling();
+
+        this->firstAppearance = false;
+    }
 
     for (BoxLayoutChild* child : this->children)
         child->view->willAppear();
@@ -374,9 +379,6 @@ void BoxLayout::willAppear()
 
 void BoxLayout::willDisappear()
 {
-    this->focusedIndex = this->defaultFocusedIndex;
-    this->updateScroll(false);
-
     for (BoxLayoutChild* child : this->children)
         child->view->willDisappear();
 }
