@@ -26,14 +26,14 @@ namespace brls
 
 Image::Image(std::string imagePath)
 {
-    setImage(imagePath);
-    setOpacity(1.0F);
+    this->setImage(imagePath);
+    this->setOpacity(1.0F);
 }
 
 Image::Image(unsigned char* buffer, size_t bufferSize)
 {
-    setImage(buffer, bufferSize);
-    setOpacity(1.0F);
+    this->setImage(buffer, bufferSize);
+    this->setOpacity(1.0F);
 }
 
 Image::~Image()
@@ -41,7 +41,7 @@ Image::~Image()
     if (this->imageBuffer != nullptr)
         delete[] this->imageBuffer;
 
-    if (texture != -1)
+    if (this->texture != -1)
         nvgDeleteImage(Application::getNVGContext(), this->texture);
 }
 
@@ -77,19 +77,19 @@ void Image::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
     if (this->origViewWidth == 0 || this->origViewHeight == 0)
     {
-        this->origViewWidth  = getWidth();
-        this->origViewHeight = getHeight();
+        this->origViewWidth  = this->getWidth();
+        this->origViewHeight = this->getHeight();
     }
 
     nvgImageSize(vg, this->texture, &this->imageWidth, &this->imageHeight);
 
-    setWidth(this->origViewWidth);
-    setHeight(this->origViewHeight);
+    this->setWidth(this->origViewWidth);
+    this->setHeight(this->origViewHeight);
 
     this->imageX = 0;
     this->imageY = 0;
 
-    float viewAspectRatio  = static_cast<float>(getWidth()) / static_cast<float>(getHeight());
+    float viewAspectRatio  = static_cast<float>(this->getWidth()) / static_cast<float>(this->getHeight());
     float imageAspectRatio = static_cast<float>(this->imageWidth) / static_cast<float>(this->imageHeight);
 
     switch (imageScaleType)
@@ -101,13 +101,13 @@ void Image::layout(NVGcontext* vg, Style* style, FontStash* stash)
         case ImageScaleType::FIT:
             if (viewAspectRatio >= imageAspectRatio)
             {
-                this->imageHeight = getHeight();
+                this->imageHeight = this->getHeight();
                 this->imageWidth  = this->imageHeight * imageAspectRatio;
                 this->imageX      = (this->origViewWidth - this->imageWidth) / 2.0F;
             }
             else
             {
-                this->imageWidth  = getWidth();
+                this->imageWidth  = this->getWidth();
                 this->imageHeight = this->imageWidth * imageAspectRatio;
                 this->imageY      = (this->origViewHeight - this->imageHeight) / 2.0F;
             }
@@ -115,24 +115,24 @@ void Image::layout(NVGcontext* vg, Style* style, FontStash* stash)
         case ImageScaleType::CROP:
             if (viewAspectRatio < imageAspectRatio)
             {
-                this->imageHeight = getHeight();
+                this->imageHeight = this->getHeight();
                 this->imageWidth  = this->imageHeight * imageAspectRatio;
                 this->imageX      = (this->origViewWidth - this->imageWidth) / 2.0F;
             }
             else
             {
-                this->imageWidth  = getWidth();
+                this->imageWidth  = this->getWidth();
                 this->imageHeight = this->imageWidth * imageAspectRatio;
                 this->imageY      = (this->origViewHeight - this->imageHeight) / 2.0F;
             }
             break;
         case ImageScaleType::SCALE:
-            this->imageWidth  = getWidth();
-            this->imageHeight = getHeight();
+            this->imageWidth  = this->getWidth();
+            this->imageHeight = this->getHeight();
             break;
         case ImageScaleType::VIEW_RESIZE:
-            setWidth(this->imageWidth);
-            setHeight(this->imageHeight);
+            this->setWidth(this->imageWidth);
+            this->setHeight(this->imageHeight);
             break;
     }
 
@@ -177,7 +177,7 @@ void Image::setOpacity(float opacity)
 void Image::setScaleType(ImageScaleType imageScaleType)
 {
     this->imageScaleType = imageScaleType;
-    invalidate();
+    this->invalidate();
 }
 
 } // namespace brls
