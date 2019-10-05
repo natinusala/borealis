@@ -80,7 +80,7 @@ ThumbnailSidebar::ThumbnailSidebar()
     this->setBackground(Background::SIDEBAR);
     this->setWidth(style->Sidebar.width);
 
-    this->button = new Button(ButtonStyle::PLAIN, "Save");
+    this->button = (new Button(ButtonStyle::PLAIN))->setLabel("Save");
     this->button->setParent(this);
 }
 

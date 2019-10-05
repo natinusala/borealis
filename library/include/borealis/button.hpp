@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include <borealis/image.hpp>
 #include <borealis/label.hpp>
 #include <borealis/view.hpp>
 
@@ -45,7 +46,8 @@ class Button : public View
 {
   private:
     ButtonStyle style;
-    Label* label;
+    Label* label = nullptr;
+    Image* image = nullptr;
 
     EventListener clickListener = [](View* view) {};
 
@@ -53,8 +55,11 @@ class Button : public View
 
     ButtonState state = ButtonState::ENABLED;
 
+    float cornerRadiusOverride = 0;
+
   public:
-    Button(ButtonStyle style, std::string label);
+    Button(ButtonStyle style)
+        : style(style) {};
     ~Button();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
@@ -65,14 +70,28 @@ class Button : public View
     ButtonState getState();
     void setState(ButtonState state);
 
+    Button* setLabel(std::string label);
+    Button* setImage(std::string path);
+    Button* setImage(unsigned char* buffer, size_t bufferSize);
+
+    Image* getImage(FocusDirection direction, View* oldFocus, bool fromUp)
+    {
+        return this->image;
+    }
+
     View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp) override
     {
         return this;
     }
 
+    void setCornerRadius(float cornerRadius);
+
     void getHighlightMetrics(Style* style, float* cornerRadius) override
     {
-        *cornerRadius = style->Button.cornerRadius;
+        if (cornerRadiusOverride)
+            *cornerRadius = cornerRadiusOverride;
+        else
+            *cornerRadius = style->Button.cornerRadius;
     }
 
     bool isHighlightBackgroundEnabled() override

@@ -17,19 +17,13 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <math.h>
+
 #include <borealis/application.hpp>
 #include <borealis/button.hpp>
 
 namespace brls
 {
-
-Button::Button(ButtonStyle style, std::string text)
-    : style(style)
-{
-    this->label = new Label(this->getLabelStyle(), text, true);
-    this->label->setHorizontalAlign(NVG_ALIGN_CENTER);
-    this->label->setParent(this);
-}
 
 LabelStyle Button::getLabelStyle()
 {
@@ -46,25 +40,72 @@ LabelStyle Button::getLabelStyle()
 
 Button::~Button()
 {
-    delete this->label;
+    if (this->label != nullptr)
+        delete this->label;
+    if (this->image != nullptr)
+        delete this->image;
 }
 
 void Button::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
-    this->label->setWidth(this->width);
-    this->label->layout(vg, style, stash);
-    this->label->setBoundaries(
-        this->x,
-        this->y + this->height / 2 - this->label->getHeight() / 2,
-        this->label->getWidth(),
-        this->label->getHeight());
-    this->label->invalidate();
+    unsigned imageWidth = this->label ? this->getHeight() : this->getWidth();
+    unsigned imageHeight = this->getHeight();
+
+    if (this->label != nullptr)
+    {
+        this->label->setWidth(this->getWidth() - imageWidth);
+        this->label->layout(vg, style, stash);
+        this->label->setBoundaries(
+            this->x + imageWidth,
+            this->y + this->getHeight() / 2 - this->label->getHeight() / 2,
+            this->label->getWidth(),
+            this->label->getHeight());
+        this->label->invalidate();
+    }
+    if (this->image != nullptr)
+    {
+        this->image->setHeight(imageHeight);
+        this->image->setWidth(imageWidth);
+        this->image->layout(vg, style, stash);
+        this->image->setBoundaries(
+            this->x,
+            this->y + this->getHeight() / 2 - this->image->getHeight() / 2,
+            this->image->getWidth(),
+            this->image->getHeight());
+    }
 }
 
+Button* Button::setLabel(std::string label)
+{
+    if (this->label != nullptr)
+        delete this->label;
+
+    this->label = new Label(this->getLabelStyle(), label, true);
+    this->label->setHorizontalAlign(NVG_ALIGN_CENTER);
+    this->label->setParent(this);
+
+    return this;
+}
+
+Button* Button::setImage(std::string path)
+{
+    this->image = new Image(path);
+
+    return this;
+}
+
+Button* Button::setImage(unsigned char* buffer, size_t bufferSize)
+{
+    this->image = new Image(buffer, bufferSize);
+
+    return this;
+}
+ 
 void Button::setState(ButtonState state)
 {
     this->state = state;
-    this->label->setStyle(this->getLabelStyle());
+    if (this->label != nullptr)
+        this->label->setStyle(this->getLabelStyle());
 }
 
 ButtonState Button::getState()
@@ -90,7 +131,7 @@ void Button::getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom
 
 void Button::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
-    float cornerRadius = (float)style->Button.cornerRadius;
+    float cornerRadius = this->cornerRadiusOverride ? this->cornerRadiusOverride : (float)style->Button.cornerRadius;
 
     // Background
     switch (this->style)
@@ -131,7 +172,11 @@ void Button::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height,
     }
 
     // Label
-    this->label->frame(ctx);
+    if (this->label != nullptr)
+        this->label->frame(ctx);
+
+    if (this->image != nullptr)
+        this->image->frame(ctx);
 }
 
 bool Button::onClick()
@@ -150,4 +195,11 @@ void Button::setClickListener(EventListener listener)
     this->clickListener = listener;
 }
 
+void Button::setCornerRadius(float cornerRadius)
+{
+    this->cornerRadiusOverride = cornerRadius;
+
+    if (this->image != nullptr)
+        this->image->setCornerRadius(cornerRadius);
+}
 } // namespace brls
