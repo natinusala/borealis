@@ -52,7 +52,7 @@ void Image::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, 
     if (this->texture != -1)
     {
         nvgBeginPath(vg);
-        nvgRect(vg, x + this->imageX, y + this->imageY, this->imageWidth, this->imageHeight);
+        nvgRoundedRect(vg, x + this->imageX, y + this->imageY, this->imageWidth, this->imageHeight, this->cornerRadius);
         nvgFillPaint(vg, a(this->imgPaint));
         nvgFill(vg);
     }

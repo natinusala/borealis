@@ -37,21 +37,24 @@ enum class ImageScaleType
 // An image
 class Image : public View
 {
-  protected:
-    void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
-
   public:
     Image(std::string imagePath);
     Image(unsigned char* buffer, size_t bufferSize);
     ~Image();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
+    void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
 
     void setImage(unsigned char* buffer, size_t bufferSize);
     void setImage(std::string imagePath);
 
     void setScaleType(ImageScaleType imageScaleType);
     void setOpacity(float opacity);
+
+    void setCornerRadius(float radius)
+    {
+        this->cornerRadius = radius;
+    }
 
   private:
     std::string imagePath;
@@ -62,6 +65,8 @@ class Image : public View
     NVGpaint imgPaint;
 
     ImageScaleType imageScaleType = ImageScaleType::FIT;
+
+    float cornerRadius = 0;
 
     int imageX = 0, imageY = 0;
     int imageWidth = 0, imageHeight = 0;
