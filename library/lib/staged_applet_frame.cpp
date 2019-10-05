@@ -122,9 +122,12 @@ unsigned StagedAppletFrame::isLastStage()
 
 StagedAppletFrame::~StagedAppletFrame()
 {
-    stageViews.clear();
+    for (View* view : this->stageViews)
+        delete view;
 
-    // Content view is freed by ~AppletFrame()
+    this->stageViews.clear();
+
+    this->setContentView(nullptr); // so that ~AppletFrame() doesn't free it twice
 }
 
 } // namespace brls

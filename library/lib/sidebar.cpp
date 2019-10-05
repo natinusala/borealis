@@ -51,10 +51,9 @@ SidebarItem* Sidebar::addItem(std::string label, View* view)
 {
     SidebarItem* item = new SidebarItem(label, this);
     item->setAssociatedView(view);
+
     if (this->isEmpty())
-    {
         setActive(item);
-    }
 
     this->addView(item);
 
@@ -71,6 +70,7 @@ void Sidebar::setActive(SidebarItem* active)
 {
     if (currentActive)
         currentActive->setActive(false);
+
     currentActive = active;
     active->setActive(true);
 }

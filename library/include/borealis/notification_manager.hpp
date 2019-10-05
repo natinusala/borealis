@@ -33,6 +33,7 @@ class Notification : public View
 {
   public:
     Notification(std::string text);
+    ~Notification();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;

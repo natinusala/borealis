@@ -161,6 +161,11 @@ Notification::Notification(std::string text)
     this->setParent(this);
 }
 
+Notification::~Notification()
+{
+    delete this->label;
+}
+
 void Notification::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
     this->label->frame(ctx);

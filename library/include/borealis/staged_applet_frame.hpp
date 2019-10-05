@@ -32,14 +32,13 @@ class StagedAppletFrame : public AppletFrame
 {
   public:
     StagedAppletFrame();
+    ~StagedAppletFrame();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
 
     void addStage(View* view);
     void nextStage();
     void previousStage();
-
-    ~StagedAppletFrame();
 
     unsigned getCurrentStage();
     unsigned getStagesCount();

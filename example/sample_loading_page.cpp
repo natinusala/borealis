@@ -77,3 +77,9 @@ void SampleLoadingPage::willDisappear()
 {
     this->progressDisp->willDisappear();
 }
+
+SampleLoadingPage::~SampleLoadingPage()
+{
+    delete this->progressDisp;
+    delete this->label;
+}

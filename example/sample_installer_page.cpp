@@ -67,3 +67,9 @@ void SampleInstallerPage::layout(NVGcontext* vg, brls::Style* style, brls::FontS
         style->CrashFrame.buttonHeight);
     this->button->invalidate();
 }
+
+SampleInstallerPage::~SampleInstallerPage()
+{
+    delete this->label;
+    delete this->button;
+}

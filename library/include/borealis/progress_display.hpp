@@ -40,6 +40,7 @@ class ProgressDisplay : public View
 {
   public:
     ProgressDisplay(ProgressDisplayFlags progressFlags = DEFAULT_PROGRESS_DISPLAY_FLAGS);
+    ~ProgressDisplay();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;

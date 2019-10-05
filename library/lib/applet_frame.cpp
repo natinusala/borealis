@@ -209,8 +209,13 @@ void AppletFrame::layout(NVGcontext* vg, Style* style, FontStash* stash)
 void AppletFrame::setContentView(View* view)
 {
     this->contentView = view;
-    this->contentView->setParent(this);
-    this->contentView->willAppear();
+
+    if (this->contentView)
+    {
+        this->contentView->setParent(this);
+        this->contentView->willAppear();
+    }
+
     this->invalidate();
 }
 

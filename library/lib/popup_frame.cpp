@@ -148,6 +148,8 @@ void PopupFrame::willDisappear()
 
 PopupFrame::~PopupFrame()
 {
+    if (this->contentView)
+        delete this->contentView;
 }
 
 } // namespace brls

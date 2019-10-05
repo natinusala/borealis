@@ -122,4 +122,13 @@ void ProgressDisplay::willDisappear()
         this->spinner->willDisappear();
 }
 
+ProgressDisplay::~ProgressDisplay()
+{
+    if (this->spinner)
+        delete this->spinner;
+
+    if (this->label)
+        delete this->label;
+}
+
 } // namespace brls
