@@ -50,6 +50,16 @@ void BoxLayout::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heig
     nvgRestore(vg);
 }
 
+void BoxLayout::setScrollStrategy(BoxLayoutScrollStrategy strategy)
+{
+    this->scrollStrategy = strategy;
+}
+
+BoxLayoutScrollStrategy BoxLayout::getScrollStrategy()
+{
+    return this->scrollStrategy;
+}
+
 void BoxLayout::setSpacing(unsigned spacing)
 {
     this->spacing = spacing;
@@ -182,21 +192,52 @@ void BoxLayout::updateScroll(bool animated)
 
     if (this->orientation == BoxLayoutOrientation::VERTICAL)
     {
-        int currentSelectionMiddleOnScreen = selectedView->getY() + selectedView->getHeight() / 2;
-        newScroll                          = this->scrollY - ((float)currentSelectionMiddleOnScreen - (float)this->middleY);
-        scroll                             = &this->scrollY;
+        if (this->scrollStrategy == BoxLayoutScrollStrategy::BOUNDS)
+        {
+            if ((int)selectedView->getY() - this->marginTop < (int)this->y) // If selection is out of view on the top
+                newScroll = this->scrollY + this->marginTop + ((float)this->y - (float)selectedView->getY());
+            else if (selectedView->getY() + selectedView->getHeight() * 2 > this->bottomY) // If selection is out of view on the bottom
+                newScroll = this->scrollY + ((float)this->bottomY - (float)selectedView->getY()) - (float)selectedView->getHeight() * 2;
+            else
+                return;
+        }
+        else if (this->scrollStrategy == BoxLayoutScrollStrategy::CENTRED)
+        {
+            int currentSelectionMiddleOnScreen = selectedView->getY() + selectedView->getHeight() / 2;
+            newScroll                          = this->scrollY - ((float)currentSelectionMiddleOnScreen - (float)this->middleY);
 
-        if ((float)this->y + newScroll + (float)this->entriesHeight < (float)this->bottomY)
-            newScroll = (float)this->height - (float)this->entriesHeight + (float)this->spacing - (float)this->marginTop - (float)this->marginBottom;
+            if ((float)this->y + newScroll + (float)this->entriesHeight < (float)this->bottomY)
+                newScroll = (float)this->height - (float)this->entriesHeight + (float)this->spacing - (float)this->marginTop - (float)this->marginBottom;
+        }
+        else
+        {
+            return;
+        }
+        scroll = &this->scrollY;
     }
     else if (this->orientation == BoxLayoutOrientation::HORIZONTAL)
     {
-        if ((int)selectedView->getX() - (int)selectedView->getWidth() < (int)this->x) // If selection is out of view on the left
-            newScroll = this->scrollX + ((float)this->x - (float)selectedView->getX()) + (float)selectedView->getWidth();
-        else if (selectedView->getX() + selectedView->getWidth() * 2 > this->rightX) // If selection is out of view on right
-            newScroll = this->scrollX + ((float)this->rightX - (float)selectedView->getX()) - (float)selectedView->getWidth() * 2;
+        if (this->scrollStrategy == BoxLayoutScrollStrategy::BOUNDS)
+        {
+            if ((int)selectedView->getX() - (int)selectedView->getWidth() < (int)this->x) // If selection is out of view on the left
+                newScroll = this->scrollX + ((float)this->x - (float)selectedView->getX()) + (float)selectedView->getWidth();
+            else if (selectedView->getX() + selectedView->getWidth() * 2 > this->rightX) // If selection is out of view on the right
+                newScroll = this->scrollX + ((float)this->rightX - (float)selectedView->getX()) - (float)selectedView->getWidth() * 2;
+            else
+                return;
+        }
+        else if (this->scrollStrategy == BoxLayoutScrollStrategy::CENTRED)
+        {
+            int currentSelectionMiddleOnScreen = selectedView->getX() + selectedView->getWidth() / 2;
+            newScroll                          = this->scrollX - ((float)currentSelectionMiddleOnScreen - (float)this->middleX);
+
+            if ((float)this->x + newScroll + (float)this->entriesWidth < (float)this->rightX)
+                newScroll = (float)this->width - (float)this->entriesWidth + (float)this->spacing - (float)this->marginLeft - (float)this->marginRight;
+        }
         else
+        {
             return;
+        }
 
         scroll = &this->scrollX;
     }
@@ -260,6 +301,7 @@ void BoxLayout::prebakeScrolling()
     // Prebaked values for scrolling
     this->middleY       = this->y + this->height / 2;
     this->bottomY       = this->y + this->height + this->spacing;
+    this->middleX       = this->x + this->width / 2;
     this->rightX        = this->x + this->width + this->spacing;
     this->entriesHeight = 0.0f;
     this->entriesWidth  = 0.0f;

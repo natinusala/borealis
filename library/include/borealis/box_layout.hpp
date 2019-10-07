@@ -32,6 +32,13 @@ enum class BoxLayoutOrientation
     HORIZONTAL
 };
 
+enum class BoxLayoutScrollStrategy
+{
+    DISABLED = 0, // no scrolling at all
+    BOUNDS, // will scroll once the focus is offscreen
+    CENTRED, // will scroll so the current focus is in the center of the layout
+};
+
 class BoxLayoutChild
 {
   public:
@@ -44,21 +51,22 @@ class BoxLayoutChild
 // - Only works with children with fixed width (horizontal) or height (vertical)
 // - Handles vertical scrolling only
 
-// TODO: Allow disabling scrolling
 // TODO: Add alignment or stretching parameters to children
 class BoxLayout : public View
 {
   private:
     BoxLayoutOrientation orientation;
+    BoxLayoutScrollStrategy scrollStrategy = BoxLayoutScrollStrategy::BOUNDS;
 
     unsigned spacing = 0;
 
     unsigned middleY = 0; // y + height/2
     unsigned bottomY = 0; // y + height
+    unsigned middleX = 0; // x + width
     unsigned rightX  = 0; // x + width
 
     unsigned entriesHeight = 0; // sum of all entries heights (with spacing) + bottom margin
-    unsigned entriesWidth  = 0; // sum of all entries heights (with spacing) + bottom margin
+    unsigned entriesWidth  = 0; // sum of all entries widths (with spacing) + right margin
 
     float scrollY = 0.0f; // all childrens are offset by this value
     float scrollX = 0.0f; // all childrens are offset by this value
@@ -98,6 +106,12 @@ class BoxLayout : public View
     View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override;
     void willAppear() override;
     void willDisappear() override;
+
+    /**
+      * Sets the scrolling strategy to use
+      */
+    void setScrollStrategy(BoxLayoutScrollStrategy strategy);
+    BoxLayoutScrollStrategy getScrollStrategy();
 
     /**
       * Sets spacing between views

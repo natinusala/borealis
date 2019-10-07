@@ -32,10 +32,11 @@ TabFrame::TabFrame()
 {
     //Create sidebar
     this->sidebar = new Sidebar();
+    this->sidebar->setScrollStrategy(BoxLayoutScrollStrategy::CENTRED);
 
     // Setup content view
     this->layout = new BoxLayout(BoxLayoutOrientation::HORIZONTAL);
-    layout->addView(sidebar);
+    this->layout->addView(sidebar);
 
     this->setContentView(layout);
 }
