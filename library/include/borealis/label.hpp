@@ -36,7 +36,8 @@ enum class LabelStyle
     BUTTON_BORDERLESS,
     LIST_ITEM,
     NOTIFICATION,
-    DIALOG
+    DIALOG,
+    BUTTON_DIALOG
 };
 
 // A Label, multiline or with a ticker

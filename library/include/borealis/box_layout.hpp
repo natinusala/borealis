@@ -44,7 +44,6 @@ class BoxLayoutChild
 // - Only works with children with fixed width (horizontal) or height (vertical)
 // - Handles vertical scrolling only
 
-// TODO: Allow disabling scrolling
 // TODO: Add alignment or stretching parameters to children
 class BoxLayout : public View
 {
@@ -67,6 +66,8 @@ class BoxLayout : public View
 
     bool firstLayout     = true;
     bool firstAppearance = true;
+
+    bool scrollingEnabled = true;
 
   protected:
     std::vector<BoxLayoutChild*> children;
@@ -144,6 +145,10 @@ class BoxLayout : public View
 
     void setFocusedIndex(unsigned index);
     size_t getViewsCount();
+
+    View* getChild(size_t i);
+
+    void setScrollingEnabled(bool enabled);
 
     ~BoxLayout();
 };

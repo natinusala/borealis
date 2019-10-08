@@ -51,7 +51,7 @@ class ListItem : public View
     Label* descriptionView = nullptr;
     Image* thumbnailView   = nullptr;
 
-    EventListener clickListener = nullptr;
+    EventListener clickListener = [](View* view) {};
 
     bool indented = false;
 

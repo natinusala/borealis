@@ -112,7 +112,7 @@ class View
 
     View* parent = nullptr;
 
-    EventListener focusListener = nullptr;
+    EventListener focusListener = [](View* view) {};
 
     virtual unsigned getShowAnimationDuration(ViewAnimation animation);
 

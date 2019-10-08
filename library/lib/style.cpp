@@ -255,7 +255,12 @@ Style Style::horizon()
         .cornerRadius = 5.0f,
 
         .buttonHeight          = 72,
-        .buttonSeparatorHeight = 2
+        .buttonSeparatorHeight = 2,
+
+        .shadowWidth   = 2.0f,
+        .shadowFeather = 10.0f,
+        .shadowOpacity = 63.75f,
+        .shadowOffset  = 10.0f
     };
 
     return style;

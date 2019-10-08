@@ -16,6 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <borealis/box_layout.hpp>
 #include <borealis/view.hpp>
 
 namespace brls
@@ -25,25 +26,63 @@ namespace brls
 // TODO: Add buttons at creation time
 // TODO: Add the blurred dialog type once the blur is finished
 
+class DialogButton
+{
+  public:
+    std::string label;
+    EventListener clickListener = [](View* view) {};
+};
+
 // A modal dialog with zero to three buttons
 // and anything as content
-// Use the Dialog::openWith... methods
+// Create the dialog then use open() and close()
 class Dialog : public View
 {
   private:
-    Dialog(View* contentView);
-    ~Dialog();
-
     View* contentView = nullptr;
 
     unsigned frameX, frameY, frameWidth, frameHeight;
 
+    std::vector<DialogButton*> buttons;
+    BoxLayout* verticalButtonsLayout   = nullptr;
+    BoxLayout* horizontalButtonsLayout = nullptr;
+
+    void rebuildButtons();
+
+    unsigned getButtonsHeight();
+
+    bool cancelable = true;
+
   public:
-    static void openWithView(View* contentView);
-    static void openWithText(std::string text);
+    Dialog(std::string text);
+    Dialog(View* contentView);
+    ~Dialog();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
+    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override;
+    bool onCancel() override;
+
+    /**
+     * Adds a button to this dialog, with a maximum of three
+     * The position depends on the add order
+     *
+     * Adding a button after the dialog has been opened is
+     * NOT SUPPORTED
+     */
+    void addButton(std::string label, EventListener clickListener);
+
+    /**
+     * A cancelable dialog is closed when
+     * the user presses B (defaults to true)
+     *
+     * A dialog without any buttons cannot
+     * be cancelable
+     */
+    void setCancelable(bool cancelable);
+
+    void open();
+    void close();
 
     bool isTranslucent() override
     {

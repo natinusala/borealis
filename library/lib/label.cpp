@@ -49,6 +49,7 @@ Label::Label(LabelStyle labelStyle, std::string text, bool multiline)
         case LabelStyle::BUTTON_PLAIN_DISABLED:
         case LabelStyle::BUTTON_PLAIN:
         case LabelStyle::BUTTON_BORDERLESS:
+        case LabelStyle::BUTTON_DIALOG:
             this->fontSize = style->Label.buttonFontSize;
             break;
         case LabelStyle::LIST_ITEM:
@@ -138,6 +139,9 @@ void Label::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, 
                 break;
             case LabelStyle::NOTIFICATION:
                 nvgFillColor(vg, a(ctx->theme->notificationTextColor));
+                break;
+            case LabelStyle::BUTTON_DIALOG:
+                nvgFillColor(vg, a(ctx->theme->dialogButtonColor));
                 break;
         }
     }

@@ -35,6 +35,8 @@ LabelStyle Button::getLabelStyle()
 {
     if (this->style == ButtonStyle::BORDERLESS)
         return LabelStyle::BUTTON_BORDERLESS;
+    else if (this->style == ButtonStyle::DIALOG)
+        return LabelStyle::BUTTON_DIALOG;
 
     if (this->state == ButtonState::DISABLED)
         return LabelStyle::BUTTON_PLAIN_DISABLED;
@@ -71,6 +73,13 @@ ButtonState Button::getState()
 
 void Button::getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom, unsigned* left)
 {
+    if (this->style == ButtonStyle::DIALOG)
+    {
+        View::getHighlightInsets(top, right, bottom, left);
+        *right -= 1;
+        return;
+    }
+
     Style* style = Application::getStyle();
     *top         = style->Button.highlightInset;
     *right       = style->Button.highlightInset;
@@ -97,28 +106,26 @@ void Button::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height,
     }
 
     // Shadow
-    if (this->state == ButtonState::ENABLED)
+    if (this->state == ButtonState::ENABLED && this->style == ButtonStyle::PLAIN)
     {
         float shadowWidth   = style->Button.shadowWidth;
         float shadowFeather = style->Button.shadowFeather;
         float shadowOpacity = style->Button.shadowOpacity;
         float shadowOffset  = style->Button.shadowOffset;
-        if (this->style == ButtonStyle::PLAIN)
-        {
-            NVGpaint shadowPaint = nvgBoxGradient(vg,
-                x, y + shadowWidth,
-                width, height,
-                cornerRadius * 2, shadowFeather,
-                RGBA(0, 0, 0, shadowOpacity * alpha), transparent);
 
-            nvgBeginPath(vg);
-            nvgRect(vg, x - shadowOffset, y - shadowOffset,
-                width + shadowOffset * 2, height + shadowOffset * 3);
-            nvgRoundedRect(vg, x, y, width, height, cornerRadius);
-            nvgPathWinding(vg, NVG_HOLE);
-            nvgFillPaint(vg, shadowPaint);
-            nvgFill(vg);
-        }
+        NVGpaint shadowPaint = nvgBoxGradient(vg,
+            x, y + shadowWidth,
+            width, height,
+            cornerRadius * 2, shadowFeather,
+            RGBA(0, 0, 0, shadowOpacity * alpha), transparent);
+
+        nvgBeginPath(vg);
+        nvgRect(vg, x - shadowOffset, y - shadowOffset,
+            width + shadowOffset * 2, height + shadowOffset * 3);
+        nvgRoundedRect(vg, x, y, width, height, cornerRadius);
+        nvgPathWinding(vg, NVG_HOLE);
+        nvgFillPaint(vg, shadowPaint);
+        nvgFill(vg);
     }
 
     // Label

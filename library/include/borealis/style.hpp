@@ -306,6 +306,11 @@ class Style
 
         unsigned buttonHeight;
         unsigned buttonSeparatorHeight;
+
+        float shadowWidth;
+        float shadowFeather;
+        float shadowOpacity;
+        float shadowOffset;
     } Dialog;
 
     // As close to HOS as possible

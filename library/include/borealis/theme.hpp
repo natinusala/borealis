@@ -79,6 +79,8 @@ typedef struct
 
     NVGcolor dialogColor;
     NVGcolor dialogBackdrop;
+    NVGcolor dialogButtonColor;
+    NVGcolor dialogButtonSeparatorColor;
 } ThemeValues;
 
 // A theme contains colors for all variants

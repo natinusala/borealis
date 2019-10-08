@@ -791,10 +791,8 @@ void Application::blockInputs()
 
 void Application::unblockInputs()
 {
-    Application::blockInputsTokens -= 1;
-
-    if (Application::blockInputsTokens < 0)
-        Application::blockInputsTokens = 0;
+    if (Application::blockInputsTokens > 0)
+        Application::blockInputsTokens -= 1;
 }
 
 NVGcontext* Application::getNVGContext()

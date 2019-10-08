@@ -72,8 +72,10 @@ Theme Theme::horizon()
     LIGHT.buttonPlainEnabledTextColor        = nvgRGB(255, 255, 255);
     LIGHT.buttonPlainDisabledTextColor       = nvgRGB(220, 220, 228);
 
-    LIGHT.dialogColor    = nvgRGB(240, 240, 240);
-    LIGHT.dialogBackdrop = nvgRGBA(0, 0, 0, 80);
+    LIGHT.dialogColor                = nvgRGB(240, 240, 240);
+    LIGHT.dialogBackdrop             = nvgRGBA(0, 0, 0, 100);
+    LIGHT.dialogButtonColor          = nvgRGB(46, 78, 255);
+    LIGHT.dialogButtonSeparatorColor = nvgRGB(210, 210, 210);
 
     // Dark variant
     DARK.backgroundColor[0] = 0.176f;
@@ -117,8 +119,10 @@ Theme Theme::horizon()
     DARK.buttonPlainEnabledTextColor        = nvgRGB(52, 41, 55);
     DARK.buttonPlainDisabledTextColor       = nvgRGB(71, 75, 74);
 
-    DARK.dialogColor    = nvgRGB(70, 70, 70);
-    DARK.dialogBackdrop = nvgRGBA(0, 0, 0, 80);
+    DARK.dialogColor                = nvgRGB(70, 70, 70);
+    DARK.dialogBackdrop             = nvgRGBA(0, 0, 0, 100);
+    DARK.dialogButtonColor          = nvgRGB(3, 251, 199);
+    DARK.dialogButtonSeparatorColor = nvgRGB(103, 103, 103);
 
     return theme;
 }

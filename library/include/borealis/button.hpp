@@ -30,7 +30,8 @@ enum class ButtonStyle
     PLAIN = 0, // regular, plain button
     BORDERED, // text and a border
     BORDERLESS, // only text
-    CRASH // same as borderless but with a different text color
+    CRASH, // same as borderless but with a different text color
+    DIALOG // same as borderless but with a different text color
 };
 
 enum class ButtonState
@@ -46,7 +47,7 @@ class Button : public View
     ButtonStyle style;
     Label* label;
 
-    EventListener clickListener = nullptr;
+    EventListener clickListener = [](View* view) {};
 
     LabelStyle getLabelStyle();
 

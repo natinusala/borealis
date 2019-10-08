@@ -171,7 +171,7 @@ void BoxLayout::clear(bool free)
 void BoxLayout::updateScroll(bool animated)
 {
     // Don't scroll if layout hasn't been called yet
-    if (this->entriesHeight == 0.0f)
+    if (this->entriesHeight == 0.0f || !this->scrollingEnabled)
         return;
 
     View* selectedView                 = this->children[this->focusedIndex]->view;
@@ -215,6 +215,11 @@ void BoxLayout::updateScroll(bool animated)
     }
 
     this->invalidate();
+}
+
+void BoxLayout::setScrollingEnabled(bool enabled)
+{
+    this->scrollingEnabled = enabled;
 }
 
 View* BoxLayout::requestFocus(FocusDirection direction, View* oldFocus, bool fromUp)
@@ -336,6 +341,11 @@ void BoxLayout::addView(View* view, bool fill)
 
     view->willAppear();
     this->invalidate();
+}
+
+View* BoxLayout::getChild(size_t index)
+{
+    return this->children[index]->view;
 }
 
 bool BoxLayout::isEmpty()

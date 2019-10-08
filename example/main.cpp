@@ -57,7 +57,20 @@ int main(int argc, char* argv[])
 
     brls::ListItem* dialogItem = new brls::ListItem("Open a dialog");
     dialogItem->setClickListener([](brls::View* view) {
-        brls::Dialog::openWithText("Warning: PozzNX will wipe all data on your Switch and render it inoperable, do you want to proceed?");
+        brls::Dialog* dialog = new brls::Dialog("Warning: PozzNX will wipe all data on your Switch and render it inoperable, do you want to proceed?");
+
+        brls::EventListener closeListener = [dialog](brls::View* view) {
+            dialog->close();
+            brls::Application::notify("Running PozzNX...");
+        };
+
+        dialog->addButton("Continue", closeListener);
+        dialog->addButton("Continue", closeListener);
+        dialog->addButton("Continue", closeListener);
+
+        dialog->setCancelable(false);
+
+        dialog->open();
     });
 
     brls::ListItem* notificationItem = new brls::ListItem("Post a random notification");
