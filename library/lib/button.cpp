@@ -58,6 +58,7 @@ void Button::layout(NVGcontext* vg, Style* style, FontStash* stash)
         this->y + this->height / 2 - this->label->getHeight() / 2,
         this->label->getWidth(),
         this->label->getHeight());
+    this->label->invalidate();
 }
 
 void Button::setState(ButtonState state)
@@ -97,6 +98,7 @@ void Button::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height,
         case ButtonStyle::PLAIN:
         {
             nvgFillColor(vg, a(this->state == ButtonState::DISABLED ? ctx->theme->buttonPlainDisabledBackgroundColor : ctx->theme->buttonPlainEnabledBackgroundColor));
+            nvgBeginPath(vg);
             nvgRoundedRect(vg, x, y, width, height, cornerRadius);
             nvgFill(vg);
             break;
