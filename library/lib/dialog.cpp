@@ -60,9 +60,9 @@ void Dialog::open()
 }
 
 // TODO: do something better in case another view was pushed in the meantime
-void Dialog::close()
+void Dialog::close(std::function<void(void)> cb)
 {
-    Application::popView();
+    Application::popView(ViewAnimation::FADE, cb);
 
     if (this->buttons.size() == 0)
         Application::unblockInputs();

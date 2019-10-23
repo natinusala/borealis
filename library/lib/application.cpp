@@ -612,7 +612,7 @@ void Application::requestFocus(View* view, FocusDirection direction)
         oldFocus->shakeHighlight(direction);
 }
 
-void Application::popView(ViewAnimation animation)
+void Application::popView(ViewAnimation animation, std::function<void(void)> cb)
 {
     if (Application::viewStack.size() == 0)
         return;
@@ -627,7 +627,7 @@ void Application::popView(ViewAnimation animation)
     bool wait = animation == ViewAnimation::FADE; // wait for the new view animation to be done before showing the old one?
 
     // Hide animation (and show previous view, if any)
-    last->hide([last, animation, wait]() {
+    last->hide([last, animation, wait, cb]() {
         last->setForceTranslucent(false);
         Application::viewStack.pop_back();
         delete last;
@@ -641,20 +641,23 @@ void Application::popView(ViewAnimation animation)
             if (newLast->isHidden())
             {
                 newLast->willAppear();
-                newLast->show([]() {}, true, animation);
+                newLast->show(cb, true, animation);
+            }
+            else
+            {
+                cb();
             }
         }
 
         Application::unblockInputs();
-    },
-        true, animation);
+    }, true, animation);
 
     // Animate the old view immediately
     if (!wait && Application::viewStack.size() > 1)
     {
         View* toShow = Application::viewStack[Application::viewStack.size() - 2];
         toShow->willAppear();
-        toShow->show([]() {}, true, animation);
+        toShow->show(cb, true, animation);
     }
 
     // Focus
