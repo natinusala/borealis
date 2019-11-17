@@ -117,6 +117,18 @@ ListItem::ListItem(std::string label, std::string description, std::string subLa
         this->descriptionView = new Label(LabelStyle::DESCRIPTION, description, true);
 }
 
+void ListItem::setThumbnail(Image* image)
+{
+    if (this->thumbnailView)
+        delete this->thumbnailView;
+    else if (image != NULL)
+    {
+        this->thumbnailView = image;
+        this->thumbnailView->setParent(this);
+        this->invalidate();
+    }
+}
+
 void ListItem::setThumbnail(std::string imagePath)
 {
     if (this->thumbnailView)
