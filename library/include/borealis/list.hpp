@@ -67,6 +67,7 @@ class ListItem : public View
     void setParent(View* parent) override;
     bool onClick() override;
 
+    void setThumbnail(Image* image);
     void setThumbnail(std::string imagePath);
     void setThumbnail(unsigned char* buffer, size_t bufferSize);
 
