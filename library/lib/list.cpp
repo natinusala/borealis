@@ -121,7 +121,7 @@ void ListItem::setThumbnail(Image* image)
 {
     if (this->thumbnailView)
         delete this->thumbnailView;
-    else if (image != NULL)
+    if (image != NULL)
     {
         this->thumbnailView = image;
         this->thumbnailView->setParent(this);
