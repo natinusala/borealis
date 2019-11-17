@@ -84,6 +84,10 @@ void List::customSpacing(View* current, View* next, int* spacing)
         {
             *spacing = 1;
         }
+        else if (dynamic_cast<Label*>(current) && dynamic_cast<Header*>(next))
+        {
+            // Keep default spacing
+        }
         else
         {
             Style* style = Application::getStyle();
