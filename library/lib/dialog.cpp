@@ -284,7 +284,7 @@ void Dialog::rebuildButtons()
         // Only one big button
         if (this->buttons.size() == 1)
         {
-            Button* button = new Button(ButtonStyle::DIALOG, this->buttons[0]->label);
+            Button* button = (new Button(ButtonStyle::DIALOG))->setLabel(this->buttons[0]->label);
             button->setClickListener(this->buttons[0]->clickListener);
             this->verticalButtonsLayout->addView(button);
         }
@@ -296,7 +296,7 @@ void Dialog::rebuildButtons()
 
             for (DialogButton* dialogButton : this->buttons)
             {
-                Button* button = new Button(ButtonStyle::DIALOG, dialogButton->label);
+                Button* button = (new Button(ButtonStyle::DIALOG))->setLabel(dialogButton->label);
                 button->setClickListener(dialogButton->clickListener);
                 this->horizontalButtonsLayout->addView(button);
             }
@@ -304,7 +304,7 @@ void Dialog::rebuildButtons()
         // Two rows: one with one button and one with two
         else if (this->buttons.size() == 3)
         {
-            Button* button = new Button(ButtonStyle::DIALOG, this->buttons[0]->label);
+            Button* button = (new Button(ButtonStyle::DIALOG))->setLabel(this->buttons[0]->label);
             button->setClickListener(this->buttons[0]->clickListener);
             this->verticalButtonsLayout->addView(button);
 
@@ -314,7 +314,7 @@ void Dialog::rebuildButtons()
             for (size_t i = 1; i < this->buttons.size(); i++)
             {
                 DialogButton* dialogButton = this->buttons[i];
-                Button* button             = new Button(ButtonStyle::DIALOG, dialogButton->label);
+                Button* button             = (new Button(ButtonStyle::DIALOG))->setLabel(dialogButton->label);
                 button->setClickListener(dialogButton->clickListener);
                 this->horizontalButtonsLayout->addView(button);
             }

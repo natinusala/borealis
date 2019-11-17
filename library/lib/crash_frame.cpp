@@ -34,7 +34,7 @@ CrashFrame::CrashFrame(std::string text)
     this->label->setParent(this);
 
     // Button
-    this->button = new Button(ButtonStyle::CRASH, "OK");
+    this->button = (new Button(ButtonStyle::CRASH))->setLabel("OK");
     this->button->setParent(this);
     this->button->alpha = 0.0f;
     this->button->setClickListener([](View* view) { Application::quit(); });
