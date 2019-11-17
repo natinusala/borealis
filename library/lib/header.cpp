@@ -23,8 +23,9 @@
 namespace brls
 {
 
-Header::Header(std::string label, bool separator)
+Header::Header(std::string label, bool separator, std::string sublabel)
     : label(label)
+    , sublabel(sublabel)
     , separator(separator)
 {
     Style* style = Application::getStyle();
@@ -48,6 +49,17 @@ void Header::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height,
     nvgFillColor(vg, a(ctx->theme->textColor));
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
     nvgText(vg, x + style->Header.rectangleWidth + padding, y + height / 2, this->label.c_str(), nullptr);
+
+    // Sublabel
+    if (this->sublabel != "")
+    {
+        nvgBeginPath(vg);
+        nvgFontFaceId(vg, ctx->fontStash->regular);
+        nvgFontSize(vg, style->Header.fontSize);
+        nvgFillColor(vg, a(ctx->theme->descriptionColor));
+        nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
+        nvgText(vg, x + width - style->Header.rectangleWidth - padding, y + height / 2, this->sublabel.c_str(), nullptr);
+    }
 
     // Separator
     if (this->separator)

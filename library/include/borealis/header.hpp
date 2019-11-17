@@ -30,10 +30,11 @@ class Header : public View
 {
   private:
     std::string label;
+    std::string sublabel;
     bool separator;
 
   public:
-    Header(std::string label, bool separator = true);
+    Header(std::string label, bool separator = true, std::string sublabel = "");
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
 
