@@ -49,7 +49,12 @@ void List::customSpacing(View* current, View* next, int* spacing)
     // Or if the next item is a ListItemGroupSpacing
     if (ListItem* currentItem = dynamic_cast<ListItem*>(current))
     {
-        if (ListItem* nextItem = dynamic_cast<ListItem*>(next))
+        if (currentItem->getReduceDescriptionSpacing())
+        {
+            if (next != nullptr)
+                *spacing /= 2;
+        }
+        else if (ListItem* nextItem = dynamic_cast<ListItem*>(next))
         {
             if (!currentItem->hasDescription())
             {
@@ -155,6 +160,16 @@ void ListItem::setThumbnail(unsigned char* buffer, size_t bufferSize)
     this->thumbnailView->setParent(this);
     this->thumbnailView->setScaleType(ImageScaleType::FIT);
     this->invalidate();
+}
+
+bool ListItem::getReduceDescriptionSpacing()
+{
+    return this->reduceDescriptionSpacing;
+}
+
+void ListItem::setReduceDescriptionSpacing(bool value)
+{
+    this->reduceDescriptionSpacing = value;
 }
 
 void ListItem::setIndented(bool indented)

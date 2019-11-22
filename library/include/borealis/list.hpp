@@ -51,6 +51,8 @@ class ListItem : public View
     Label* descriptionView = nullptr;
     Image* thumbnailView   = nullptr;
 
+    bool reduceDescriptionSpacing = false;
+
     EventListener clickListener = [](View* view) {};
 
     bool indented = false;
@@ -73,6 +75,9 @@ class ListItem : public View
 
     bool hasDescription();
     void setDrawTopSeparator(bool draw);
+
+    bool getReduceDescriptionSpacing();
+    void setReduceDescriptionSpacing(bool value);
 
     void setIndented(bool indented);
 
