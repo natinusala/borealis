@@ -18,7 +18,10 @@
 */
 
 #include <borealis/swkbd.hpp>
+#include <borealis/logger.hpp>
+
 #include <cstring>
+#include <iostream>
 
 #ifdef __SWITCH__
 #include <switch.h>
@@ -44,6 +47,14 @@ static SwkbdConfig createSwkbdBaseConfig(std::string headerText, std::string sub
 
     return config;
 }
+#else
+static std::string terminalInput(std::string text)
+{
+    printf("\033[0;94m[INPUT] \033[0;36m%s\033[0m: ", text.c_str());
+    std::string line;
+    std::getline(std::cin, line);
+    return line;
+}
 #endif
 
 bool Swkbd::openForText(std::function<void(std::string)> f, std::string headerText, std::string subText, int maxStringLength, std::string initialText)
@@ -68,7 +79,8 @@ bool Swkbd::openForText(std::function<void(std::string)> f, std::string headerTe
 
     return false;
 #else
-    f("");
+    std::string line = terminalInput(headerText);
+    f(line);
     return true;
 #endif
 }
@@ -97,8 +109,18 @@ bool Swkbd::openForNumber(std::function<void(int)> f, std::string headerText, st
 
     return false;
 #else
-    f(0);
-    return true;
+    std::string line = terminalInput(headerText);
+
+    try
+    {
+        f(stol(line));
+        return true;
+    }
+    catch(const std::exception& e)
+    {
+        Logger::error("Could not parse input, did you enter a valid integer?");
+        return false;
+    }
 #endif
 }
 
