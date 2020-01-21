@@ -184,24 +184,12 @@ void Label::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, 
         if (this->textWidth > this->getWidth())
         {   
             nvgSave(vg);
-            nvgIntersectScissor(vg, x - 20, y, width + 20, height);
-            NVGpaint paintLeft  = nvgLinearGradient(vg, x - 20, y, x, y, ctx->theme->backgroundColorRGB, RGBA(0, 0, 0, 0));
-            NVGpaint paintRight = nvgLinearGradient(vg, x + width - 20, y, x + width, y, RGBA(0, 0, 0, 0), ctx->theme->backgroundColorRGB);
+            nvgIntersectScissor(vg, x, y, width, height);
 
             if (this->verticalAlign == NVG_ALIGN_BOTTOM)
                 nvgText(vg, x - tickerOffset, y + height, this->textTicker.c_str(), nullptr);
             else
                 nvgText(vg, x - tickerOffset, y + height / 2, this->textTicker.c_str(), nullptr);   
-
-            nvgBeginPath(vg);
-            nvgFillPaint(vg, paintLeft);
-            nvgRect(vg, x - 20, y, 20, height);
-            nvgFill(vg);
-
-            nvgBeginPath(vg);
-            nvgFillPaint(vg, paintRight);
-            nvgRect(vg, x + width - 20, y, 20, height);
-            nvgFill(vg);
 
             nvgRestore(vg);
         } 
