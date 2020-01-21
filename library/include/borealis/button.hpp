@@ -58,12 +58,22 @@ class Button : public View
     float cornerRadiusOverride = 0;
 
   public:
-    Button(ButtonStyle style)
-        : style(style) {};
+    Button(ButtonStyle style) : style(style) {
+        this->addHint("OK", Key::A, [this] {
+            if (this->state == ButtonState::DISABLED)
+                return false;
+
+            if (this->clickListener)
+                this->clickListener(this);
+
+            return this->clickListener != nullptr;
+        });
+    }
+    
     ~Button();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-    bool onClick() override;
+    bool onClick();
     void layout(NVGcontext* vg, Style* style, FontStash* stash);
     void getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom, unsigned* left) override;
 

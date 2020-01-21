@@ -38,6 +38,8 @@ TabFrame::TabFrame()
     layout->addView(sidebar);
 
     this->setContentView(layout);
+
+    this->addHint("Back", Key::B, [this] { return this->onCancel(); });
 }
 
 bool TabFrame::onCancel()

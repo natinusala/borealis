@@ -25,6 +25,7 @@
 
 #include <borealis/animations.hpp>
 #include <borealis/frame_context.hpp>
+#include <borealis/hint.hpp>
 #include <borealis/label.hpp>
 #include <borealis/logger.hpp>
 #include <borealis/notification_manager.hpp>
@@ -127,6 +128,7 @@ class Application
     static void resizeFramerateCounter();
     static void resizeNotificationManager();
 
+    friend Hint;
   private:
     inline static GLFWwindow* window;
     inline static NVGcontext* vg;

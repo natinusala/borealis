@@ -24,8 +24,10 @@
 
 #include <borealis/event.hpp>
 #include <borealis/frame_context.hpp>
+#include <borealis/hint_types.hpp>
 #include <functional>
 #include <string>
+#include <map>
 
 namespace brls
 {
@@ -98,8 +100,9 @@ class View
 
     bool hidden = false;
 
-    std::string backHint = "Back";
+    std::map<Key, KeyHint> keyHints;
 
+    friend class Hint;
   protected:
     int x = 0;
     int y = 0;
@@ -168,12 +171,8 @@ class View
         return false;
     }
 
-    /**
-      * Draws the bottom-right buttons hint
-      */
-    void drawHint(FrameContext* ctx, unsigned x, unsigned y, unsigned width, unsigned height, NVGcolor color);
-
-    void setBackHint(std::string hint);
+    void addHint(std::string hintText, Key key, ButtonListener eventListener, bool hidden = false);
+    void setHintAvailable(Key key, bool available);
 
   public:
     void setBoundaries(int x, int y, unsigned width, unsigned height);
@@ -348,47 +347,6 @@ class View
     float alpha = 1.0f;
 
     virtual float getAlpha(bool child = false);
-
-    /**
-      * Fired when the user "clicks" on the view
-      * either via touch or pressing A
-      *
-      * Should return true if the event
-      * was consumed, false otherwise
-      *
-      * This is the method to override to add custom
-      * click behavior
-      */
-    virtual bool onClick() { return false; };
-
-    /**
-      * Fired when the user presses "Back" on the view
-      * either via touch (on hint) or pressing B
-      *
-      * Should return true if the event
-      * was consumed, false otherwise
-      *
-      * This is the method to override to add custom
-      * cancel behavior
-      */
-    virtual bool onCancel()
-    {
-        return false;
-    }
-
-    /**
-      * Function to be called when the view is clicked
-      * (calls onClick internally)
-      */
-    // TODO: Play click animation here
-    void click();
-
-    /**
-      * Function to be called when
-      * the cancel button is pressed on this view
-      * (calls onCancel internally)
-      */
-    void cancel();
 
     /**
       * Forces this view and its children to use

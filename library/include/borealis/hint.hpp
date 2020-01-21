@@ -1,7 +1,6 @@
 /*
     Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2019-2020  natinusala
-    Copyright (C) 2019  p-sam
+    Copyright (C) 2019  WerWolv
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,37 +18,33 @@
 
 #pragma once
 
-#include <borealis/button.hpp>
-#include <borealis/hint.hpp>
-#include <borealis/label.hpp>
 #include <borealis/view.hpp>
 
 namespace brls
 {
 
-// A screen similar to the "The software has closed" dialog
-// pressing OK will exit the app
-class CrashFrame : public View
+// A button input hint
+class Hint : public View
 {
   private:
-    Label* label;
-    Button* button;
-    Hint * hint;
+    bool animateHint;
 
   public:
-    CrashFrame(std::string text);
+    Hint();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-    void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
-    void onShowAnimationEnd() override;
-    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override;
 
-    bool isTranslucent() override
+    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override
     {
-        return true; // have it always translucent to disable fade out animation
+        return nullptr;
     }
 
-    ~CrashFrame();
+    void setAnimateHint(bool animate)
+    {
+        this->animateHint = animate;
+    }
+
+    static void handleInput(char button);
 };
 
 } // namespace brls

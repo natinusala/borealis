@@ -38,6 +38,24 @@ PopupFrame::PopupFrame(std::string title, unsigned char* imageBuffer, size_t ima
         this->contentView->setIcon(imageBuffer, imageBufferSize);
         this->contentView->invalidate();
     }
+
+    this->addHint("Back", Key::B, [this] { return this->onCancel(); });
+}
+
+PopupFrame::PopupFrame(std::string title, unsigned char* imageBuffer, unsigned width, unsigned height, AppletFrame* contentView, std::string subTitleLeft, std::string subTitleRight)
+    : contentView(contentView)
+{
+    if (this->contentView)
+    {
+        this->contentView->setParent(this);
+        this->contentView->setHeaderStyle(HeaderStyle::POPUP);
+        this->contentView->setTitle(title);
+        this->contentView->setSubtitle(subTitleLeft, subTitleRight);
+        this->contentView->setIcon(imageBuffer, width, height);
+        this->contentView->invalidate();
+    }
+
+    this->addHint("Back", Key::B, [this] { return this->onCancel(); });
 }
 
 PopupFrame::PopupFrame(std::string title, std::string imagePath, AppletFrame* contentView, std::string subTitleLeft, std::string subTitleRight)
@@ -52,6 +70,8 @@ PopupFrame::PopupFrame(std::string title, std::string imagePath, AppletFrame* co
         this->contentView->setIcon(imagePath);
         this->contentView->invalidate();
     }
+
+    this->addHint("Back", Key::B, [this] { return this->onCancel(); });
 }
 
 PopupFrame::PopupFrame(std::string title, AppletFrame* contentView, std::string subTitleLeft, std::string subTitleRight)
@@ -65,6 +85,24 @@ PopupFrame::PopupFrame(std::string title, AppletFrame* contentView, std::string 
         this->contentView->setSubtitle(subTitleLeft, subTitleRight);
         this->contentView->invalidate();
     }
+
+    this->addHint("Back", Key::B, [this] { return this->onCancel(); });
+}
+
+PopupFrame::PopupFrame(std::string title, std::vector<unsigned char> &buffer, AppletFrame* contentView, std::string subTitleLeft, std::string subTitleRight)
+    : contentView(contentView)
+{
+    if (this->contentView)
+    {
+        this->contentView->setParent(this);
+        this->contentView->setHeaderStyle(HeaderStyle::POPUP);
+        this->contentView->setTitle(title);
+        this->contentView->setSubtitle(subTitleLeft, subTitleRight);
+        this->contentView->setIcon(buffer);
+        this->contentView->invalidate();
+    }
+
+    this->addHint("Back", Key::B, [this] { return this->onCancel(); });
 }
 
 void PopupFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)

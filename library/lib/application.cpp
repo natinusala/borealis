@@ -441,15 +441,10 @@ void Application::onGamepadButtonPressed(char button, bool repeating)
 
     Application::repetitionOldFocus = Application::currentFocus;
 
+    Hint::handleInput(button);
+
     switch (button)
     {
-        // Exit by pressing Start (aka Plus)
-        case GLFW_GAMEPAD_BUTTON_START:
-            Application::quit();
-            break;
-        case GLFW_GAMEPAD_BUTTON_BACK:
-            Application::toggleFramerateDisplay();
-            break;
         case GLFW_GAMEPAD_BUTTON_DPAD_DOWN:
             if (Application::currentFocus && Application::currentFocus->getParent())
                 Application::requestFocus(Application::currentFocus->getParent(), FocusDirection::DOWN);
@@ -465,14 +460,6 @@ void Application::onGamepadButtonPressed(char button, bool repeating)
         case GLFW_GAMEPAD_BUTTON_DPAD_RIGHT:
             if (Application::currentFocus && Application::currentFocus->getParent())
                 Application::requestFocus(Application::currentFocus->getParent(), FocusDirection::RIGHT);
-            break;
-        case GLFW_GAMEPAD_BUTTON_A:
-            if (Application::currentFocus)
-                Application::currentFocus->click();
-            break;
-        case GLFW_GAMEPAD_BUTTON_B:
-            if (Application::currentFocus)
-                Application::currentFocus->cancel();
             break;
         default:
             break;

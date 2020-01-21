@@ -353,68 +353,16 @@ void View::drawBackground(NVGcontext* vg, FrameContext* ctx, Style* style)
     }
 }
 
-// TODO: Make it dynamic somehow
-void View::drawHint(FrameContext* ctx, unsigned x, unsigned y, unsigned width, unsigned height, NVGcolor color)
-{
-    NVGcontext* vg = ctx->vg;
-    Style* style   = Application::getStyle();
-
-    unsigned xAdvance = x + width - style->AppletFrame.separatorSpacing - style->AppletFrame.footerTextSpacing;
-
-    y      = y + height - style->AppletFrame.footerHeight;
-    height = style->AppletFrame.footerHeight;
-
-    unsigned middle = y + height / 2;
-
-    if (this->animateHint())
-        nvgFillColor(vg, a(color));
-    else
-        nvgFillColor(vg, color);
-
-    nvgTextAlign(ctx->vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
-
-    std::string okText   = "OK";
-    std::string backText = this->backHint;
-
-    std::string okIcon   = "\uE0E0";
-    std::string backIcon = "\uE0E1";
-
-    float bounds[4];
-
-    // OK
-    nvgBeginPath(vg);
-    nvgFontSize(vg, style->AppletFrame.footerTextSize);
-    nvgText(vg, xAdvance, middle, okText.c_str(), nullptr);
-    nvgTextBounds(vg, xAdvance, middle, okText.c_str(), nullptr, bounds);
-
-    xAdvance -= style->AppletFrame.footerTextSpacing / 3;
-    xAdvance -= (unsigned)(bounds[2] - bounds[0]);
-
-    nvgBeginPath(vg);
-    nvgFontSize(vg, style->AppletFrame.footerHintSize);
-    nvgText(vg, xAdvance, middle, okIcon.c_str(), nullptr);
-    nvgTextBounds(vg, xAdvance, middle, okIcon.c_str(), nullptr, bounds);
-
-    xAdvance -= (unsigned)(bounds[2] - bounds[0]);
-    xAdvance -= style->AppletFrame.footerTextSpacing + style->AppletFrame.separatorSpacing / 2;
-
-    // Back
-    nvgFontSize(vg, style->AppletFrame.footerTextSize);
-    nvgText(vg, xAdvance, middle, backText.c_str(), nullptr);
-    nvgTextBounds(vg, xAdvance, middle, backText.c_str(), nullptr, bounds);
-
-    xAdvance -= style->AppletFrame.footerTextSpacing / 3;
-    xAdvance -= (unsigned)(bounds[2] - bounds[0]);
-
-    nvgBeginPath(vg);
-    nvgFontSize(vg, style->AppletFrame.footerHintSize);
-    nvgText(vg, xAdvance, middle, backIcon.c_str(), nullptr);
+void View::addHint(std::string hintText, Key key, ButtonListener buttonListener, bool hidden) {
+    this->keyHints[key] = { hintText, true, hidden, buttonListener };
 }
 
-void View::setBackHint(std::string hint)
+void View::setHintAvailable(Key key, bool available)
 {
-    this->backHint = hint;
+    if (this->keyHints.find(key) != this->keyHints.end())
+        this->keyHints[key].available = available;
 }
+
 
 void View::setBoundaries(int x, int y, unsigned width, unsigned height)
 {
@@ -617,18 +565,6 @@ void View::hide(std::function<void(void)> cb, bool animated, ViewAnimation anima
 bool View::isHidden()
 {
     return this->hidden;
-}
-
-void View::click()
-{
-    if (!this->onClick() && this->getParent())
-        this->getParent()->click();
-}
-
-void View::cancel()
-{
-    if (!this->onCancel() && this->getParent())
-        this->getParent()->cancel();
 }
 
 void View::overrideThemeVariant(ThemeValues* theme)

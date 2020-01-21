@@ -32,6 +32,12 @@ AppletFrame::AppletFrame(bool padLeft, bool padRight)
 
     if (padRight)
         this->rightPadding = style->AppletFrame.separatorSpacing;
+
+    this->cancelListener = [](View *view){ return false; };
+
+    this->hint = new Hint();
+
+    this->addHint("Back", Key::B, [this] { return this->onCancel(); });
 }
 
 void AppletFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
@@ -132,7 +138,7 @@ void AppletFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned he
     nvgText(vg, x + style->AppletFrame.separatorSpacing + style->AppletFrame.footerTextSpacing, y + height - style->AppletFrame.footerHeight / 2, text->c_str(), nullptr);
 
     // Hint
-    this->drawHint(ctx, x, y, width, height, footerColor);
+    this->hint->frame(ctx);
 
     // Icon
     if (this->icon)
@@ -203,6 +209,9 @@ void AppletFrame::layout(NVGcontext* vg, Style* style, FontStash* stash)
 
         this->contentView->invalidate();
     }
+
+    this->hint->setBoundaries(this->x, this->y, this->width, this->height);
+    this->hint->invalidate();
 }
 
 void AppletFrame::setContentView(View* view)
