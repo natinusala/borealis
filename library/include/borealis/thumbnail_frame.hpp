@@ -44,6 +44,7 @@ class ThumbnailSidebar : public View
 
     void setThumbnail(std::string imagePath);
     void setThumbnail(unsigned char* buffer, size_t bufferSize);
+    void setThumbnail(unsigned char* buffer, size_t width, size_t height);
 
     void setTitle(std::string title);
     void setSubtitle(std::string subTitle);

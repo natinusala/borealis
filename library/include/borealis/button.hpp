@@ -73,6 +73,7 @@ class Button : public View
     Button* setLabel(std::string label);
     Button* setImage(std::string path);
     Button* setImage(unsigned char* buffer, size_t bufferSize);
+    Button* setImage(unsigned char* buffer, size_t width, size_t height);
 
     Image* getImage(FocusDirection direction, View* oldFocus, bool fromUp)
     {

@@ -100,6 +100,13 @@ Button* Button::setImage(unsigned char* buffer, size_t bufferSize)
 
     return this;
 }
+
+Button* Button::setImage(unsigned char* buffer, size_t width, size_t height)
+{
+    this->image = new Image(buffer, width, height);
+
+    return this;
+}
  
 void Button::setState(ButtonState state)
 {
