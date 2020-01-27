@@ -51,6 +51,9 @@ void Button::layout(NVGcontext* vg, Style* style, FontStash* stash)
     unsigned imageWidth = this->label ? this->getHeight() : this->getWidth();
     unsigned imageHeight = this->getHeight();
 
+    if (!this->image)
+        imageWidth = 0;
+
     if (this->label != nullptr)
     {
         this->label->setWidth(this->getWidth() - imageWidth);
