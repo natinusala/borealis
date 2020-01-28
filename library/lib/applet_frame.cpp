@@ -238,7 +238,7 @@ void AppletFrame::setIcon(unsigned char* buffer, size_t bufferSize)
 {
     if (!this->icon)
     {
-        Image *icon = new Image(buffer, bufferSize);
+        Image* icon = new Image(buffer, bufferSize);
         icon->setScaleType(ImageScaleType::SCALE);
         icon->setParent(this);
 
@@ -256,7 +256,7 @@ void AppletFrame::setIcon(std::string imagePath)
 {
     if (!this->icon)
     {
-        Image *icon = new Image(imagePath);
+        Image* icon = new Image(imagePath);
         icon->setScaleType(ImageScaleType::SCALE);
         icon->setParent(this);
 

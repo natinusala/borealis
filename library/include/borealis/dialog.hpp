@@ -82,7 +82,7 @@ class Dialog : public View
     void setCancelable(bool cancelable);
 
     void open();
-    void close(std::function<void(void)> cb = [](){});
+    void close(std::function<void(void)> cb = []() {});
 
     bool isTranslucent() override
     {

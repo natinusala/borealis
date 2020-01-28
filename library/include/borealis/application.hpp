@@ -75,7 +75,8 @@ class Application
       * Pops the last pushed view from the stack
       * and gives focus back where it was before
       */
-    static void popView(ViewAnimation animation = ViewAnimation::FADE, std::function<void(void)> cb = [](){});
+    static void popView(
+        ViewAnimation animation = ViewAnimation::FADE, std::function<void(void)> cb = []() {});
 
     static void requestFocus(View* view, FocusDirection direction);
 

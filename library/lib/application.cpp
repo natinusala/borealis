@@ -659,7 +659,8 @@ void Application::popView(ViewAnimation animation, std::function<void(void)> cb)
         }
 
         Application::unblockInputs();
-    }, true, animation);
+    },
+        true, animation);
 
     // Animate the old view immediately
     if (!wait && Application::viewStack.size() > 1)

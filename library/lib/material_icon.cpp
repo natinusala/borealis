@@ -21,9 +21,9 @@
 namespace brls
 {
 
-MaterialIcon::MaterialIcon(std::string icon) : icon(icon)
+MaterialIcon::MaterialIcon(std::string icon)
+    : icon(icon)
 {
-
 }
 
 void MaterialIcon::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
@@ -46,5 +46,3 @@ void MaterialIcon::layout(NVGcontext* vg, Style* style, FontStash* stash)
 }
 
 }; // namespace brls
-
-

@@ -24,17 +24,15 @@ namespace brls
 // A Material icon (from the Material font)
 class MaterialIcon : public View
 {
-    private:
-        std::string icon;
-        unsigned middleX, middleY;
+  private:
+    std::string icon;
+    unsigned middleX, middleY;
 
-    public:
-        MaterialIcon(std::string icon);
+  public:
+    MaterialIcon(std::string icon);
 
-        void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-        void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
+    void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
+    void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
 };
 
 } // namespace brls
-
-

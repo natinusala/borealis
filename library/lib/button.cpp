@@ -48,7 +48,7 @@ Button::~Button()
 
 void Button::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
-    unsigned imageWidth = this->label ? this->getHeight() : this->getWidth();
+    unsigned imageWidth  = this->label ? this->getHeight() : this->getWidth();
     unsigned imageHeight = this->getHeight();
 
     if (!this->image)
@@ -103,7 +103,7 @@ Button* Button::setImage(unsigned char* buffer, size_t bufferSize)
 
     return this;
 }
- 
+
 void Button::setState(ButtonState state)
 {
     this->state = state;

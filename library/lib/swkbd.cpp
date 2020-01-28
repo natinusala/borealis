@@ -17,9 +17,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <borealis/swkbd.hpp>
 #include <borealis/logger.hpp>
-
+#include <borealis/swkbd.hpp>
 #include <cstring>
 #include <iostream>
 
@@ -116,7 +115,7 @@ bool Swkbd::openForNumber(std::function<void(int)> f, std::string headerText, st
         f(stol(line));
         return true;
     }
-    catch(const std::exception& e)
+    catch (const std::exception& e)
     {
         Logger::error("Could not parse input, did you enter a valid integer?");
         return false;
