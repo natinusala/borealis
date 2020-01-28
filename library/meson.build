@@ -35,6 +35,7 @@ borealis_files = files(
     'lib/thumbnail_frame.cpp',
     'lib/layer_view.cpp',
     'lib/dialog.cpp',
+    'lib/material_icon.cpp',
 
     'lib/task_manager.cpp',
     'lib/notification_manager.cpp',
