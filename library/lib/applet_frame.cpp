@@ -47,7 +47,6 @@ void AppletFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned he
 
         nvgFillColor(vg, titleColor);
         nvgFontSize(vg, style->AppletFrame.titleSize);
-        nvgFontFaceId(vg, ctx->fontStash->regular);
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
         nvgFontFaceId(vg, ctx->fontStash->regular);
         nvgBeginPath(vg);
@@ -239,13 +238,15 @@ void AppletFrame::setIcon(unsigned char* buffer, size_t bufferSize)
 {
     if (!this->icon)
     {
-        this->icon = new Image(buffer, bufferSize);
-        this->icon->setScaleType(ImageScaleType::SCALE);
-        this->icon->setParent(this);
+        Image *icon = new Image(buffer, bufferSize);
+        icon->setScaleType(ImageScaleType::SCALE);
+        icon->setParent(this);
+
+        this->icon = icon;
     }
-    else
+    else if (Image* icon = dynamic_cast<Image*>(this->icon))
     {
-        this->icon->setImage(buffer, bufferSize);
+        icon->setImage(buffer, bufferSize);
     }
 
     this->icon->invalidate();
@@ -255,16 +256,29 @@ void AppletFrame::setIcon(std::string imagePath)
 {
     if (!this->icon)
     {
-        this->icon = new Image(imagePath);
-        this->icon->setScaleType(ImageScaleType::SCALE);
-        this->icon->setParent(this);
+        Image *icon = new Image(imagePath);
+        icon->setScaleType(ImageScaleType::SCALE);
+        icon->setParent(this);
+
+        this->icon = icon;
     }
-    else
+    else if (Image* icon = dynamic_cast<Image*>(this->icon))
     {
-        this->icon->setImage(imagePath);
+        icon->setImage(imagePath);
     }
 
     this->icon->invalidate();
+}
+
+void AppletFrame::setIcon(View* view)
+{
+    if (this->icon)
+        delete this->icon;
+
+    if (view != nullptr)
+        view->setParent(this);
+
+    this->icon = view;
 }
 
 void AppletFrame::setHeaderStyle(HeaderStyle headerStyle)

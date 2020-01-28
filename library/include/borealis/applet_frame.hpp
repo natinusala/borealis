@@ -42,7 +42,7 @@ class AppletFrame : public View
 
     std::string subTitleLeft = "", subTitleRight = "";
 
-    Image* icon = nullptr;
+    View* icon = nullptr;
 
     View* contentView = nullptr;
 
@@ -74,6 +74,7 @@ class AppletFrame : public View
     void setSubtitle(std::string left, std::string right);
     void setIcon(unsigned char* buffer, size_t bufferSize);
     void setIcon(std::string imagePath);
+    void setIcon(View* view);
     virtual void setContentView(View* view);
     void setHeaderStyle(HeaderStyle headerStyle);
 
