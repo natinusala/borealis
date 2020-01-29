@@ -1,6 +1,6 @@
 /*
     Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2019  natinusala
+    Copyright (C) 2019-2020  natinusala
     Copyright (C) 2019  p-sam
 
     This program is free software: you can redistribute it and/or modify
@@ -72,6 +72,14 @@ void Label::setHorizontalAlign(NVGalign align)
 void Label::setVerticalAlign(NVGalign align)
 {
     this->verticalAlign = align;
+}
+
+void Label::setFontSize(unsigned size)
+{
+    this->fontSize = size;
+
+    if (this->getParent())
+        this->getParent()->invalidate();
 }
 
 void Label::setText(std::string text)
