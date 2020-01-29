@@ -158,7 +158,7 @@ Notification::Notification(std::string text)
     this->setBackground(Background::BACKDROP);
 
     this->label = new Label(LabelStyle::NOTIFICATION, text, true);
-    this->setParent(this);
+    label->setParent(this);
 }
 
 Notification::~Notification()
