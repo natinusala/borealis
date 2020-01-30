@@ -25,6 +25,18 @@
 namespace brls
 {
 
+Button::Button(ButtonStyle style) : style(style) {
+    this->registerAction("OK", Key::A, [this] {
+        if (this->state == ButtonState::DISABLED)
+            return false;
+
+        if (this->clickListener)
+            this->clickListener(this);
+
+        return this->clickListener != nullptr;
+    });
+}
+
 LabelStyle Button::getLabelStyle()
 {
     if (this->style == ButtonStyle::BORDERLESS)

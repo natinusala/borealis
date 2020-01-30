@@ -47,7 +47,6 @@ class AppletFrame : public View
     Hint* hint  = nullptr;
 
     View* contentView = nullptr;
-    Hint* hint  = nullptr;
 
     bool slideOut = false;
     bool slideIn  = false;
