@@ -1,7 +1,6 @@
 /*
     Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2019  natinusala
-    Copyright (C) 2019  p-sam
+    Copyright (C) 2020  WerWolv
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,20 +18,28 @@
 
 #include <borealis/application.hpp>
 #include <borealis/hint.hpp>
-#include <borealis/hint_types.hpp>
+#include <borealis/actions.hpp>
 
 #include <set>
 
 namespace brls
 {
 
-Hint::Hint()
+Hint::Hint(bool animate) : animate(animate)
 {
     Style* style = Application::getStyle();
     this->setHeight(style->AppletFrame.footerHeight);
 
-    this->animateHint = true;
+    Application::addFocusListener(this, [this](View* newFocus) {
+        this->invalidate();
+    });
 }
+
+Hint::~Hint()
+{
+    Application::removeFocusListener(this);
+}
+
 
 std::string getKeyIcon(Key key) {
     switch (key)
@@ -57,63 +64,137 @@ std::string getKeyIcon(Key key) {
 
 void Hint::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
-    unsigned xAdvance = x + width - style->AppletFrame.separatorSpacing - style->AppletFrame.footerTextSpacing;
+    nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
-    y      = y + height - style->AppletFrame.footerHeight;
-    height = style->AppletFrame.footerHeight;
+    for (unsigned i = 0; i < this->buttonHints.size(); i++)
+    {   
+        if (this->hintAvailables[i])
+            nvgFillColor(vg, animate ? a(ctx->theme->textColor) : ctx->theme->textColor);
+        else
+            nvgFillColor(vg, animate ? a(ctx->theme->descriptionColor) : ctx->theme->descriptionColor);
+            
+        nvgBeginPath(vg);
+        nvgFontSize(vg, style->AppletFrame.footerTextSize);
+        nvgText(vg, this->hintXPositions[i], this->hintYPosition, this->buttonHints[i].c_str(), nullptr);
+    }
+}
+
+void Hint::layout(NVGcontext* vg, Style* style, FontStash* stash)
+{
+    unsigned x = this->x + this->width - style->AppletFrame.separatorSpacing - style->AppletFrame.footerTextSpacing;
+    unsigned xAdvance = x + style->AppletFrame.separatorSpacing / 2;
+
+    unsigned y      = this->y + this->height - style->AppletFrame.footerHeight;
+    unsigned height = style->AppletFrame.footerHeight;
 
     unsigned middle = y + height / 2;
 
-    nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
+    this->hintYPosition = middle;
 
     float bounds[4];
-    View *parent = Application::currentFocus;
-    std::set<Key> hintsDrawn;
+    std::string hintText;
+    
+    // Check if the focused element is still a child of the same parent as the hint view's
+    {
+        View *focusParent = Application::currentFocus;
+        View *hintBaseParent = this;
 
-    while (parent != nullptr) {
-
-        for (auto &[key, keyHint] : parent->keyHints)
-        {
-            if (keyHint.hidden)
-                continue;
-            
-            if (hintsDrawn.find(key) != hintsDrawn.end())
-                continue;
-
-            hintsDrawn.insert(key);
-
-            if (this->animateHint) {
-                if (keyHint.available)
-                    nvgFillColor(vg, a(ctx->theme->textColor));
-                else
-                    nvgFillColor(vg, a(ctx->theme->descriptionColor));
-            }
-            else {
-                if (keyHint.available)
-                    nvgFillColor(vg, ctx->theme->textColor);
-                else
-                    nvgFillColor(vg, ctx->theme->descriptionColor);
-            }
-
-            nvgBeginPath(vg);
-            nvgFontSize(vg, style->AppletFrame.footerTextSize);
-            nvgText(vg, xAdvance, middle, keyHint.hintText.c_str(), nullptr);
-            nvgTextBounds(vg, xAdvance, middle, keyHint.hintText.c_str(), nullptr, bounds);
-
-            xAdvance -= style->AppletFrame.footerTextSpacing / 3;
-            xAdvance -= (unsigned)(bounds[2] - bounds[0]);
-
-            nvgBeginPath(vg);
-            nvgFontSize(vg, style->AppletFrame.footerHintSize);
-            nvgText(vg, xAdvance, middle, getKeyIcon(key).c_str(), nullptr);
-            nvgTextBounds(vg, xAdvance, middle, getKeyIcon(key).c_str(), nullptr, bounds);
-
-            xAdvance -= (unsigned)(bounds[2] - bounds[0]);
-            xAdvance -= style->AppletFrame.footerTextSpacing + style->AppletFrame.separatorSpacing / 2;
+        while (focusParent != nullptr) {
+            if (focusParent->getParent() == nullptr)
+                break;
+            focusParent = focusParent->getParent();
         }
 
-        parent = parent->getParent();
+        while (hintBaseParent != nullptr) {
+            if (hintBaseParent->getParent() == nullptr)
+                break;
+            hintBaseParent = hintBaseParent->getParent();
+        }
+
+        if (focusParent != hintBaseParent)
+            return;
     }
+
+    this->hintCount = 2;
+    this->buttonHints.clear();
+    this->hintAvailables.clear();
+    this->hintXPositions.clear();
+
+    // Reserve space for A and B hint
+    this->buttonHints.push_back(" ");
+    this->buttonHints.push_back(" ");
+    this->hintAvailables.push_back(false);
+    this->hintAvailables.push_back(false);
+    this->hintXPositions.push_back(0);
+    this->hintXPositions.push_back(0);
+
+    // We only ever want one action per key
+    std::set<Key> addedKeys;
+
+    View *focusParent = Application::currentFocus;
+
+    while (focusParent != nullptr)
+    {
+        for (auto &action : focusParent->actions)
+        {
+            if (action.hidden)
+                continue;
+
+            if (addedKeys.find(action.key) != addedKeys.end())
+                continue;
+            
+            addedKeys.insert(action.key);
+
+            hintText = getKeyIcon(action.key) + "  " + action.hintText;
+            hintCount++;
+
+            printf("%s\n", hintText.c_str());
+            nvgSave(Application::getNVGContext());
+            nvgFontSize(vg, style->AppletFrame.footerTextSize);
+            nvgTextBounds(vg, x, middle, hintText.c_str(), nullptr, bounds);
+            nvgRestore(Application::getNVGContext());
+
+            unsigned hintWidth = (unsigned)(bounds[2] - bounds[0]) + style->AppletFrame.footerTextSpacing + style->AppletFrame.separatorSpacing / 2;
+
+            if (action.key == Key::A) 
+            {
+                this->buttonHints[0] = hintText;
+                this->hintAvailables[0] = action.available;
+                this->hintXPositions[0] = x;
+
+                for (unsigned i = 2; i < this->hintCount; i++)
+                    this->hintXPositions[i] -= hintWidth;
+            } 
+            else if (action.key == Key::B) 
+            {
+                this->buttonHints[1] = hintText;
+                this->hintAvailables[1] = action.available;
+                this->hintXPositions[1] = x - hintWidth + style->AppletFrame.footerTextSpacing;
+            
+                for (unsigned i = 2; i < this->hintCount; i++)
+                    this->hintXPositions[i] -= hintWidth;
+                } 
+            else
+            {
+                this->buttonHints.push_back(hintText);
+                this->hintAvailables.push_back(action.available);
+                this->hintXPositions.push_back(xAdvance);
+            }
+
+            xAdvance -= hintWidth;
+        }
+
+        focusParent = focusParent->getParent();
+    }
+}
+
+void Hint::willAppear()
+{   
+
+}
+
+void Hint::willDisappear()
+{   
 
 }
 
@@ -121,19 +202,15 @@ void Hint::handleInput(char button)
 {   
     View *hintParent = Application::currentFocus;
 
-    std::set<Key> inputConsumed;
-
     while (hintParent != nullptr)
     {
-        for (auto &[key, keyHint] : hintParent->keyHints)
+        for (auto &action : hintParent->actions)
         {
-            if (key != static_cast<Key>(button))
+            if (action.key != static_cast<Key>(button))
                 continue;
 
-            if (keyHint.available)
-                if (inputConsumed.find(key) == inputConsumed.end())
-                    if (keyHint.buttonListener())
-                        inputConsumed.insert(key);
+            if (action.available)
+                action.buttonListener();
         }
 
         hintParent = hintParent->getParent();

@@ -47,6 +47,7 @@ class AppletFrame : public View
     Hint* hint  = nullptr;
 
     View* contentView = nullptr;
+    Hint* hint  = nullptr;
 
     bool slideOut = false;
     bool slideIn  = false;
@@ -55,6 +56,7 @@ class AppletFrame : public View
 
   protected:
     HeaderStyle headerStyle = HeaderStyle::REGULAR;
+
 
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
 
@@ -66,7 +68,7 @@ class AppletFrame : public View
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override;
-    bool onCancel();
+    virtual bool onCancel();
     void willAppear() override;
     void willDisappear() override;
     void show(std::function<void(void)> cb, bool animate = true, ViewAnimation animation = ViewAnimation::FADE) override;
@@ -80,6 +82,11 @@ class AppletFrame : public View
     void setIcon(View* view);
     virtual void setContentView(View* view);
     void setHeaderStyle(HeaderStyle headerStyle);
+
+    void setAnimateHint(bool animate)
+    {
+      this->hint->setAnimate(animate);
+    }
 
     ~AppletFrame();
 };

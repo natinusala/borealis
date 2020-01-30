@@ -1,6 +1,6 @@
 /*
     Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2019  WerWolv
+    Copyright (C) 2020  WerWolv
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,11 +46,18 @@ enum class Key
     DDOWN     = 13,
 };
 
-struct KeyHint {
+struct Action {
+  Key key;
+  
   std::string hintText;
   bool available;
   bool hidden;
   ButtonListener buttonListener;
+
+  bool operator==(const Key other)
+  {
+    return this->key == other;
+  }
 };
 
 } // namespace brls

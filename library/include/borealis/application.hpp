@@ -33,6 +33,8 @@
 #include <borealis/task_manager.hpp>
 #include <borealis/theme.hpp>
 #include <borealis/view.hpp>
+
+#include <map>
 #include <vector>
 
 namespace brls
@@ -50,6 +52,8 @@ class FramerateCounter : public Label
 
     void frame(FrameContext* ctx) override;
 };
+
+typedef std::function<void(View*)> FocusListener;
 
 class Application
 {
@@ -128,6 +132,9 @@ class Application
     static void resizeFramerateCounter();
     static void resizeNotificationManager();
 
+    static void addFocusListener(View* view, FocusListener focusListener);
+    static void removeFocusListener(View *view);
+
     friend Hint;
   private:
     inline static GLFWwindow* window;
@@ -162,6 +169,8 @@ class Application
     inline static float frameTime = 0.0f;
 
     inline static View* repetitionOldFocus = nullptr;
+
+    inline static std::map<View*, FocusListener> focusListeners;
 
     static void onWindowSizeChanged();
 

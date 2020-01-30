@@ -24,7 +24,7 @@
 
 #include <borealis/event.hpp>
 #include <borealis/frame_context.hpp>
-#include <borealis/hint_types.hpp>
+#include <borealis/actions.hpp>
 #include <functional>
 #include <string>
 #include <map>
@@ -100,7 +100,7 @@ class View
 
     bool hidden = false;
 
-    std::map<Key, KeyHint> keyHints;
+    std::vector<Action> actions;
 
     friend class Hint;
   protected:
@@ -171,9 +171,6 @@ class View
         return false;
     }
 
-    void addHint(std::string hintText, Key key, ButtonListener eventListener, bool hidden = false);
-    void setHintAvailable(Key key, bool available);
-
   public:
     void setBoundaries(int x, int y, unsigned width, unsigned height);
 
@@ -194,6 +191,9 @@ class View
     virtual void setParent(View* parent);
     View* getParent();
     bool hasParent();
+
+    void registerAction(std::string hintText, Key key, ButtonListener eventListener, bool hidden = false);
+    void setActionAvailable(Key key, bool available);
 
     std::string name() const { return typeid(*this).name(); }
 

@@ -17,6 +17,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <algorithm>
 #include <math.h>
 
 #include <borealis/animations.hpp>
@@ -353,14 +354,16 @@ void View::drawBackground(NVGcontext* vg, FrameContext* ctx, Style* style)
     }
 }
 
-void View::addHint(std::string hintText, Key key, ButtonListener buttonListener, bool hidden) {
-    this->keyHints[key] = { hintText, true, hidden, buttonListener };
+void View::registerAction(std::string hintText, Key key, ButtonListener buttonListener, bool hidden) {
+    if (auto it = std::find(this->actions.begin(), this->actions.end(), key); it != this->actions.end())
+        *it = { key, hintText, true, hidden, buttonListener };
+    this->actions.push_back({ key, hintText, true, hidden, buttonListener });
 }
 
-void View::setHintAvailable(Key key, bool available)
+void View::setActionAvailable(Key key, bool available)
 {
-    if (this->keyHints.find(key) != this->keyHints.end())
-        this->keyHints[key].available = available;
+    if (auto it = std::find(this->actions.begin(), this->actions.end(), key); it != this->actions.end())
+        it->available = available;
 }
 
 

@@ -82,7 +82,7 @@ SidebarItem::SidebarItem(std::string label, Sidebar* sidebar)
     Style* style = Application::getStyle();
     this->setHeight(style->Sidebar.Item.height);
 
-    this->addHint("OK", Key::A, [this] { return this->onClick(); });
+    this->registerAction("OK", Key::A, [this] { return this->onClick(); });
 }
 
 void SidebarItem::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)

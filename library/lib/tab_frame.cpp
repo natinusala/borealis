@@ -39,7 +39,7 @@ TabFrame::TabFrame()
 
     this->setContentView(layout);
 
-    this->addHint("Back", Key::B, [this] { return this->onCancel(); });
+    this->registerAction("Back", Key::B, [this] { return this->onCancel(); });
 }
 
 bool TabFrame::onCancel()

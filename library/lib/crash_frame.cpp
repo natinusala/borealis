@@ -42,7 +42,7 @@ CrashFrame::CrashFrame(std::string text)
 
     // Hint
     this->hint = new Hint();
-    this->hint->setAnimateHint(false);
+    this->hint->setParent(this);
 }
 
 void CrashFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
@@ -136,6 +136,7 @@ void CrashFrame::layout(NVGcontext* vg, Style* style, FontStash* stash)
 CrashFrame::~CrashFrame()
 {
     delete this->label;
+    delete this->hint;
 }
 
 } // namespace brls

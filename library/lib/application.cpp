@@ -603,6 +603,9 @@ void Application::requestFocus(View* view, FocusDirection direction)
         newFocus->onFocusGained();
 
         Application::currentFocus = newFocus;
+
+        for (auto &[view, focusListener] : Application::focusListeners)
+            focusListener(newFocus);
     }
     else if (oldFocus)
         oldFocus->shakeHighlight(direction);
@@ -681,6 +684,9 @@ void Application::pushView(View* view, ViewAnimation animation)
 
     bool fadeOut = last && !last->isTranslucent() && !view->isTranslucent(); // play the fade out animation?
     bool wait    = animation == ViewAnimation::FADE; // wait for the old view animation to be done before showing the new one?
+
+    view->registerAction("Exit", Key::PLUS, [] { Application::quit(); return true; });
+    view->registerAction("FPS", Key::MINUS, [] { Application:: toggleFramerateDisplay(); return true; }, true);
 
     // Fade out animation
     if (fadeOut)
@@ -857,6 +863,16 @@ void Application::setMaximumFPS(unsigned fps)
     }
 
     Logger::info("Maximum FPS set to %d - using a frame time of %.2f ms", fps, Application::frameTime);
+}
+
+void Application::addFocusListener(View* view, FocusListener focusListener)
+{
+    Application::focusListeners.insert({ view, focusListener });
+}
+
+void Application::removeFocusListener(View *view)
+{
+    Application::focusListeners.erase(view);
 }
 
 } // namespace brls

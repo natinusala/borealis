@@ -67,8 +67,9 @@ Dropdown::Dropdown(std::string title, std::vector<std::string> values, ValueSele
     }
 
     this->hint = new Hint();
+    this->hint->setParent(this);
 
-    this->addHint("Back", Key::B, [this] { return this->onCancel(); });
+    this->registerAction("Back", Key::B, [this] { return this->onCancel(); });
 }
 
 void Dropdown::show(std::function<void(void)> cb, bool animate, ViewAnimation animation)
@@ -188,6 +189,7 @@ void Dropdown::willAppear()
 Dropdown::~Dropdown()
 {
     delete this->list;
+    delete this->hint;
 }
 
 } // namespace brls

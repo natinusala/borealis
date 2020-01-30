@@ -33,11 +33,10 @@ AppletFrame::AppletFrame(bool padLeft, bool padRight)
     if (padRight)
         this->rightPadding = style->AppletFrame.separatorSpacing;
 
-    this->cancelListener = [](View *view){ return false; };
-
     this->hint = new Hint();
+    this->hint->setParent(this);
 
-    this->addHint("Back", Key::B, [this] { return this->onCancel(); });
+    this->registerAction("Back", Key::B, [this] { return this->onCancel(); });
 }
 
 void AppletFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
@@ -307,6 +306,8 @@ AppletFrame::~AppletFrame()
 
     if (this->icon)
         delete this->icon;
+
+    delete this->hint;
 }
 
 void AppletFrame::willAppear()
@@ -316,6 +317,8 @@ void AppletFrame::willAppear()
 
     if (this->contentView)
         this->contentView->willAppear();
+
+    this->hint->willAppear();
 }
 
 void AppletFrame::willDisappear()
@@ -325,6 +328,8 @@ void AppletFrame::willDisappear()
 
     if (this->contentView)
         this->contentView->willDisappear();
+
+    this->hint->willDisappear();
 }
 
 void AppletFrame::show(std::function<void(void)> cb, bool animated, ViewAnimation animation)
@@ -367,6 +372,12 @@ void AppletFrame::hide(std::function<void(void)> cb, bool animated, ViewAnimatio
     }
 
     View::hide(cb, animated, animation);
+}
+
+bool AppletFrame::onCancel()
+{   
+    Application::popView();
+    return true;
 }
 
 } // namespace brls
