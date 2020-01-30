@@ -120,11 +120,14 @@ void Hint::layout(NVGcontext* vg, Style* style, FontStash* stash)
     this->hintAvailables.clear();
     this->hintXPositions.clear();
 
-    // Reserve space for A and B hint
+    // Reserve space for A, B and (+) hint
+    this->buttonHints.push_back(" ");
     this->buttonHints.push_back(" ");
     this->buttonHints.push_back(" ");
     this->hintAvailables.push_back(false);
     this->hintAvailables.push_back(false);
+    this->hintAvailables.push_back(false);
+    this->hintXPositions.push_back(0);
     this->hintXPositions.push_back(0);
     this->hintXPositions.push_back(0);
 
@@ -148,7 +151,6 @@ void Hint::layout(NVGcontext* vg, Style* style, FontStash* stash)
             hintText = getKeyIcon(action.key) + "  " + action.hintText;
             hintCount++;
 
-            printf("%s\n", hintText.c_str());
             nvgSave(Application::getNVGContext());
             nvgFontSize(vg, style->AppletFrame.footerTextSize);
             nvgTextBounds(vg, x, middle, hintText.c_str(), nullptr, bounds);
@@ -162,18 +164,27 @@ void Hint::layout(NVGcontext* vg, Style* style, FontStash* stash)
                 this->hintAvailables[0] = action.available;
                 this->hintXPositions[0] = x;
 
-                for (unsigned i = 2; i < this->hintCount; i++)
+                for (unsigned i = 3; i < this->hintCount; i++)
                     this->hintXPositions[i] -= hintWidth;
             } 
             else if (action.key == Key::B) 
             {
                 this->buttonHints[1] = hintText;
                 this->hintAvailables[1] = action.available;
-                this->hintXPositions[1] = x - hintWidth + style->AppletFrame.footerTextSpacing;
+                this->hintXPositions[1] = this->hintXPositions[0] - hintWidth + style->AppletFrame.footerTextSpacing;
             
-                for (unsigned i = 2; i < this->hintCount; i++)
+                for (unsigned i = 3; i < this->hintCount; i++)
                     this->hintXPositions[i] -= hintWidth;
-                } 
+            } 
+            else if (action.key == Key::PLUS) 
+            {
+                this->buttonHints[2] = hintText;
+                this->hintAvailables[2] = action.available;
+                this->hintXPositions[2] = this->hintXPositions[1] - hintWidth - style->AppletFrame.footerTextSpacing / 2;
+            
+                for (unsigned i = 3; i < this->hintCount; i++)
+                    this->hintXPositions[i] -= hintWidth;
+            } 
             else
             {
                 this->buttonHints.push_back(hintText);
