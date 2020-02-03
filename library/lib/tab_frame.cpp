@@ -38,8 +38,6 @@ TabFrame::TabFrame()
     layout->addView(sidebar);
 
     this->setContentView(layout);
-
-    this->registerAction("Back", Key::B, [this] { return this->onCancel(); });
 }
 
 bool TabFrame::onCancel()
