@@ -26,7 +26,7 @@ namespace brls
 
 class View;
 
-typedef std::function<bool(void)> ButtonListener;
+typedef std::function<bool(void)> ActionListener;
 
 enum class Key
 {
@@ -52,7 +52,7 @@ struct Action {
   std::string hintText;
   bool available;
   bool hidden;
-  ButtonListener buttonListener;
+  ActionListener actionListener;
 
   bool operator==(const Key other)
   {

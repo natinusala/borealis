@@ -192,7 +192,7 @@ class View
     View* getParent();
     bool hasParent();
 
-    void registerAction(std::string hintText, Key key, ButtonListener eventListener, bool hidden = false);
+    void registerAction(std::string hintText, Key key, ActionListener actionListener, bool hidden = false);
     void setActionAvailable(Key key, bool available);
 
     std::string name() const { return typeid(*this).name(); }

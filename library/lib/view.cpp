@@ -354,10 +354,10 @@ void View::drawBackground(NVGcontext* vg, FrameContext* ctx, Style* style)
     }
 }
 
-void View::registerAction(std::string hintText, Key key, ButtonListener buttonListener, bool hidden) {
+void View::registerAction(std::string hintText, Key key, ActionListener actionListener, bool hidden) {
     if (auto it = std::find(this->actions.begin(), this->actions.end(), key); it != this->actions.end())
-        *it = { key, hintText, true, hidden, buttonListener };
-    this->actions.push_back({ key, hintText, true, hidden, buttonListener });
+        *it = { key, hintText, true, hidden, actionListener };
+    this->actions.push_back({ key, hintText, true, hidden, actionListener });
 }
 
 void View::setActionAvailable(Key key, bool available)

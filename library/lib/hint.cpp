@@ -221,7 +221,7 @@ void Hint::handleInput(char button)
                 continue;
 
             if (action.available)
-                action.buttonListener();
+                action.actionListener();
         }
 
         hintParent = hintParent->getParent();
