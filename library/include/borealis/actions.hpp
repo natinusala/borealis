@@ -28,6 +28,8 @@ class View;
 
 typedef std::function<bool(void)> ActionListener;
 
+// These values must match GLFW's button codes
+// This is also the reason why ZL and ZR do not exist here. GLFW doesn't know them
 enum class Key
 {
     A         = 0,
