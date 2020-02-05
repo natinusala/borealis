@@ -21,19 +21,21 @@
 
 #include <borealis/list.hpp>
 #include <borealis/view.hpp>
+#include <borealis/event.hpp>
+
 #include <string>
 
 namespace brls
 {
 
-// Called when the user has selected a value
+// Fired when the user has selected a value
 //
 // Parameter is either the selected value index
 // or -1 if the user cancelled
 //
 // Assume that the Dropdown is deleted
 // as soon as this function is called
-typedef std::function<void(int)> DropdownListener;
+typedef Event<int> ValueSelectedEvent;
 
 // Allows the user to select between multiple
 // values
@@ -41,13 +43,13 @@ typedef std::function<void(int)> DropdownListener;
 class Dropdown : public View
 {
   private:
-    Dropdown(std::string title, std::vector<std::string> values, DropdownListener listener, size_t selected = 0);
+    Dropdown(std::string title, std::vector<std::string> values, ValueSelectedEvent::Callback cb, size_t selected = 0);
 
     std::string title;
 
     int valuesCount;
 
-    DropdownListener listener;
+    ValueSelectedEvent valueEvent;
 
     List* list;
 
@@ -71,7 +73,7 @@ class Dropdown : public View
     void show(std::function<void(void)> cb, bool animate = true, ViewAnimation animation = ViewAnimation::FADE) override;
     void willAppear() override;
 
-    static void open(std::string title, std::vector<std::string> values, DropdownListener listener, int selected = -1);
+    static void open(std::string title, std::vector<std::string> values, ValueSelectedEvent::Callback cb, int selected = -1);
 
     bool isTranslucent() override
     {

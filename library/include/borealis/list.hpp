@@ -23,6 +23,7 @@
 #include <borealis/image.hpp>
 #include <borealis/label.hpp>
 #include <borealis/rectangle.hpp>
+
 #include <string>
 
 namespace brls
@@ -53,7 +54,7 @@ class ListItem : public View
 
     bool reduceDescriptionSpacing = false;
 
-    EventListener clickListener = [](View* view) {};
+    GenericEvent clickEvent;
 
     bool indented = false;
 
@@ -96,7 +97,7 @@ class ListItem : public View
     void setValue(std::string value, bool faint = false, bool animate = true);
     std::string getValue();
 
-    void setClickListener(EventListener listener);
+    GenericEvent* getClickEvent();
 
     ~ListItem();
 };
@@ -110,26 +111,32 @@ class ListItemGroupSpacing : public Rectangle
 
 // A list item with mutliple choices for its value
 // (will open a Dropdown)
-typedef std::function<void(int result)> SelectListener;
+
+// Fired when the user has selected a value
+//
+// Parameter is either the selected value index
+// or -1 if the user cancelled
+typedef Event<int> ValueSelectedEvent;
 
 class SelectListItem : public ListItem
 {
   public:
     SelectListItem(std::string label, std::vector<std::string> values, unsigned selectedValue = 0);
 
-    void setListener(SelectListener listener);
     void setSelectedValue(unsigned value);
+
+    ValueSelectedEvent* getValueSelectedEvent();
 
   private:
     std::vector<std::string> values;
     unsigned selectedValue;
 
-    SelectListener listener = [](unsigned result) {};
+    ValueSelectedEvent valueEvent;
 };
 
 // A list item with a ON/OFF value
 // that can be toggled
-// Use the clickListener to detect when the value
+// Use the click event to detect when the value
 // changes
 class ToggleListItem : public ListItem
 {

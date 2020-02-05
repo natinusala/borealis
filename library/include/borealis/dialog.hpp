@@ -30,7 +30,7 @@ class DialogButton
 {
   public:
     std::string label;
-    EventListener clickListener = [](View* view) {};
+    GenericEvent::Callback cb;
 };
 
 // A modal dialog with zero to three buttons
@@ -70,7 +70,7 @@ class Dialog : public View
      * Adding a button after the dialog has been opened is
      * NOT SUPPORTED
      */
-    void addButton(std::string label, EventListener clickListener);
+    void addButton(std::string label, GenericEvent::Callback cb);
 
     /**
      * A cancelable dialog is closed when

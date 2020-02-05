@@ -55,3 +55,4 @@
 #include <borealis/theme.hpp>
 #include <borealis/thumbnail_frame.hpp>
 #include <borealis/view.hpp>
+#include <borealis/event.hpp>

@@ -49,7 +49,7 @@ class Button : public View
     Label* label = nullptr;
     Image* image = nullptr;
 
-    EventListener clickListener = [](View* view) {};
+    GenericEvent clickEvent;
 
     LabelStyle getLabelStyle();
 
@@ -73,6 +73,8 @@ class Button : public View
     Button* setLabel(std::string label);
     Button* setImage(std::string path);
     Button* setImage(unsigned char* buffer, size_t bufferSize);
+
+    GenericEvent* getClickEvent();
 
     Image* getImage(FocusDirection direction, View* oldFocus, bool fromUp)
     {
@@ -98,8 +100,6 @@ class Button : public View
     {
         return false;
     }
-
-    void setClickListener(EventListener listener);
 };
 
 } // namespace brls

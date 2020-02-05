@@ -37,14 +37,15 @@ Dialog::Dialog(std::string text)
 {
 }
 
-void Dialog::addButton(std::string label, EventListener clickListener)
+void Dialog::addButton(std::string label, GenericEvent::Callback cb)
 {
     if (this->buttons.size() >= 3)
         return;
 
     DialogButton* button  = new DialogButton();
     button->label         = label;
-    button->clickListener = clickListener;
+    button->cb            = cb;
+
     this->buttons.push_back(button);
 
     this->rebuildButtons();
@@ -285,7 +286,7 @@ void Dialog::rebuildButtons()
         if (this->buttons.size() == 1)
         {
             Button* button = (new Button(ButtonStyle::DIALOG))->setLabel(this->buttons[0]->label);
-            button->setClickListener(this->buttons[0]->clickListener);
+            button->getClickEvent()->subscribe(this->buttons[0]->cb);
             this->verticalButtonsLayout->addView(button);
         }
         // Two buttons on one row
@@ -297,7 +298,7 @@ void Dialog::rebuildButtons()
             for (DialogButton* dialogButton : this->buttons)
             {
                 Button* button = (new Button(ButtonStyle::DIALOG))->setLabel(dialogButton->label);
-                button->setClickListener(dialogButton->clickListener);
+                button->getClickEvent()->subscribe(dialogButton->cb);
                 this->horizontalButtonsLayout->addView(button);
             }
         }
@@ -305,7 +306,7 @@ void Dialog::rebuildButtons()
         else if (this->buttons.size() == 3)
         {
             Button* button = (new Button(ButtonStyle::DIALOG))->setLabel(this->buttons[0]->label);
-            button->setClickListener(this->buttons[0]->clickListener);
+            button->getClickEvent()->subscribe(this->buttons[0]->cb);
             this->verticalButtonsLayout->addView(button);
 
             this->horizontalButtonsLayout = new BoxLayout(BoxLayoutOrientation::HORIZONTAL);
@@ -315,7 +316,7 @@ void Dialog::rebuildButtons()
             {
                 DialogButton* dialogButton = this->buttons[i];
                 Button* button             = (new Button(ButtonStyle::DIALOG))->setLabel(dialogButton->label);
-                button->setClickListener(dialogButton->clickListener);
+                button->getClickEvent()->subscribe(dialogButton->cb);
                 this->horizontalButtonsLayout->addView(button);
             }
         }

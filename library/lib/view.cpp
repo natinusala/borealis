@@ -494,13 +494,12 @@ void View::onFocusGained()
 
     menu_animation_push(&entry);
 
-    if (this->focusListener)
-        this->focusListener(this);
+    this->focusEvent.fire(this);
 }
 
-void View::setFocusListener(EventListener listener)
+GenericEvent* View::getFocusEvent()
 {
-    this->focusListener = listener;
+    return &this->focusEvent;
 }
 
 /**

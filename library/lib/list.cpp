@@ -196,15 +196,12 @@ void ListItem::setParent(View* parent)
 
 bool ListItem::onClick()
 {
-    if (this->clickListener)
-        this->clickListener(this);
-
-    return this->clickListener != nullptr;
+    return this->clickEvent.fire(this);
 }
 
-void ListItem::setClickListener(EventListener listener)
+GenericEvent* ListItem::getClickEvent()
 {
-    this->clickListener = listener;
+    return &this->clickEvent;
 }
 
 void ListItem::layout(NVGcontext* vg, Style* style, FontStash* stash)
@@ -545,18 +542,17 @@ SelectListItem::SelectListItem(std::string label, std::vector<std::string> value
 {
     this->setValue(values[selectedValue], false, false);
 
-    this->setClickListener([this](View* view) {
-        DropdownListener dropdownListener = [this](int result) {
+    this->getClickEvent()->subscribe([this](View* view) {
+        ValueSelectedEvent::Callback valueCallback = [this](int result) {
             if (result == -1)
                 return;
 
             this->setValue(this->values[result], false, false);
             this->selectedValue = result;
 
-            if (this->listener != nullptr)
-                this->listener(result);
+            this->valueEvent.fire(result);
         };
-        Dropdown::open(this->getLabel(), this->values, dropdownListener, this->selectedValue);
+        Dropdown::open(this->getLabel(), this->values, valueCallback, this->selectedValue);
     });
 }
 
@@ -569,9 +565,9 @@ void SelectListItem::setSelectedValue(unsigned value)
     }
 }
 
-void SelectListItem::setListener(SelectListener listener)
+ValueSelectedEvent* SelectListItem::getValueSelectedEvent()
 {
-    this->listener = listener;
+    return &this->valueEvent;
 }
 
 } // namespace brls

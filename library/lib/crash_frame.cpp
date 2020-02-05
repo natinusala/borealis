@@ -37,7 +37,7 @@ CrashFrame::CrashFrame(std::string text)
     this->button = (new Button(ButtonStyle::CRASH))->setLabel("OK");
     this->button->setParent(this);
     this->button->alpha = 0.0f;
-    this->button->setClickListener([](View* view) { Application::quit(); });
+    this->button->getClickEvent()->subscribe([](View* view) { Application::quit(); });
     this->button->overrideThemeVariant(Application::getThemeValuesForVariant(ThemeVariant_DARK));
 }
 

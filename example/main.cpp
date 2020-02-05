@@ -56,17 +56,17 @@ int main(int argc, char* argv[])
     brls::List* testList = new brls::List();
 
     brls::ListItem* dialogItem = new brls::ListItem("Open a dialog");
-    dialogItem->setClickListener([](brls::View* view) {
+    dialogItem->getClickEvent()->subscribe([](brls::View* view) {
         brls::Dialog* dialog = new brls::Dialog("Warning: PozzNX will wipe all data on your Switch and render it inoperable, do you want to proceed?");
 
-        brls::EventListener closeListener = [dialog](brls::View* view) {
+        brls::GenericEvent::Callback closeCallback = [dialog](brls::View* view) {
             dialog->close();
             brls::Application::notify("Running PozzNX...");
         };
 
-        dialog->addButton("Continue", closeListener);
-        dialog->addButton("Continue", closeListener);
-        dialog->addButton("Continue", closeListener);
+        dialog->addButton("Continue", closeCallback);
+        dialog->addButton("Continue", closeCallback);
+        dialog->addButton("Continue", closeCallback);
 
         dialog->setCancelable(false);
 
@@ -74,7 +74,7 @@ int main(int argc, char* argv[])
     });
 
     brls::ListItem* notificationItem = new brls::ListItem("Post a random notification");
-    notificationItem->setClickListener([](brls::View* view) {
+    notificationItem->getClickEvent()->subscribe([](brls::View* view) {
         std::string notification = NOTIFICATIONS[std::rand() % NOTIFICATIONS.size()];
         brls::Application::notify(notification);
     });
@@ -86,10 +86,10 @@ int main(int argc, char* argv[])
     jankItem->setValue("Minimal");
 
     brls::ListItem* crashItem = new brls::ListItem("Divide by 0", "Can the Switch do it?");
-    crashItem->setClickListener([](brls::View* view) { brls::Application::crash("The software was closed because an error occured:\nSIGABRT (signal 6)"); });
+    crashItem->getClickEvent()->subscribe([](brls::View* view) { brls::Application::crash("The software was closed because an error occured:\nSIGABRT (signal 6)"); });
 
     brls::ListItem* popupItem = new brls::ListItem("Open popup");
-    popupItem->setClickListener([](brls::View* view) {
+    popupItem->getClickEvent()->subscribe([](brls::View* view) {
         brls::TabFrame* popupTabFrame = new brls::TabFrame();
         popupTabFrame->addTab("Red", new brls::Rectangle(nvgRGB(255, 0, 0)));
         popupTabFrame->addTab("Green", new brls::Rectangle(nvgRGB(0, 255, 0)));
@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
     });
 
     brls::ListItem* installerItem = new brls::ListItem("Open example installer");
-    installerItem->setClickListener([](brls::View* view) {
+    installerItem->getClickEvent()->subscribe([](brls::View* view) {
         brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
         stagedFrame->setTitle("My great installer");
 
@@ -139,7 +139,7 @@ int main(int argc, char* argv[])
     testLayers->addLayer(layerList1);
     testLayers->addLayer(layerList2);
 
-    layerSelectItem->setListener([=](size_t selection) {
+    layerSelectItem->getValueSelectedEvent()->subscribe([=](size_t selection) {
         testLayers->changeLayer(selection);
     });
 

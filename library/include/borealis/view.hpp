@@ -23,6 +23,8 @@
 #include <stdio.h>
 
 #include <borealis/frame_context.hpp>
+#include <borealis/event.hpp>
+
 #include <functional>
 #include <string>
 
@@ -62,7 +64,7 @@ extern NVGcolor transparent;
 
 class View;
 
-typedef std::function<void(View*)> EventListener;
+typedef Event<View*> GenericEvent;
 
 // Superclass for all the other views
 // Lifecycle of a view is :
@@ -112,7 +114,7 @@ class View
 
     View* parent = nullptr;
 
-    EventListener focusListener = [](View* view) {};
+    GenericEvent focusEvent;
 
     virtual unsigned getShowAnimationDuration(ViewAnimation animation);
 
@@ -342,7 +344,7 @@ class View
       */
     virtual void onFocusLost();
 
-    void setFocusListener(EventListener listener);
+    GenericEvent* getFocusEvent();
 
     float alpha = 1.0f;
 

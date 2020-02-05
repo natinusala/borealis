@@ -31,11 +31,12 @@
 namespace brls
 {
 
-Dropdown::Dropdown(std::string title, std::vector<std::string> values, DropdownListener listener, size_t selected)
+Dropdown::Dropdown(std::string title, std::vector<std::string> values, ValueSelectedEvent::Callback cb, size_t selected)
     : title(title)
-    , listener(listener)
 {
     Style* style = Application::getStyle();
+
+    this->valueEvent.subscribe(cb);
 
     this->topOffset = (float)style->Dropdown.listPadding / 8.0f;
 
@@ -57,9 +58,8 @@ Dropdown::Dropdown(std::string title, std::vector<std::string> values, DropdownL
         item->setHeight(style->Dropdown.listItemHeight);
         item->setTextSize(style->Dropdown.listItemTextSize);
 
-        item->setClickListener([listener, i](View* view) {
-            if (listener)
-                listener(i);
+        item->getClickEvent()->subscribe([this, i](View* view) {
+            this->valueEvent.fire(i);
             Application::popView();
         });
 
@@ -136,9 +136,7 @@ void Dropdown::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heigh
 
 bool Dropdown::onCancel()
 {
-    if (this->listener)
-        this->listener(-1);
-
+    this->valueEvent.fire(-1);
     Application::popView();
     return true;
 }
@@ -169,9 +167,9 @@ View* Dropdown::requestFocus(FocusDirection direction, View* oldFocus, bool from
     return nullptr;
 }
 
-void Dropdown::open(std::string title, std::vector<std::string> values, DropdownListener listener, int selected)
+void Dropdown::open(std::string title, std::vector<std::string> values, ValueSelectedEvent::Callback cb, int selected)
 {
-    Dropdown* dropdown = new Dropdown(title, values, listener, selected);
+    Dropdown* dropdown = new Dropdown(title, values, cb, selected);
     Application::pushView(dropdown);
 }
 

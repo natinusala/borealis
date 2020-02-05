@@ -1,6 +1,6 @@
 /*
     Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2019  natinusala
+    Copyright (C) 2019-2020  natinusala
     Copyright (C) 2019  p-sam
 
     This program is free software: you can redistribute it and/or modify
@@ -187,15 +187,12 @@ bool Button::onClick()
     if (this->state == ButtonState::DISABLED)
         return false;
 
-    if (this->clickListener)
-        this->clickListener(this);
-
-    return this->clickListener != nullptr;
+    return this->clickEvent.fire(this);
 }
 
-void Button::setClickListener(EventListener listener)
+GenericEvent* Button::getClickEvent()
 {
-    this->clickListener = listener;
+    return &this->clickEvent;
 }
 
 void Button::setCornerRadius(float cornerRadius)
