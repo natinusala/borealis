@@ -25,7 +25,7 @@
 SampleInstallerPage::SampleInstallerPage(brls::StagedAppletFrame* frame, std::string label)
 {
     // Label
-    this->button = (new brls::Button(brls::ButtonStyle::BORDERLESS))->setLabel(label)->setImage("resources/icon/borealis.jpg");
+    this->button = (new brls::Button(brls::ButtonStyle::BORDERLESS))->setLabel(label)->setImage(ASSET("icon/borealis.jpg"));
     this->button->setParent(this);
     this->button->setClickListener([frame](View* view) {
         if (frame->isLastStage())
