@@ -1,6 +1,6 @@
 /*
     Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2019  natinusala
+    Copyright (C) 2019-2020  natinusala
     Copyright (C) 2019  WerWolv
     Copyright (C) 2019  p-sam
 
