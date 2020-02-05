@@ -18,9 +18,9 @@
 
 #pragma once
 
+#include <algorithm>
 #include <functional>
 #include <list>
-#include <algorithm>
 
 namespace brls
 {
@@ -34,36 +34,36 @@ namespace brls
 // 4. call fire when you want to fire the events
 //    it wil return true if at least one subscriber exists
 //    for that event
-template<typename ... Ts>
+template <typename... Ts>
 class Event
 {
-    public:
-        typedef std::function<void(Ts...)> Callback;
-        typedef std::list<Callback> CallbacksList;
-        typedef typename CallbacksList::iterator Subscription;
+  public:
+    typedef std::function<void(Ts...)> Callback;
+    typedef std::list<Callback> CallbacksList;
+    typedef typename CallbacksList::iterator Subscription;
 
-        Subscription subscribe(Callback cb);
-        void unsubscribe(Subscription subscription);
-        bool fire(Ts... args);
+    Subscription subscribe(Callback cb);
+    void unsubscribe(Subscription subscription);
+    bool fire(Ts... args);
 
-    private:
-        CallbacksList callbacks;
+  private:
+    CallbacksList callbacks;
 };
 
-template<typename ... Ts>
+template <typename... Ts>
 typename Event<Ts...>::Subscription Event<Ts...>::subscribe(Event<Ts...>::Callback cb)
 {
     this->callbacks.push_back(cb);
     return --this->callbacks.end();
 }
 
-template<typename ... Ts>
+template <typename... Ts>
 void Event<Ts...>::unsubscribe(Event<Ts...>::Subscription subscription)
 {
     this->callbacks.erase(subscription);
 }
 
-template<typename ... Ts>
+template <typename... Ts>
 bool Event<Ts...>::fire(Ts... args)
 {
     for (Callback cb : this->callbacks)

@@ -73,8 +73,7 @@ void TabFrame::switchToView(View* view)
 void TabFrame::addTab(std::string label, View* view)
 {
     SidebarItem* item = this->sidebar->addItem(label, view);
-    item->getFocusEvent()->subscribe([this](View* view)
-    {
+    item->getFocusEvent()->subscribe([this](View* view) {
         if (SidebarItem* item = dynamic_cast<SidebarItem*>(view))
             this->switchToView(item->getAssociatedView());
     });

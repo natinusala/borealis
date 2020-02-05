@@ -22,9 +22,8 @@
 #include <features/features_cpu.h>
 #include <stdio.h>
 
-#include <borealis/frame_context.hpp>
 #include <borealis/event.hpp>
-
+#include <borealis/frame_context.hpp>
 #include <functional>
 #include <string>
 

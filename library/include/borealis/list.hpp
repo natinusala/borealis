@@ -23,7 +23,6 @@
 #include <borealis/image.hpp>
 #include <borealis/label.hpp>
 #include <borealis/rectangle.hpp>
-
 #include <string>
 
 namespace brls

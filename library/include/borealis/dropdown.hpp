@@ -19,10 +19,9 @@
 
 #pragma once
 
+#include <borealis/event.hpp>
 #include <borealis/list.hpp>
 #include <borealis/view.hpp>
-#include <borealis/event.hpp>
-
 #include <string>
 
 namespace brls

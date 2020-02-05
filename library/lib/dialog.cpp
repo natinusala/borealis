@@ -42,9 +42,9 @@ void Dialog::addButton(std::string label, GenericEvent::Callback cb)
     if (this->buttons.size() >= 3)
         return;
 
-    DialogButton* button  = new DialogButton();
-    button->label         = label;
-    button->cb            = cb;
+    DialogButton* button = new DialogButton();
+    button->label        = label;
+    button->cb           = cb;
 
     this->buttons.push_back(button);
 
