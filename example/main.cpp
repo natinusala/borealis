@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
     // Create a sample view
     brls::TabFrame* rootFrame = new brls::TabFrame();
     rootFrame->setTitle("Borealis Example App");
-    rootFrame->setIcon(ASSET("icon/borealis.jpg"));
+    rootFrame->setIcon(BOREALIS_ASSET("icon/borealis.jpg"));
 
     brls::List* testList = new brls::List();
 
@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
         popupTabFrame->addTab("Red", new brls::Rectangle(nvgRGB(255, 0, 0)));
         popupTabFrame->addTab("Green", new brls::Rectangle(nvgRGB(0, 255, 0)));
         popupTabFrame->addTab("Blue", new brls::Rectangle(nvgRGB(0, 0, 255)));
-        brls::PopupFrame::open("Popup title", ASSET("icon/borealis.jpg"), popupTabFrame, "Subtitle left", "Subtitle right");
+        brls::PopupFrame::open("Popup title", BOREALIS_ASSET("icon/borealis.jpg"), popupTabFrame, "Subtitle left", "Subtitle right");
     });
 
     brls::ListItem* installerItem = new brls::ListItem("Open example installer");

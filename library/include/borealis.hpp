@@ -19,12 +19,10 @@
 
 #pragma once
 
-// Useful macros
-#ifndef __SWITCH__
-#define ASSET(_str) BOREALIS_RESOURCES _str
-#else
-#define ASSET(_str) "romfs:/" _str
+#ifndef BOREALIS_RESOURCES
+#error BOREALIS_RESOURCES define missing
 #endif
+#define BOREALIS_ASSET(_str) BOREALIS_RESOURCES _str
 
 // Library
 #include <borealis/applet_frame.hpp>

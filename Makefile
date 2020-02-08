@@ -43,10 +43,13 @@ SOURCES		:=	example
 DATA		:=	data
 ICON		:=	resources/icon/borealis.jpg
 INCLUDES	:=	example
-ROMFS		:=	resources
 APP_TITLE	:=	borealis example
 APP_AUTHOR	:=	natinusala
 APP_VERSION	:=	1.0
+
+ROMFS				:=	resources
+BOREALIS_PATH		:=	.
+BOREALIS_RESOURCES	:=	romfs:/
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -56,7 +59,9 @@ ARCH	:=	-march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
 CFLAGS	:=	-g -Wall -O2 -ffunction-sections \
 			$(ARCH) $(DEFINES)
 
-CFLAGS	+=	$(INCLUDE) -D__SWITCH__ -DWINDOW_NAME="\"$(APP_TITLE)\"" -O2
+CFLAGS	+=	$(INCLUDE) -D__SWITCH__ \
+			-DWINDOW_NAME="\"$(APP_TITLE)\"" \
+			-DBOREALIS_RESOURCES="\"$(BOREALIS_RESOURCES)\""
 
 CXXFLAGS	:= $(CFLAGS) -fno-exceptions -std=c++1z -O2
 
@@ -71,7 +76,6 @@ LIBS	:= -lnx -lm
 #---------------------------------------------------------------------------------
 LIBDIRS	:= $(PORTLIBS) $(LIBNX)
 
-export BOREALIS_PATH := .
 include $(TOPDIR)/library/borealis.mk
 
 #---------------------------------------------------------------------------------

@@ -240,18 +240,18 @@ bool Application::init(Style style, Theme theme)
     }
 #else
     // Use illegal font if available
-    if (access(ASSET("Illegal-Font.ttf"), F_OK) != -1)
-        Application::fontStash.regular = nvgCreateFont(Application::vg, "regular", ASSET("Illegal-Font.ttf"));
+    if (access(BOREALIS_ASSET("Illegal-Font.ttf"), F_OK) != -1)
+        Application::fontStash.regular = nvgCreateFont(Application::vg, "regular", BOREALIS_ASSET("Illegal-Font.ttf"));
     else
-        Application::fontStash.regular = nvgCreateFont(Application::vg, "regular", ASSET("inter/Inter-Switch.ttf"));
+        Application::fontStash.regular = nvgCreateFont(Application::vg, "regular", BOREALIS_ASSET("inter/Inter-Switch.ttf"));
 
-    if (access(ASSET("Wingdings.ttf"), F_OK) != -1)
-        Application::fontStash.sharedSymbols = nvgCreateFont(Application::vg, "sharedSymbols", ASSET("Wingdings.ttf"));
+    if (access(BOREALIS_ASSET("Wingdings.ttf"), F_OK) != -1)
+        Application::fontStash.sharedSymbols = nvgCreateFont(Application::vg, "sharedSymbols", BOREALIS_ASSET("Wingdings.ttf"));
 #endif
 
     // Material font
-    if (access(ASSET("material/MaterialIcons-Regular.ttf"), F_OK) != -1)
-        Application::fontStash.material = nvgCreateFont(Application::vg, "material", ASSET("material/MaterialIcons-Regular.ttf"));
+    if (access(BOREALIS_ASSET("material/MaterialIcons-Regular.ttf"), F_OK) != -1)
+        Application::fontStash.material = nvgCreateFont(Application::vg, "material", BOREALIS_ASSET("material/MaterialIcons-Regular.ttf"));
 
     // Set symbols font as fallback
     if (Application::fontStash.sharedSymbols)
