@@ -37,6 +37,8 @@ class Hint : public View
     std::vector<bool> hintAvailables;
     unsigned hintCount = 0;
 
+    GenericEvent::Subscription globalFocusEventSubscriptor;
+
   public:
     Hint(bool animate = false);
     ~Hint();

@@ -604,8 +604,7 @@ void Application::requestFocus(View* view, FocusDirection direction)
 
         Application::currentFocus = newFocus;
 
-        for (auto &[view, focusListener] : Application::focusListeners)
-            focusListener(newFocus);
+        Application::globalFocusChangeEvent.fire(newFocus);
     }
     else if (oldFocus)
         oldFocus->shakeHighlight(direction);
@@ -865,14 +864,9 @@ void Application::setMaximumFPS(unsigned fps)
     Logger::info("Maximum FPS set to %d - using a frame time of %.2f ms", fps, Application::frameTime);
 }
 
-void Application::addFocusListener(View* view, FocusListener focusListener)
+GenericEvent* Application::getGlobalFocusChangeEvent()
 {
-    Application::focusListeners.insert({ view, focusListener });
-}
-
-void Application::removeFocusListener(View *view)
-{
-    Application::focusListeners.erase(view);
+    return &Application::globalFocusChangeEvent;
 }
 
 } // namespace brls

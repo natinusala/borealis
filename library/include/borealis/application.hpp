@@ -53,8 +53,6 @@ class FramerateCounter : public Label
     void frame(FrameContext* ctx) override;
 };
 
-typedef std::function<void(View*)> FocusListener;
-
 class Application
 {
   public:
@@ -132,8 +130,7 @@ class Application
     static void resizeFramerateCounter();
     static void resizeNotificationManager();
 
-    static void addFocusListener(View* view, FocusListener focusListener);
-    static void removeFocusListener(View *view);
+    static GenericEvent* getGlobalFocusChangeEvent();
 
     friend Hint;
   private:
@@ -170,7 +167,7 @@ class Application
 
     inline static View* repetitionOldFocus = nullptr;
 
-    inline static std::map<View*, FocusListener> focusListeners;
+    inline static GenericEvent globalFocusChangeEvent;
 
     static void onWindowSizeChanged();
 

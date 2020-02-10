@@ -30,14 +30,14 @@ Hint::Hint(bool animate) : animate(animate)
     Style* style = Application::getStyle();
     this->setHeight(style->AppletFrame.footerHeight);
 
-    Application::addFocusListener(this, [this](View* newFocus) {
+    this->globalFocusEventSubscriptor = Application::getGlobalFocusChangeEvent()->subscribe([this](View* newFocus) {
         this->invalidate();
     });
 }
 
 Hint::~Hint()
 {
-    Application::removeFocusListener(this);
+    Application::getGlobalFocusChangeEvent()->unsubscribe(this->globalFocusEventSubscriptor);
 }
 
 
