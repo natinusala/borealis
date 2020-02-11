@@ -56,6 +56,9 @@ class Label : public View
     NVGcolor customColor;
     bool useCustomColor = false;
 
+    int customFont;
+    bool useCustomFont = false;
+
   public:
     Label(LabelStyle labelStyle, std::string text, bool multiline = false);
 
@@ -84,6 +87,17 @@ class Label : public View
      * for the label style
      */
     void unsetColor();
+
+    /**
+     * Sets the font id
+     */
+    void setFont(int fontId);
+
+    /**
+     * Unsets the font id - it
+     * will now use the regular one
+     */
+    void unsetFont();
 };
 
 } // namespace brls

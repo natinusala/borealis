@@ -106,7 +106,7 @@ void Label::layout(NVGcontext* vg, Style* style, FontStash* stash)
         float bounds[4];
         nvgFontSize(vg, this->fontSize);
         nvgTextAlign(vg, this->horizontalAlign | NVG_ALIGN_TOP);
-        nvgFontFaceId(vg, stash->regular);
+        nvgFontFaceId(vg, this->useCustomFont ? this->customFont : stash->regular);
         nvgTextLineHeight(vg, style->Label.lineHeight);
         nvgTextBoxBounds(vg, this->x, this->y, this->width, this->text.c_str(), nullptr, bounds);
 
@@ -156,12 +156,12 @@ void Label::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, 
 
     // Draw
     nvgFontSize(vg, this->fontSize);
+    nvgFontFaceId(vg, this->useCustomFont ? this->customFont : ctx->fontStash->regular);
 
     if (this->multiline)
     {
         nvgTextLineHeight(vg, style->Label.lineHeight);
         nvgTextAlign(vg, this->horizontalAlign | NVG_ALIGN_TOP);
-        nvgFontFaceId(vg, ctx->fontStash->regular);
         nvgBeginPath(vg);
 
         nvgTextBox(vg, x, y, width, this->text.c_str(), nullptr);
@@ -170,7 +170,6 @@ void Label::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, 
     {
         nvgTextLineHeight(vg, 1.0f);
         nvgTextAlign(vg, this->horizontalAlign | this->verticalAlign);
-        nvgFontFaceId(vg, ctx->fontStash->regular);
         nvgBeginPath(vg);
 
         if (this->horizontalAlign == NVG_ALIGN_RIGHT)
@@ -196,6 +195,17 @@ void Label::setColor(NVGcolor color)
 void Label::unsetColor()
 {
     this->useCustomColor = false;
+}
+
+void Label::setFont(int font)
+{
+    this->customFont    = font;
+    this->useCustomFont = true;
+}
+
+void Label::unsetFont()
+{
+    this->useCustomFont = false;
 }
 
 } // namespace brls
