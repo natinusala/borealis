@@ -86,6 +86,10 @@ class Application
     static ThemeValues* getThemeValuesForVariant(ThemeVariant variant);
     static ThemeVariant getThemeVariant();
 
+    static int loadFont(const char* fontName, const char* filePath);
+    static int loadFontFromMemory(const char* fontName, void* data, size_t size, bool freeData);
+    static int findFont(const char* fontName);
+
     static void notify(std::string text);
 
     static void onGamepadButtonPressed(char button, bool repeating);

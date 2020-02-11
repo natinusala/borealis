@@ -228,30 +228,30 @@ bool Application::init(Style style, Theme theme)
         if (R_SUCCEEDED(rc))
         {
             Logger::info("Using Switch shared font");
-            Application::fontStash.regular = nvgCreateFontMem(Application::vg, "regular", (unsigned char*)font.address, font.size, 0);
+            Application::fontStash.regular = Application::loadFontFromMemory("regular", font.address, font.size, false);
         }
 
         rc = plGetSharedFontByType(&font, PlSharedFontType_NintendoExt);
         if (R_SUCCEEDED(rc))
         {
             Logger::info("Using Switch shared symbols font");
-            Application::fontStash.sharedSymbols = nvgCreateFontMem(Application::vg, "symbols", (unsigned char*)font.address, font.size, 0);
+            Application::fontStash.sharedSymbols = Application::loadFontFromMemory("symbols", font.address, font.size, false);
         }
     }
 #else
     // Use illegal font if available
     if (access(BOREALIS_ASSET("Illegal-Font.ttf"), F_OK) != -1)
-        Application::fontStash.regular = nvgCreateFont(Application::vg, "regular", BOREALIS_ASSET("Illegal-Font.ttf"));
+        Application::fontStash.regular = Application::loadFont("regular", BOREALIS_ASSET("Illegal-Font.ttf"));
     else
-        Application::fontStash.regular = nvgCreateFont(Application::vg, "regular", BOREALIS_ASSET("inter/Inter-Switch.ttf"));
+        Application::fontStash.regular = Application::loadFont("regular", BOREALIS_ASSET("inter/Inter-Switch.ttf"));
 
     if (access(BOREALIS_ASSET("Wingdings.ttf"), F_OK) != -1)
-        Application::fontStash.sharedSymbols = nvgCreateFont(Application::vg, "sharedSymbols", BOREALIS_ASSET("Wingdings.ttf"));
+        Application::fontStash.sharedSymbols = Application::loadFont("sharedSymbols", BOREALIS_ASSET("Wingdings.ttf"));
 #endif
 
     // Material font
     if (access(BOREALIS_ASSET("material/MaterialIcons-Regular.ttf"), F_OK) != -1)
-        Application::fontStash.material = nvgCreateFont(Application::vg, "material", BOREALIS_ASSET("material/MaterialIcons-Regular.ttf"));
+        Application::fontStash.material = Application::loadFont("material", BOREALIS_ASSET("material/MaterialIcons-Regular.ttf"));
 
     // Set symbols font as fallback
     if (Application::fontStash.sharedSymbols)
@@ -789,6 +789,21 @@ ThemeValues* Application::getThemeValuesForVariant(ThemeVariant variant)
 ThemeVariant Application::getThemeVariant()
 {
     return Application::currentThemeVariant;
+}
+
+int Application::loadFont(const char* fontName, const char* filePath)
+{
+    return nvgCreateFont(Application::vg, fontName, filePath);
+}
+
+int Application::loadFontFromMemory(const char* fontName, void* address, size_t size, bool freeData)
+{
+    return nvgCreateFontMem(Application::vg, fontName, (unsigned char*)address, size, freeData);
+}
+
+int Application::findFont(const char* fontName)
+{
+    return nvgFindFont(Application::vg, fontName);
 }
 
 void Application::crash(std::string text)
