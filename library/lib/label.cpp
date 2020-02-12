@@ -106,7 +106,7 @@ void Label::layout(NVGcontext* vg, Style* style, FontStash* stash)
         float bounds[4];
         nvgFontSize(vg, this->fontSize);
         nvgTextAlign(vg, this->horizontalAlign | NVG_ALIGN_TOP);
-        nvgFontFaceId(vg, this->useCustomFont ? this->customFont : stash->regular);
+        nvgFontFaceId(vg, this->getFont(stash));
         nvgTextLineHeight(vg, style->Label.lineHeight);
         nvgTextBoxBounds(vg, this->x, this->y, this->width, this->text.c_str(), nullptr, bounds);
 
@@ -118,45 +118,11 @@ void Label::layout(NVGcontext* vg, Style* style, FontStash* stash)
 
 void Label::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
-    // Use custom color if any
-    if (this->useCustomColor)
-        nvgFillColor(vg, a(this->customColor));
-    else
-    {
-        switch (this->labelStyle)
-        {
-            case LabelStyle::REGULAR:
-            case LabelStyle::MEDIUM:
-            case LabelStyle::SMALL:
-            case LabelStyle::LIST_ITEM:
-            case LabelStyle::DIALOG:
-            case LabelStyle::BUTTON_BORDERLESS:
-                nvgFillColor(vg, a(ctx->theme->textColor));
-                break;
-            case LabelStyle::DESCRIPTION:
-                nvgFillColor(vg, a(ctx->theme->descriptionColor));
-                break;
-            case LabelStyle::CRASH:
-                nvgFillColor(vg, RGB(255, 255, 255));
-                break;
-            case LabelStyle::BUTTON_PLAIN:
-                nvgFillColor(vg, a(ctx->theme->buttonPlainEnabledTextColor));
-                break;
-            case LabelStyle::BUTTON_PLAIN_DISABLED:
-                nvgFillColor(vg, a(ctx->theme->buttonPlainDisabledTextColor));
-                break;
-            case LabelStyle::NOTIFICATION:
-                nvgFillColor(vg, a(ctx->theme->notificationTextColor));
-                break;
-            case LabelStyle::BUTTON_DIALOG:
-                nvgFillColor(vg, a(ctx->theme->dialogButtonColor));
-                break;
-        }
-    }
+    nvgFillColor(vg, this->getColor(ctx->theme));
 
     // Draw
     nvgFontSize(vg, this->fontSize);
-    nvgFontFaceId(vg, this->useCustomFont ? this->customFont : ctx->fontStash->regular);
+    nvgFontFaceId(vg, this->getFont(ctx->fontStash));
 
     if (this->multiline)
     {
@@ -197,6 +163,31 @@ void Label::unsetColor()
     this->useCustomColor = false;
 }
 
+NVGcolor Label::getColor(ThemeValues* theme)
+{
+    // Use custom color if any
+    if (this->useCustomColor)
+        return a(this->customColor);
+
+    switch (this->labelStyle)
+    {
+        case LabelStyle::DESCRIPTION:
+            return a(theme->descriptionColor);
+        case LabelStyle::CRASH:
+            return RGB(255, 255, 255);
+        case LabelStyle::BUTTON_PLAIN:
+            return a(theme->buttonPlainEnabledTextColor);
+        case LabelStyle::BUTTON_PLAIN_DISABLED:
+            return a(theme->buttonPlainDisabledTextColor);
+        case LabelStyle::NOTIFICATION:
+            return a(theme->notificationTextColor);
+        case LabelStyle::BUTTON_DIALOG:
+            return a(theme->dialogButtonColor);
+        default:
+            return a(theme->textColor);
+    }
+}
+
 void Label::setFont(int font)
 {
     this->customFont    = font;
@@ -206,6 +197,14 @@ void Label::setFont(int font)
 void Label::unsetFont()
 {
     this->useCustomFont = false;
+}
+
+int Label::getFont(FontStash* stash)
+{
+    if (this->useCustomFont)
+        return this->customFont;
+
+    return stash->regular;
 }
 
 } // namespace brls

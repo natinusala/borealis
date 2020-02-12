@@ -89,6 +89,12 @@ class Label : public View
     void unsetColor();
 
     /**
+     * Returns the effective label color
+     * = custom or the style default
+     */
+    NVGcolor getColor(ThemeValues* theme);
+
+    /**
      * Sets the font id
      */
     void setFont(int fontId);
@@ -98,6 +104,12 @@ class Label : public View
      * will now use the regular one
      */
     void unsetFont();
+
+    /**
+     * Returns the font used
+     * = custom or the regular font
+     */
+    int getFont(FontStash* stash);
 };
 
 } // namespace brls
