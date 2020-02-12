@@ -97,23 +97,31 @@ void Label::setStyle(LabelStyle style)
 
 void Label::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
-    // Update height if needed
+    nvgSave(vg);
+    nvgReset(vg);
+
+    nvgFontSize(vg, this->fontSize);
+    nvgTextAlign(vg, this->horizontalAlign | NVG_ALIGN_TOP);
+    nvgFontFaceId(vg, this->getFont(stash));
+    nvgTextLineHeight(vg, style->Label.lineHeight);
+
+    float bounds[4];
+
+    // Update width or height to text bounds
     if (this->multiline)
     {
-        nvgSave(vg);
-        nvgReset(vg);
-
-        float bounds[4];
-        nvgFontSize(vg, this->fontSize);
-        nvgTextAlign(vg, this->horizontalAlign | NVG_ALIGN_TOP);
-        nvgFontFaceId(vg, this->getFont(stash));
-        nvgTextLineHeight(vg, style->Label.lineHeight);
         nvgTextBoxBounds(vg, this->x, this->y, this->width, this->text.c_str(), nullptr, bounds);
 
         this->height = bounds[3] - bounds[1]; // ymax - ymin
-
-        nvgRestore(vg);
     }
+    else
+    {
+        nvgTextBounds(vg, this->x, this->y, this->text.c_str(), nullptr, bounds);
+
+        this->width = bounds[2] - bounds[0]; // xmax - xmin
+    }
+
+    nvgRestore(vg);
 }
 
 void Label::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
