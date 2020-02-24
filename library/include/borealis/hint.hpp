@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include <borealis/view.hpp>
 #include <borealis/label.hpp>
+#include <borealis/view.hpp>
 
 namespace brls
 {

@@ -34,7 +34,7 @@ class CrashFrame : public View
   private:
     Label* label;
     Button* button;
-    Hint * hint;
+    Hint* hint;
 
   public:
     CrashFrame(std::string text);

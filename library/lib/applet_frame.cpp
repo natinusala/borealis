@@ -375,7 +375,7 @@ void AppletFrame::hide(std::function<void(void)> cb, bool animated, ViewAnimatio
 }
 
 bool AppletFrame::onCancel()
-{   
+{
     Application::popView();
     return true;
 }

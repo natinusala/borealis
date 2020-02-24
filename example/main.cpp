@@ -122,13 +122,12 @@ int main(int argc, char* argv[])
     brls::Label* testLabel = new brls::Label(brls::LabelStyle::REGULAR, "For more information about how to use Nintendo Switch and its features, please refer to the Nintendo Support Website on your smart device or PC.", true);
     testList->addView(testLabel);
 
-    brls::ListItem *actionTestItem = new brls::ListItem("Custom Actions");
+    brls::ListItem* actionTestItem = new brls::ListItem("Custom Actions");
     actionTestItem->registerAction("Show notification", brls::Key::L, [] {
         brls::Application::notify("Custom Action triggered");
-        return true; 
+        return true;
     });
     testList->addView(actionTestItem);
-    
 
     brls::LayerView* testLayers = new brls::LayerView();
     brls::List* layerList1      = new brls::List();
@@ -150,7 +149,6 @@ int main(int argc, char* argv[])
     layerSelectItem->getValueSelectedEvent()->subscribe([=](size_t selection) {
         testLayers->changeLayer(selection);
     });
-
 
     testList->addView(layerSelectItem);
 

@@ -33,7 +33,6 @@
 #include <borealis/task_manager.hpp>
 #include <borealis/theme.hpp>
 #include <borealis/view.hpp>
-
 #include <map>
 #include <vector>
 
@@ -137,6 +136,7 @@ class Application
     static GenericEvent* getGlobalFocusChangeEvent();
 
     friend Hint;
+
   private:
     inline static GLFWwindow* window;
     inline static NVGcontext* vg;

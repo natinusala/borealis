@@ -44,7 +44,7 @@ class AppletFrame : public View
     std::string subTitleLeft = "", subTitleRight = "";
 
     View* icon = nullptr;
-    Hint* hint  = nullptr;
+    Hint* hint = nullptr;
 
     View* contentView = nullptr;
 
@@ -55,7 +55,6 @@ class AppletFrame : public View
 
   protected:
     HeaderStyle headerStyle = HeaderStyle::REGULAR;
-
 
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
 
@@ -84,7 +83,7 @@ class AppletFrame : public View
 
     void setAnimateHint(bool animate)
     {
-      this->hint->setAnimate(animate);
+        this->hint->setAnimate(animate);
     }
 
     ~AppletFrame();

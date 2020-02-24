@@ -16,16 +16,16 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <borealis/actions.hpp>
 #include <borealis/application.hpp>
 #include <borealis/hint.hpp>
-#include <borealis/actions.hpp>
-
 #include <set>
 
 namespace brls
 {
 
-Hint::Hint(bool animate) : animate(animate)
+Hint::Hint(bool animate)
+    : animate(animate)
 {
     Style* style = Application::getStyle();
     this->setHeight(style->AppletFrame.footerHeight);
@@ -40,25 +40,40 @@ Hint::~Hint()
     Application::getGlobalFocusChangeEvent()->unsubscribe(this->globalFocusEventSubscriptor);
 }
 
-
-std::string getKeyIcon(Key key) {
+std::string getKeyIcon(Key key)
+{
     switch (key)
     {
-        case Key::A:        return "\uE0E0";
-        case Key::B:        return "\uE0E1";
-        case Key::X:        return "\uE0E2";
-        case Key::Y:        return "\uE0E3";
-        case Key::LSTICK:   return "\uE104";
-        case Key::RSTICK:   return "\uE105";
-        case Key::L:        return "\uE0E4";
-        case Key::R:        return "\uE0E5";
-        case Key::PLUS:     return "\uE0EF";
-        case Key::MINUS:    return "\uE0F0";
-        case Key::DLEFT:    return "\uE0ED";
-        case Key::DUP:      return "\uE0EB";
-        case Key::DRIGHT:   return "\uE0EF";
-        case Key::DDOWN:    return "\uE0EC";
-        default:            return "\uE152";
+        case Key::A:
+            return "\uE0E0";
+        case Key::B:
+            return "\uE0E1";
+        case Key::X:
+            return "\uE0E2";
+        case Key::Y:
+            return "\uE0E3";
+        case Key::LSTICK:
+            return "\uE104";
+        case Key::RSTICK:
+            return "\uE105";
+        case Key::L:
+            return "\uE0E4";
+        case Key::R:
+            return "\uE0E5";
+        case Key::PLUS:
+            return "\uE0EF";
+        case Key::MINUS:
+            return "\uE0F0";
+        case Key::DLEFT:
+            return "\uE0ED";
+        case Key::DUP:
+            return "\uE0EB";
+        case Key::DRIGHT:
+            return "\uE0EF";
+        case Key::DDOWN:
+            return "\uE0EC";
+        default:
+            return "\uE152";
     }
 }
 
@@ -67,12 +82,12 @@ void Hint::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, S
     nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
     for (unsigned i = 0; i < this->buttonHints.size(); i++)
-    {   
+    {
         if (this->hintAvailables[i])
             nvgFillColor(vg, animate ? a(ctx->theme->textColor) : ctx->theme->textColor);
         else
             nvgFillColor(vg, animate ? a(ctx->theme->descriptionColor) : ctx->theme->descriptionColor);
-            
+
         nvgBeginPath(vg);
         nvgFontSize(vg, style->AppletFrame.footerTextSize);
         nvgText(vg, this->hintXPositions[i], this->hintYPosition, this->buttonHints[i].c_str(), nullptr);
@@ -81,7 +96,7 @@ void Hint::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, S
 
 void Hint::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
-    unsigned x = this->x + this->width - style->AppletFrame.separatorSpacing - style->AppletFrame.footerTextSpacing;
+    unsigned x        = this->x + this->width - style->AppletFrame.separatorSpacing - style->AppletFrame.footerTextSpacing;
     unsigned xAdvance = x + style->AppletFrame.separatorSpacing / 2;
 
     unsigned y      = this->y + this->height - style->AppletFrame.footerHeight;
@@ -93,19 +108,21 @@ void Hint::layout(NVGcontext* vg, Style* style, FontStash* stash)
 
     float bounds[4];
     std::string hintText;
-    
+
     // Check if the focused element is still a child of the same parent as the hint view's
     {
-        View *focusParent = Application::currentFocus;
-        View *hintBaseParent = this;
+        View* focusParent    = Application::currentFocus;
+        View* hintBaseParent = this;
 
-        while (focusParent != nullptr) {
+        while (focusParent != nullptr)
+        {
             if (focusParent->getParent() == nullptr)
                 break;
             focusParent = focusParent->getParent();
         }
 
-        while (hintBaseParent != nullptr) {
+        while (hintBaseParent != nullptr)
+        {
             if (hintBaseParent->getParent() == nullptr)
                 break;
             hintBaseParent = hintBaseParent->getParent();
@@ -134,18 +151,18 @@ void Hint::layout(NVGcontext* vg, Style* style, FontStash* stash)
     // We only ever want one action per key
     std::set<Key> addedKeys;
 
-    View *focusParent = Application::currentFocus;
+    View* focusParent = Application::currentFocus;
 
     while (focusParent != nullptr)
     {
-        for (auto &action : focusParent->actions)
+        for (auto& action : focusParent->actions)
         {
             if (action.hidden)
                 continue;
 
             if (addedKeys.find(action.key) != addedKeys.end())
                 continue;
-            
+
             addedKeys.insert(action.key);
 
             hintText = getKeyIcon(action.key) + "  " + action.hintText;
@@ -158,33 +175,33 @@ void Hint::layout(NVGcontext* vg, Style* style, FontStash* stash)
 
             unsigned hintWidth = (unsigned)(bounds[2] - bounds[0]) + style->AppletFrame.footerTextSpacing + style->AppletFrame.separatorSpacing / 2;
 
-            if (action.key == Key::A) 
+            if (action.key == Key::A)
             {
-                this->buttonHints[0] = hintText;
+                this->buttonHints[0]    = hintText;
                 this->hintAvailables[0] = action.available;
                 this->hintXPositions[0] = x;
 
                 for (unsigned i = 3; i < this->hintCount; i++)
                     this->hintXPositions[i] -= hintWidth;
-            } 
-            else if (action.key == Key::B) 
+            }
+            else if (action.key == Key::B)
             {
-                this->buttonHints[1] = hintText;
+                this->buttonHints[1]    = hintText;
                 this->hintAvailables[1] = action.available;
                 this->hintXPositions[1] = this->hintXPositions[0] - hintWidth + style->AppletFrame.footerTextSpacing;
-            
+
                 for (unsigned i = 3; i < this->hintCount; i++)
                     this->hintXPositions[i] -= hintWidth;
-            } 
-            else if (action.key == Key::PLUS) 
+            }
+            else if (action.key == Key::PLUS)
             {
-                this->buttonHints[2] = hintText;
+                this->buttonHints[2]    = hintText;
                 this->hintAvailables[2] = action.available;
                 this->hintXPositions[2] = this->hintXPositions[1] - hintWidth - style->AppletFrame.footerTextSpacing / 2;
-            
+
                 for (unsigned i = 3; i < this->hintCount; i++)
                     this->hintXPositions[i] -= hintWidth;
-            } 
+            }
             else
             {
                 this->buttonHints.push_back(hintText);
@@ -200,22 +217,20 @@ void Hint::layout(NVGcontext* vg, Style* style, FontStash* stash)
 }
 
 void Hint::willAppear()
-{   
-
+{
 }
 
 void Hint::willDisappear()
-{   
-
+{
 }
 
 void Hint::handleInput(char button)
-{   
-    View *hintParent = Application::currentFocus;
+{
+    View* hintParent = Application::currentFocus;
 
     while (hintParent != nullptr)
     {
-        for (auto &action : hintParent->actions)
+        for (auto& action : hintParent->actions)
         {
             if (action.key != static_cast<Key>(button))
                 continue;

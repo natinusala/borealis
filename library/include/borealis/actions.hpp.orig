@@ -16,10 +16,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#pragma once 
 
-#include <functional>
 #include <string>
+#include <functional>
 
 namespace brls
 {
@@ -32,35 +32,34 @@ typedef std::function<bool(void)> ActionListener;
 // This is also the reason why ZL and ZR do not exist here. GLFW doesn't know them
 enum class Key
 {
-    A      = 0,
-    B      = 1,
-    X      = 2,
-    Y      = 3,
-    LSTICK = 9,
-    RSTICK = 10,
-    L      = 4,
-    R      = 5,
-    PLUS   = 7,
-    MINUS  = 6,
-    DLEFT  = 14,
-    DUP    = 11,
-    DRIGHT = 12,
-    DDOWN  = 13,
+    A         = 0,
+    B         = 1,
+    X         = 2,
+    Y         = 3,
+    LSTICK    = 9,
+    RSTICK    = 10,
+    L         = 4,
+    R         = 5,
+    PLUS      = 7,
+    MINUS     = 6,
+    DLEFT     = 14,
+    DUP       = 11,
+    DRIGHT    = 12,
+    DDOWN     = 13,
 };
 
-struct Action
-{
-    Key key;
+struct Action {
+  Key key;
+  
+  std::string hintText;
+  bool available;
+  bool hidden;
+  ActionListener actionListener;
 
-    std::string hintText;
-    bool available;
-    bool hidden;
-    ActionListener actionListener;
-
-    bool operator==(const Key other)
-    {
-        return this->key == other;
-    }
+  bool operator==(const Key other)
+  {
+    return this->key == other;
+  }
 };
 
 } // namespace brls

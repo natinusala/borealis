@@ -22,12 +22,12 @@
 #include <features/features_cpu.h>
 #include <stdio.h>
 
+#include <borealis/actions.hpp>
 #include <borealis/event.hpp>
 #include <borealis/frame_context.hpp>
-#include <borealis/actions.hpp>
 #include <functional>
-#include <string>
 #include <map>
+#include <string>
 
 namespace brls
 {
@@ -103,6 +103,7 @@ class View
     std::vector<Action> actions;
 
     friend class Hint;
+
   protected:
     int x = 0;
     int y = 0;
