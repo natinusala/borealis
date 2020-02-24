@@ -177,7 +177,9 @@ void Hint::layout(NVGcontext* vg, Style* style, FontStash* stash)
 
             nvgSave(Application::getNVGContext());
             nvgFontSize(vg, style->AppletFrame.footerTextSize);
+            nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
             nvgTextBounds(vg, x, middle, hintText.c_str(), nullptr, bounds);
+            nvgFontFaceId(vg, stash->regular);
             nvgRestore(Application::getNVGContext());
 
             unsigned hintWidth = (unsigned)(bounds[2] - bounds[0]) + style->AppletFrame.footerTextSpacing + style->AppletFrame.separatorSpacing / 2;
