@@ -39,6 +39,10 @@ CrashFrame::CrashFrame(std::string text)
     this->button->alpha = 0.0f;
     this->button->getClickEvent()->subscribe([](View* view) { Application::quit(); });
     this->button->overrideThemeVariant(Application::getThemeValuesForVariant(ThemeVariant_DARK));
+
+    // Hint
+    this->hint = new Hint();
+    this->hint->setParent(this);
 }
 
 void CrashFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
@@ -93,7 +97,7 @@ void CrashFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned hei
     this->button->frame(ctx);
 
     // Hint
-    this->drawHint(ctx, x, y, width, height, ctx->theme->textColor); // we purposely don't apply opacity
+    this->hint->frame(ctx);
 }
 
 void CrashFrame::onShowAnimationEnd()
@@ -125,11 +129,14 @@ void CrashFrame::layout(NVGcontext* vg, Style* style, FontStash* stash)
         style->CrashFrame.buttonWidth,
         style->CrashFrame.buttonHeight);
     this->button->invalidate();
+
+    this->hint->setBoundaries(this->x, this->y, this->width, this->height);
 }
 
 CrashFrame::~CrashFrame()
 {
     delete this->label;
+    delete this->hint;
 }
 
 } // namespace brls

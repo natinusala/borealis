@@ -20,6 +20,7 @@
 #pragma once
 
 #include <borealis/frame_context.hpp>
+#include <borealis/hint.hpp>
 #include <borealis/image.hpp>
 #include <borealis/view.hpp>
 #include <string>
@@ -43,6 +44,7 @@ class AppletFrame : public View
     std::string subTitleLeft = "", subTitleRight = "";
 
     View* icon = nullptr;
+    Hint* hint  = nullptr;
 
     View* contentView = nullptr;
 
@@ -54,6 +56,7 @@ class AppletFrame : public View
   protected:
     HeaderStyle headerStyle = HeaderStyle::REGULAR;
 
+
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
 
     unsigned leftPadding  = 0;
@@ -64,6 +67,7 @@ class AppletFrame : public View
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override;
+    virtual bool onCancel();
     void willAppear() override;
     void willDisappear() override;
     void show(std::function<void(void)> cb, bool animate = true, ViewAnimation animation = ViewAnimation::FADE) override;
@@ -77,6 +81,11 @@ class AppletFrame : public View
     void setIcon(View* view);
     virtual void setContentView(View* view);
     void setHeaderStyle(HeaderStyle headerStyle);
+
+    void setAnimateHint(bool animate)
+    {
+      this->hint->setAnimate(animate);
+    }
 
     ~AppletFrame();
 };

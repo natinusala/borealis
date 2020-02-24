@@ -25,6 +25,7 @@
 
 #include <borealis/animations.hpp>
 #include <borealis/frame_context.hpp>
+#include <borealis/hint.hpp>
 #include <borealis/label.hpp>
 #include <borealis/logger.hpp>
 #include <borealis/notification_manager.hpp>
@@ -32,6 +33,8 @@
 #include <borealis/task_manager.hpp>
 #include <borealis/theme.hpp>
 #include <borealis/view.hpp>
+
+#include <map>
 #include <vector>
 
 namespace brls
@@ -131,6 +134,9 @@ class Application
     static void resizeFramerateCounter();
     static void resizeNotificationManager();
 
+    static GenericEvent* getGlobalFocusChangeEvent();
+
+    friend Hint;
   private:
     inline static GLFWwindow* window;
     inline static NVGcontext* vg;
@@ -164,6 +170,8 @@ class Application
     inline static float frameTime = 0.0f;
 
     inline static View* repetitionOldFocus = nullptr;
+
+    inline static GenericEvent globalFocusChangeEvent;
 
     static void onWindowSizeChanged();
 

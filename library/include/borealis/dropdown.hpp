@@ -51,16 +51,12 @@ class Dropdown : public View
     ValueSelectedEvent valueEvent;
 
     List* list;
+    Hint* hint;
 
     float topOffset; // for slide in animation
 
   protected:
     unsigned getShowAnimationDuration(ViewAnimation animation) override;
-
-    bool animateHint() override
-    {
-        return true;
-    }
 
   public:
     ~Dropdown();
@@ -68,7 +64,7 @@ class Dropdown : public View
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
     View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override;
-    bool onCancel() override;
+    bool onCancel();
     void show(std::function<void(void)> cb, bool animate = true, ViewAnimation animation = ViewAnimation::FADE) override;
     void willAppear() override;
 

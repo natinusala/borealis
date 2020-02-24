@@ -1,7 +1,6 @@
 /*
     Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2019-2020  natinusala
-    Copyright (C) 2019  p-sam
+    Copyright (C) 2020  WerWolv
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,37 +18,48 @@
 
 #pragma once
 
-#include <borealis/button.hpp>
-#include <borealis/hint.hpp>
-#include <borealis/label.hpp>
 #include <borealis/view.hpp>
+#include <borealis/label.hpp>
 
 namespace brls
 {
 
-// A screen similar to the "The software has closed" dialog
-// pressing OK will exit the app
-class CrashFrame : public View
+// A button input hint
+class Hint : public View
 {
   private:
-    Label* label;
-    Button* button;
-    Hint * hint;
+    bool animate;
+
+    std::vector<int> hintXPositions;
+    int hintYPosition = 0;
+
+    std::vector<std::string> buttonHints;
+    std::vector<bool> hintAvailables;
+    unsigned hintCount = 0;
+
+    GenericEvent::Subscription globalFocusEventSubscriptor;
 
   public:
-    CrashFrame(std::string text);
+    Hint(bool animate = false);
+    ~Hint();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-    void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
-    void onShowAnimationEnd() override;
-    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override;
+    void layout(NVGcontext* vg, Style* style, FontStash* stash);
 
-    bool isTranslucent() override
+    void willAppear() override;
+    void willDisappear() override;
+
+    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override
     {
-        return true; // have it always translucent to disable fade out animation
+        return nullptr;
     }
 
-    ~CrashFrame();
+    void setAnimate(bool animate)
+    {
+        this->animate = animate;
+    }
+
+    static void handleInput(char button);
 };
 
 } // namespace brls

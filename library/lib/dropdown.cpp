@@ -65,6 +65,11 @@ Dropdown::Dropdown(std::string title, std::vector<std::string> values, ValueSele
 
         this->list->addView(item);
     }
+
+    this->hint = new Hint();
+    this->hint->setParent(this);
+
+    this->registerAction("Back", Key::B, [this] { return this->onCancel(); });
 }
 
 void Dropdown::show(std::function<void(void)> cb, bool animate, ViewAnimation animation)
@@ -106,7 +111,7 @@ void Dropdown::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heigh
     this->list->frame(ctx);
 
     // Footer
-    this->drawHint(ctx, x, y, width, height, ctx->theme->textColor); // we purposely don't apply opacity
+    this->hint->frame(ctx);
 
     nvgFillColor(vg, ctx->theme->separatorColor); // we purposely don't apply opacity
 
@@ -158,6 +163,8 @@ void Dropdown::layout(NVGcontext* vg, Style* style, FontStash* stash)
         listWidth,
         listHeight);
     this->list->invalidate();
+
+    this->hint->setBoundaries(this->x, this->y, this->width, this->height);
 }
 
 View* Dropdown::requestFocus(FocusDirection direction, View* oldFocus, bool fromUp)
@@ -182,6 +189,7 @@ void Dropdown::willAppear()
 Dropdown::~Dropdown()
 {
     delete this->list;
+    delete this->hint;
 }
 
 } // namespace brls

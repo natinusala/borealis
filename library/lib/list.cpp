@@ -124,6 +124,8 @@ ListItem::ListItem(std::string label, std::string description, std::string subLa
 
     if (description != "")
         this->descriptionView = new Label(LabelStyle::DESCRIPTION, description, true);
+
+    this->registerAction("OK", Key::A, [this] { return this->onClick(); });
 }
 
 void ListItem::setThumbnail(Image* image)

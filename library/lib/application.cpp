@@ -441,15 +441,10 @@ void Application::onGamepadButtonPressed(char button, bool repeating)
 
     Application::repetitionOldFocus = Application::currentFocus;
 
+    Hint::handleInput(button);
+
     switch (button)
     {
-        // Exit by pressing Start (aka Plus)
-        case GLFW_GAMEPAD_BUTTON_START:
-            Application::quit();
-            break;
-        case GLFW_GAMEPAD_BUTTON_BACK:
-            Application::toggleFramerateDisplay();
-            break;
         case GLFW_GAMEPAD_BUTTON_DPAD_DOWN:
             if (Application::currentFocus && Application::currentFocus->getParent())
                 Application::requestFocus(Application::currentFocus->getParent(), FocusDirection::DOWN);
@@ -465,14 +460,6 @@ void Application::onGamepadButtonPressed(char button, bool repeating)
         case GLFW_GAMEPAD_BUTTON_DPAD_RIGHT:
             if (Application::currentFocus && Application::currentFocus->getParent())
                 Application::requestFocus(Application::currentFocus->getParent(), FocusDirection::RIGHT);
-            break;
-        case GLFW_GAMEPAD_BUTTON_A:
-            if (Application::currentFocus)
-                Application::currentFocus->click();
-            break;
-        case GLFW_GAMEPAD_BUTTON_B:
-            if (Application::currentFocus)
-                Application::currentFocus->cancel();
             break;
         default:
             break;
@@ -616,6 +603,8 @@ void Application::requestFocus(View* view, FocusDirection direction)
         newFocus->onFocusGained();
 
         Application::currentFocus = newFocus;
+
+        Application::globalFocusChangeEvent.fire(newFocus);
     }
     else if (oldFocus)
         oldFocus->shakeHighlight(direction);
@@ -694,6 +683,9 @@ void Application::pushView(View* view, ViewAnimation animation)
 
     bool fadeOut = last && !last->isTranslucent() && !view->isTranslucent(); // play the fade out animation?
     bool wait    = animation == ViewAnimation::FADE; // wait for the old view animation to be done before showing the new one?
+
+    view->registerAction("Exit", Key::PLUS, [] { Application::quit(); return true; });
+    view->registerAction("FPS", Key::MINUS, [] { Application::toggleFramerateDisplay(); return true; }, true);
 
     // Fade out animation
     if (fadeOut)
@@ -885,6 +877,11 @@ void Application::setMaximumFPS(unsigned fps)
     }
 
     Logger::info("Maximum FPS set to %d - using a frame time of %.2f ms", fps, Application::frameTime);
+}
+
+GenericEvent* Application::getGlobalFocusChangeEvent()
+{
+    return &Application::globalFocusChangeEvent;
 }
 
 } // namespace brls
