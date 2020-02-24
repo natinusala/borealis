@@ -33,11 +33,16 @@ Hint::Hint(bool animate)
     this->globalFocusEventSubscriptor = Application::getGlobalFocusChangeEvent()->subscribe([this](View* newFocus) {
         this->invalidate();
     });
+
+    this->globalHintsUpdateEventSubscriptor = Application::getGlobalHintsUpdateEvent()->subscribe([this]() {
+        this->invalidate();
+    });
 }
 
 Hint::~Hint()
 {
     Application::getGlobalFocusChangeEvent()->unsubscribe(this->globalFocusEventSubscriptor);
+    Application::getGlobalHintsUpdateEvent()->unsubscribe(this->globalHintsUpdateEventSubscriptor);
 }
 
 std::string getKeyIcon(Key key)

@@ -358,7 +358,16 @@ void View::registerAction(std::string hintText, Key key, ActionListener actionLi
 {
     if (auto it = std::find(this->actions.begin(), this->actions.end(), key); it != this->actions.end())
         *it = { key, hintText, true, hidden, actionListener };
-    this->actions.push_back({ key, hintText, true, hidden, actionListener });
+    else
+        this->actions.push_back({ key, hintText, true, hidden, actionListener });
+}
+
+void View::updateActionHint(Key key, std::string hintText)
+{
+    if (auto it = std::find(this->actions.begin(), this->actions.end(), key); it != this->actions.end())
+        it->hintText = hintText;
+
+    Application::getGlobalHintsUpdateEvent()->fire();
 }
 
 void View::setActionAvailable(Key key, bool available)

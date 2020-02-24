@@ -885,4 +885,9 @@ GenericEvent* Application::getGlobalFocusChangeEvent()
     return &Application::globalFocusChangeEvent;
 }
 
+VoidEvent* Application::getGlobalHintsUpdateEvent()
+{
+    return &Application::globalHintsUpdateEvent;
+}
+
 } // namespace brls

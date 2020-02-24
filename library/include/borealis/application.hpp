@@ -134,6 +134,7 @@ class Application
     static void resizeNotificationManager();
 
     static GenericEvent* getGlobalFocusChangeEvent();
+    static VoidEvent* getGlobalHintsUpdateEvent();
 
     friend Hint;
 
@@ -172,6 +173,7 @@ class Application
     inline static View* repetitionOldFocus = nullptr;
 
     inline static GenericEvent globalFocusChangeEvent;
+    inline static VoidEvent globalHintsUpdateEvent;
 
     static void onWindowSizeChanged();
 

@@ -66,6 +66,7 @@ extern NVGcolor transparent;
 class View;
 
 typedef Event<View*> GenericEvent;
+typedef Event<> VoidEvent;
 
 // Superclass for all the other views
 // Lifecycle of a view is :
@@ -194,6 +195,7 @@ class View
     bool hasParent();
 
     void registerAction(std::string hintText, Key key, ActionListener actionListener, bool hidden = false);
+    void updateActionHint(Key key, std::string hintText);
     void setActionAvailable(Key key, bool available);
 
     std::string name() const { return typeid(*this).name(); }

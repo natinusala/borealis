@@ -38,6 +38,7 @@ class Hint : public View
     unsigned hintCount = 0;
 
     GenericEvent::Subscription globalFocusEventSubscriptor;
+    VoidEvent::Subscription globalHintsUpdateEventSubscriptor;
 
   public:
     Hint(bool animate = false);
