@@ -30,6 +30,7 @@ Hint::Hint(bool animate)
     Style* style = Application::getStyle();
     this->setHeight(style->AppletFrame.footerHeight);
 
+    // Subscribe to all events
     this->globalFocusEventSubscriptor = Application::getGlobalFocusChangeEvent()->subscribe([this](View* newFocus) {
         this->invalidate();
     });
@@ -41,6 +42,7 @@ Hint::Hint(bool animate)
 
 Hint::~Hint()
 {
+    // Unregister all events
     Application::getGlobalFocusChangeEvent()->unsubscribe(this->globalFocusEventSubscriptor);
     Application::getGlobalHintsUpdateEvent()->unsubscribe(this->globalHintsUpdateEventSubscriptor);
 }
@@ -223,10 +225,46 @@ void Hint::layout(NVGcontext* vg, Style* style, FontStash* stash)
 
 void Hint::willAppear()
 {
+    // Push ourself to hide other hints
+    // We assume that we are the top-most hint
+    Hint::pushHint(this);
 }
 
 void Hint::willDisappear()
 {
+    // Pop ourself to show other hints
+    Hint::popHint(this);
+}
+
+void Hint::pushHint(Hint* hint)
+{
+    // If the hint is already in the stack, remove it and put it back on top
+    Hint::globalHintStack.erase(std::remove(Hint::globalHintStack.begin(), Hint::globalHintStack.end(), hint), Hint::globalHintStack.end());
+    Hint::globalHintStack.push_back(hint);
+
+    //Trigger animation
+    Hint::animateHints();
+}
+
+void Hint::popHint(Hint* hint)
+{
+    Hint::globalHintStack.erase(std::remove(Hint::globalHintStack.begin(), Hint::globalHintStack.end(), hint), Hint::globalHintStack.end());
+    Hint::animateHints();
+
+    // animateHints() won't call hide() on the hint since it's been removed from the stack
+    // but it doesn't matter since it is getting destroyed anyay
+}
+
+void Hint::animateHints()
+{
+    for (size_t i = 0; i < Hint::globalHintStack.size(); i++)
+    {
+        // Last one = top one: show
+        if (i == Hint::globalHintStack.size() - 1)
+            Hint::globalHintStack[i]->show([](){}, false);
+        else
+            Hint::globalHintStack[i]->hide([](){}, false);
+    }
 }
 
 void Hint::handleInput(char button)

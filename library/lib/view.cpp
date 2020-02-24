@@ -543,12 +543,12 @@ void View::show(std::function<void(void)> cb, bool animate, ViewAnimation animat
 
 void View::hide(std::function<void(void)> cb, bool animated, ViewAnimation animation)
 {
-    brls::Logger::debug("Hiding %s with animation", this->name().c_str(), animation);
+    brls::Logger::debug("Hiding %s with animation %d", this->name().c_str(), animation);
 
     this->hidden = true;
     this->fadeIn = false;
 
-    menu_animation_ctx_tag tag = (uintptr_t) & this->alpha;
+    menu_animation_ctx_tag tag = (uintptr_t) &this->alpha;
     menu_animation_kill_by_tag(&tag);
 
     if (animated)

@@ -184,6 +184,18 @@ void Dropdown::willAppear()
 {
     if (this->list)
         this->list->willAppear();
+
+    if (this->hint)
+        this->hint->willAppear();
+}
+
+void Dropdown::willDisappear()
+{
+    if (this->list)
+        this->list->willDisappear();
+
+    if (this->hint)
+        this->hint->willDisappear();
 }
 
 Dropdown::~Dropdown()

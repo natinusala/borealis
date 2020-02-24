@@ -40,8 +40,14 @@ class Hint : public View
     GenericEvent::Subscription globalFocusEventSubscriptor;
     VoidEvent::Subscription globalHintsUpdateEventSubscriptor;
 
+    static inline std::vector<Hint*> globalHintStack;
+
+    static void pushHint(Hint* hint);
+    static void popHint(Hint* hint);
+    static void animateHints();
+
   public:
-    Hint(bool animate = false);
+    Hint(bool animate = true);
     ~Hint();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;

@@ -67,6 +67,7 @@ class Dropdown : public View
     bool onCancel();
     void show(std::function<void(void)> cb, bool animate = true, ViewAnimation animation = ViewAnimation::FADE) override;
     void willAppear() override;
+    void willDisappear() override;
 
     static void open(std::string title, std::vector<std::string> values, ValueSelectedEvent::Callback cb, int selected = -1);
 
