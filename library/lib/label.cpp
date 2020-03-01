@@ -129,6 +129,7 @@ void Label::layout(NVGcontext* vg, Style* style, FontStash* stash)
 
         unsigned oldWidth = this->width;
         this->width = bounds[2] - bounds[0]; // xmax - xmin
+        this->height = bounds[3] - bounds[1]; // ymax - ymin
 
         // offset the position to compensate the width change
         // and keep right alignment
@@ -179,7 +180,7 @@ void Label::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, 
             this->startTickerAnimation();
         }
 
-        if (this->textWidth > this->getWidth())
+        if (this->getParent() && this->textWidth > this->getParent()->getWidth())
         {   
             nvgSave(vg);
             nvgIntersectScissor(vg, x, y, width, height);
