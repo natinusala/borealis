@@ -199,6 +199,8 @@ class View
     void updateActionHint(Key key, std::string hintText);
     void setActionAvailable(Key key, bool available);
 
+    void playClickAnimation();
+
     std::string name() const { return typeid(*this).name(); }
 
     /**

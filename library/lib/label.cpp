@@ -120,8 +120,6 @@ void Label::layout(NVGcontext* vg, Style* style, FontStash* stash)
     if (this->multiline)
     {
         nvgTextBoxBounds(vg, this->x, this->y, this->width, this->text.c_str(), nullptr, bounds);
-    else
-        nvgTextBounds(vg, this->x, this->y, this->text.c_str(), nullptr, bounds);
 
         this->height = bounds[3] - bounds[1]; // ymax - ymin
     }

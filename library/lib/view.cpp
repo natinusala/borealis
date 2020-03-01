@@ -197,6 +197,25 @@ void View::expand(bool animated)
     }
 }
 
+void View::playClickAnimation() {
+    menu_animation_ctx_tag tag = (uintptr_t) &this->clickAnimationAlpha;
+    menu_animation_kill_by_tag(&tag);
+
+    this->clickAnimationAlpha = 0.3f;
+
+    menu_animation_ctx_entry_t entry;
+    entry.cb           = nullptr;
+    entry.duration     = 200;
+    entry.easing_enum  = EASING_LINEAR;
+    entry.subject      = &this->clickAnimationAlpha;
+    entry.tag          = tag;
+    entry.target_value = 0.0f;
+    entry.tick         = [](void* userdata) {};
+    entry.userdata     = nullptr;
+
+    menu_animation_push(&entry);
+}
+
 // TODO: Slight glow all around
 void View::drawHighlight(NVGcontext* vg, ThemeValues* theme, float alpha, Style* style, bool background)
 {

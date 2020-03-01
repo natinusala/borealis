@@ -67,8 +67,8 @@ class Label : public View
     int customFont;
     bool useCustomFont = false;
 
-    menu_timer_t waitTimer;
-    menu_timer_ctx_entry_t waitTimerCtx;
+    menu_timer_t tickerWaitTimer;
+    menu_timer_ctx_entry_t tickerWaitTimerCtx;
 
   public:
     Label(LabelStyle labelStyle, std::string text, bool multiline = false);

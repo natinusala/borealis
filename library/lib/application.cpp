@@ -441,8 +441,6 @@ void Application::onGamepadButtonPressed(char button, bool repeating)
 
     Application::repetitionOldFocus = Application::currentFocus;
 
-    Hint::handleInput(button);
-
     switch (button)
     {
         case GLFW_GAMEPAD_BUTTON_DPAD_DOWN:
@@ -461,9 +459,16 @@ void Application::onGamepadButtonPressed(char button, bool repeating)
             if (Application::currentFocus && Application::currentFocus->getParent())
                 Application::requestFocus(Application::currentFocus->getParent(), FocusDirection::RIGHT);
             break;
+        case GLFW_GAMEPAD_BUTTON_A:
+            if (Application::currentFocus)
+                Application::currentFocus->playClickAnimation();
+            break;
         default:
             break;
     }
+
+    Hint::handleInput(button);
+
 }
 
 void Application::frame()
