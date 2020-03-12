@@ -67,7 +67,7 @@ class ListItem : public View
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
     void getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom, unsigned* left) override;
     void setParent(View* parent) override;
-    bool onClick();
+    virtual bool onClick();
 
     void setThumbnail(Image* image);
     void setThumbnail(std::string imagePath);
@@ -148,7 +148,7 @@ class ToggleListItem : public ListItem
   public:
     ToggleListItem(std::string label, bool initialValue, std::string description = "", std::string onValue = "On", std::string offValue = "Off");
 
-    bool onClick();
+    bool onClick() override;
 
     bool getToggleState();
 };
@@ -164,7 +164,7 @@ class InputListItem : public ListItem
   public:
     InputListItem(std::string label, std::string initialValue, std::string helpText, std::string description = "", int maxInputLength = 32);
 
-    bool onClick();
+    bool onClick() override;
 };
 
 // A list item which spawns the swkbd
@@ -174,7 +174,7 @@ class IntegerInputListItem : public InputListItem
   public:
     IntegerInputListItem(std::string label, int initialValue, std::string helpText, std::string description = "", int maxInputLength = 32);
 
-    bool onClick();
+    bool onClick() override;
 };
 
 // A vertical list of various widgets, with proper margins and spacing
