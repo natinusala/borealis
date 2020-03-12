@@ -548,7 +548,7 @@ void View::hide(std::function<void(void)> cb, bool animated, ViewAnimation anima
     this->hidden = true;
     this->fadeIn = false;
 
-    menu_animation_ctx_tag tag = (uintptr_t) &this->alpha;
+    menu_animation_ctx_tag tag = (uintptr_t) & this->alpha;
     menu_animation_kill_by_tag(&tag);
 
     if (animated)

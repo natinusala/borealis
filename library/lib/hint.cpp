@@ -263,9 +263,9 @@ void Hint::animateHints()
     {
         // Last one = top one: show
         if (i == Hint::globalHintStack.size() - 1)
-            Hint::globalHintStack[i]->show([](){}, false);
+            Hint::globalHintStack[i]->show([]() {}, false);
         else
-            Hint::globalHintStack[i]->hide([](){}, false);
+            Hint::globalHintStack[i]->hide([]() {}, false);
     }
 }
 
