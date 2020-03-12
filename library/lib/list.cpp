@@ -328,7 +328,10 @@ void ListItem::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heigh
     }
 
     // Value
-    nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
+    unsigned valueX = x + width - style->List.Item.padding;
+    unsigned valueY = y + (hasSubLabel ? baseHeight - baseHeight / 3 : baseHeight / 2);
+
+    nvgTextAlign(vg, NVG_ALIGN_RIGHT | (hasSubLabel ? NVG_ALIGN_TOP : NVG_ALIGN_MIDDLE));
     nvgFontFaceId(vg, ctx->fontStash->regular);
     if (this->valueAnimation != 0.0f)
     {
@@ -338,7 +341,7 @@ void ListItem::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heigh
         nvgFillColor(vg, valueColor);
         nvgFontSize(vg, style->List.Item.valueSize * (1.0f - this->valueAnimation));
         nvgBeginPath(vg);
-        nvgText(vg, x + width - style->List.Item.padding, y + baseHeight / 2, this->oldValue.c_str(), nullptr);
+        nvgText(vg, valueX, valueY, this->oldValue.c_str(), nullptr);
 
         //New value
         valueColor = a(this->valueFaint ? ctx->theme->listItemFaintValueColor : ctx->theme->listItemValueColor);
@@ -346,16 +349,15 @@ void ListItem::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heigh
         nvgFillColor(vg, valueColor);
         nvgFontSize(vg, style->List.Item.valueSize * this->valueAnimation);
         nvgBeginPath(vg);
-        nvgText(vg, x + width - style->List.Item.padding, y + baseHeight / 2, this->value.c_str(), nullptr);
+        nvgText(vg, valueX, valueY, this->value.c_str(), nullptr);
     }
     else
     {
         nvgFillColor(vg, a(this->valueFaint ? ctx->theme->listItemFaintValueColor : ctx->theme->listItemValueColor));
         nvgFontSize(vg, style->List.Item.valueSize);
-        nvgTextAlign(vg, NVG_ALIGN_RIGHT | (hasSubLabel ? NVG_ALIGN_TOP : NVG_ALIGN_MIDDLE));
         nvgFontFaceId(vg, ctx->fontStash->regular);
         nvgBeginPath(vg);
-        nvgText(vg, x + width - style->List.Item.padding, y + (hasSubLabel ? baseHeight - baseHeight / 3 : baseHeight / 2), this->value.c_str(), nullptr);
+        nvgText(vg, valueX, valueY, this->value.c_str(), nullptr);
     }
 
     // Checked marker
