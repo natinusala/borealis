@@ -114,7 +114,8 @@ Style Style::horizon()
         .notificationFontSize = 18,
         .dialogFontSize       = 24,
 
-        .lineHeight = 1.65f
+        .lineHeight             = 1.65f,
+        .notificationLineHeight = 1.35f
     };
 
     style.CrashFrame = {
@@ -240,7 +241,7 @@ Style Style::horizon()
 
     style.Notification = {
         .width   = 280,
-        .padding = 15,
+        .padding = 16,
 
         .slideAnimation = 40
     };

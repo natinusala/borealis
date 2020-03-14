@@ -48,6 +48,7 @@ class Label : public View
 
     bool multiline;
     unsigned fontSize;
+    float lineHeight;
     LabelStyle labelStyle;
 
     NVGalign horizontalAlign = NVG_ALIGN_LEFT;

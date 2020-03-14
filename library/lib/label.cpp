@@ -28,7 +28,9 @@ Label::Label(LabelStyle labelStyle, std::string text, bool multiline)
     , multiline(multiline)
     , labelStyle(labelStyle)
 {
-    Style* style = Application::getStyle();
+    Style* style     = Application::getStyle();
+    this->lineHeight = style->Label.lineHeight;
+
     switch (labelStyle)
     {
         case LabelStyle::REGULAR:
@@ -56,7 +58,8 @@ Label::Label(LabelStyle labelStyle, std::string text, bool multiline)
             this->fontSize = style->Label.listItemFontSize;
             break;
         case LabelStyle::NOTIFICATION:
-            this->fontSize = style->Label.notificationFontSize;
+            this->fontSize   = style->Label.notificationFontSize;
+            this->lineHeight = style->Label.notificationLineHeight;
             break;
         case LabelStyle::DIALOG:
             this->fontSize = style->Label.dialogFontSize;
@@ -103,7 +106,7 @@ void Label::layout(NVGcontext* vg, Style* style, FontStash* stash)
     nvgFontSize(vg, this->fontSize);
     nvgTextAlign(vg, this->horizontalAlign | NVG_ALIGN_TOP);
     nvgFontFaceId(vg, this->getFont(stash));
-    nvgTextLineHeight(vg, style->Label.lineHeight);
+    nvgTextLineHeight(vg, this->lineHeight);
 
     float bounds[4];
 
@@ -134,7 +137,7 @@ void Label::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, 
 
     if (this->multiline)
     {
-        nvgTextLineHeight(vg, style->Label.lineHeight);
+        nvgTextLineHeight(vg, this->lineHeight);
         nvgTextAlign(vg, this->horizontalAlign | NVG_ALIGN_TOP);
         nvgBeginPath(vg);
 

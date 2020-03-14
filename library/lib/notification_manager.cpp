@@ -173,20 +173,33 @@ void Notification::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned h
 
 void Notification::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
-    unsigned padding = style->Notification.padding;
+    unsigned padding  = style->Notification.padding;
+    unsigned fontSize = style->Label.notificationFontSize;
+    float lineHeight  = style->Label.notificationLineHeight;
 
     // Layout the label
-    this->label->setBoundaries(
-        this->getX() + padding,
-        this->getY() + padding,
-        this->getWidth() - padding * 2,
-        0 // height is dynamic
-    );
+    this->label->setWidth(this->getWidth() - padding * 2);
+    this->label->setHeight(0); // height is dynamic
 
     this->label->layout(vg, style, stash); // layout directly to update height
 
+    unsigned minLabelHeight = (unsigned int)(lineHeight * fontSize) + fontSize; // 2 lines
+    unsigned labelYAdvance  = padding;
+    if (this->label->getHeight() < minLabelHeight)
+    {
+        labelYAdvance += (minLabelHeight - this->label->getHeight()) / 2;
+    }
+
+    this->label->setBoundaries(
+        this->getX() + padding,
+        this->getY() + labelYAdvance,
+        this->label->getWidth(),
+        this->label->getHeight());
+
     // Update our own height
-    this->setHeight(this->label->getHeight() + padding * 2);
+    this->setHeight(std::max(
+        this->label->getHeight() + padding * 2,
+        minLabelHeight + padding * 2));
 }
 
 }; // namespace brls

@@ -137,6 +137,7 @@ class Style
         unsigned dialogFontSize;
 
         float lineHeight;
+        float notificationLineHeight;
     } Label;
 
     // CrashFrame
