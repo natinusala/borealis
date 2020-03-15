@@ -37,6 +37,8 @@ LabelStyle Button::getLabelStyle()
         return LabelStyle::BUTTON_BORDERLESS;
     else if (this->style == ButtonStyle::DIALOG)
         return LabelStyle::BUTTON_DIALOG;
+    else if (this->style == ButtonStyle::CRASH)
+        return LabelStyle::CRASH;
 
     if (this->state == ButtonState::DISABLED)
         return LabelStyle::BUTTON_PLAIN_DISABLED;
