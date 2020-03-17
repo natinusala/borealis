@@ -148,7 +148,7 @@ class ToggleListItem : public ListItem
   public:
     ToggleListItem(std::string label, bool initialValue, std::string description = "", std::string onValue = "On", std::string offValue = "Off");
 
-    bool onClick() override;
+    virtual bool onClick() override;
 
     bool getToggleState();
 };
@@ -164,7 +164,7 @@ class InputListItem : public ListItem
   public:
     InputListItem(std::string label, std::string initialValue, std::string helpText, std::string description = "", int maxInputLength = 32);
 
-    bool onClick() override;
+    virtual bool onClick() override;
 };
 
 // A list item which spawns the swkbd
@@ -174,7 +174,7 @@ class IntegerInputListItem : public InputListItem
   public:
     IntegerInputListItem(std::string label, int initialValue, std::string helpText, std::string description = "", int maxInputLength = 32);
 
-    bool onClick() override;
+    virtual bool onClick() override;
 };
 
 // A vertical list of various widgets, with proper margins and spacing

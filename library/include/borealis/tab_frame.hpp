@@ -44,7 +44,7 @@ class TabFrame : public AppletFrame
 
     View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override;
 
-    virtual bool onCancel();
+    virtual bool onCancel() override;
 
     ~TabFrame();
 
