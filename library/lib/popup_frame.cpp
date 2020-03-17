@@ -152,7 +152,7 @@ void PopupFrame::willAppear()
 
 void PopupFrame::willDisappear()
 {
-    this->contentView->willAppear();
+    this->contentView->willDisappear();
 }
 
 PopupFrame::~PopupFrame()
