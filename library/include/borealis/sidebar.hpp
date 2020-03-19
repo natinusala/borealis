@@ -59,7 +59,7 @@ class SidebarItem : public View
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override;
 
-    bool onClick();
+    virtual bool onClick();
 
     void setActive(bool active);
     bool isActive();

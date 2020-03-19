@@ -272,6 +272,7 @@ void Hint::animateHints()
 void Hint::handleInput(char button)
 {
     View* hintParent = Application::currentFocus;
+    std::set<Key> consumedKeys;
 
     while (hintParent != nullptr)
     {
@@ -280,8 +281,12 @@ void Hint::handleInput(char button)
             if (action.key != static_cast<Key>(button))
                 continue;
 
+            if (consumedKeys.find(action.key) != consumedKeys.end())
+                continue;
+
             if (action.available)
-                action.actionListener();
+                if (action.actionListener())
+                    consumedKeys.insert(action.key);
         }
 
         hintParent = hintParent->getParent();

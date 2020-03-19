@@ -62,7 +62,7 @@ class Button : public View
     ~Button();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-    bool onClick();
+    virtual bool onClick();
     void layout(NVGcontext* vg, Style* style, FontStash* stash);
     void getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom, unsigned* left) override;
 
