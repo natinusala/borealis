@@ -857,6 +857,7 @@ void FramerateCounter::frame(FrameContext* ctx)
         char fps[10];
         snprintf(fps, sizeof(fps), "FPS: %03d", this->frames);
         this->setText(std::string(fps));
+        this->invalidate(); // update width for background
 
         this->frames     = 0;
         this->lastSecond = current;
