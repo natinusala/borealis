@@ -841,7 +841,7 @@ FramerateCounter::FramerateCounter()
 {
     this->setColor(nvgRGB(255, 255, 255));
     this->setVerticalAlign(NVG_ALIGN_MIDDLE);
-    this->setHorizontalAlign(NVG_ALIGN_CENTER);
+    this->setHorizontalAlign(NVG_ALIGN_RIGHT);
     this->setBackground(Background::BACKDROP);
 
     this->lastSecond = cpu_features_get_time_usec() / 1000;
