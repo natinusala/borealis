@@ -418,7 +418,7 @@ bool Application::mainLoop()
 
         if (frameTime > currentFrameTime)
         {
-            retro_time_t toSleep = frameTime - currentFrameTime - 1000; // never sleep too much
+            retro_time_t toSleep = frameTime - currentFrameTime; // never sleep too much
             std::this_thread::sleep_for(std::chrono::microseconds(toSleep));
         }
     }
