@@ -25,7 +25,7 @@
 namespace brls
 {
 
-enum class LabelStyle
+enum class LabelStyle : std::uint32_t
 {
     REGULAR = 0,
     MEDIUM,
@@ -36,9 +36,17 @@ enum class LabelStyle
     BUTTON_PLAIN_DISABLED,
     BUTTON_BORDERLESS,
     LIST_ITEM,
+    LIST_ITEM_VALUE,
+    LIST_ITEM_VALUE_FAINT,
     NOTIFICATION,
     DIALOG,
     BUTTON_DIALOG
+};
+
+enum class LabelAnimation
+{
+    EASE_IN,
+    EASE_OUT
 };
 
 // A Label, multiline or with a ticker
@@ -47,8 +55,9 @@ class Label : public View
   private:
     std::string text;
     std::string textTicker;
+    std::string textEllipsis;
 
-    unsigned textWidth = 0;
+    unsigned textWidth = 0, textHeight = 0;
     unsigned textTickerWidth = 0;
 
     float tickerOffset = 0.0f;
@@ -56,7 +65,7 @@ class Label : public View
     bool multiline;
     unsigned fontSize;
     float lineHeight;
-    LabelStyle labelStyle;
+    LabelStyle labelStyle, oldLabelStyle;
 
     NVGalign horizontalAlign = NVG_ALIGN_LEFT;
     NVGalign verticalAlign   = NVG_ALIGN_MIDDLE;
@@ -67,8 +76,19 @@ class Label : public View
     int customFont;
     bool useCustomFont = false;
 
+    bool tickerActive = true;
     menu_timer_t tickerWaitTimer;
     menu_timer_ctx_entry_t tickerWaitTimerCtx;
+
+    float textAnimation = 1.0f;
+
+    GenericEvent::Subscription parentFocusSubscription;
+
+    unsigned getFontSize(LabelStyle labelStyle);
+    float getLineHeight(LabelStyle labelStyle);
+
+    void onParentFocus();
+    void onParentUnfocus();
 
   public:
     Label(LabelStyle labelStyle, std::string text, bool multiline = false);
@@ -82,6 +102,8 @@ class Label : public View
         return nullptr;
     }
 
+    void resetValueAnimation();
+
     void setVerticalAlign(NVGalign align);
     void setHorizontalAlign(NVGalign align);
     void setText(std::string text);
@@ -93,6 +115,10 @@ class Label : public View
 
     void startTickerAnimation();
     void stopTickerAnimation();
+
+    unsigned getTextWidth();
+    unsigned getTextHeight();
+    const std::string& getText();
 
     /**
      * Sets the label color
@@ -128,6 +154,14 @@ class Label : public View
      * = custom or the regular font
      */
     int getFont(FontStash* stash);
+
+    /**
+     * Sets the ticker state to active (scrolling) or inactive (ellipsis)
+     * 
+     */
+    void setTickerState(bool active);
+
+    void animate(LabelAnimation animation);
 };
 
 } // namespace brls

@@ -33,13 +33,9 @@ namespace brls
 class ListItem : public View
 {
   private:
-    std::string label;
     std::string subLabel;
-    std::string value;
     bool valueFaint;
 
-    std::string oldValue;
-    bool oldValueFaint;
     float valueAnimation = 0.0f;
 
     bool checked = false; // check mark on the right
@@ -48,7 +44,10 @@ class ListItem : public View
 
     bool drawTopSeparator = true;
 
+    Label* labelView       = nullptr;
     Label* descriptionView = nullptr;
+    Label* valueView       = nullptr;
+    Label* oldValueView    = nullptr;
     Image* thumbnailView   = nullptr;
 
     bool reduceDescriptionSpacing = false;
@@ -56,8 +55,6 @@ class ListItem : public View
     GenericEvent clickEvent;
 
     bool indented = false;
-
-    void resetValueAnimation();
 
   public:
     ListItem(std::string label, std::string description = "", std::string subLabel = "");
