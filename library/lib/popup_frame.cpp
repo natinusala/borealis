@@ -118,11 +118,10 @@ void PopupFrame::layout(NVGcontext* vg, Style* style, FontStash* stash)
     this->contentView->invalidate();
 }
 
-View* PopupFrame::requestFocus(FocusDirection direction, View* oldFocus, bool fromUp)
+View* PopupFrame::getDefaultFocus()
 {
-    if (direction == FocusDirection::NONE)
-        if (this->contentView)
-            return this->contentView->requestFocus(direction, oldFocus, fromUp);
+    if (this->contentView)
+        return this->contentView->getDefaultFocus();
 
     return nullptr;
 }

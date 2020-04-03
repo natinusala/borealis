@@ -65,7 +65,7 @@ class AppletFrame : public View
     AppletFrame(bool padLeft, bool padRight);
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override;
+    View* getDefaultFocus();
     virtual bool onCancel();
     void willAppear() override;
     void willDisappear() override;
@@ -79,6 +79,7 @@ class AppletFrame : public View
     void setIcon(std::string imagePath);
     void setIcon(View* view);
     virtual void setContentView(View* view);
+    bool hasContentView();
     void setHeaderStyle(HeaderStyle headerStyle);
 
     void setAnimateHint(bool animate)

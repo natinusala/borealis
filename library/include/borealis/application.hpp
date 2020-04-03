@@ -80,7 +80,11 @@ class Application
     static void popView(
         ViewAnimation animation = ViewAnimation::FADE, std::function<void(void)> cb = []() {});
 
-    static void requestFocus(View* view, FocusDirection direction);
+    /**
+     * Gives the focus to the given view
+     * or clears the focus if given nullptr
+     */
+    static void giveFocus(View* view);
 
     static Style* getStyle();
     static void setTheme(Theme theme);
@@ -174,6 +178,8 @@ class Application
 
     inline static GenericEvent globalFocusChangeEvent;
     inline static VoidEvent globalHintsUpdateEvent;
+
+    static void navigate(FocusDirection direction);
 
     static void onWindowSizeChanged();
 

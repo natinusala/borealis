@@ -152,10 +152,10 @@ void Dialog::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height,
         this->verticalButtonsLayout->frame(ctx);
 }
 
-View* Dialog::requestFocus(FocusDirection direction, View* oldFocus, bool fromUp)
+View* Dialog::getDefaultFocus()
 {
     if (this->buttons.size() > 0 && this->verticalButtonsLayout)
-        return this->verticalButtonsLayout->requestFocus(FocusDirection::NONE, oldFocus, fromUp);
+        return this->verticalButtonsLayout->getDefaultFocus();
 
     return nullptr;
 }

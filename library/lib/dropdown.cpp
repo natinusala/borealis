@@ -167,11 +167,9 @@ void Dropdown::layout(NVGcontext* vg, Style* style, FontStash* stash)
     this->hint->setBoundaries(this->x, this->y, this->width, this->height);
 }
 
-View* Dropdown::requestFocus(FocusDirection direction, View* oldFocus, bool fromUp)
+View* Dropdown::getDefaultFocus()
 {
-    if (direction == FocusDirection::NONE)
-        return this->list->requestFocus(direction, oldFocus, fromUp);
-    return nullptr;
+    return this->list->getDefaultFocus();
 }
 
 void Dropdown::open(std::string title, std::vector<std::string> values, ValueSelectedEvent::Callback cb, int selected)

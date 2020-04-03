@@ -384,9 +384,15 @@ void View::setBoundaries(int x, int y, unsigned width, unsigned height)
     this->height = height;
 }
 
-void View::setParent(View* parent)
+void View::setParent(View* parent, size_t parentUserdata)
 {
-    this->parent = parent;
+    this->parent         = parent;
+    this->parentUserdata = parentUserdata;
+}
+
+size_t View::getParentUserData()
+{
+    return this->parentUserdata;
 }
 
 bool View::isFocused()
@@ -503,7 +509,7 @@ unsigned View::getShowAnimationDuration(ViewAnimation animation)
 
 void View::show(std::function<void(void)> cb, bool animate, ViewAnimation animation)
 {
-    brls::Logger::debug("Showing %s with animation %d", this->name().c_str(), animation);
+    brls::Logger::debug("Showing %s with animation %d", this->describe().c_str(), animation);
 
     this->hidden = false;
 
@@ -543,7 +549,7 @@ void View::show(std::function<void(void)> cb, bool animate, ViewAnimation animat
 
 void View::hide(std::function<void(void)> cb, bool animated, ViewAnimation animation)
 {
-    brls::Logger::debug("Hiding %s with animation %d", this->name().c_str(), animation);
+    brls::Logger::debug("Hiding %s with animation %d", this->describe().c_str(), animation);
 
     this->hidden = true;
     this->fadeIn = false;

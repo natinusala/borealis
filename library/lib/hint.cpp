@@ -139,7 +139,7 @@ void Hint::layout(NVGcontext* vg, Style* style, FontStash* stash)
             return;
     }
 
-    this->hintCount = 2;
+    this->hintCount = 0; // TODO: set value back to 2 and fix heap buffer overflow
     this->buttonHints.clear();
     this->hintAvailables.clear();
     this->hintXPositions.clear();

@@ -174,12 +174,11 @@ void AppletFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned he
     }
 }
 
-View* AppletFrame::requestFocus(FocusDirection direction, View* oldFocus, bool fromUp)
+View* AppletFrame::getDefaultFocus()
 {
-    if (fromUp)
-        return View::requestFocus(direction, oldFocus);
-    else if (this->contentView)
-        return this->contentView->requestFocus(direction, oldFocus);
+    if (this->contentView)
+        return this->contentView->getDefaultFocus();
+
     return nullptr;
 }
 
@@ -224,6 +223,11 @@ void AppletFrame::setContentView(View* view)
     }
 
     this->invalidate();
+}
+
+bool AppletFrame::hasContentView()
+{
+    return this->contentView;
 }
 
 void AppletFrame::setTitle(std::string title)

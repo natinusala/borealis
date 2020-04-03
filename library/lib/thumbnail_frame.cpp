@@ -165,12 +165,9 @@ void ThumbnailSidebar::layout(NVGcontext* vg, Style* style, FontStash* stash)
         buttonHeight);
 }
 
-View* ThumbnailSidebar::requestFocus(FocusDirection direction, View* oldFocus, bool fromUp)
+View* ThumbnailSidebar::getDefaultFocus()
 {
-    if (direction == FocusDirection::NONE)
-        return this->button->requestFocus(direction, oldFocus, fromUp);
-
-    return View::requestFocus(direction, oldFocus, fromUp);
+    return this->button->getDefaultFocus();
 }
 
 void ThumbnailSidebar::setThumbnail(std::string imagePath)

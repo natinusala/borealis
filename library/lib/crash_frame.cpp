@@ -105,9 +105,9 @@ void CrashFrame::onShowAnimationEnd()
     this->button->show([]() {});
 }
 
-View* CrashFrame::requestFocus(FocusDirection direction, View* oldFocus, bool fromUp)
+View* CrashFrame::getDefaultFocus()
 {
-    return this->button;
+    return this->button->getDefaultFocus();
 }
 
 void CrashFrame::layout(NVGcontext* vg, Style* style, FontStash* stash)

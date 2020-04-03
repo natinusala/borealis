@@ -72,8 +72,8 @@ class BoxLayout : public View
   protected:
     std::vector<BoxLayoutChild*> children;
 
-    size_t defaultFocusedIndex = 0;
-    size_t focusedIndex        = 0;
+    size_t defaultFocusedIndex = 0; // TODO: take care of that too
+    size_t focusedIndex        = 0; // TODO: remove or rewrite that using focus listener and parent userdata
 
     unsigned marginTop    = 0;
     unsigned marginRight  = 0;
@@ -86,14 +86,13 @@ class BoxLayout : public View
       */
     virtual void customSpacing(View* current, View* next, int* spacing) {}
 
-    virtual View* defaultFocus(View* oldFocus);
-
   public:
     BoxLayout(BoxLayoutOrientation orientation, size_t defaultFocus = 0);
 
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override;
+    View* getNextFocus(FocusDirection direction, size_t parentUserdata) override;
+    View* getDefaultFocus() override;
     void willAppear() override;
     void willDisappear() override;
 

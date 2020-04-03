@@ -65,7 +65,7 @@ void TabFrame::switchToView(View* view)
 
     if (view != nullptr)
     {
-        this->layout->addView(view, true); //addView() calls willAppear()
+        this->layout->addView(view, true); // addView() calls willAppear()
         this->rightPane = view;
     }
 }
@@ -77,6 +77,13 @@ void TabFrame::addTab(std::string label, View* view)
         if (SidebarItem* item = dynamic_cast<SidebarItem*>(view))
             this->switchToView(item->getAssociatedView());
     });
+
+    // Switch to first one as soon as we add it
+    if (!this->rightPane)
+    {
+        Logger::debug("Switching to the first tab");
+        this->switchToView(view);
+    }
 }
 
 void TabFrame::addSeparator()
@@ -84,24 +91,22 @@ void TabFrame::addSeparator()
     this->sidebar->addSeparator();
 }
 
-View* TabFrame::requestFocus(FocusDirection direction, View* oldFocus, bool fromUp)
+View* TabFrame::getDefaultFocus()
 {
-    if (fromUp)
-        return View::requestFocus(direction, oldFocus);
-
-    // Give focus to the right panel
-    if (direction == FocusDirection::NONE && this->layout->getViewsCount() > 1)
+    // Try to focus the right pane
+    if (this->layout->getViewsCount() > 1)
     {
-        View* newFocus = this->rightPane->requestFocus(direction, oldFocus);
+        View* newFocus = this->rightPane->getDefaultFocus();
+
         if (newFocus)
         {
-            this->layout->setFocusedIndex(1);
+            this->layout->setFocusedIndex(1); // TODO: yeet
             return newFocus;
         }
     }
 
-    // Let the layout do its thing
-    return this->layout->requestFocus(direction, oldFocus, fromUp);
+    // Otherwise focus sidebar
+    return this->sidebar->getDefaultFocus();
 }
 
 TabFrame::~TabFrame()

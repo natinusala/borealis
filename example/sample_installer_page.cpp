@@ -44,7 +44,7 @@ void SampleInstallerPage::draw(NVGcontext* vg, int x, int y, unsigned width, uns
     this->button->frame(ctx);
 }
 
-brls::View* SampleInstallerPage::requestFocus(brls::FocusDirection direction, brls::View* oldFocus, bool fromUp)
+brls::View* SampleInstallerPage::getDefaultFocus()
 {
     return this->button;
 }

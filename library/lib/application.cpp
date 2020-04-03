@@ -431,6 +431,38 @@ void Application::quit()
     glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 
+void Application::navigate(FocusDirection direction)
+{
+    View* currentFocus = Application::currentFocus;
+
+    // Do nothing if there is no current focus or if it doesn't have a parent
+    // (in which case there is nothing to traverse)
+    if (!currentFocus || !currentFocus->hasParent())
+        return;
+
+    // Get next view to focus by traversing the views tree upwards
+    View* nextFocus = currentFocus->getParent()->getNextFocus(direction, currentFocus->getParentUserData());
+
+    while (!nextFocus) // stop when we find a view to focus
+    {
+        if (!currentFocus->hasParent() || !currentFocus->getParent()->hasParent()) // stop when we reach the root of the tree
+            break;
+
+        currentFocus = currentFocus->getParent();
+        nextFocus    = currentFocus->getParent()->getNextFocus(direction, currentFocus->getParentUserData());
+    }
+
+    // No view to focus at the end of the traversal: wiggle and return
+    if (!nextFocus)
+    {
+        Application::currentFocus->shakeHighlight(direction);
+        return;
+    }
+
+    // Otherwise give it focus
+    Application::giveFocus(nextFocus);
+}
+
 void Application::onGamepadButtonPressed(char button, bool repeating)
 {
     if (Application::blockInputsTokens != 0)
@@ -446,20 +478,16 @@ void Application::onGamepadButtonPressed(char button, bool repeating)
     switch (button)
     {
         case GLFW_GAMEPAD_BUTTON_DPAD_DOWN:
-            if (Application::currentFocus && Application::currentFocus->getParent())
-                Application::requestFocus(Application::currentFocus->getParent(), FocusDirection::DOWN);
+            Application::navigate(FocusDirection::DOWN);
             break;
         case GLFW_GAMEPAD_BUTTON_DPAD_UP:
-            if (Application::currentFocus && Application::currentFocus->getParent())
-                Application::requestFocus(Application::currentFocus->getParent(), FocusDirection::UP);
+            Application::navigate(FocusDirection::UP);
             break;
         case GLFW_GAMEPAD_BUTTON_DPAD_LEFT:
-            if (Application::currentFocus && Application::currentFocus->getParent())
-                Application::requestFocus(Application::currentFocus->getParent(), FocusDirection::LEFT);
+            Application::navigate(FocusDirection::LEFT);
             break;
         case GLFW_GAMEPAD_BUTTON_DPAD_RIGHT:
-            if (Application::currentFocus && Application::currentFocus->getParent())
-                Application::requestFocus(Application::currentFocus->getParent(), FocusDirection::RIGHT);
+            Application::navigate(FocusDirection::RIGHT);
             break;
         default:
             break;
@@ -591,23 +619,26 @@ NotificationManager* Application::getNotificationManager()
     return Application::notificationManager;
 }
 
-void Application::requestFocus(View* view, FocusDirection direction)
+void Application::giveFocus(View* view)
 {
     View* oldFocus = Application::currentFocus;
-    View* newFocus = view->requestFocus(direction, oldFocus);
+    View* newFocus = view ? view->getDefaultFocus() : nullptr;
 
-    if (oldFocus != newFocus && newFocus)
+    if (oldFocus != newFocus)
     {
         if (oldFocus)
             oldFocus->onFocusLost();
-        newFocus->onFocusGained();
+
+        if (newFocus)
+        {
+            newFocus->onFocusGained();
+            Logger::debug("Giving focus to %s", newFocus->describe().c_str());
+        }
 
         Application::currentFocus = newFocus;
 
         Application::globalFocusChangeEvent.fire(newFocus);
     }
-    else if (oldFocus)
-        oldFocus->shakeHighlight(direction);
 }
 
 void Application::popView(ViewAnimation animation, std::function<void(void)> cb)
@@ -664,9 +695,9 @@ void Application::popView(ViewAnimation animation, std::function<void(void)> cb)
     {
         View* newFocus = Application::focusStack[Application::focusStack.size() - 1];
 
-        Logger::debug("Giving focus to %s, and removing it from the focus stack", newFocus->name().c_str());
+        Logger::debug("Giving focus to %s, and removing it from the focus stack", newFocus->describe().c_str());
 
-        Application::requestFocus(newFocus, FocusDirection::NONE);
+        Application::giveFocus(newFocus);
         Application::focusStack.pop_back();
     }
 }
@@ -724,12 +755,12 @@ void Application::pushView(View* view, ViewAnimation animation)
     // Focus
     if (Application::viewStack.size() > 0)
     {
-        Logger::debug("Pushing %s to the focus stack", Application::currentFocus->name().c_str());
+        Logger::debug("Pushing %s to the focus stack", Application::currentFocus->describe().c_str());
         Application::focusStack.push_back(Application::currentFocus);
     }
 
     view->willAppear();
-    Application::requestFocus(view, FocusDirection::NONE);
+    Application::giveFocus(view->getDefaultFocus());
 
     Application::viewStack.push_back(view);
 }

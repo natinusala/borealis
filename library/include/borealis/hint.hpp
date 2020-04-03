@@ -56,11 +56,6 @@ class Hint : public View
     void willAppear() override;
     void willDisappear() override;
 
-    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override
-    {
-        return nullptr;
-    }
-
     void setAnimate(bool animate)
     {
         this->animate = animate;

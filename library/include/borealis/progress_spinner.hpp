@@ -35,11 +35,6 @@ class ProgressSpinner : public View
     void willAppear() override;
     void willDisappear() override;
 
-    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override
-    {
-        return nullptr;
-    }
-
   private:
     float animationValue = 0.0f;
 

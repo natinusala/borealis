@@ -35,16 +35,17 @@ Sidebar::Sidebar()
     this->setBackground(Background::SIDEBAR);
 }
 
-View* Sidebar::defaultFocus(View* oldFocus)
+View* Sidebar::getDefaultFocus()
 {
     if (this->focusedIndex >= 0 && this->focusedIndex < this->children.size())
     {
-        View* newFocus = this->children[this->focusedIndex]->view->requestFocus(FocusDirection::NONE, oldFocus);
+        View* newFocus = this->children[this->focusedIndex]->view->getDefaultFocus();
+
         if (newFocus)
             return newFocus;
     }
 
-    return BoxLayout::defaultFocus(oldFocus);
+    return BoxLayout::getDefaultFocus();
 }
 
 SidebarItem* Sidebar::addItem(std::string label, View* view)
@@ -128,11 +129,6 @@ void SidebarSeparator::draw(NVGcontext* vg, int x, int y, unsigned width, unsign
     nvgBeginPath(vg);
     nvgRect(vg, x, y + height / 2, width, 1);
     nvgFill(vg);
-}
-
-View* SidebarItem::requestFocus(FocusDirection direction, View* oldFocus, bool fromUp)
-{
-    return this;
 }
 
 void SidebarItem::setAssociatedView(View* view)
