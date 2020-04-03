@@ -461,6 +461,9 @@ void View::onFocusGained()
     menu_animation_push(&entry);
 
     this->focusEvent.fire(this);
+
+    if (this->hasParent())
+        this->getParent()->onChildFocusGained(this);
 }
 
 GenericEvent* View::getFocusEvent()
@@ -490,6 +493,9 @@ void View::onFocusLost()
     entry.userdata     = nullptr;
 
     menu_animation_push(&entry);
+
+    if (this->hasParent())
+        this->getParent()->onChildFocusLost(this);
 }
 
 void View::setForceTranslucent(bool translucent)

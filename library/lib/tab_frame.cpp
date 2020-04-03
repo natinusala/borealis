@@ -42,13 +42,14 @@ TabFrame::TabFrame()
 
 bool TabFrame::onCancel()
 {
+    // Go back to sidebar if not already focused
     if (!this->sidebar->isChildFocused())
     {
         Application::onGamepadButtonPressed(GLFW_GAMEPAD_BUTTON_DPAD_LEFT, false);
         return true;
     }
 
-    return false;
+    return AppletFrame::onCancel();
 }
 
 void TabFrame::switchToView(View* view)
@@ -99,10 +100,7 @@ View* TabFrame::getDefaultFocus()
         View* newFocus = this->rightPane->getDefaultFocus();
 
         if (newFocus)
-        {
-            this->layout->setFocusedIndex(1); // TODO: yeet
             return newFocus;
-        }
     }
 
     // Otherwise focus sidebar

@@ -86,6 +86,9 @@ class Sidebar : public BoxLayout
     void setActive(SidebarItem* item);
 
     View* getDefaultFocus() override;
+    void onChildFocusGained(View* child) override;
+
+    size_t lastFocus = 0;
 };
 
 } // namespace brls

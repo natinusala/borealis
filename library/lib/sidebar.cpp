@@ -37,15 +37,24 @@ Sidebar::Sidebar()
 
 View* Sidebar::getDefaultFocus()
 {
-    if (this->focusedIndex >= 0 && this->focusedIndex < this->children.size())
-    {
-        View* newFocus = this->children[this->focusedIndex]->view->getDefaultFocus();
+    // Sanity check
+    if (this->lastFocus >= this->children.size())
+        this->lastFocus = 0;
 
-        if (newFocus)
-            return newFocus;
-    }
+    // Try to focus last focused one
+    View* toFocus = this->children[this->lastFocus]->view->getDefaultFocus();
+    if (toFocus)
+        return toFocus;
 
+    // Otherwise just get the first available item
     return BoxLayout::getDefaultFocus();
+}
+
+void Sidebar::onChildFocusGained(View* child)
+{
+    this->lastFocus = child->getParentUserData();
+
+    BoxLayout::onChildFocusGained(child);
 }
 
 SidebarItem* Sidebar::addItem(std::string label, View* view)
@@ -143,8 +152,8 @@ bool SidebarItem::isActive()
 
 void SidebarItem::onFocusGained()
 {
-    View::onFocusGained();
     this->sidebar->setActive(this);
+    View::onFocusGained();
 }
 
 View* SidebarItem::getAssociatedView()

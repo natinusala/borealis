@@ -643,7 +643,7 @@ void Application::giveFocus(View* view)
 
 void Application::popView(ViewAnimation animation, std::function<void(void)> cb)
 {
-    if (Application::viewStack.size() == 0)
+    if (Application::viewStack.size() <= 1) // never pop the root view
         return;
 
     Application::blockInputs();

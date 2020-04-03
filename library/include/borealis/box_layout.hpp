@@ -59,12 +59,11 @@ class BoxLayout : public View
     float scrollY = 0.0f; // all childrens are offset by this value
 
     View* updateFocus(FocusDirection direction, View* oldFocus, bool fromUp);
-    void updateScroll(bool animated = true);
+    void updateScroll(bool animated, size_t focusedIndex);
 
     void scrollAnimationTick();
     void prebakeScrolling();
 
-    bool firstLayout     = true;
     bool firstAppearance = true;
 
     bool scrollingEnabled = true;
@@ -73,7 +72,7 @@ class BoxLayout : public View
     std::vector<BoxLayoutChild*> children;
 
     size_t defaultFocusedIndex = 0; // TODO: take care of that too
-    size_t focusedIndex        = 0; // TODO: remove or rewrite that using focus listener and parent userdata
+    bool childFocused = false;
 
     unsigned marginTop    = 0;
     unsigned marginRight  = 0;
@@ -93,6 +92,8 @@ class BoxLayout : public View
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     View* getNextFocus(FocusDirection direction, size_t parentUserdata) override;
     View* getDefaultFocus() override;
+    void onChildFocusGained(View* child) override;
+    void onChildFocusLost(View* child) override;
     void willAppear() override;
     void willDisappear() override;
 

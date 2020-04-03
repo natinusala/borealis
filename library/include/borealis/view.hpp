@@ -358,6 +358,24 @@ class View
       */
     virtual void onFocusLost();
 
+    /**
+     * Fired when focus is gained on one of this view's children
+     */
+    virtual void onChildFocusGained(View* child)
+    {
+      if (this->hasParent())
+        this->getParent()->onChildFocusGained(this);
+    }
+
+    /**
+     * Fired when focus is gained on one of this view's children
+     */
+    virtual void onChildFocusLost(View* child)
+    {
+      if (this->hasParent())
+        this->getParent()->onChildFocusLost(this);
+    }
+
     GenericEvent* getFocusEvent();
 
     float alpha = 1.0f;

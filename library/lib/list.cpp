@@ -101,19 +101,6 @@ void List::customSpacing(View* current, View* next, int* spacing)
     }
 }
 
-View* List::getDefaultFocus()
-{
-    if (this->focusedIndex >= 0 && this->focusedIndex < this->children.size())
-    {
-        View* newFocus = this->children[this->focusedIndex]->view->getDefaultFocus();
-
-        if (newFocus)
-            return newFocus;
-    }
-
-    return BoxLayout::getDefaultFocus();
-}
-
 ListItem::ListItem(std::string label, std::string description, std::string subLabel)
     : label(label)
     , subLabel(subLabel)
