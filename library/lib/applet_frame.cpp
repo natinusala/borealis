@@ -380,6 +380,11 @@ void AppletFrame::hide(std::function<void(void)> cb, bool animated, ViewAnimatio
 
 bool AppletFrame::onCancel()
 {
+    /*
+     * TODO: this assumes AppletFrames are used as "activities" in the app, which may be wrong
+     * so we should instead change the view stack to an "activity" stack and have them popped when
+     * the user presses B on the root view of an "activity"
+     */
     Application::popView();
     return true;
 }
