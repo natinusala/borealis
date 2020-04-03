@@ -96,8 +96,7 @@ View* BoxLayout::getDefaultFocus()
 View* BoxLayout::getNextFocus(FocusDirection direction, size_t parentUserData)
 {
     // Return nullptr immediately if focus direction mismatches the layout direction
-    if ((this->orientation == BoxLayoutOrientation::HORIZONTAL && direction != FocusDirection::LEFT && direction != FocusDirection::RIGHT) ||
-        (this->orientation == BoxLayoutOrientation::VERTICAL && direction != FocusDirection::UP && direction != FocusDirection::DOWN))
+    if ((this->orientation == BoxLayoutOrientation::HORIZONTAL && direction != FocusDirection::LEFT && direction != FocusDirection::RIGHT) || (this->orientation == BoxLayoutOrientation::VERTICAL && direction != FocusDirection::UP && direction != FocusDirection::DOWN))
     {
         return nullptr;
     }
@@ -105,19 +104,18 @@ View* BoxLayout::getNextFocus(FocusDirection direction, size_t parentUserData)
     // Traverse the children
     size_t offset = 1; // which way are we going in the children list
 
-    if ((this->orientation == BoxLayoutOrientation::HORIZONTAL && direction == FocusDirection::LEFT) ||
-        (this->orientation == BoxLayoutOrientation::VERTICAL && direction == FocusDirection::UP))
+    if ((this->orientation == BoxLayoutOrientation::HORIZONTAL && direction == FocusDirection::LEFT) || (this->orientation == BoxLayoutOrientation::VERTICAL && direction == FocusDirection::UP))
     {
         offset = -1;
     }
 
-    size_t currentFocusIndex    = parentUserData + offset;
-    View* currentFocus          = nullptr;
+    size_t currentFocusIndex = parentUserData + offset;
+    View* currentFocus       = nullptr;
 
     while (!currentFocus && currentFocusIndex >= 0 && currentFocusIndex < this->children.size())
     {
-        currentFocus        = this->children[currentFocusIndex]->view->getDefaultFocus();
-        currentFocusIndex   += offset;
+        currentFocus = this->children[currentFocusIndex]->view->getDefaultFocus();
+        currentFocusIndex += offset;
     }
 
     return currentFocus;

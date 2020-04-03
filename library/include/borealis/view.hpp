@@ -332,7 +332,7 @@ class View
      */
     virtual View* getDefaultFocus()
     {
-      return nullptr;
+        return nullptr;
     }
 
     /**
@@ -345,7 +345,7 @@ class View
      */
     virtual View* getNextFocus(FocusDirection direction, size_t parentUserdata)
     {
-      return nullptr;
+        return nullptr;
     }
 
     /**
@@ -363,8 +363,8 @@ class View
      */
     virtual void onChildFocusGained(View* child)
     {
-      if (this->hasParent())
-        this->getParent()->onChildFocusGained(this);
+        if (this->hasParent())
+            this->getParent()->onChildFocusGained(this);
     }
 
     /**
@@ -372,8 +372,8 @@ class View
      */
     virtual void onChildFocusLost(View* child)
     {
-      if (this->hasParent())
-        this->getParent()->onChildFocusLost(this);
+        if (this->hasParent())
+            this->getParent()->onChildFocusLost(this);
     }
 
     GenericEvent* getFocusEvent();

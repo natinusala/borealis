@@ -72,7 +72,7 @@ class BoxLayout : public View
     std::vector<BoxLayoutChild*> children;
 
     size_t defaultFocusedIndex = 0; // TODO: take care of that too
-    bool childFocused = false;
+    bool childFocused          = false;
 
     unsigned marginTop    = 0;
     unsigned marginRight  = 0;

@@ -55,7 +55,7 @@ class SidebarItem : public View
 
     View* getDefaultFocus() override
     {
-      return this;
+        return this;
     }
 
     virtual bool onClick();
