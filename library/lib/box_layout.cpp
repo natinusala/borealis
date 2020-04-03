@@ -82,6 +82,16 @@ size_t BoxLayout::getViewsCount()
 
 View* BoxLayout::getDefaultFocus()
 {
+    // Focus default focus first
+    if (this->defaultFocusedIndex < this->children.size())
+    {
+        View* newFocus = this->children[this->defaultFocusedIndex]->view->getDefaultFocus();
+
+        if (newFocus)
+            return newFocus;
+    }
+
+    // Fallback to finding the first focusable view
     for (size_t i = 0; i < this->children.size(); i++)
     {
         View* newFocus = this->children[i]->view->getDefaultFocus();
