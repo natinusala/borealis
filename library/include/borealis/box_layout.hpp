@@ -90,7 +90,7 @@ class BoxLayout : public View
 
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-    View* getNextFocus(FocusDirection direction, size_t parentUserdata) override;
+    View* getNextFocus(FocusDirection direction, void* parentUserdata) override;
     View* getDefaultFocus() override;
     void onChildFocusGained(View* child) override;
     void onChildFocusLost(View* child) override;

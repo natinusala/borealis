@@ -108,7 +108,7 @@ class View
      * Parent user data, typically the index of the view
      * in the internal layout structure
      */
-    size_t parentUserdata = 0;
+    void* parentUserdata = nullptr;
 
   protected:
     int x = 0;
@@ -195,11 +195,11 @@ class View
 
     void setForceTranslucent(bool translucent);
 
-    void setParent(View* parent, size_t parentUserdata = 0);
+    void setParent(View* parent, void* parentUserdata = nullptr);
     View* getParent();
     bool hasParent();
 
-    size_t getParentUserData();
+    void* getParentUserData();
 
     void registerAction(std::string hintText, Key key, ActionListener actionListener, bool hidden = false);
     void updateActionHint(Key key, std::string hintText);
@@ -343,7 +343,7 @@ class View
      * in that direction - getNextFocus will then be called on our
      * parent if any
      */
-    virtual View* getNextFocus(FocusDirection direction, size_t parentUserdata)
+    virtual View* getNextFocus(FocusDirection direction, void* parentUserdata)
     {
         return nullptr;
     }

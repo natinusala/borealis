@@ -52,7 +52,9 @@ View* Sidebar::getDefaultFocus()
 
 void Sidebar::onChildFocusGained(View* child)
 {
-    this->lastFocus = child->getParentUserData();
+    size_t position = *((size_t*)child->getParentUserData());
+
+    this->lastFocus = position;
 
     BoxLayout::onChildFocusGained(child);
 }

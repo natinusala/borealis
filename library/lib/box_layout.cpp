@@ -103,7 +103,7 @@ View* BoxLayout::getDefaultFocus()
     return nullptr;
 }
 
-View* BoxLayout::getNextFocus(FocusDirection direction, size_t parentUserData)
+View* BoxLayout::getNextFocus(FocusDirection direction, void* parentUserData)
 {
     // Return nullptr immediately if focus direction mismatches the layout direction
     if ((this->orientation == BoxLayoutOrientation::HORIZONTAL && direction != FocusDirection::LEFT && direction != FocusDirection::RIGHT) || (this->orientation == BoxLayoutOrientation::VERTICAL && direction != FocusDirection::UP && direction != FocusDirection::DOWN))
@@ -119,7 +119,7 @@ View* BoxLayout::getNextFocus(FocusDirection direction, size_t parentUserData)
         offset = -1;
     }
 
-    size_t currentFocusIndex = parentUserData + offset;
+    size_t currentFocusIndex = *((size_t*)parentUserData) + offset;
     View* currentFocus       = nullptr;
 
     while (!currentFocus && currentFocusIndex >= 0 && currentFocusIndex < this->children.size())
@@ -305,7 +305,11 @@ void BoxLayout::addView(View* view, bool fill)
     this->children.push_back(child);
 
     size_t position = this->children.size() - 1;
-    view->setParent(this, position);
+
+    size_t* userdata = (size_t*)malloc(sizeof(size_t));
+    *userdata        = position;
+
+    view->setParent(this, userdata);
 
     view->willAppear();
     this->invalidate();
@@ -328,8 +332,10 @@ bool BoxLayout::isChildFocused()
 
 void BoxLayout::onChildFocusGained(View* child)
 {
+    size_t position = *((size_t*)child->getParentUserData());
+
     this->childFocused = true;
-    this->updateScroll(true, child->getParentUserData());
+    this->updateScroll(true, position);
 
     View::onChildFocusGained(child);
 }

@@ -384,13 +384,13 @@ void View::setBoundaries(int x, int y, unsigned width, unsigned height)
     this->height = height;
 }
 
-void View::setParent(View* parent, size_t parentUserdata)
+void View::setParent(View* parent, void* parentUserdata)
 {
     this->parent         = parent;
     this->parentUserdata = parentUserdata;
 }
 
-size_t View::getParentUserData()
+void* View::getParentUserData()
 {
     return this->parentUserdata;
 }
@@ -606,6 +606,13 @@ View::~View()
 
     menu_animation_ctx_tag collapseTag = (uintptr_t) & this->collapseState;
     menu_animation_kill_by_tag(&collapseTag);
+
+    // Parent userdata
+    if (this->parentUserdata)
+    {
+        free(this->parentUserdata);
+        this->parentUserdata = nullptr;
+    }
 }
 
 } // namespace brls
