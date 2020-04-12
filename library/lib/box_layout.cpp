@@ -21,6 +21,8 @@
 #include <math.h>
 #include <stdio.h>
 
+#include <iterator>
+
 #include <borealis/animations.hpp>
 #include <borealis/application.hpp>
 #include <borealis/box_layout.hpp>
@@ -47,6 +49,12 @@ void BoxLayout::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heig
 
     //Disable scissoring
     nvgRestore(vg);
+}
+
+void BoxLayout::setGravity(BoxLayoutGravity gravity)
+{
+    this->gravity = gravity;
+    this->invalidate();
 }
 
 void BoxLayout::setSpacing(unsigned spacing)
@@ -259,9 +267,9 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
         }
     }
     // Horizontal orientation
-    // TODO: Make sure that spacing and margins work with horizontal
     else if (this->orientation == BoxLayoutOrientation::HORIZONTAL)
     {
+        // Layout
         int xAdvance = this->x + this->marginLeft;
         for (size_t i = 0; i < this->children.size(); i++)
         {
@@ -292,6 +300,45 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
                 spacing = 0;
 
             xAdvance += spacing + childWidth;
+        }
+
+        // Apply gravity
+        // TODO: more efficient gravity implementation?
+        if (!this->children.empty())
+        {
+            switch (this->gravity)
+            {
+                case BoxLayoutGravity::RIGHT:
+                {
+                    // Take the remaining empty space between the last view's
+                    // right boundary and ours and push all views by this amount
+                    View* lastView = this->children[this->children.size() - 1]->view;
+
+                    unsigned lastViewRight = lastView->getX() + lastView->getWidth();
+                    unsigned ourRight      = this->getX() + this->getWidth();
+
+                    if (lastViewRight <= ourRight)
+                    {
+                        unsigned difference = ourRight - lastViewRight;
+
+                        for (BoxLayoutChild* child : this->children)
+                        {
+                            View* view = child->view;
+                            view->setBoundaries(
+                                view->getX() + difference,
+                                view->getY(),
+                                view->getWidth(),
+                                view->getHeight()
+                            );
+                            view->invalidate();
+                        }
+                    }
+
+                    break;
+                }
+                default:
+                    break;
+            }
         }
     }
 }

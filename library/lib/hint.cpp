@@ -27,7 +27,6 @@
 namespace brls
 {
 
-// TODO: Right-align the layout (oof)
 // TODO: Adjust metrics and labels style to match HOS
 
 Hint::Hint(bool animate) :
@@ -35,6 +34,8 @@ Hint::Hint(bool animate) :
     animate(animate)
 {
     Style* style = Application::getStyle();
+
+    this->setGravity(BoxLayoutGravity::RIGHT);
     this->setHeight(style->AppletFrame.footerHeight);
 
     // Subscribe to all events
