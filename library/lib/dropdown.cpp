@@ -164,7 +164,17 @@ void Dropdown::layout(NVGcontext* vg, Style* style, FontStash* stash)
         listHeight);
     this->list->invalidate();
 
-    this->hint->setBoundaries(this->x, this->y, this->width, this->height);
+    // Hint
+    // TODO: convert the bottom-left footer into a Label to get its width and avoid clipping with the hint
+    unsigned hintWidth = this->width - style->AppletFrame.separatorSpacing * 2 - style->AppletFrame.footerTextSpacing * 2;
+
+    this->hint->setBoundaries(
+        this->x + this->width - hintWidth - style->AppletFrame.separatorSpacing - style->AppletFrame.footerTextSpacing,
+        this->y + this->height - style->AppletFrame.footerHeight,
+        hintWidth,
+        style->AppletFrame.footerHeight
+    );
+    this->hint->invalidate();
 }
 
 View* Dropdown::getDefaultFocus()

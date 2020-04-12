@@ -186,6 +186,8 @@ class Application
     static void frame();
     static void clear();
     static void exit();
+
+    static void handleAction(char button);
 };
 
 } // namespace brls

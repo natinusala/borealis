@@ -2,6 +2,7 @@
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2019-2020  natinusala
     Copyright (C) 2019  p-sam
+    Copyright (C) 2020  WerWolv
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,6 +49,7 @@
 
 #include <chrono>
 #include <thread>
+#include <set>
 
 // Constants used for scaling as well as
 // creating a window of the right size on PC
@@ -473,10 +475,9 @@ void Application::onGamepadButtonPressed(char button, bool repeating)
 
     Application::repetitionOldFocus = Application::currentFocus;
 
-    Hint::handleInput(button);
-
     switch (button)
     {
+        // Navigation
         case GLFW_GAMEPAD_BUTTON_DPAD_DOWN:
             Application::navigate(FocusDirection::DOWN);
             break;
@@ -489,8 +490,34 @@ void Application::onGamepadButtonPressed(char button, bool repeating)
         case GLFW_GAMEPAD_BUTTON_DPAD_RIGHT:
             Application::navigate(FocusDirection::RIGHT);
             break;
+        // Actions
         default:
+            Application::handleAction(button);
             break;
+    }
+}
+
+void Application::handleAction(char button)
+{
+    View* hintParent = Application::currentFocus;
+    std::set<Key> consumedKeys;
+
+    while (hintParent != nullptr)
+    {
+        for (auto& action : hintParent->getActions())
+        {
+            if (action.key != static_cast<Key>(button))
+                continue;
+
+            if (consumedKeys.find(action.key) != consumedKeys.end())
+                continue;
+
+            if (action.available)
+                if (action.actionListener())
+                    consumedKeys.insert(action.key);
+        }
+
+        hintParent = hintParent->getParent();
     }
 }
 

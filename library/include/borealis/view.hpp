@@ -207,6 +207,11 @@ class View
 
     std::string describe() const { return typeid(*this).name(); }
 
+    std::vector<Action> getActions()
+    {
+      return this->actions;
+    }
+
     /**
       * Called each frame
       * Do not override it to draw your view,

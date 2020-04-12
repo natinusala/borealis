@@ -1,6 +1,7 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2020  WerWolv
+    Copyright (C) 2020  natinusala
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,21 +22,18 @@
 #include <borealis/label.hpp>
 #include <borealis/view.hpp>
 
+#include <borealis/box_layout.hpp>
+
 namespace brls
 {
 
-// A button input hint
-class Hint : public View
+// Displays button hints for the currently focused view
+// Depending on the view's available actions
+// there can only be one Hint visible at any time
+class Hint : public BoxLayout
 {
   private:
     bool animate;
-
-    std::vector<int> hintXPositions;
-    int hintYPosition = 0;
-
-    std::vector<std::string> buttonHints;
-    std::vector<bool> hintAvailables;
-    unsigned hintCount = 0;
 
     GenericEvent::Subscription globalFocusEventSubscriptor;
     VoidEvent::Subscription globalHintsUpdateEventSubscriptor;
@@ -50,9 +48,6 @@ class Hint : public View
     Hint(bool animate = true);
     ~Hint();
 
-    void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-    void layout(NVGcontext* vg, Style* style, FontStash* stash);
-
     void willAppear() override;
     void willDisappear() override;
 
@@ -60,8 +55,6 @@ class Hint : public View
     {
         this->animate = animate;
     }
-
-    static void handleInput(char button);
 };
 
 } // namespace brls
