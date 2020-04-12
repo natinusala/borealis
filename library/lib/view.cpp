@@ -613,6 +613,10 @@ View::~View()
         free(this->parentUserdata);
         this->parentUserdata = nullptr;
     }
+
+    // Focus sanity check
+    if (Application::getCurrentFocus() == this)
+        Application::giveFocus(nullptr);
 }
 
 } // namespace brls

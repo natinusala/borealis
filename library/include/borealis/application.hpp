@@ -140,7 +140,7 @@ class Application
     static GenericEvent* getGlobalFocusChangeEvent();
     static VoidEvent* getGlobalHintsUpdateEvent();
 
-    friend Hint;
+    static View* getCurrentFocus();
 
   private:
     inline static GLFWwindow* window;

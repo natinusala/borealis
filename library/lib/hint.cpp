@@ -20,9 +20,15 @@
 #include <borealis/actions.hpp>
 #include <borealis/application.hpp>
 #include <borealis/hint.hpp>
+#include <borealis/label.hpp>
+
+#include <set>
 
 namespace brls
 {
+
+// TODO: Right-align the layout (oof)
+// TODO: Adjust metrics and labels style to match HOS
 
 Hint::Hint(bool animate) :
     BoxLayout(BoxLayoutOrientation::HORIZONTAL),
@@ -33,12 +39,99 @@ Hint::Hint(bool animate) :
 
     // Subscribe to all events
     this->globalFocusEventSubscriptor = Application::getGlobalFocusChangeEvent()->subscribe([this](View* newFocus) {
-        this->invalidate();
+        this->rebuildHints();
     });
 
     this->globalHintsUpdateEventSubscriptor = Application::getGlobalHintsUpdateEvent()->subscribe([this]() {
-        this->invalidate();
+        this->rebuildHints();
     });
+}
+
+bool actionsSortFunc(Action a, Action b)
+{
+    // From left to right:
+    //  - first +
+    //  - then all hints that are not B and A
+    //  - finally B and A
+
+    // + is before all others
+    if (a.key == Key::PLUS)
+        return true;
+
+    // A is after all others
+    if (b.key == Key::A)
+        return true;
+
+    // B is after all others but A
+    if (b.key == Key::B && a.key != Key::A)
+        return true;
+
+    // Keep original order for the rest
+    return false;
+}
+
+void Hint::rebuildHints()
+{
+    // Check if the focused element is still a child of the same parent as the hint view's
+    {
+        View* focusParent    = Application::getCurrentFocus();
+        View* hintBaseParent = this;
+
+        while (focusParent != nullptr)
+        {
+            if (focusParent->getParent() == nullptr)
+                break;
+            focusParent = focusParent->getParent();
+        }
+
+        while (hintBaseParent != nullptr)
+        {
+            if (hintBaseParent->getParent() == nullptr)
+                break;
+            hintBaseParent = hintBaseParent->getParent();
+        }
+
+        if (focusParent != hintBaseParent)
+            return;
+    }
+
+    // Empty the layout and re-populate it with new Labels
+    this->clear(true);
+
+    std::set<Key> addedKeys; // we only ever want one action per key
+    View* focusParent = Application::getCurrentFocus();
+
+    // Iterate over the view tree to find all the actions to display
+    std::vector<Action> actions;
+
+    while (focusParent != nullptr)
+    {
+        for (auto& action : focusParent->getActions())
+        {
+            if (action.hidden)
+                continue;
+
+            if (addedKeys.find(action.key) != addedKeys.end())
+                continue;
+
+            addedKeys.insert(action.key);
+            actions.push_back(action);
+        }
+
+        focusParent = focusParent->getParent();
+    }
+
+    // Sort the actions
+    std::stable_sort(actions.begin(), actions.end(), actionsSortFunc);
+
+    // Populate the layout with labels
+    for (Action action : actions)
+    {
+        std::string hintText = Hint::getKeyIcon(action.key) + "  " + action.hintText;
+
+        Label* label = new Label(LabelStyle::SMALL, hintText);
+        this->addView(label);
+    }
 }
 
 Hint::~Hint()
@@ -48,7 +141,7 @@ Hint::~Hint()
     Application::getGlobalHintsUpdateEvent()->unsubscribe(this->globalHintsUpdateEventSubscriptor);
 }
 
-std::string getKeyIcon(Key key)
+std::string Hint::getKeyIcon(Key key)
 {
     switch (key)
     {

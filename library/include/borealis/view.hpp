@@ -102,8 +102,6 @@ class View
 
     std::vector<Action> actions;
 
-    friend class Hint;
-
     /**
      * Parent user data, typically the index of the view
      * in the internal layout structure

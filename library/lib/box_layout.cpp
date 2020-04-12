@@ -143,8 +143,8 @@ void BoxLayout::removeView(int index, bool free)
 
 void BoxLayout::clear(bool free)
 {
-    for (size_t i = 0; i < this->children.size(); i++)
-        this->removeView(i, free);
+    while (!this->children.empty())
+        this->removeView(0, free);
 }
 
 void BoxLayout::updateScroll(bool animated, size_t focusedIndex)

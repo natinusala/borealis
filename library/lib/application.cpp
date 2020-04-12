@@ -497,6 +497,11 @@ void Application::onGamepadButtonPressed(char button, bool repeating)
     }
 }
 
+View* Application::getCurrentFocus()
+{
+    return Application::currentFocus;
+}
+
 void Application::handleAction(char button)
 {
     View* hintParent = Application::currentFocus;
