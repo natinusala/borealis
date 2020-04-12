@@ -35,12 +35,12 @@ enum class BoxLayoutOrientation
 // TODO: Implement all gravity options for both orientations
 enum class BoxLayoutGravity
 {
-  DEFAULT = 0,  // left for horizontal, top for vertical
-  LEFT,
-  RIGHT,
-  TOP,
-  BOTTOM,
-  CENTER
+    DEFAULT = 0, // left for horizontal, top for vertical
+    LEFT,
+    RIGHT,
+    TOP,
+    BOTTOM,
+    CENTER
 };
 
 class BoxLayoutChild
@@ -95,7 +95,7 @@ class BoxLayout : public View
       * Should the BoxLayout apply spacing after
       * this view?
       */
-    virtual void customSpacing(View* current, View* next, int* spacing) {}
+    virtual void customSpacing(View* current, View* next, int* spacing) { }
 
   public:
     BoxLayout(BoxLayoutOrientation orientation, size_t defaultFocus = 0);

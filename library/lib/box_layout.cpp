@@ -21,12 +21,11 @@
 #include <math.h>
 #include <stdio.h>
 
-#include <iterator>
-
 #include <borealis/animations.hpp>
 #include <borealis/application.hpp>
 #include <borealis/box_layout.hpp>
 #include <borealis/logger.hpp>
+#include <iterator>
 
 namespace brls
 {
@@ -328,8 +327,7 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
                                 view->getX() + difference,
                                 view->getY(),
                                 view->getWidth(),
-                                view->getHeight()
-                            );
+                                view->getHeight());
                             view->invalidate();
                         }
                     }

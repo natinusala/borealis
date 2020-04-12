@@ -48,8 +48,8 @@
 #endif
 
 #include <chrono>
-#include <thread>
 #include <set>
+#include <thread>
 
 // Constants used for scaling as well as
 // creating a window of the right size on PC

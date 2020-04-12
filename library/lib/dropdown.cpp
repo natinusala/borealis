@@ -172,8 +172,7 @@ void Dropdown::layout(NVGcontext* vg, Style* style, FontStash* stash)
         this->x + this->width - hintWidth - style->AppletFrame.separatorSpacing - style->AppletFrame.footerTextSpacing,
         this->y + this->height - style->AppletFrame.footerHeight,
         hintWidth,
-        style->AppletFrame.footerHeight
-    );
+        style->AppletFrame.footerHeight);
     this->hint->invalidate();
 }
 

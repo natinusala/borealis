@@ -207,7 +207,7 @@ class View
 
     std::vector<Action> getActions()
     {
-      return this->actions;
+        return this->actions;
     }
 
     /**

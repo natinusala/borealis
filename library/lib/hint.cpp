@@ -21,7 +21,6 @@
 #include <borealis/application.hpp>
 #include <borealis/hint.hpp>
 #include <borealis/label.hpp>
-
 #include <set>
 
 namespace brls
@@ -29,9 +28,9 @@ namespace brls
 
 // TODO: Adjust metrics and labels style to match HOS
 
-Hint::Hint(bool animate) :
-    BoxLayout(BoxLayoutOrientation::HORIZONTAL),
-    animate(animate)
+Hint::Hint(bool animate)
+    : BoxLayout(BoxLayoutOrientation::HORIZONTAL)
+    , animate(animate)
 {
     Style* style = Application::getStyle();
 
