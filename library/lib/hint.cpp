@@ -26,8 +26,6 @@
 namespace brls
 {
 
-// TODO: Adjust metrics and labels style to match HOS
-
 Hint::Hint(bool animate)
     : BoxLayout(BoxLayoutOrientation::HORIZONTAL)
     , animate(animate)
@@ -36,6 +34,7 @@ Hint::Hint(bool animate)
 
     this->setGravity(BoxLayoutGravity::RIGHT);
     this->setHeight(style->AppletFrame.footerHeight);
+    this->setSpacing(style->AppletFrame.footerTextSpacing);
 
     // Subscribe to all events
     this->globalFocusEventSubscriptor = Application::getGlobalFocusChangeEvent()->subscribe([this](View* newFocus) {
@@ -129,7 +128,7 @@ void Hint::rebuildHints()
     {
         std::string hintText = Hint::getKeyIcon(action.key) + "  " + action.hintText;
 
-        Label* label = new Label(LabelStyle::SMALL, hintText);
+        Label* label = new Label(LabelStyle::HINT, hintText);
         this->addView(label);
     }
 }

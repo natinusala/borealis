@@ -64,6 +64,8 @@ Label::Label(LabelStyle labelStyle, std::string text, bool multiline)
         case LabelStyle::DIALOG:
             this->fontSize = style->Label.dialogFontSize;
             break;
+        case LabelStyle::HINT:
+            this->fontSize = style->Label.hintFontSize;
     }
 }
 

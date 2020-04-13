@@ -42,7 +42,6 @@ Style Style::horizon()
         .titleOffset = 5,
 
         .footerTextSize    = 22,
-        .footerHintSize    = 26,
         .footerTextSpacing = 30,
 
         .slideAnimation = 20
@@ -113,6 +112,7 @@ Style Style::horizon()
         .listItemFontSize     = 24,
         .notificationFontSize = 18,
         .dialogFontSize       = 24,
+        .hintFontSize         = 22,
 
         .lineHeight             = 1.65f,
         .notificationLineHeight = 1.35f
