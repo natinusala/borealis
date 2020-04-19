@@ -28,14 +28,14 @@ namespace brls
 
 enum class BoxLayoutOrientation
 {
-    VERTICAL = 0,
+    VERTICAL,
     HORIZONTAL
 };
 
 // TODO: Implement all gravity options for both orientations
 enum class BoxLayoutGravity
 {
-    DEFAULT = 0, // left for horizontal, top for vertical
+    DEFAULT, // left for horizontal, top for vertical
     LEFT,
     RIGHT,
     TOP,
