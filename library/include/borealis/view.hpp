@@ -205,7 +205,7 @@ class View
 
     std::string describe() const { return typeid(*this).name(); }
 
-    std::vector<Action> getActions()
+    const std::vector<Action>& getActions()
     {
         return this->actions;
     }
