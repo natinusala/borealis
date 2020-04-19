@@ -475,9 +475,15 @@ void Application::onGamepadButtonPressed(char button, bool repeating)
 
     Application::repetitionOldFocus = Application::currentFocus;
 
+    // Actions
+    if (Application::handleAction(button))
+        return;
+
+    // Navigation
+    // Only navigate if the button hasn't been consumed by an action
+    // (allows overriding DPAD buttons using actions)
     switch (button)
     {
-        // Navigation
         case GLFW_GAMEPAD_BUTTON_DPAD_DOWN:
             Application::navigate(FocusDirection::DOWN);
             break;
@@ -490,9 +496,7 @@ void Application::onGamepadButtonPressed(char button, bool repeating)
         case GLFW_GAMEPAD_BUTTON_DPAD_RIGHT:
             Application::navigate(FocusDirection::RIGHT);
             break;
-        // Actions
         default:
-            Application::handleAction(button);
             break;
     }
 }
@@ -502,7 +506,7 @@ View* Application::getCurrentFocus()
     return Application::currentFocus;
 }
 
-void Application::handleAction(char button)
+bool Application::handleAction(char button)
 {
     View* hintParent = Application::currentFocus;
     std::set<Key> consumedKeys;
@@ -524,6 +528,8 @@ void Application::handleAction(char button)
 
         hintParent = hintParent->getParent();
     }
+
+    return !consumedKeys.empty();
 }
 
 void Application::frame()

@@ -187,7 +187,12 @@ class Application
     static void clear();
     static void exit();
 
-    static void handleAction(char button);
+    /**
+     * Handles actions for the currently focused view and
+     * the given button
+     * Returns true if at least one action has been fired
+     */
+    static bool handleAction(char button);
 };
 
 } // namespace brls
