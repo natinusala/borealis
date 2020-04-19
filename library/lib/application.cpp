@@ -346,15 +346,17 @@ bool Application::mainLoop()
     // Gamepad
     if (!glfwGetGamepadState(GLFW_JOYSTICK_1, &Application::gamepad))
     {
-        // Gamepad not available, so let's fake it with keyboard
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT]  = glfwGetKey(window, GLFW_KEY_LEFT);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT] = glfwGetKey(window, GLFW_KEY_RIGHT);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP]    = glfwGetKey(window, GLFW_KEY_UP);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN]  = glfwGetKey(window, GLFW_KEY_DOWN);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_START]      = glfwGetKey(window, GLFW_KEY_ESCAPE);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_BACK]       = glfwGetKey(window, GLFW_KEY_F1);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_A]          = glfwGetKey(window, GLFW_KEY_ENTER);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_B]          = glfwGetKey(window, GLFW_KEY_BACKSPACE);
+        // Keyboard -> DPAD Mapping
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT]             = glfwGetKey(window, GLFW_KEY_LEFT);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT]            = glfwGetKey(window, GLFW_KEY_RIGHT);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP]               = glfwGetKey(window, GLFW_KEY_UP);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN]             = glfwGetKey(window, GLFW_KEY_DOWN);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_START]                 = glfwGetKey(window, GLFW_KEY_ESCAPE);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_BACK]                  = glfwGetKey(window, GLFW_KEY_F1);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_A]                     = glfwGetKey(window, GLFW_KEY_ENTER);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_B]                     = glfwGetKey(window, GLFW_KEY_BACKSPACE);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER]           = glfwGetKey(window, GLFW_KEY_L);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER]          = glfwGetKey(window, GLFW_KEY_R);
     }
 
     // Trigger gamepad events
