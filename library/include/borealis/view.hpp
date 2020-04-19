@@ -45,7 +45,7 @@ enum class ViewAnimation
 // Focus direction when navigating
 enum class FocusDirection
 {
-    UP = 0,
+    UP,
     DOWN,
     LEFT,
     RIGHT
@@ -54,7 +54,7 @@ enum class FocusDirection
 // View background
 enum class Background
 {
-    NONE = 0,
+    NONE,
     SIDEBAR,
     DEBUG,
     BACKDROP
