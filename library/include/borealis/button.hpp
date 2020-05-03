@@ -75,12 +75,7 @@ class Button : public View
 
     GenericEvent* getClickEvent();
 
-    Image* getImage(FocusDirection direction, View* oldFocus, bool fromUp)
-    {
-        return this->image;
-    }
-
-    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp) override
+    View* getDefaultFocus() override
     {
         return this;
     }

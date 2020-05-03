@@ -37,7 +37,8 @@ enum class LabelStyle
     LIST_ITEM,
     NOTIFICATION,
     DIALOG,
-    BUTTON_DIALOG
+    BUTTON_DIALOG,
+    HINT
 };
 
 // A Label, multiline or with a ticker
@@ -65,11 +66,6 @@ class Label : public View
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
-
-    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override
-    {
-        return nullptr;
-    }
 
     void setVerticalAlign(NVGalign align);
     void setHorizontalAlign(NVGalign align);

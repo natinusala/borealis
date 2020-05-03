@@ -45,11 +45,6 @@ void SampleLoadingPage::draw(NVGcontext* vg, int x, int y, unsigned width, unsig
     this->label->frame(ctx);
 }
 
-brls::View* SampleLoadingPage::requestFocus(brls::FocusDirection direction, brls::View* oldFocus, bool fromUp)
-{
-    return nullptr;
-}
-
 void SampleLoadingPage::layout(NVGcontext* vg, brls::Style* style, brls::FontStash* stash)
 {
     this->label->setWidth(roundf((float)this->width * style->CrashFrame.labelWidth));

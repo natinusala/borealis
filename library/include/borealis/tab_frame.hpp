@@ -42,7 +42,7 @@ class TabFrame : public AppletFrame
     void addTab(std::string label, View* view);
     void addSeparator();
 
-    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override;
+    View* getDefaultFocus() override;
 
     virtual bool onCancel() override;
 
@@ -51,7 +51,7 @@ class TabFrame : public AppletFrame
   private:
     Sidebar* sidebar;
     BoxLayout* layout;
-    View* rightPane;
+    View* rightPane = nullptr;
 
     void switchToView(View* view);
 };

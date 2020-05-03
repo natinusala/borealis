@@ -384,9 +384,15 @@ void View::setBoundaries(int x, int y, unsigned width, unsigned height)
     this->height = height;
 }
 
-void View::setParent(View* parent)
+void View::setParent(View* parent, void* parentUserdata)
 {
-    this->parent = parent;
+    this->parent         = parent;
+    this->parentUserdata = parentUserdata;
+}
+
+void* View::getParentUserData()
+{
+    return this->parentUserdata;
 }
 
 bool View::isFocused()
@@ -455,6 +461,9 @@ void View::onFocusGained()
     menu_animation_push(&entry);
 
     this->focusEvent.fire(this);
+
+    if (this->hasParent())
+        this->getParent()->onChildFocusGained(this);
 }
 
 GenericEvent* View::getFocusEvent()
@@ -484,6 +493,9 @@ void View::onFocusLost()
     entry.userdata     = nullptr;
 
     menu_animation_push(&entry);
+
+    if (this->hasParent())
+        this->getParent()->onChildFocusLost(this);
 }
 
 void View::setForceTranslucent(bool translucent)
@@ -503,7 +515,7 @@ unsigned View::getShowAnimationDuration(ViewAnimation animation)
 
 void View::show(std::function<void(void)> cb, bool animate, ViewAnimation animation)
 {
-    brls::Logger::debug("Showing %s with animation %d", this->name().c_str(), animation);
+    brls::Logger::debug("Showing %s with animation %d", this->describe().c_str(), animation);
 
     this->hidden = false;
 
@@ -543,7 +555,7 @@ void View::show(std::function<void(void)> cb, bool animate, ViewAnimation animat
 
 void View::hide(std::function<void(void)> cb, bool animated, ViewAnimation animation)
 {
-    brls::Logger::debug("Hiding %s with animation %d", this->name().c_str(), animation);
+    brls::Logger::debug("Hiding %s with animation %d", this->describe().c_str(), animation);
 
     this->hidden = true;
     this->fadeIn = false;
@@ -594,6 +606,17 @@ View::~View()
 
     menu_animation_ctx_tag collapseTag = (uintptr_t) & this->collapseState;
     menu_animation_kill_by_tag(&collapseTag);
+
+    // Parent userdata
+    if (this->parentUserdata)
+    {
+        free(this->parentUserdata);
+        this->parentUserdata = nullptr;
+    }
+
+    // Focus sanity check
+    if (Application::getCurrentFocus() == this)
+        Application::giveFocus(nullptr);
 }
 
 } // namespace brls

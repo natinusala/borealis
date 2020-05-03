@@ -101,18 +101,6 @@ void List::customSpacing(View* current, View* next, int* spacing)
     }
 }
 
-View* List::defaultFocus(View* oldFocus)
-{
-    if (this->focusedIndex >= 0 && this->focusedIndex < this->children.size())
-    {
-        View* newFocus = this->children[this->focusedIndex]->view->requestFocus(FocusDirection::NONE, oldFocus);
-        if (newFocus)
-            return newFocus;
-    }
-
-    return BoxLayout::defaultFocus(oldFocus);
-}
-
 ListItem::ListItem(std::string label, std::string description, std::string subLabel)
     : label(label)
     , subLabel(subLabel)
@@ -123,7 +111,10 @@ ListItem::ListItem(std::string label, std::string description, std::string subLa
     this->setTextSize(style->Label.listItemFontSize);
 
     if (description != "")
+    {
         this->descriptionView = new Label(LabelStyle::DESCRIPTION, description, true);
+        this->descriptionView->setParent(this);
+    }
 
     this->registerAction("OK", Key::A, [this] { return this->onClick(); });
 }
@@ -187,13 +178,6 @@ void ListItem::setTextSize(unsigned textSize)
 void ListItem::setChecked(bool checked)
 {
     this->checked = checked;
-}
-
-void ListItem::setParent(View* parent)
-{
-    View::setParent(parent);
-    if (this->descriptionView)
-        this->descriptionView->setParent(parent);
 }
 
 bool ListItem::onClick()
@@ -297,7 +281,7 @@ void ListItem::setDrawTopSeparator(bool draw)
     this->drawTopSeparator = draw;
 }
 
-View* ListItem::requestFocus(FocusDirection direction, View* oldFocus, bool fromUp)
+View* ListItem::getDefaultFocus()
 {
     if (this->collapseState != 1.0f)
         return nullptr;

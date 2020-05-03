@@ -56,12 +56,15 @@ void StagedAppletFrame::enterStage(int index, bool requestFocus)
     if ((size_t)index >= stageViews.size())
         return;
 
+    if (this->hasContentView())
+        stageViews[currentStage]->willDisappear();
+
     currentStage = (size_t)index;
 
-    this->setContentView(stageViews[currentStage]);
+    this->setContentView(stageViews[currentStage]); // calls willAppear
 
     if (requestFocus)
-        Application::requestFocus(this, FocusDirection::NONE);
+        Application::giveFocus(this->getDefaultFocus());
 }
 
 void StagedAppletFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)

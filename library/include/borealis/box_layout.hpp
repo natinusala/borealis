@@ -28,8 +28,19 @@ namespace brls
 
 enum class BoxLayoutOrientation
 {
-    VERTICAL = 0,
+    VERTICAL,
     HORIZONTAL
+};
+
+// TODO: Implement all gravity options for both orientations
+enum class BoxLayoutGravity
+{
+    DEFAULT, // left for horizontal, top for vertical
+    LEFT,
+    RIGHT,
+    TOP,
+    BOTTOM,
+    CENTER
 };
 
 class BoxLayoutChild
@@ -44,7 +55,7 @@ class BoxLayoutChild
 // - Only works with children with fixed width (horizontal) or height (vertical)
 // - Handles vertical scrolling only
 
-// TODO: Add alignment or stretching parameters to children
+// TODO: More complex alignment and/or stretching parameters to children
 class BoxLayout : public View
 {
   private:
@@ -58,22 +69,22 @@ class BoxLayout : public View
 
     float scrollY = 0.0f; // all childrens are offset by this value
 
-    View* updateFocus(FocusDirection direction, View* oldFocus, bool fromUp);
-    void updateScroll(bool animated = true);
+    void updateScroll(bool animated, size_t focusedIndex);
 
     void scrollAnimationTick();
     void prebakeScrolling();
 
-    bool firstLayout     = true;
     bool firstAppearance = true;
 
     bool scrollingEnabled = true;
+
+    BoxLayoutGravity gravity = BoxLayoutGravity::DEFAULT;
 
   protected:
     std::vector<BoxLayoutChild*> children;
 
     size_t defaultFocusedIndex = 0;
-    size_t focusedIndex        = 0;
+    bool childFocused          = false;
 
     unsigned marginTop    = 0;
     unsigned marginRight  = 0;
@@ -84,18 +95,24 @@ class BoxLayout : public View
       * Should the BoxLayout apply spacing after
       * this view?
       */
-    virtual void customSpacing(View* current, View* next, int* spacing) {}
-
-    virtual View* defaultFocus(View* oldFocus);
+    virtual void customSpacing(View* current, View* next, int* spacing) { }
 
   public:
     BoxLayout(BoxLayoutOrientation orientation, size_t defaultFocus = 0);
 
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override;
+    View* getNextFocus(FocusDirection direction, void* parentUserdata) override;
+    View* getDefaultFocus() override;
+    void onChildFocusGained(View* child) override;
+    void onChildFocusLost(View* child) override;
     void willAppear() override;
     void willDisappear() override;
+
+    /**
+     * Sets gravity
+     */
+    void setGravity(BoxLayoutGravity gravity);
 
     /**
       * Sets spacing between views

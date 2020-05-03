@@ -45,7 +45,6 @@ enum class ViewAnimation
 // Focus direction when navigating
 enum class FocusDirection
 {
-    NONE = 0,
     UP,
     DOWN,
     LEFT,
@@ -55,7 +54,7 @@ enum class FocusDirection
 // View background
 enum class Background
 {
-    NONE = 0,
+    NONE,
     SIDEBAR,
     DEBUG,
     BACKDROP
@@ -103,7 +102,11 @@ class View
 
     std::vector<Action> actions;
 
-    friend class Hint;
+    /**
+     * Parent user data, typically the index of the view
+     * in the internal layout structure
+     */
+    void* parentUserdata = nullptr;
 
   protected:
     int x = 0;
@@ -190,15 +193,22 @@ class View
 
     void setForceTranslucent(bool translucent);
 
-    virtual void setParent(View* parent);
+    void setParent(View* parent, void* parentUserdata = nullptr);
     View* getParent();
     bool hasParent();
+
+    void* getParentUserData();
 
     void registerAction(std::string hintText, Key key, ActionListener actionListener, bool hidden = false);
     void updateActionHint(Key key, std::string hintText);
     void setActionAvailable(Key key, bool available);
 
-    std::string name() const { return typeid(*this).name(); }
+    std::string describe() const { return typeid(*this).name(); }
+
+    const std::vector<Action>& getActions()
+    {
+        return this->actions;
+    }
 
     /**
       * Called each frame
@@ -311,27 +321,33 @@ class View
     bool isFocused();
 
     /**
-      * Used to change focus based on controller
-      * directions (up, down, left, right)
-      *
-      * Should return the view that is to be
-      * focused or nullptr if no focusable
-      * view exists in that direction
-      * or if the view itself isn't focusable
-      *
-      * Should return this to give focus
-      * to that one view, or traverse and
-      * return a pointer to a child view
-      *
-      * This method should not be called
-      * directly by the user, use
-      * Application::requestFocus(View*) instead
-      */
-    virtual View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false)
+     * Returns the default view to focus when focusing this view
+     * Typically the view itself or one of its children
+     *
+     * Returning nullptr means that the view is not focusable
+     * (and neither are its children)
+     *
+     * When pressing a key, the flow is :
+     *    1. starting from the currently focused view's parent, traverse the tree upwards and
+     *       repeatidly call getNextFocus() on every view until we find a next view to focus or meet the end of the tree
+     *    2. if a view is found, getNextFocus() will internally call getDefaultFocus() for the selected child
+     *    3. give focus to the result, if it exists
+     */
+    virtual View* getDefaultFocus()
     {
-        if (this->parent)
-            return this->parent->requestFocus(direction, oldFocus, true);
+        return nullptr;
+    }
 
+    /**
+     * Returns the next view to focus given the requested direction
+     * and the currently focused view (as parent user data)
+     *
+     * Returning nullptr means that there is no next view to focus
+     * in that direction - getNextFocus will then be called on our
+     * parent if any
+     */
+    virtual View* getNextFocus(FocusDirection direction, void* parentUserdata)
+    {
         return nullptr;
     }
 
@@ -344,6 +360,24 @@ class View
       * Fired when focus is lost
       */
     virtual void onFocusLost();
+
+    /**
+     * Fired when focus is gained on one of this view's children
+     */
+    virtual void onChildFocusGained(View* child)
+    {
+        if (this->hasParent())
+            this->getParent()->onChildFocusGained(this);
+    }
+
+    /**
+     * Fired when focus is gained on one of this view's children
+     */
+    virtual void onChildFocusLost(View* child)
+    {
+        if (this->hasParent())
+            this->getParent()->onChildFocusLost(this);
+    }
 
     GenericEvent* getFocusEvent();
 

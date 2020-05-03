@@ -59,7 +59,7 @@ void LayerView::changeLayer(int index, bool focus)
         this->layers[this->selectedIndex]->willAppear();
         this->layers[this->selectedIndex]->show([=]() {
             if (focus)
-                Application::requestFocus(this->layers[this->selectedIndex], FocusDirection::NONE);
+                Application::giveFocus(this->layers[this->selectedIndex]->getDefaultFocus());
             Application::unblockInputs();
         });
 
@@ -83,14 +83,11 @@ int LayerView::getLayerIndex()
     return this->selectedIndex;
 }
 
-View* LayerView::requestFocus(FocusDirection direction, View* oldFocus, bool fromUp)
+View* LayerView::getDefaultFocus()
 {
-    if (fromUp)
-        return View::requestFocus(direction, oldFocus);
-
     if (this->selectedIndex >= 0 && this->selectedIndex < static_cast<int>(this->layers.size()))
     {
-        View* newFocus = this->layers[this->selectedIndex]->requestFocus(direction, oldFocus);
+        View* newFocus = this->layers[this->selectedIndex]->getDefaultFocus();
         if (newFocus)
         {
             return newFocus;

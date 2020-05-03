@@ -21,6 +21,9 @@
 #include <functional>
 #include <string>
 
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+
 namespace brls
 {
 
@@ -28,24 +31,23 @@ class View;
 
 typedef std::function<bool(void)> ActionListener;
 
-// These values must match GLFW's button codes
-// This is also the reason why ZL and ZR do not exist here. GLFW doesn't know them
+// ZL and ZR do not exist here because GLFW doesn't know them
 enum class Key
 {
-    A      = 0,
-    B      = 1,
-    X      = 2,
-    Y      = 3,
-    LSTICK = 9,
-    RSTICK = 10,
-    L      = 4,
-    R      = 5,
-    PLUS   = 7,
-    MINUS  = 6,
-    DLEFT  = 14,
-    DUP    = 11,
-    DRIGHT = 12,
-    DDOWN  = 13,
+    A      = GLFW_GAMEPAD_BUTTON_A,
+    B      = GLFW_GAMEPAD_BUTTON_B,
+    X      = GLFW_GAMEPAD_BUTTON_X,
+    Y      = GLFW_GAMEPAD_BUTTON_Y,
+    LSTICK = GLFW_GAMEPAD_BUTTON_LEFT_THUMB,
+    RSTICK = GLFW_GAMEPAD_BUTTON_RIGHT_THUMB,
+    L      = GLFW_GAMEPAD_BUTTON_LEFT_BUMPER,
+    R      = GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER,
+    PLUS   = GLFW_GAMEPAD_BUTTON_START,
+    MINUS  = GLFW_GAMEPAD_BUTTON_BACK,
+    DLEFT  = GLFW_GAMEPAD_BUTTON_DPAD_LEFT,
+    DUP    = GLFW_GAMEPAD_BUTTON_DPAD_UP,
+    DRIGHT = GLFW_GAMEPAD_BUTTON_DPAD_RIGHT,
+    DDOWN  = GLFW_GAMEPAD_BUTTON_DPAD_DOWN,
 };
 
 struct Action

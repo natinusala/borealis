@@ -63,11 +63,10 @@ class ListItem : public View
     ListItem(std::string label, std::string description = "", std::string subLabel = "");
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp) override;
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
     void getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom, unsigned* left) override;
-    void setParent(View* parent) override;
     virtual bool onClick();
+    View* getDefaultFocus() override;
 
     void setThumbnail(Image* image);
     void setThumbnail(std::string imagePath);
@@ -183,8 +182,6 @@ class List : public BoxLayout
 {
   public:
     List(size_t defaultFocus = 0);
-
-    View* defaultFocus(View* oldFocus) override;
 
   protected:
     void customSpacing(View* current, View* next, int* spacing) override;

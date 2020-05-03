@@ -25,6 +25,7 @@
 #include <borealis/application.hpp>
 #include <borealis/box_layout.hpp>
 #include <borealis/logger.hpp>
+#include <iterator>
 
 namespace brls
 {
@@ -32,7 +33,6 @@ namespace brls
 BoxLayout::BoxLayout(BoxLayoutOrientation orientation, size_t defaultFocus)
     : orientation(orientation)
     , defaultFocusedIndex(defaultFocus)
-    , focusedIndex(defaultFocus)
 {
 }
 
@@ -48,6 +48,12 @@ void BoxLayout::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heig
 
     //Disable scissoring
     nvgRestore(vg);
+}
+
+void BoxLayout::setGravity(BoxLayoutGravity gravity)
+{
+    this->gravity = gravity;
+    this->invalidate();
 }
 
 void BoxLayout::setSpacing(unsigned spacing)
@@ -81,75 +87,55 @@ size_t BoxLayout::getViewsCount()
     return this->children.size();
 }
 
-View* BoxLayout::defaultFocus(View* oldFocus)
+View* BoxLayout::getDefaultFocus()
 {
-    for (unsigned i = 0; i < this->children.size(); i++)
+    // Focus default focus first
+    if (this->defaultFocusedIndex < this->children.size())
     {
-        View* newFocus = this->children[i]->view->requestFocus(FocusDirection::NONE, oldFocus);
+        View* newFocus = this->children[this->defaultFocusedIndex]->view->getDefaultFocus();
+
         if (newFocus)
-        {
-            this->focusedIndex = i;
             return newFocus;
-        }
+    }
+
+    // Fallback to finding the first focusable view
+    for (size_t i = 0; i < this->children.size(); i++)
+    {
+        View* newFocus = this->children[i]->view->getDefaultFocus();
+
+        if (newFocus)
+            return newFocus;
     }
 
     return nullptr;
 }
 
-View* BoxLayout::updateFocus(FocusDirection direction, View* oldFocus, bool fromUp)
+View* BoxLayout::getNextFocus(FocusDirection direction, void* parentUserData)
 {
-    // Give focus to first focusable view by default
-    if (direction == FocusDirection::NONE)
+    // Return nullptr immediately if focus direction mismatches the layout direction
+    if ((this->orientation == BoxLayoutOrientation::HORIZONTAL && direction != FocusDirection::LEFT && direction != FocusDirection::RIGHT) || (this->orientation == BoxLayoutOrientation::VERTICAL && direction != FocusDirection::UP && direction != FocusDirection::DOWN))
     {
-        View* newFocus = this->defaultFocus(oldFocus);
-        if (newFocus)
-            return newFocus;
-    }
-    // Handle directions
-    else
-    {
-        View* newFocus = nullptr;
-        // Give focus to next focusable view
-        if ((this->orientation == BoxLayoutOrientation::HORIZONTAL && direction == FocusDirection::RIGHT) || (this->orientation == BoxLayoutOrientation::VERTICAL && direction == FocusDirection::DOWN))
-        {
-            for (unsigned i = this->focusedIndex + 1; i < this->children.size(); i++)
-            {
-                newFocus = this->children[i]->view->requestFocus(FocusDirection::NONE, oldFocus);
-                if (newFocus && newFocus != oldFocus)
-                {
-                    this->focusedIndex = i;
-                    return newFocus;
-                }
-            }
-            return nullptr;
-        }
-        // Give focus to previous focusable view
-        else if ((this->orientation == BoxLayoutOrientation::HORIZONTAL && direction == FocusDirection::LEFT) || (this->orientation == BoxLayoutOrientation::VERTICAL && direction == FocusDirection::UP))
-        {
-            if (this->focusedIndex > 0)
-            {
-                for (int i = this->focusedIndex - 1; i >= 0; i--)
-                {
-                    newFocus = this->children[i]->view->requestFocus(FocusDirection::NONE, oldFocus);
-                    if (newFocus && newFocus != oldFocus)
-                    {
-                        this->focusedIndex = i;
-                        return newFocus;
-                    }
-                }
-            }
-
-            return nullptr;
-        }
+        return nullptr;
     }
 
-    // Fallback to parent
-    return View::requestFocus(direction, oldFocus);
-}
+    // Traverse the children
+    size_t offset = 1; // which way are we going in the children list
 
-void BoxLayout::setFocusedIndex(unsigned index)
-{
-    this->focusedIndex = index;
+    if ((this->orientation == BoxLayoutOrientation::HORIZONTAL && direction == FocusDirection::LEFT) || (this->orientation == BoxLayoutOrientation::VERTICAL && direction == FocusDirection::UP))
+    {
+        offset = -1;
+    }
+
+    size_t currentFocusIndex = *((size_t*)parentUserData) + offset;
+    View* currentFocus       = nullptr;
+
+    while (!currentFocus && currentFocusIndex >= 0 && currentFocusIndex < this->children.size())
+    {
+        currentFocus = this->children[currentFocusIndex]->view->getDefaultFocus();
+        currentFocusIndex += offset;
+    }
+
+    return currentFocus;
 }
 
 void BoxLayout::removeView(int index, bool free)
@@ -164,17 +150,21 @@ void BoxLayout::removeView(int index, bool free)
 
 void BoxLayout::clear(bool free)
 {
-    for (size_t i = 0; i < this->children.size(); i++)
-        this->removeView(i, free);
+    while (!this->children.empty())
+        this->removeView(0, free);
 }
 
-void BoxLayout::updateScroll(bool animated)
+void BoxLayout::updateScroll(bool animated, size_t focusedIndex)
 {
     // Don't scroll if layout hasn't been called yet
     if (this->entriesHeight == 0.0f || !this->scrollingEnabled)
         return;
 
-    View* selectedView                 = this->children[this->focusedIndex]->view;
+    // Sanity check
+    if (focusedIndex >= this->children.size())
+        return;
+
+    View* selectedView                 = this->children[focusedIndex]->view;
     int currentSelectionMiddleOnScreen = selectedView->getY() + selectedView->getHeight() / 2;
     float newScroll                    = this->scrollY - ((float)currentSelectionMiddleOnScreen - (float)this->middleY);
 
@@ -220,16 +210,6 @@ void BoxLayout::updateScroll(bool animated)
 void BoxLayout::setScrollingEnabled(bool enabled)
 {
     this->scrollingEnabled = enabled;
-}
-
-View* BoxLayout::requestFocus(FocusDirection direction, View* oldFocus, bool fromUp)
-{
-    View* newFocus = this->updateFocus(direction, oldFocus, fromUp);
-
-    if (newFocus != nullptr)
-        this->updateScroll();
-
-    return newFocus;
 }
 
 void BoxLayout::scrollAnimationTick()
@@ -286,9 +266,9 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
         }
     }
     // Horizontal orientation
-    // TODO: Make sure that spacing and margins work with horizontal
     else if (this->orientation == BoxLayoutOrientation::HORIZONTAL)
     {
+        // Layout
         int xAdvance = this->x + this->marginLeft;
         for (size_t i = 0; i < this->children.size(); i++)
         {
@@ -311,7 +291,7 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
 
             int spacing = (int)this->spacing;
 
-            View* next = i <= (this->children.size() > 1 && this->children.size() - 2) ? this->children[i + 1]->view : nullptr;
+            View* next = (this->children.size() > 1 && i <= this->children.size() - 2) ? this->children[i + 1]->view : nullptr;
 
             this->customSpacing(child->view, next, &spacing);
 
@@ -320,13 +300,45 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
 
             xAdvance += spacing + childWidth;
         }
+
+        // Apply gravity
+        // TODO: more efficient gravity implementation?
+        if (!this->children.empty())
+        {
+            switch (this->gravity)
+            {
+                case BoxLayoutGravity::RIGHT:
+                {
+                    // Take the remaining empty space between the last view's
+                    // right boundary and ours and push all views by this amount
+                    View* lastView = this->children[this->children.size() - 1]->view;
+
+                    unsigned lastViewRight = lastView->getX() + lastView->getWidth();
+                    unsigned ourRight      = this->getX() + this->getWidth();
+
+                    if (lastViewRight <= ourRight)
+                    {
+                        unsigned difference = ourRight - lastViewRight;
+
+                        for (BoxLayoutChild* child : this->children)
+                        {
+                            View* view = child->view;
+                            view->setBoundaries(
+                                view->getX() + difference,
+                                view->getY(),
+                                view->getWidth(),
+                                view->getHeight());
+                            view->invalidate();
+                        }
+                    }
+
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
     }
-
-    // Setup initial scrolling
-    if (this->firstLayout)
-        this->updateScroll(false);
-
-    this->firstLayout = false;
 }
 
 void BoxLayout::addView(View* view, bool fill)
@@ -335,9 +347,14 @@ void BoxLayout::addView(View* view, bool fill)
     child->view           = view;
     child->fill           = fill;
 
-    view->setParent(this);
-
     this->children.push_back(child);
+
+    size_t position = this->children.size() - 1;
+
+    size_t* userdata = (size_t*)malloc(sizeof(size_t));
+    *userdata        = position;
+
+    view->setParent(this, userdata);
 
     view->willAppear();
     this->invalidate();
@@ -355,11 +372,24 @@ bool BoxLayout::isEmpty()
 
 bool BoxLayout::isChildFocused()
 {
-    for (auto child : this->children)
-        if (child->view->isFocused())
-            return true;
+    return this->childFocused;
+}
 
-    return false;
+void BoxLayout::onChildFocusGained(View* child)
+{
+    size_t position = *((size_t*)child->getParentUserData());
+
+    this->childFocused = true;
+    this->updateScroll(true, position);
+
+    View::onChildFocusGained(child);
+}
+
+void BoxLayout::onChildFocusLost(View* child)
+{
+    this->childFocused = false;
+
+    View::onChildFocusLost(child);
 }
 
 BoxLayout::~BoxLayout()
@@ -370,6 +400,7 @@ BoxLayout::~BoxLayout()
         delete child->view;
         delete child;
     }
+
     this->children.clear();
 }
 
@@ -377,9 +408,7 @@ void BoxLayout::willAppear()
 {
     if (this->firstAppearance)
     {
-        this->focusedIndex = this->defaultFocusedIndex;
         this->prebakeScrolling();
-
         this->firstAppearance = false;
     }
 
@@ -389,6 +418,9 @@ void BoxLayout::willAppear()
 
 void BoxLayout::willDisappear()
 {
+    // Reset scrolling to the top
+    this->updateScroll(false, 0);
+
     for (BoxLayoutChild* child : this->children)
         child->view->willDisappear();
 }

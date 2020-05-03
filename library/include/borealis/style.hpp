@@ -43,7 +43,6 @@ class Style
         unsigned titleOffset;
 
         unsigned footerTextSize;
-        unsigned footerHintSize;
         unsigned footerTextSpacing;
 
         unsigned slideAnimation;
@@ -135,6 +134,7 @@ class Style
         unsigned listItemFontSize;
         unsigned notificationFontSize;
         unsigned dialogFontSize;
+        unsigned hintFontSize;
 
         float lineHeight;
         float notificationLineHeight;

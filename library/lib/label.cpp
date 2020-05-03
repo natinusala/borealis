@@ -64,6 +64,8 @@ Label::Label(LabelStyle labelStyle, std::string text, bool multiline)
         case LabelStyle::DIALOG:
             this->fontSize = style->Label.dialogFontSize;
             break;
+        case LabelStyle::HINT:
+            this->fontSize = style->Label.hintFontSize;
     }
 }
 
@@ -122,7 +124,7 @@ void Label::layout(NVGcontext* vg, Style* style, FontStash* stash)
         nvgTextBounds(vg, this->x, this->y, this->text.c_str(), nullptr, bounds);
 
         unsigned oldWidth = this->width;
-        this->width = bounds[2] - bounds[0]; // xmax - xmin
+        this->width       = bounds[2] - bounds[0]; // xmax - xmin
 
         // offset the position to compensate the width change
         // and keep right alignment

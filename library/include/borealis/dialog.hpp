@@ -62,7 +62,7 @@ class Dialog : public View
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
-    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override;
+    View* getDefaultFocus() override;
     virtual bool onCancel();
 
     /**

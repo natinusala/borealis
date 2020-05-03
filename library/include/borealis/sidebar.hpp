@@ -33,11 +33,6 @@ class SidebarSeparator : public View
     SidebarSeparator();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-
-    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override
-    {
-        return nullptr;
-    }
 };
 
 class Sidebar;
@@ -57,7 +52,11 @@ class SidebarItem : public View
     SidebarItem(std::string label, Sidebar* sidebar);
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override;
+
+    View* getDefaultFocus() override
+    {
+        return this;
+    }
 
     virtual bool onClick();
 
@@ -78,9 +77,6 @@ class Sidebar : public BoxLayout
   private:
     SidebarItem* currentActive = nullptr;
 
-  protected:
-    View* defaultFocus(View* oldFocus) override;
-
   public:
     Sidebar();
 
@@ -88,6 +84,11 @@ class Sidebar : public BoxLayout
     void addSeparator();
 
     void setActive(SidebarItem* item);
+
+    View* getDefaultFocus() override;
+    void onChildFocusGained(View* child) override;
+
+    size_t lastFocus = 0;
 };
 
 } // namespace brls

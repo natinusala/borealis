@@ -37,11 +37,6 @@ class Header : public View
     Header(std::string label, bool separator = true, std::string sublabel = "");
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-
-    View* requestFocus(FocusDirection direction, View* oldFocus, bool fromUp = false) override
-    {
-        return nullptr;
-    }
 };
 
 } // namespace brls

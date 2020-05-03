@@ -174,17 +174,17 @@ void AppletFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned he
     }
 }
 
-View* AppletFrame::requestFocus(FocusDirection direction, View* oldFocus, bool fromUp)
+View* AppletFrame::getDefaultFocus()
 {
-    if (fromUp)
-        return View::requestFocus(direction, oldFocus);
-    else if (this->contentView)
-        return this->contentView->requestFocus(direction, oldFocus);
+    if (this->contentView)
+        return this->contentView->getDefaultFocus();
+
     return nullptr;
 }
 
 void AppletFrame::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
+    // Icon
     if (this->icon)
     {
         if (this->headerStyle == HeaderStyle::REGULAR)
@@ -199,6 +199,7 @@ void AppletFrame::layout(NVGcontext* vg, Style* style, FontStash* stash)
         }
     }
 
+    // Content
     if (this->contentView)
     {
         if (this->headerStyle == HeaderStyle::REGULAR)
@@ -209,7 +210,15 @@ void AppletFrame::layout(NVGcontext* vg, Style* style, FontStash* stash)
         this->contentView->invalidate();
     }
 
-    this->hint->setBoundaries(this->x, this->y, this->width, this->height);
+    // Hint
+    // TODO: convert the bottom-left footer into a Label to get its width and avoid clipping with the hint
+    unsigned hintWidth = this->width - style->AppletFrame.separatorSpacing * 2 - style->AppletFrame.footerTextSpacing * 2;
+
+    this->hint->setBoundaries(
+        this->x + this->width - hintWidth - style->AppletFrame.separatorSpacing - style->AppletFrame.footerTextSpacing,
+        this->y + this->height - style->AppletFrame.footerHeight,
+        hintWidth,
+        style->AppletFrame.footerHeight);
     this->hint->invalidate();
 }
 
@@ -224,6 +233,11 @@ void AppletFrame::setContentView(View* view)
     }
 
     this->invalidate();
+}
+
+bool AppletFrame::hasContentView()
+{
+    return this->contentView;
 }
 
 void AppletFrame::setTitle(std::string title)
@@ -376,6 +390,11 @@ void AppletFrame::hide(std::function<void(void)> cb, bool animated, ViewAnimatio
 
 bool AppletFrame::onCancel()
 {
+    /*
+     * TODO: this assumes AppletFrames are used as "activities" in the app, which may be wrong
+     * so we should instead change the view stack to an "activity" stack and have them popped when
+     * the user presses B on the root view of an "activity"
+     */
     Application::popView();
     return true;
 }
