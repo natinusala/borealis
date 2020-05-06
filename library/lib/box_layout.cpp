@@ -154,81 +154,8 @@ void BoxLayout::clear(bool free)
         this->removeView(0, free);
 }
 
-void BoxLayout::updateScroll(bool animated, size_t focusedIndex)
-{
-    // Don't scroll if layout hasn't been called yet
-    if (this->entriesHeight == 0.0f || !this->scrollingEnabled)
-        return;
-
-    // Sanity check
-    if (focusedIndex >= this->children.size())
-        return;
-
-    View* selectedView                 = this->children[focusedIndex]->view;
-    int currentSelectionMiddleOnScreen = selectedView->getY() + selectedView->getHeight() / 2;
-    float newScroll                    = this->scrollY - ((float)currentSelectionMiddleOnScreen - (float)this->middleY);
-
-    // Bottom boundary
-    if ((float)this->y + newScroll + (float)this->entriesHeight < (float)this->bottomY)
-        newScroll = (float)this->height - (float)this->entriesHeight + (float)this->spacing - (float)this->marginTop - (float)this->marginBottom;
-
-    // Top boundary
-    if (newScroll > 0.0f)
-        newScroll = 0.0f;
-
-    if (newScroll == this->scrollY)
-        return;
-
-    //Start animation
-    menu_animation_ctx_tag tag = (uintptr_t) & this->scrollY;
-    menu_animation_kill_by_tag(&tag);
-
-    if (animated)
-    {
-        Style* style = Application::getStyle();
-
-        menu_animation_ctx_entry_t entry;
-        entry.cb           = [](void* userdata) {};
-        entry.duration     = style->AnimationDuration.highlight;
-        entry.easing_enum  = EASING_OUT_QUAD;
-        entry.subject      = &this->scrollY;
-        entry.tag          = tag;
-        entry.target_value = newScroll;
-        entry.tick         = [this](void* userdata) { this->scrollAnimationTick(); };
-        entry.userdata     = nullptr;
-
-        menu_animation_push(&entry);
-    }
-    else
-    {
-        this->scrollY = newScroll;
-    }
-
-    this->invalidate();
-}
-
-void BoxLayout::setScrollingEnabled(bool enabled)
-{
-    this->scrollingEnabled = enabled;
-}
-
-void BoxLayout::scrollAnimationTick()
-{
-    this->invalidate();
-}
-
-void BoxLayout::prebakeScrolling()
-{
-    // Prebaked values for scrolling
-    this->middleY       = this->y + this->height / 2;
-    this->bottomY       = this->y + this->height + this->spacing;
-    this->entriesHeight = 0.0f;
-}
-
 void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
-    this->prebakeScrolling();
-
     // Vertical orientation
     if (this->orientation == BoxLayoutOrientation::VERTICAL)
     {
@@ -240,12 +167,12 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
 
             if (child->fill)
                 child->view->setBoundaries(this->x + this->marginLeft,
-                    yAdvance + roundf(this->scrollY),
+                    yAdvance,
                     this->width - this->marginLeft - this->marginRight,
                     this->y + this->height - yAdvance - this->marginBottom);
             else
                 child->view->setBoundaries(this->x + this->marginLeft,
-                    yAdvance + roundf(this->scrollY),
+                    yAdvance,
                     this->width - this->marginLeft - this->marginRight,
                     child->view->getHeight(false));
 
@@ -377,10 +304,7 @@ bool BoxLayout::isChildFocused()
 
 void BoxLayout::onChildFocusGained(View* child)
 {
-    size_t position = *((size_t*)child->getParentUserData());
-
     this->childFocused = true;
-    this->updateScroll(true, position);
 
     View::onChildFocusGained(child);
 }
@@ -406,21 +330,12 @@ BoxLayout::~BoxLayout()
 
 void BoxLayout::willAppear()
 {
-    if (this->firstAppearance)
-    {
-        this->prebakeScrolling();
-        this->firstAppearance = false;
-    }
-
     for (BoxLayoutChild* child : this->children)
         child->view->willAppear();
 }
 
 void BoxLayout::willDisappear()
 {
-    // Reset scrolling to the top
-    this->updateScroll(false, 0);
-
     for (BoxLayoutChild* child : this->children)
         child->view->willDisappear();
 }

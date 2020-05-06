@@ -53,7 +53,6 @@ class BoxLayoutChild
 // A basic horizontal or vertical box layout :
 // - Children can currently only be stretched to full width (vertical) or height (horizontal)
 // - Only works with children with fixed width (horizontal) or height (vertical)
-// - Handles vertical scrolling only
 
 // TODO: More complex alignment and/or stretching parameters to children
 class BoxLayout : public View
@@ -66,17 +65,6 @@ class BoxLayout : public View
     unsigned middleY       = 0; // y + height/2
     unsigned bottomY       = 0; // y + height
     unsigned entriesHeight = 0; // sum of all entries heights (with spacing) + bottom margin
-
-    float scrollY = 0.0f; // all childrens are offset by this value
-
-    void updateScroll(bool animated, size_t focusedIndex);
-
-    void scrollAnimationTick();
-    void prebakeScrolling();
-
-    bool firstAppearance = true;
-
-    bool scrollingEnabled = true;
 
     BoxLayoutGravity gravity = BoxLayoutGravity::DEFAULT;
 
@@ -164,8 +152,6 @@ class BoxLayout : public View
     size_t getViewsCount();
 
     View* getChild(size_t i);
-
-    void setScrollingEnabled(bool enabled);
 
     ~BoxLayout();
 };

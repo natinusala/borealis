@@ -281,7 +281,6 @@ void Dialog::rebuildButtons()
     if (this->buttons.size() > 0)
     {
         this->verticalButtonsLayout = new BoxLayout(BoxLayoutOrientation::VERTICAL);
-        this->verticalButtonsLayout->setScrollingEnabled(false);
         this->verticalButtonsLayout->setParent(this);
 
         // Only one big button
