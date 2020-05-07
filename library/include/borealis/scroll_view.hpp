@@ -27,7 +27,20 @@ namespace brls
 // when one of its children gains focus
 class ScrollView : public View
 {
+    private:
+        View* contentView = nullptr;
 
+    public:
+        ~ScrollView();
+
+        void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
+        void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
+        void willAppear() override;
+        void willDisappear() override;
+        View* getDefaultFocus() override;
+
+        void setContentView(View* view);
+        View* getContentView();
 };
 
 } // namespace brls

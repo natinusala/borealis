@@ -177,16 +177,6 @@ class IntegerInputListItem : public InputListItem
     virtual bool onClick() override;
 };
 
-// A vertical list of various widgets, with proper margins and spacing
-// and a scroll bar
-// In practice it's a ScrollView which content view is
-// a ListContentView (BoxLayout)
-class List : public ScrollView
-{
-  public:
-    List(size_t defaultFocus = 0);
-};
-
 // The content view of lists (used internally)
 class ListContentView : public BoxLayout
 {
@@ -195,6 +185,24 @@ class ListContentView : public BoxLayout
 
   protected:
     void customSpacing(View* current, View* next, int* spacing) override;
+};
+
+// A vertical list of various widgets, with proper margins and spacing
+// and a scroll bar
+// In practice it's a ScrollView which content view is
+// a ListContentView (BoxLayout)
+class List : public ScrollView
+{
+  private:
+    ListContentView* layout;
+
+  public:
+    List(size_t defaultFocus = 0);
+    ~List();
+
+    // Wrapped BoxLayout methods
+    void addView(View* view, bool fill = false);
+    void setMargins(unsigned top, unsigned right, unsigned bottom, unsigned left);
 };
 
 } // namespace brls

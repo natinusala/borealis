@@ -558,4 +558,34 @@ ValueSelectedEvent* SelectListItem::getValueSelectedEvent()
     return &this->valueEvent;
 }
 
+List::List(size_t defaultFocus)
+{
+    this->layout = new ListContentView(defaultFocus);
+    this->layout->setParent(this);
+
+    this->setContentView(this->layout);
+}
+
+// Wrapped BoxLayout methods
+
+void List::addView(View* view, bool fill)
+{
+    this->layout->addView(view, fill);
+}
+
+void List::setMargins(unsigned top, unsigned right, unsigned bottom, unsigned left)
+{
+    this->layout->setMargins(
+        top,
+        right,
+        bottom,
+        left
+    );
+}
+
+List::~List()
+{
+    // ScrollView already deletes the content view
+}
+
 } // namespace brls
