@@ -62,9 +62,7 @@ class BoxLayout : public View
 
     unsigned spacing = 0;
 
-    unsigned middleY       = 0; // y + height/2
-    unsigned bottomY       = 0; // y + height
-    unsigned entriesHeight = 0; // sum of all entries heights (with spacing) + bottom margin
+    bool resize = false; // should the view be resized according to children size after a layout?
 
     BoxLayoutGravity gravity = BoxLayoutGravity::DEFAULT;
 
@@ -87,6 +85,7 @@ class BoxLayout : public View
 
   public:
     BoxLayout(BoxLayoutOrientation orientation, size_t defaultFocus = 0);
+    ~BoxLayout();
 
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
@@ -153,7 +152,12 @@ class BoxLayout : public View
 
     View* getChild(size_t i);
 
-    ~BoxLayout();
+    /**
+     * If enabled, will force the layout to resize itself
+     * to match the children size
+     * Mandatory for using in a ScrollView
+     */
+    void setResize(bool resize);
 };
 
 } // namespace brls

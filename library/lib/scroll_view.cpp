@@ -24,6 +24,8 @@
 namespace brls
 {
 
+// TODO: update scrolling when resizing window (apply new scrollY)
+
 void ScrollView::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
     if (!this->contentView)
@@ -47,6 +49,8 @@ unsigned ScrollView::getYCenter(View* view)
 
 void ScrollView::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
+    this->prebakeScrolling();
+
     // Layout content view
     if (this->contentView)
     {
@@ -56,29 +60,26 @@ void ScrollView::layout(NVGcontext* vg, Style* style, FontStash* stash)
             this->getWidth(),
             this->getHeight()
         );
-        this->contentView->layout(vg, style, stash); // call layout directly to update height
+        this->contentView->invalidate();
     }
 
-    // Compute yCenter
-    if (!this->ready)
-    {
-        this->yCenter = this->getYCenter(this);
-        this->ready = true;
-    }
-
-    // TODO: find a way to reset scrolling (without animating) without having an infinite layout -> scroll reset -> layout -> scroll reset... loop (cancel animation too!)
+    this->ready = true;
 }
 
 void ScrollView::willAppear()
 {
+    this->prebakeScrolling();
+
     if (this->contentView)
         this->contentView->willAppear();
-
-    // TODO: reset scrolling (cancel animation too!)
 }
 
 void ScrollView::willDisappear()
 {
+    // Reset scrolling to the top
+    this->startScrolling(false, 0.0f);
+
+    // Send event to content view
     if (this->contentView)
         this->contentView->willDisappear();
 }
@@ -106,6 +107,72 @@ View* ScrollView::getContentView()
     return this->contentView;
 }
 
+void ScrollView::prebakeScrolling()
+{
+    // Prebaked values for scrolling
+    this->middleY = this->y + this->height / 2;
+    this->bottomY = this->y + this->height;
+}
+
+void ScrollView::updateScrolling(bool animated)
+{
+    // Don't scroll if layout hasn't been called yet
+    if (!this->ready || !this->contentView)
+        return;
+
+    View* focusedView                  = Application::getCurrentFocus();
+    int currentSelectionMiddleOnScreen = focusedView->getY() + focusedView->getHeight() / 2;
+    float newScroll                    = this->scrollY - ((float)currentSelectionMiddleOnScreen - (float)this->middleY);
+
+    // Bottom boundary
+    if ((float)this->y + newScroll + (float)this->contentView->getHeight() < (float)this->bottomY)
+        newScroll = (float)this->height - (float)this->contentView->getHeight();
+
+    // Top boundary
+    if (newScroll > 0.0f)
+        newScroll = 0.0f;
+
+    //Start animation
+    this->startScrolling(animated, newScroll);
+}
+
+void ScrollView::startScrolling(bool animated, float newScroll)
+{
+    if (newScroll == this->scrollY)
+        return;
+
+    menu_animation_ctx_tag tag = (uintptr_t) & this->scrollY;
+    menu_animation_kill_by_tag(&tag);
+
+    if (animated)
+    {
+        Style* style = Application::getStyle();
+
+        menu_animation_ctx_entry_t entry;
+        entry.cb           = [](void* userdata) {};
+        entry.duration     = style->AnimationDuration.highlight;
+        entry.easing_enum  = EASING_OUT_QUAD;
+        entry.subject      = &this->scrollY;
+        entry.tag          = tag;
+        entry.target_value = newScroll;
+        entry.tick         = [this](void* userdata) { this->scrollAnimationTick(); };
+        entry.userdata     = nullptr;
+
+        menu_animation_push(&entry);
+    }
+    else
+    {
+        this->scrollY = newScroll;
+    }
+
+    this->invalidate();
+}
+
+void ScrollView::scrollAnimationTick()
+{
+    this->invalidate();
+}
+
 void ScrollView::onChildFocusGained(View* child)
 {
     // layout hasn't been called yet, don't scroll
@@ -117,28 +184,8 @@ void ScrollView::onChildFocusGained(View* child)
     if (child != this->contentView)
         return;
 
-    // Parameter child is the direct child of ours that gained focus,
-    // so this->contentView in our case
-    // We need to get the actually focused view instead
-    View* focused = Application::getCurrentFocus();
-
-    if (!focused)
-        return;
-
-    // Compute scroll
-    unsigned focusedYCenter = this->getYCenter(focused);
-
-    // TODO: animate (cancel animation too!)
-
-    // TODO: get content view height and set scrollY accordingly
-
-    // Boundaries check
-    if (this->scrollY > 0.0f)
-        this->scrollY = 0.0f;
-
-    // TODO: bottom boundary check (needs accurate content view height)
-
-    this->invalidate(); // TODO: remove once animated, if animation there is
+    // Start scrolling
+    this->updateScrolling(true);
 
     View::onChildFocusGained(child);
 }

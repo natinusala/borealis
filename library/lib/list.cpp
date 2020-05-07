@@ -561,6 +561,8 @@ ValueSelectedEvent* SelectListItem::getValueSelectedEvent()
 List::List(size_t defaultFocus)
 {
     this->layout = new ListContentView(defaultFocus);
+
+    this->layout->setResize(true);
     this->layout->setParent(this);
 
     this->setContentView(this->layout);

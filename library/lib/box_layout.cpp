@@ -152,7 +152,9 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
     // Vertical orientation
     if (this->orientation == BoxLayoutOrientation::VERTICAL)
     {
+        unsigned entriesHeight = 0;
         int yAdvance = this->y + this->marginTop;
+
         for (size_t i = 0; i < this->children.size(); i++)
         {
             BoxLayoutChild* child = this->children[i];
@@ -181,9 +183,16 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
                 spacing = 0;
 
             if (!child->view->isHidden())
-                this->entriesHeight += spacing + childHeight;
+                entriesHeight += spacing + childHeight;
+
             yAdvance += spacing + childHeight;
         }
+
+        // TODO: apply gravity
+
+        // Update height if needed
+        if (this->resize)
+            this->setHeight(entriesHeight - spacing + this->marginTop + this->marginBottom);
     }
     // Horizontal orientation
     else if (this->orientation == BoxLayoutOrientation::HORIZONTAL)
@@ -258,7 +267,15 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
                     break;
             }
         }
+
+        // TODO: update width if needed (introduce entriesWidth)
     }
+}
+
+void BoxLayout::setResize(bool resize)
+{
+    this->resize = resize;
+    this->invalidate();
 }
 
 void BoxLayout::addView(View* view, bool fill)

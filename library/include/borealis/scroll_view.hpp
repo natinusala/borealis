@@ -32,11 +32,17 @@ class ScrollView : public View
 
         bool ready = false; // has layout been called at least once?
 
-        unsigned yCenter = 0;
+        unsigned middleY       = 0; // y + height/2
+        unsigned bottomY       = 0; // y + height
 
-        float scrollY = 0.0f; // content view is scrolled by this amount (animated)
+        float scrollY = 0.0f; // content view is scrolled by this amount (float because animated)
 
         unsigned getYCenter(View* view);
+
+        void prebakeScrolling();
+        void updateScrolling(bool animated);
+        void startScrolling(bool animated, float newScroll);
+        void scrollAnimationTick();
 
     public:
         ~ScrollView();

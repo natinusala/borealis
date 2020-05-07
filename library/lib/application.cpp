@@ -669,15 +669,14 @@ void Application::giveFocus(View* view)
         if (oldFocus)
             oldFocus->onFocusLost();
 
+        Application::currentFocus = newFocus;
+        Application::globalFocusChangeEvent.fire(newFocus);
+
         if (newFocus)
         {
             newFocus->onFocusGained();
             Logger::debug("Giving focus to %s", newFocus->describe().c_str());
         }
-
-        Application::currentFocus = newFocus;
-
-        Application::globalFocusChangeEvent.fire(newFocus);
     }
 }
 
