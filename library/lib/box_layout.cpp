@@ -153,7 +153,7 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
     if (this->orientation == BoxLayoutOrientation::VERTICAL)
     {
         unsigned entriesHeight = 0;
-        int yAdvance = this->y + this->marginTop;
+        int yAdvance           = this->y + this->marginTop;
 
         for (size_t i = 0; i < this->children.size(); i++)
         {

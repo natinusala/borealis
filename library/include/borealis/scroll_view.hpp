@@ -27,36 +27,35 @@ namespace brls
 // when one of its children gains focus
 class ScrollView : public View
 {
-    private:
-        View* contentView = nullptr;
+  private:
+    View* contentView = nullptr;
 
-        bool ready = false; // has layout been called at least once?
+    bool ready = false; // has layout been called at least once?
 
-        unsigned middleY       = 0; // y + height/2
-        unsigned bottomY       = 0; // y + height
+    unsigned middleY = 0; // y + height/2
+    unsigned bottomY = 0; // y + height
 
-        float scrollY = 0.0f; // content view is scrolled by this amount (float because animated)
+    float scrollY = 0.0f; // content view is scrolled by this amount (float because animated)
 
-        unsigned getYCenter(View* view);
+    unsigned getYCenter(View* view);
 
-        void prebakeScrolling();
-        void updateScrolling(bool animated);
-        void startScrolling(bool animated, float newScroll);
-        void scrollAnimationTick();
+    void prebakeScrolling();
+    void updateScrolling(bool animated);
+    void startScrolling(bool animated, float newScroll);
+    void scrollAnimationTick();
 
-    public:
-        ~ScrollView();
+  public:
+    ~ScrollView();
 
-        void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-        void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
-        void willAppear() override;
-        void willDisappear() override;
-        View* getDefaultFocus() override;
-        void onChildFocusGained(View* child) override;
+    void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
+    void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
+    void willAppear() override;
+    void willDisappear() override;
+    View* getDefaultFocus() override;
+    void onChildFocusGained(View* child) override;
 
-        void setContentView(View* view);
-        View* getContentView();
+    void setContentView(View* view);
+    View* getContentView();
 };
 
 } // namespace brls
-

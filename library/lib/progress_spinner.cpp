@@ -26,7 +26,7 @@
 namespace brls
 {
 
-ProgressSpinner::ProgressSpinner() { }
+ProgressSpinner::ProgressSpinner() {}
 
 void ProgressSpinner::restartAnimation()
 {

@@ -38,7 +38,7 @@ class Rectangle : public View
 
     void setColor(NVGcolor color);
 
-    ~Rectangle() { }
+    ~Rectangle() {}
 
   private:
     NVGcolor color = nvgRGB(0, 0, 255);

@@ -16,10 +16,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <borealis/scroll_view.hpp>
-#include <borealis/application.hpp>
-
 #include <math.h>
+
+#include <borealis/application.hpp>
+#include <borealis/scroll_view.hpp>
 
 namespace brls
 {
@@ -58,8 +58,7 @@ void ScrollView::layout(NVGcontext* vg, Style* style, FontStash* stash)
             this->getX(),
             this->getY() + roundf(this->scrollY),
             this->getWidth(),
-            this->getHeight()
-        );
+            this->getHeight());
         this->contentView->invalidate();
     }
 
@@ -194,8 +193,8 @@ ScrollView::~ScrollView()
 {
     if (this->contentView)
     {
-         this->contentView->willDisappear();
-         delete this->contentView;
+        this->contentView->willDisappear();
+        delete this->contentView;
     }
 }
 

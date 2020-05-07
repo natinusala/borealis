@@ -581,8 +581,7 @@ void List::setMargins(unsigned top, unsigned right, unsigned bottom, unsigned le
         top,
         right,
         bottom,
-        left
-    );
+        left);
 }
 
 List::~List()

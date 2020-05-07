@@ -81,7 +81,7 @@ class BoxLayout : public View
       * Should the BoxLayout apply spacing after
       * this view?
       */
-    virtual void customSpacing(View* current, View* next, int* spacing) { }
+    virtual void customSpacing(View* current, View* next, int* spacing) {}
 
   public:
     BoxLayout(BoxLayoutOrientation orientation, size_t defaultFocus = 0);
