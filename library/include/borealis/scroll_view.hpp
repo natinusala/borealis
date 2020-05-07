@@ -21,7 +21,7 @@
 namespace brls
 {
 
-// TODO: horizontal scrolling
+// TODO: horizontal scrolling, either in ScrollView or in a separate class (like Android has)
 
 // A view that automatically scrolls vertically
 // when one of its children gains focus
@@ -29,6 +29,14 @@ class ScrollView : public View
 {
     private:
         View* contentView = nullptr;
+
+        bool ready = false; // has layout been called at least once?
+
+        unsigned yCenter = 0;
+
+        float scrollY = 0.0f; // content view is scrolled by this amount (animated)
+
+        unsigned getYCenter(View* view);
 
     public:
         ~ScrollView();
@@ -38,6 +46,7 @@ class ScrollView : public View
         void willAppear() override;
         void willDisappear() override;
         View* getDefaultFocus() override;
+        void onChildFocusGained(View* child) override;
 
         void setContentView(View* view);
         View* getContentView();

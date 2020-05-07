@@ -17,34 +17,64 @@
 */
 
 #include <borealis/scroll_view.hpp>
+#include <borealis/application.hpp>
+
+#include <math.h>
 
 namespace brls
 {
 
 void ScrollView::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
-    if (this->contentView)
-        this->contentView->frame(ctx);
+    if (!this->contentView)
+        return;
+
+    // Enable scissoring
+    nvgSave(vg);
+    nvgScissor(vg, x, y, this->width, this->height);
+
+    // Draw content view
+    this->contentView->frame(ctx);
+
+    //Disable scissoring
+    nvgRestore(vg);
+}
+
+unsigned ScrollView::getYCenter(View* view)
+{
+    return view->getY() + view->getHeight() / 2;
 }
 
 void ScrollView::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
+    // Layout content view
     if (this->contentView)
     {
         this->contentView->setBoundaries(
             this->getX(),
-            this->getY(),
+            this->getY() + roundf(this->scrollY),
             this->getWidth(),
             this->getHeight()
         );
-        this->contentView->invalidate();
+        this->contentView->layout(vg, style, stash); // call layout directly to update height
     }
+
+    // Compute yCenter
+    if (!this->ready)
+    {
+        this->yCenter = this->getYCenter(this);
+        this->ready = true;
+    }
+
+    // TODO: find a way to reset scrolling (without animating) without having an infinite layout -> scroll reset -> layout -> scroll reset... loop (cancel animation too!)
 }
 
 void ScrollView::willAppear()
 {
     if (this->contentView)
         this->contentView->willAppear();
+
+    // TODO: reset scrolling (cancel animation too!)
 }
 
 void ScrollView::willDisappear()
@@ -74,6 +104,43 @@ void ScrollView::setContentView(View* view)
 View* ScrollView::getContentView()
 {
     return this->contentView;
+}
+
+void ScrollView::onChildFocusGained(View* child)
+{
+    // layout hasn't been called yet, don't scroll
+    if (!this->ready)
+        return;
+
+    // Safety check to ensure that we don't have
+    // two children (setContentView called twice)
+    if (child != this->contentView)
+        return;
+
+    // Parameter child is the direct child of ours that gained focus,
+    // so this->contentView in our case
+    // We need to get the actually focused view instead
+    View* focused = Application::getCurrentFocus();
+
+    if (!focused)
+        return;
+
+    // Compute scroll
+    unsigned focusedYCenter = this->getYCenter(focused);
+
+    // TODO: animate (cancel animation too!)
+
+    // TODO: get content view height and set scrollY accordingly
+
+    // Boundaries check
+    if (this->scrollY > 0.0f)
+        this->scrollY = 0.0f;
+
+    // TODO: bottom boundary check (needs accurate content view height)
+
+    this->invalidate(); // TODO: remove once animated, if animation there is
+
+    View::onChildFocusGained(child);
 }
 
 ScrollView::~ScrollView()

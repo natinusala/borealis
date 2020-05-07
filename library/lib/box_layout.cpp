@@ -38,16 +38,9 @@ BoxLayout::BoxLayout(BoxLayoutOrientation orientation, size_t defaultFocus)
 
 void BoxLayout::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
-    // Enable scissoring
-    nvgSave(vg);
-    nvgScissor(vg, x, y, this->width, this->height);
-
     // Draw children
     for (BoxLayoutChild* child : this->children)
         child->view->frame(ctx);
-
-    //Disable scissoring
-    nvgRestore(vg);
 }
 
 void BoxLayout::setGravity(BoxLayoutGravity gravity)
