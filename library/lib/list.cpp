@@ -33,7 +33,7 @@
 namespace brls
 {
 
-List::List(size_t defaultFocus)
+ListContentView::ListContentView(size_t defaultFocus)
     : BoxLayout(BoxLayoutOrientation::VERTICAL, defaultFocus)
 {
     Style* style = Application::getStyle();
@@ -41,7 +41,7 @@ List::List(size_t defaultFocus)
     this->setSpacing(style->List.spacing);
 }
 
-void List::customSpacing(View* current, View* next, int* spacing)
+void ListContentView::customSpacing(View* current, View* next, int* spacing)
 {
     // Don't add spacing to the first list item
     // if it doesn't have a description and the second one is a

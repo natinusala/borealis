@@ -23,6 +23,7 @@
 #include <borealis/image.hpp>
 #include <borealis/label.hpp>
 #include <borealis/rectangle.hpp>
+#include <borealis/scroll_view.hpp>
 #include <string>
 
 namespace brls
@@ -178,10 +179,19 @@ class IntegerInputListItem : public InputListItem
 
 // A vertical list of various widgets, with proper margins and spacing
 // and a scroll bar
-class List : public BoxLayout
+// In practice it's a ScrollView which content view is
+// a ListContentView (BoxLayout)
+class List : public ScrollView
 {
   public:
     List(size_t defaultFocus = 0);
+};
+
+// The content view of lists (used internally)
+class ListContentView : public BoxLayout
+{
+  public:
+    ListContentView(size_t defaultFocus = 0);
 
   protected:
     void customSpacing(View* current, View* next, int* spacing) override;
