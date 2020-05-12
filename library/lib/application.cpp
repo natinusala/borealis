@@ -812,6 +812,8 @@ void Application::onWindowSizeChanged()
     {
         view->setBoundaries(0, 0, Application::contentWidth, Application::contentHeight);
         view->invalidate();
+
+        view->onWindowSizeChanged();
     }
 
     Application::resizeNotificationManager();

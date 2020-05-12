@@ -52,14 +52,21 @@ void ScrollView::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
     this->prebakeScrolling();
 
+    if (this->updateScrollingOnNextLayout)
+    {
+        this->updateScrollingOnNextLayout = false;
+        this->updateScrolling(false);
+    }
+
     // Layout content view
     if (this->contentView)
     {
+        unsigned contentHeight = this->contentView->getHeight();
         this->contentView->setBoundaries(
             this->getX(),
-            this->getY() + roundf(this->scrollY),
+            this->getY() - roundf(this->scrollY * (float)contentHeight),
             this->getWidth(),
-            this->getHeight());
+            contentHeight);
         this->contentView->invalidate();
     }
 
@@ -120,17 +127,21 @@ void ScrollView::updateScrolling(bool animated)
     if (!this->ready || !this->contentView)
         return;
 
+    float contentHeight                = (float)this->contentView->getHeight();
     View* focusedView                  = Application::getCurrentFocus();
     int currentSelectionMiddleOnScreen = focusedView->getY() + focusedView->getHeight() / 2;
-    float newScroll                    = this->scrollY - ((float)currentSelectionMiddleOnScreen - (float)this->middleY);
+    float newScroll                    = -(this->scrollY * contentHeight) - ((float)currentSelectionMiddleOnScreen - (float)this->middleY);
 
     // Bottom boundary
-    if ((float)this->y + newScroll + (float)this->contentView->getHeight() < (float)this->bottomY)
-        newScroll = (float)this->height - (float)this->contentView->getHeight();
+    if ((float)this->y + newScroll + contentHeight < (float)this->bottomY)
+        newScroll = (float)this->height - contentHeight;
 
     // Top boundary
     if (newScroll > 0.0f)
         newScroll = 0.0f;
+
+    // Apply 0.0f -> 1.0f scale
+    newScroll = abs(newScroll) / contentHeight;
 
     //Start animation
     this->startScrolling(animated, newScroll);
@@ -188,6 +199,14 @@ void ScrollView::onChildFocusGained(View* child)
     this->updateScrolling(true);
 
     View::onChildFocusGained(child);
+}
+
+void ScrollView::onWindowSizeChanged()
+{
+    this->updateScrollingOnNextLayout = true;
+
+    if (this->contentView)
+        this->contentView->onWindowSizeChanged();
 }
 
 ScrollView::~ScrollView()

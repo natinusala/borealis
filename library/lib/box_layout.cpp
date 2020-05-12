@@ -350,4 +350,10 @@ void BoxLayout::willDisappear()
         child->view->willDisappear();
 }
 
+void BoxLayout::onWindowSizeChanged()
+{
+    for (BoxLayoutChild* child : this->children)
+        child->view->onWindowSizeChanged();
+}
+
 } // namespace brls

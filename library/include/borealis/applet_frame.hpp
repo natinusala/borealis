@@ -71,6 +71,7 @@ class AppletFrame : public View
     void willDisappear() override;
     void show(std::function<void(void)> cb, bool animate = true, ViewAnimation animation = ViewAnimation::FADE) override;
     void hide(std::function<void(void)> cb, bool animated = true, ViewAnimation animation = ViewAnimation::FADE) override;
+    void onWindowSizeChanged() override;
 
     void setTitle(std::string title);
     void setFooterText(std::string footerText);

@@ -379,6 +379,15 @@ class View
             this->getParent()->onChildFocusLost(this);
     }
 
+    /**
+     * Fired when the window size changes
+     * Not guaranteed to be called before or after layout()
+     */
+    virtual void onWindowSizeChanged()
+    {
+      // Nothing by default
+    }
+
     GenericEvent* getFocusEvent();
 
     float alpha = 1.0f;

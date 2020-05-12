@@ -35,7 +35,9 @@ class ScrollView : public View
     unsigned middleY = 0; // y + height/2
     unsigned bottomY = 0; // y + height
 
-    float scrollY = 0.0f; // content view is scrolled by this amount (float because animated)
+    float scrollY = 0.0f; // from 0.0f to 1.0f, in % of content view height
+
+    bool updateScrollingOnNextLayout = false;
 
     unsigned getYCenter(View* view);
 
@@ -53,6 +55,7 @@ class ScrollView : public View
     void willDisappear() override;
     View* getDefaultFocus() override;
     void onChildFocusGained(View* child) override;
+    void onWindowSizeChanged() override;
 
     void setContentView(View* view);
     View* getContentView();

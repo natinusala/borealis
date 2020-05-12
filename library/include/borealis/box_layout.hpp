@@ -95,6 +95,7 @@ class BoxLayout : public View
     void onChildFocusLost(View* child) override;
     void willAppear() override;
     void willDisappear() override;
+    void onWindowSizeChanged() override;
 
     /**
      * Sets gravity

@@ -399,4 +399,16 @@ bool AppletFrame::onCancel()
     return true;
 }
 
+void AppletFrame::onWindowSizeChanged()
+{
+    if (this->contentView)
+        this->contentView->onWindowSizeChanged();
+
+    if (this->icon)
+        this->icon->onWindowSizeChanged();
+
+    if (this->hint)
+        this->hint->onWindowSizeChanged();
+}
+
 } // namespace brls

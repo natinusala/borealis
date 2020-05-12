@@ -84,8 +84,7 @@ int main(int argc, char* argv[])
 
     brls::SelectListItem* jankItem = new brls::SelectListItem(
         "User Interface Jank",
-        { "Native", "Minimal", "Regular", "Maximum", "SX OS", "Windows Vista", "iOS 14" }
-    );
+        { "Native", "Minimal", "Regular", "Maximum", "SX OS", "Windows Vista", "iOS 14" });
 
     brls::ListItem* crashItem = new brls::ListItem("Divide by 0", "Can the Switch do it?");
     crashItem->getClickEvent()->subscribe([](brls::View* view) { brls::Application::crash("The software was closed because an error occured:\nSIGABRT (signal 6)"); });
