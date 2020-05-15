@@ -131,7 +131,7 @@ bool ScrollView::shouldBlockFocusChange(View* newFocus, FocusDirection direction
         if (direction == FocusDirection::UP)
             speed = -speed;
 
-        float newScroll = this->scrollY + (float) speed;
+        float newScroll = this->scrollY + (float)speed;
 
         this->startScrolling(true, newScroll);
 

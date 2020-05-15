@@ -320,7 +320,7 @@ void BoxLayout::onChildFocusGained(View* child)
     // Remember focus if needed
     if (this->rememberFocus)
     {
-        size_t index = *((size_t*) child->getParentUserData());
+        size_t index              = *((size_t*)child->getParentUserData());
         this->defaultFocusedIndex = index;
     }
 

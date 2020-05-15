@@ -395,7 +395,7 @@ class View
      */
     virtual bool shouldBlockFocusChange(View* newFocus, FocusDirection direction)
     {
-      return false;
+        return false;
     }
 
     GenericEvent* getFocusEvent();

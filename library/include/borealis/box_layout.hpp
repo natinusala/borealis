@@ -168,7 +168,6 @@ class BoxLayout : public View
      * view (until the layout disappears)?
      */
     void setRememberFocus(bool rememberFocus);
-
 };
 
 } // namespace brls
