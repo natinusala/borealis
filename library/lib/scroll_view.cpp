@@ -30,6 +30,7 @@ namespace brls
 // TODO: cleanup that window resize situation - we only need to apply 0 -> 1 scale on window size change
 // TODO: remove all useless attributes and methods after that
 // TODO: fix that key repetition situation
+// TODO: allow scrolling when nothing is to be focused but there is still content (like a text paragraph)
 
 void ScrollView::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
