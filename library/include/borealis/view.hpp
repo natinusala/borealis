@@ -388,6 +388,16 @@ class View
         // Nothing by default
     }
 
+    /**
+     * Called before a focus change, on the new focus's parent and upwards
+     * The focus change will be aborted if any of the views return true while
+     * traversing the tree (no wiggle animation played)
+     */
+    virtual bool shouldBlockFocusChange(View* newFocus, FocusDirection direction)
+    {
+      return false;
+    }
+
     GenericEvent* getFocusEvent();
 
     float alpha = 1.0f;

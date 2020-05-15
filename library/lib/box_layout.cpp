@@ -32,6 +32,7 @@ namespace brls
 
 BoxLayout::BoxLayout(BoxLayoutOrientation orientation, size_t defaultFocus)
     : orientation(orientation)
+    , originalDefaultFocus(defaultFocus)
     , defaultFocusedIndex(defaultFocus)
 {
 }
@@ -316,6 +317,13 @@ void BoxLayout::onChildFocusGained(View* child)
 {
     this->childFocused = true;
 
+    // Remember focus if needed
+    if (this->rememberFocus)
+    {
+        size_t index = *((size_t*) child->getParentUserData());
+        this->defaultFocusedIndex = index;
+    }
+
     View::onChildFocusGained(child);
 }
 
@@ -348,12 +356,21 @@ void BoxLayout::willDisappear()
 {
     for (BoxLayoutChild* child : this->children)
         child->view->willDisappear();
+
+    // Reset default focus to original one if needed
+    if (this->rememberFocus)
+        this->defaultFocusedIndex = this->originalDefaultFocus;
 }
 
 void BoxLayout::onWindowSizeChanged()
 {
     for (BoxLayoutChild* child : this->children)
         child->view->onWindowSizeChanged();
+}
+
+void BoxLayout::setRememberFocus(bool remember)
+{
+    this->rememberFocus = remember;
 }
 
 } // namespace brls

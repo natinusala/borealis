@@ -21,11 +21,15 @@
 #include <borealis/application.hpp>
 #include <borealis/scroll_view.hpp>
 
+#define SCROLLING_SPEED 10 // TODO: make this framerate independent
+
 namespace brls
 {
 
-// TODO: update scrolling when resizing window (apply new scrollY)
-// TODO: fix Dropdown scrolling glitch when closing and opening with the last element selected
+// TODO: do the next focused view cache in Application
+// TODO: cleanup that window resize situation - we only need to apply 0 -> 1 scale on window size change
+// TODO: remove all useless attributes and methods after that
+// TODO: fix that key repetition situation
 
 void ScrollView::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
@@ -64,7 +68,7 @@ void ScrollView::layout(NVGcontext* vg, Style* style, FontStash* stash)
         unsigned contentHeight = this->contentView->getHeight();
         this->contentView->setBoundaries(
             this->getX(),
-            this->getY() - roundf(this->scrollY * (float)contentHeight),
+            this->getY() - roundf(this->scrollY),
             this->getWidth(),
             contentHeight);
         this->contentView->invalidate();
@@ -77,8 +81,13 @@ void ScrollView::willAppear()
 {
     this->prebakeScrolling();
 
-    // Reset scrolling to the top
-    this->startScrolling(false, 0.0f);
+    // Reset scrolling to the top if we disappeared
+    // We don't want to do it in willDisappear because
+    // it might happen _during_ animations and produce graphical glitches
+    if (this->disappeared)
+        this->startScrolling(false, 0.0f);
+
+    this->disappeared = false;
 
     if (this->contentView)
         this->contentView->willAppear();
@@ -89,11 +98,47 @@ void ScrollView::willDisappear()
     // Send event to content view
     if (this->contentView)
         this->contentView->willDisappear();
+
+    this->disappeared = true;
 }
 
 View* ScrollView::getDefaultFocus()
 {
     return this->contentView;
+}
+
+bool ScrollView::shouldBlockFocusChange(View* newFocus, FocusDirection direction)
+{
+    /*
+        Main scrolling logic
+        Ensure that the view to be focused is fully visible
+            - If yes, don't block focus change
+            - If not, block focus change and scroll a little bit
+    */
+
+    Style* style = Application::getStyle();
+
+    unsigned highlightSize  = style->Highlight.strokeWidth + style->Highlight.shadowWidth;
+    int newFocusTop         = newFocus->getY() - highlightSize;
+    unsigned newFocusBottom = newFocusTop + newFocus->getHeight() + highlightSize * 2;
+
+    if (newFocusTop < this->getY() || newFocusBottom > this->bottomY)
+    {
+        // Scrolling time~
+        int speed = SCROLLING_SPEED;
+
+        if (direction == FocusDirection::UP)
+            speed = -speed;
+
+        float newScroll = this->scrollY + (float) speed;
+
+        this->startScrolling(true, newScroll);
+
+        return true;
+    }
+
+    // All good
+    return false;
 }
 
 void ScrollView::setContentView(View* view)
@@ -114,14 +159,14 @@ View* ScrollView::getContentView()
     return this->contentView;
 }
 
-void ScrollView::prebakeScrolling()
+void ScrollView::prebakeScrolling() // TODO: adjust that for new system (remove method?)
 {
     // Prebaked values for scrolling
     this->middleY = this->y + this->height / 2;
     this->bottomY = this->y + this->height;
 }
 
-void ScrollView::updateScrolling(bool animated)
+void ScrollView::updateScrolling(bool animated) // TODO: adjust that for new system (remove method?)
 {
     // Don't scroll if layout hasn't been called yet
     if (!this->ready || !this->contentView)
@@ -184,26 +229,9 @@ void ScrollView::scrollAnimationTick()
     this->invalidate();
 }
 
-void ScrollView::onChildFocusGained(View* child)
-{
-    // layout hasn't been called yet, don't scroll
-    if (!this->ready)
-        return;
-
-    // Safety check to ensure that we don't have
-    // two children (setContentView called twice)
-    if (child != this->contentView)
-        return;
-
-    // Start scrolling
-    this->updateScrolling(true);
-
-    View::onChildFocusGained(child);
-}
-
 void ScrollView::onWindowSizeChanged()
 {
-    this->updateScrollingOnNextLayout = true;
+    this->updateScrollingOnNextLayout = true; // TODO: adjust that for new system
 
     if (this->contentView)
         this->contentView->onWindowSizeChanged();

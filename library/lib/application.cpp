@@ -445,6 +445,7 @@ void Application::navigate(FocusDirection direction)
         return;
 
     // Get next view to focus by traversing the views tree upwards
+    // TODO: cache next focusin the given direction to avoid traversing the tree every time key is pressed
     View* nextFocus = currentFocus->getParent()->getNextFocus(direction, currentFocus->getParentUserData());
 
     while (!nextFocus) // stop when we find a view to focus
@@ -462,6 +463,31 @@ void Application::navigate(FocusDirection direction)
         Application::currentFocus->shakeHighlight(direction);
         return;
     }
+
+    // See if focus event should be aborted
+    bool abort = false;
+
+    if (nextFocus->hasParent())
+    {
+        View* currentView = nextFocus->getParent();
+
+        while (currentView)
+        {
+            if (currentView->shouldBlockFocusChange(nextFocus, direction))
+            {
+                abort = true;
+                break;
+            }
+
+            if (currentView->hasParent())
+                currentView = currentView->getParent();
+            else
+                currentView = nullptr;
+        }
+    }
+
+    if (abort)
+        return;
 
     // Otherwise give it focus
     Application::giveFocus(nextFocus);

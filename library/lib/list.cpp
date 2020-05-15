@@ -39,6 +39,7 @@ ListContentView::ListContentView(size_t defaultFocus)
     Style* style = Application::getStyle();
     this->setMargins(style->List.marginTopBottom, style->List.marginLeftRight, style->List.marginTopBottom, style->List.marginLeftRight);
     this->setSpacing(style->List.spacing);
+    this->setRememberFocus(true);
 }
 
 void ListContentView::customSpacing(View* current, View* next, int* spacing)
