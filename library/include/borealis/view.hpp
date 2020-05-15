@@ -385,7 +385,7 @@ class View
      */
     virtual void onWindowSizeChanged()
     {
-      // Nothing by default
+        // Nothing by default
     }
 
     GenericEvent* getFocusEvent();
