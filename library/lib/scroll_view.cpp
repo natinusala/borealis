@@ -77,15 +77,15 @@ void ScrollView::willAppear()
 {
     this->prebakeScrolling();
 
+    // Reset scrolling to the top
+    this->startScrolling(false, 0.0f);
+
     if (this->contentView)
         this->contentView->willAppear();
 }
 
 void ScrollView::willDisappear()
 {
-    // Reset scrolling to the top
-    this->startScrolling(false, 0.0f);
-
     // Send event to content view
     if (this->contentView)
         this->contentView->willDisappear();
