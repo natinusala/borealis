@@ -31,6 +31,7 @@ namespace brls
 // TODO: remove all useless attributes and methods after that
 // TODO: fix that key repetition situation
 // TODO: allow scrolling when nothing is to be focused but there is still content (like a text paragraph)
+// TODO: add scrolling behaviors: center aligned (for sidebar) and focus aligned (lists)
 
 void ScrollView::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
