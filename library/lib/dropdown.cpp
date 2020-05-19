@@ -187,22 +187,22 @@ void Dropdown::open(std::string title, std::vector<std::string> values, ValueSel
     Application::pushView(dropdown);
 }
 
-void Dropdown::willAppear()
+void Dropdown::willAppear(bool resetState)
 {
     if (this->list)
-        this->list->willAppear();
+        this->list->willAppear(resetState);
 
     if (this->hint)
-        this->hint->willAppear();
+        this->hint->willAppear(resetState);
 }
 
-void Dropdown::willDisappear()
+void Dropdown::willDisappear(bool resetState)
 {
     if (this->list)
-        this->list->willDisappear();
+        this->list->willDisappear(resetState);
 
     if (this->hint)
-        this->hint->willDisappear();
+        this->hint->willDisappear(resetState);
 }
 
 Dropdown::~Dropdown()

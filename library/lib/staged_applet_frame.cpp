@@ -57,7 +57,7 @@ void StagedAppletFrame::enterStage(int index, bool requestFocus)
         return;
 
     if (this->hasContentView())
-        stageViews[currentStage]->willDisappear();
+        stageViews[currentStage]->willDisappear(true);
 
     currentStage = (size_t)index;
 

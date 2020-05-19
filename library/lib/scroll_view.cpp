@@ -70,22 +70,23 @@ void ScrollView::layout(NVGcontext* vg, Style* style, FontStash* stash)
     this->ready = true;
 }
 
-void ScrollView::willAppear()
+void ScrollView::willAppear(bool resetState)
 {
     this->prebakeScrolling();
 
-    // Reset scrolling to the top
-    this->startScrolling(false, 0.0f);
+    // Reset scrolling to the top if asked to
+    if (resetState)
+        this->startScrolling(false, 0.0f);
 
     if (this->contentView)
-        this->contentView->willAppear();
+        this->contentView->willAppear(resetState);
 }
 
-void ScrollView::willDisappear()
+void ScrollView::willDisappear(bool resetState)
 {
     // Send event to content view
     if (this->contentView)
-        this->contentView->willDisappear();
+        this->contentView->willDisappear(resetState);
 }
 
 View* ScrollView::getDefaultFocus()
@@ -100,7 +101,7 @@ void ScrollView::setContentView(View* view)
     if (this->contentView)
     {
         this->contentView->setParent(this);
-        this->contentView->willAppear();
+        this->contentView->willAppear(true);
     }
 
     this->invalidate();
@@ -210,7 +211,7 @@ ScrollView::~ScrollView()
 {
     if (this->contentView)
     {
-        this->contentView->willDisappear();
+        this->contentView->willDisappear(true);
         delete this->contentView;
     }
 }

@@ -688,7 +688,7 @@ void Application::popView(ViewAnimation animation, std::function<void(void)> cb)
     Application::blockInputs();
 
     View* last = Application::viewStack[Application::viewStack.size() - 1];
-    last->willDisappear();
+    last->willDisappear(true);
 
     last->setForceTranslucent(true);
 
@@ -798,7 +798,7 @@ void Application::pushView(View* view, ViewAnimation animation)
         Application::focusStack.push_back(Application::currentFocus);
     }
 
-    view->willAppear();
+    view->willAppear(true);
     Application::giveFocus(view->getDefaultFocus());
 
     Application::viewStack.push_back(view);
@@ -824,7 +824,7 @@ void Application::clear()
 {
     for (View* view : Application::viewStack)
     {
-        view->willDisappear();
+        view->willDisappear(true);
         delete view;
     }
 

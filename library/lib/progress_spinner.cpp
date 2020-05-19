@@ -79,12 +79,12 @@ void ProgressSpinner::draw(NVGcontext* vg, int x, int y, unsigned width, unsigne
     }
 }
 
-void ProgressSpinner::willAppear()
+void ProgressSpinner::willAppear(bool resetState)
 {
     this->restartAnimation();
 }
 
-void ProgressSpinner::willDisappear()
+void ProgressSpinner::willDisappear(bool resetState)
 {
     menu_animation_ctx_tag tag = (uintptr_t) & this->animationValue;
 

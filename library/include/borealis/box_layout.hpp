@@ -96,8 +96,8 @@ class BoxLayout : public View
     View* getDefaultFocus() override;
     void onChildFocusGained(View* child) override;
     void onChildFocusLost(View* child) override;
-    void willAppear() override;
-    void willDisappear() override;
+    void willAppear(bool resetState = false) override;
+    void willDisappear(bool resetState = false) override;
     void onWindowSizeChanged() override;
 
     /**
@@ -124,7 +124,7 @@ class BoxLayout : public View
       * If fill is set to true, the child will
       * fill the remaining space
       */
-    void addView(View* view, bool fill = false);
+    void addView(View* view, bool fill = false, bool resetState = false);
 
     /**
       * Removes the view at specified

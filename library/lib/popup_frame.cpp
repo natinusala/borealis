@@ -144,14 +144,14 @@ void PopupFrame::open(std::string title, AppletFrame* contentView, std::string s
     Application::pushView(popupFrame);
 }
 
-void PopupFrame::willAppear()
+void PopupFrame::willAppear(bool resetState)
 {
-    this->contentView->willAppear();
+    this->contentView->willAppear(resetState);
 }
 
-void PopupFrame::willDisappear()
+void PopupFrame::willDisappear(bool resetState)
 {
-    this->contentView->willDisappear();
+    this->contentView->willDisappear(resetState);
 }
 
 PopupFrame::~PopupFrame()

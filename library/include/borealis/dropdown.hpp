@@ -66,8 +66,8 @@ class Dropdown : public View
     View* getDefaultFocus() override;
     virtual bool onCancel();
     void show(std::function<void(void)> cb, bool animate = true, ViewAnimation animation = ViewAnimation::FADE) override;
-    void willAppear() override;
-    void willDisappear() override;
+    void willAppear(bool resetState = false) override;
+    void willDisappear(bool resetState = false) override;
 
     static void open(std::string title, std::vector<std::string> values, ValueSelectedEvent::Callback cb, int selected = -1);
 
