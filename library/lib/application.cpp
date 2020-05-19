@@ -465,6 +465,7 @@ void Application::navigate(FocusDirection direction)
     }
 
     // See if focus event should be aborted
+    nextFocus = nextFocus->getDefaultFocus();
     bool abort = false;
 
     if (nextFocus->hasParent())

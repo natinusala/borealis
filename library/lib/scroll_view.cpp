@@ -123,6 +123,8 @@ bool ScrollView::shouldBlockFocusChange(View* newFocus, FocusDirection direction
     int newFocusTop         = newFocus->getY() - highlightSize;
     unsigned newFocusBottom = newFocusTop + newFocus->getHeight() + highlightSize * 2;
 
+    Logger::debug("%s", newFocus->describe().c_str());
+
     if (newFocusTop < this->getY() || newFocusBottom > this->bottomY)
     {
         // Scrolling time~
