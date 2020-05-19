@@ -69,8 +69,11 @@ class BoxLayout : public View
   protected:
     std::vector<BoxLayoutChild*> children;
 
-    size_t defaultFocusedIndex = 0;
-    bool childFocused          = false;
+    size_t originalDefaultFocus = 0;
+    size_t defaultFocusedIndex  = 0;
+    bool childFocused           = false;
+
+    bool rememberFocus = false;
 
     unsigned marginTop    = 0;
     unsigned marginRight  = 0;
@@ -159,6 +162,12 @@ class BoxLayout : public View
      * Mandatory for using in a ScrollView
      */
     void setResize(bool resize);
+
+    /**
+     * Should the default focus be set to the originally focused
+     * view (until the layout disappears)?
+     */
+    void setRememberFocus(bool rememberFocus);
 };
 
 } // namespace brls
