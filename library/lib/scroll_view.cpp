@@ -24,9 +24,6 @@
 namespace brls
 {
 
-// TODO: update scrolling when resizing window (apply new scrollY)
-// TODO: fix Dropdown scrolling glitch when closing and opening with the last element selected
-
 void ScrollView::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
     if (!this->contentView)
