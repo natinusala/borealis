@@ -700,7 +700,7 @@ void Application::popView(ViewAnimation animation, std::function<void(void)> cb)
         Application::viewStack.pop_back();
         delete last;
 
-        // Animate the old view once the old one
+        // Animate the old view once the new one
         // has ended its animation
         if (Application::viewStack.size() > 0 && wait)
         {
@@ -708,7 +708,7 @@ void Application::popView(ViewAnimation animation, std::function<void(void)> cb)
 
             if (newLast->isHidden())
             {
-                newLast->willAppear();
+                newLast->willAppear(false);
                 newLast->show(cb, true, animation);
             }
             else
@@ -725,7 +725,7 @@ void Application::popView(ViewAnimation animation, std::function<void(void)> cb)
     if (!wait && Application::viewStack.size() > 1)
     {
         View* toShow = Application::viewStack[Application::viewStack.size() - 2];
-        toShow->willAppear();
+        toShow->willAppear(false);
         toShow->show(cb, true, animation);
     }
 
