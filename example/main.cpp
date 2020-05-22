@@ -82,8 +82,9 @@ int main(int argc, char* argv[])
     brls::ListItem* themeItem = new brls::ListItem("TV Resolution");
     themeItem->setValue("Automatic");
 
-    brls::ListItem* jankItem = new brls::ListItem("User Interface Jank", "Some people believe homebrews to have a jank user interface. Set to Minimal to have a native look and feel, set to Maximal to have a SX OS look and feel.");
-    jankItem->setValue("Minimal");
+    brls::SelectListItem* jankItem = new brls::SelectListItem(
+        "User Interface Jank",
+        { "Native", "Minimal", "Regular", "Maximum", "SX OS", "Windows Vista", "iOS 14" });
 
     brls::ListItem* crashItem = new brls::ListItem("Divide by 0", "Can the Switch do it?");
     crashItem->getClickEvent()->subscribe([](brls::View* view) { brls::Application::crash("The software was closed because an error occured:\nSIGABRT (signal 6)"); });

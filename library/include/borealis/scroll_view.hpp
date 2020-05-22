@@ -1,7 +1,6 @@
 /*
     Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2019  Billy Laws
-    Copyright (C) 2019  p-sam
+    Copyright (C) 2020  natinusala
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,42 +16,49 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#pragma once
-
-#include <borealis/label.hpp>
-#include <borealis/progress_spinner.hpp>
 #include <borealis/view.hpp>
 
 namespace brls
 {
 
-// TODO: Add the "ProgressDisplayFlags_" prefix to the members
-enum ProgressDisplayFlags
-{
-    SPINNER    = 1u << 0,
-    PERCENTAGE = 1u << 1
-};
+// TODO: horizontal scrolling, either in ScrollView or in a separate class (like Android has)
 
-inline constexpr ProgressDisplayFlags DEFAULT_PROGRESS_DISPLAY_FLAGS = (ProgressDisplayFlags)(ProgressDisplayFlags::SPINNER | ProgressDisplayFlags::PERCENTAGE);
-
-// A progress bar with an optional spinner and percentage text.
-class ProgressDisplay : public View
+// A view that automatically scrolls vertically
+// when one of its children gains focus
+class ScrollView : public View
 {
+  private:
+    View* contentView = nullptr;
+
+    bool ready = false; // has layout been called at least once?
+
+    unsigned middleY = 0; // y + height/2
+    unsigned bottomY = 0; // y + height
+
+    float scrollY = 0.0f; // from 0.0f to 1.0f, in % of content view height
+
+    bool updateScrollingOnNextLayout = false;
+
+    unsigned getYCenter(View* view);
+
+    void prebakeScrolling();
+    void updateScrolling(bool animated);
+    void startScrolling(bool animated, float newScroll);
+    void scrollAnimationTick();
+
   public:
-    ProgressDisplay(ProgressDisplayFlags progressFlags = DEFAULT_PROGRESS_DISPLAY_FLAGS);
-    ~ProgressDisplay();
+    ~ScrollView();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
     void willAppear(bool resetState = false) override;
     void willDisappear(bool resetState = false) override;
+    View* getDefaultFocus() override;
+    void onChildFocusGained(View* child) override;
+    void onWindowSizeChanged() override;
 
-    void setProgress(int current, int max);
-
-  private:
-    float progressPercentage = 0.0f;
-    Label* label;
-    ProgressSpinner* spinner;
+    void setContentView(View* view);
+    View* getContentView();
 };
 
 } // namespace brls

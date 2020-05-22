@@ -37,6 +37,6 @@ class SampleLoadingPage : public brls::View
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, brls::Style* style, brls::FrameContext* ctx) override;
     void layout(NVGcontext* vg, brls::Style* style, brls::FontStash* stash) override;
 
-    void willAppear() override;
-    void willDisappear() override;
+    void willAppear(bool resetState = false) override;
+    void willDisappear(bool resetState = false) override;
 };

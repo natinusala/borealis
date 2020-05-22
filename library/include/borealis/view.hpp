@@ -240,7 +240,7 @@ class View
       * Can be called if the view has
       * already appeared, so be careful
       */
-    virtual void willAppear()
+    virtual void willAppear(bool resetState = false)
     {
         // Nothing to do
     }
@@ -252,7 +252,7 @@ class View
       * Can be called if the view has
       * already disappeared, so be careful
       */
-    virtual void willDisappear()
+    virtual void willDisappear(bool resetState = false)
     {
         // Nothing to do
     }
@@ -377,6 +377,15 @@ class View
     {
         if (this->hasParent())
             this->getParent()->onChildFocusLost(this);
+    }
+
+    /**
+     * Fired when the window size changes
+     * Not guaranteed to be called before or after layout()
+     */
+    virtual void onWindowSizeChanged()
+    {
+        // Nothing by default
     }
 
     GenericEvent* getFocusEvent();

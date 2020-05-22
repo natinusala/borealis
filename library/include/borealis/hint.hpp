@@ -51,8 +51,8 @@ class Hint : public BoxLayout
     Hint(bool animate = true);
     ~Hint();
 
-    void willAppear() override;
-    void willDisappear() override;
+    void willAppear(bool resetState = false) override;
+    void willDisappear(bool resetState = false) override;
 
     void setAnimate(bool animate)
     {

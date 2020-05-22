@@ -60,13 +60,13 @@ void TabFrame::switchToView(View* view)
     if (this->layout->getViewsCount() > 1)
     {
         if (this->rightPane)
-            this->rightPane->willDisappear();
+            this->rightPane->willDisappear(true);
         this->layout->removeView(1, false);
     }
 
     if (view != nullptr)
     {
-        this->layout->addView(view, true); // addView() calls willAppear()
+        this->layout->addView(view, true, true); // addView() calls willAppear()
         this->rightPane = view;
     }
 }

@@ -177,14 +177,14 @@ std::string Hint::getKeyIcon(Key key)
     }
 }
 
-void Hint::willAppear()
+void Hint::willAppear(bool resetState)
 {
     // Push ourself to hide other hints
     // We assume that we are the top-most hint
     Hint::pushHint(this);
 }
 
-void Hint::willDisappear()
+void Hint::willDisappear(bool resetState)
 {
     // Pop ourself to show other hints
     Hint::popHint(this);

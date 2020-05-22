@@ -314,7 +314,7 @@ AppletFrame::~AppletFrame()
 {
     if (this->contentView)
     {
-        this->contentView->willDisappear();
+        this->contentView->willDisappear(true);
         delete this->contentView;
     }
 
@@ -324,26 +324,26 @@ AppletFrame::~AppletFrame()
     delete this->hint;
 }
 
-void AppletFrame::willAppear()
+void AppletFrame::willAppear(bool resetState)
 {
     if (this->icon)
-        this->icon->willAppear();
+        this->icon->willAppear(resetState);
 
     if (this->contentView)
-        this->contentView->willAppear();
+        this->contentView->willAppear(resetState);
 
-    this->hint->willAppear();
+    this->hint->willAppear(resetState);
 }
 
-void AppletFrame::willDisappear()
+void AppletFrame::willDisappear(bool resetState)
 {
     if (this->icon)
-        this->icon->willDisappear();
+        this->icon->willDisappear(resetState);
 
     if (this->contentView)
-        this->contentView->willDisappear();
+        this->contentView->willDisappear(resetState);
 
-    this->hint->willDisappear();
+    this->hint->willDisappear(resetState);
 }
 
 void AppletFrame::show(std::function<void(void)> cb, bool animated, ViewAnimation animation)
@@ -397,6 +397,18 @@ bool AppletFrame::onCancel()
      */
     Application::popView();
     return true;
+}
+
+void AppletFrame::onWindowSizeChanged()
+{
+    if (this->contentView)
+        this->contentView->onWindowSizeChanged();
+
+    if (this->icon)
+        this->icon->onWindowSizeChanged();
+
+    if (this->hint)
+        this->hint->onWindowSizeChanged();
 }
 
 } // namespace brls

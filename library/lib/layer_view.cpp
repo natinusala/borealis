@@ -51,12 +51,12 @@ void LayerView::changeLayer(int index, bool focus)
 
         if (this->selectedIndex >= 0)
         {
-            this->layers[this->selectedIndex]->willDisappear();
+            this->layers[this->selectedIndex]->willDisappear(true);
             this->layers[this->selectedIndex]->hide([]() {});
         }
 
         this->selectedIndex = index;
-        this->layers[this->selectedIndex]->willAppear();
+        this->layers[this->selectedIndex]->willAppear(true);
         this->layers[this->selectedIndex]->show([=]() {
             if (focus)
                 Application::giveFocus(this->layers[this->selectedIndex]->getDefaultFocus());
@@ -70,7 +70,7 @@ void LayerView::changeLayer(int index, bool focus)
     {
         if (this->selectedIndex > 0)
         {
-            this->layers[this->selectedIndex]->willDisappear();
+            this->layers[this->selectedIndex]->willDisappear(true);
             this->layers[this->selectedIndex]->hide([]() {});
         }
 
@@ -112,16 +112,16 @@ void LayerView::layout(NVGcontext* vg, Style* style, FontStash* stash)
     }
 }
 
-void LayerView::willAppear()
+void LayerView::willAppear(bool resetState)
 {
     if (this->selectedIndex >= 0 && this->selectedIndex < static_cast<int>(this->layers.size()))
-        this->layers[this->selectedIndex]->willAppear();
+        this->layers[this->selectedIndex]->willAppear(true);
 }
 
-void LayerView::willDisappear()
+void LayerView::willDisappear(bool resetState)
 {
     if (this->selectedIndex >= 0 && this->selectedIndex < static_cast<int>(this->layers.size()))
-        this->layers[this->selectedIndex]->willDisappear();
+        this->layers[this->selectedIndex]->willDisappear(true);
 }
 
 }

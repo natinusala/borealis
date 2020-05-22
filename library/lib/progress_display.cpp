@@ -110,16 +110,16 @@ void ProgressDisplay::draw(NVGcontext* vg, int x, int y, unsigned width, unsigne
     }
 }
 
-void ProgressDisplay::willAppear()
+void ProgressDisplay::willAppear(bool resetState)
 {
     if (this->spinner)
-        this->spinner->willAppear();
+        this->spinner->willAppear(resetState);
 }
 
-void ProgressDisplay::willDisappear()
+void ProgressDisplay::willDisappear(bool resetState)
 {
     if (this->spinner)
-        this->spinner->willDisappear();
+        this->spinner->willDisappear(resetState);
 }
 
 ProgressDisplay::~ProgressDisplay()

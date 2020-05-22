@@ -53,7 +53,6 @@ class BoxLayoutChild
 // A basic horizontal or vertical box layout :
 // - Children can currently only be stretched to full width (vertical) or height (horizontal)
 // - Only works with children with fixed width (horizontal) or height (vertical)
-// - Handles vertical scrolling only
 
 // TODO: More complex alignment and/or stretching parameters to children
 class BoxLayout : public View
@@ -63,28 +62,18 @@ class BoxLayout : public View
 
     unsigned spacing = 0;
 
-    unsigned middleY       = 0; // y + height/2
-    unsigned bottomY       = 0; // y + height
-    unsigned entriesHeight = 0; // sum of all entries heights (with spacing) + bottom margin
-
-    float scrollY = 0.0f; // all childrens are offset by this value
-
-    void updateScroll(bool animated, size_t focusedIndex);
-
-    void scrollAnimationTick();
-    void prebakeScrolling();
-
-    bool firstAppearance = true;
-
-    bool scrollingEnabled = true;
+    bool resize = false; // should the view be resized according to children size after a layout?
 
     BoxLayoutGravity gravity = BoxLayoutGravity::DEFAULT;
 
   protected:
     std::vector<BoxLayoutChild*> children;
 
-    size_t defaultFocusedIndex = 0;
-    bool childFocused          = false;
+    size_t originalDefaultFocus = 0;
+    size_t defaultFocusedIndex  = 0;
+    bool childFocused           = false;
+
+    bool rememberFocus = false;
 
     unsigned marginTop    = 0;
     unsigned marginRight  = 0;
@@ -95,10 +84,11 @@ class BoxLayout : public View
       * Should the BoxLayout apply spacing after
       * this view?
       */
-    virtual void customSpacing(View* current, View* next, int* spacing) { }
+    virtual void customSpacing(View* current, View* next, int* spacing) {}
 
   public:
     BoxLayout(BoxLayoutOrientation orientation, size_t defaultFocus = 0);
+    ~BoxLayout();
 
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
@@ -106,8 +96,9 @@ class BoxLayout : public View
     View* getDefaultFocus() override;
     void onChildFocusGained(View* child) override;
     void onChildFocusLost(View* child) override;
-    void willAppear() override;
-    void willDisappear() override;
+    void willAppear(bool resetState = false) override;
+    void willDisappear(bool resetState = false) override;
+    void onWindowSizeChanged() override;
 
     /**
      * Sets gravity
@@ -133,7 +124,7 @@ class BoxLayout : public View
       * If fill is set to true, the child will
       * fill the remaining space
       */
-    void addView(View* view, bool fill = false);
+    void addView(View* view, bool fill = false, bool resetState = false);
 
     /**
       * Removes the view at specified
@@ -165,9 +156,18 @@ class BoxLayout : public View
 
     View* getChild(size_t i);
 
-    void setScrollingEnabled(bool enabled);
+    /**
+     * If enabled, will force the layout to resize itself
+     * to match the children size
+     * Mandatory for using in a ScrollView
+     */
+    void setResize(bool resize);
 
-    ~BoxLayout();
+    /**
+     * Should the default focus be set to the originally focused
+     * view (until the layout disappears)?
+     */
+    void setRememberFocus(bool rememberFocus);
 };
 
 } // namespace brls

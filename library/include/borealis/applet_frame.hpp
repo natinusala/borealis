@@ -67,10 +67,11 @@ class AppletFrame : public View
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     View* getDefaultFocus() override;
     virtual bool onCancel();
-    void willAppear() override;
-    void willDisappear() override;
+    void willAppear(bool resetState = false) override;
+    void willDisappear(bool resetState = false) override;
     void show(std::function<void(void)> cb, bool animate = true, ViewAnimation animation = ViewAnimation::FADE) override;
     void hide(std::function<void(void)> cb, bool animated = true, ViewAnimation animation = ViewAnimation::FADE) override;
+    void onWindowSizeChanged() override;
 
     void setTitle(std::string title);
     void setFooterText(std::string footerText);

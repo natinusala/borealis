@@ -347,16 +347,16 @@ bool Application::mainLoop()
     if (!glfwGetGamepadState(GLFW_JOYSTICK_1, &Application::gamepad))
     {
         // Keyboard -> DPAD Mapping
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT]             = glfwGetKey(window, GLFW_KEY_LEFT);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT]            = glfwGetKey(window, GLFW_KEY_RIGHT);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP]               = glfwGetKey(window, GLFW_KEY_UP);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN]             = glfwGetKey(window, GLFW_KEY_DOWN);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_START]                 = glfwGetKey(window, GLFW_KEY_ESCAPE);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_BACK]                  = glfwGetKey(window, GLFW_KEY_F1);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_A]                     = glfwGetKey(window, GLFW_KEY_ENTER);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_B]                     = glfwGetKey(window, GLFW_KEY_BACKSPACE);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER]           = glfwGetKey(window, GLFW_KEY_L);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER]          = glfwGetKey(window, GLFW_KEY_R);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT]    = glfwGetKey(window, GLFW_KEY_LEFT);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT]   = glfwGetKey(window, GLFW_KEY_RIGHT);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP]      = glfwGetKey(window, GLFW_KEY_UP);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN]    = glfwGetKey(window, GLFW_KEY_DOWN);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_START]        = glfwGetKey(window, GLFW_KEY_ESCAPE);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_BACK]         = glfwGetKey(window, GLFW_KEY_F1);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_A]            = glfwGetKey(window, GLFW_KEY_ENTER);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_B]            = glfwGetKey(window, GLFW_KEY_BACKSPACE);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER]  = glfwGetKey(window, GLFW_KEY_L);
+        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER] = glfwGetKey(window, GLFW_KEY_R);
     }
 
     // Trigger gamepad events
@@ -422,7 +422,7 @@ bool Application::mainLoop()
 
         if (frameTime > currentFrameTime)
         {
-            retro_time_t toSleep = frameTime - currentFrameTime; // never sleep too much
+            retro_time_t toSleep = frameTime - currentFrameTime;
             std::this_thread::sleep_for(std::chrono::microseconds(toSleep));
         }
     }
@@ -669,15 +669,14 @@ void Application::giveFocus(View* view)
         if (oldFocus)
             oldFocus->onFocusLost();
 
+        Application::currentFocus = newFocus;
+        Application::globalFocusChangeEvent.fire(newFocus);
+
         if (newFocus)
         {
             newFocus->onFocusGained();
             Logger::debug("Giving focus to %s", newFocus->describe().c_str());
         }
-
-        Application::currentFocus = newFocus;
-
-        Application::globalFocusChangeEvent.fire(newFocus);
     }
 }
 
@@ -689,7 +688,7 @@ void Application::popView(ViewAnimation animation, std::function<void(void)> cb)
     Application::blockInputs();
 
     View* last = Application::viewStack[Application::viewStack.size() - 1];
-    last->willDisappear();
+    last->willDisappear(true);
 
     last->setForceTranslucent(true);
 
@@ -701,7 +700,7 @@ void Application::popView(ViewAnimation animation, std::function<void(void)> cb)
         Application::viewStack.pop_back();
         delete last;
 
-        // Animate the old view once the old one
+        // Animate the old view once the new one
         // has ended its animation
         if (Application::viewStack.size() > 0 && wait)
         {
@@ -709,7 +708,7 @@ void Application::popView(ViewAnimation animation, std::function<void(void)> cb)
 
             if (newLast->isHidden())
             {
-                newLast->willAppear();
+                newLast->willAppear(false);
                 newLast->show(cb, true, animation);
             }
             else
@@ -726,7 +725,7 @@ void Application::popView(ViewAnimation animation, std::function<void(void)> cb)
     if (!wait && Application::viewStack.size() > 1)
     {
         View* toShow = Application::viewStack[Application::viewStack.size() - 2];
-        toShow->willAppear();
+        toShow->willAppear(false);
         toShow->show(cb, true, animation);
     }
 
@@ -799,7 +798,7 @@ void Application::pushView(View* view, ViewAnimation animation)
         Application::focusStack.push_back(Application::currentFocus);
     }
 
-    view->willAppear();
+    view->willAppear(true);
     Application::giveFocus(view->getDefaultFocus());
 
     Application::viewStack.push_back(view);
@@ -813,6 +812,8 @@ void Application::onWindowSizeChanged()
     {
         view->setBoundaries(0, 0, Application::contentWidth, Application::contentHeight);
         view->invalidate();
+
+        view->onWindowSizeChanged();
     }
 
     Application::resizeNotificationManager();
@@ -823,7 +824,7 @@ void Application::clear()
 {
     for (View* view : Application::viewStack)
     {
-        view->willDisappear();
+        view->willDisappear(true);
         delete view;
     }
 

@@ -63,14 +63,14 @@ void SampleLoadingPage::layout(NVGcontext* vg, brls::Style* style, brls::FontSta
         style->CrashFrame.buttonHeight);
 }
 
-void SampleLoadingPage::willAppear()
+void SampleLoadingPage::willAppear(bool resetState)
 {
-    this->progressDisp->willAppear();
+    this->progressDisp->willAppear(resetState);
 }
 
-void SampleLoadingPage::willDisappear()
+void SampleLoadingPage::willDisappear(bool resetState)
 {
-    this->progressDisp->willDisappear();
+    this->progressDisp->willDisappear(resetState);
 }
 
 SampleLoadingPage::~SampleLoadingPage()
