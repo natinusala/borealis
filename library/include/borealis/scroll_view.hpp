@@ -21,7 +21,15 @@
 namespace brls
 {
 
+enum class ScrollingStrategy
+{
+    MIDDLE,         // Focused view always in the middle (used by Sidebar)
+    // LAZY,           // Only scrolls when necessary TODO:implement it
+    LAZY_DETACHED   // Only scrolls when necessary, detached from focus (default, used by List)
+};
+
 // TODO: horizontal scrolling, either in ScrollView or in a separate class (like Android has)
+// TODO: Have Sidebar use a ScrollView w/ MIDDLE strategy
 
 // A view that automatically scrolls vertically
 // when one of its children gains focus
@@ -29,6 +37,8 @@ class ScrollView : public View
 {
   private:
     View* contentView = nullptr;
+
+    ScrollingStrategy scrollingStrategy;
 
     bool ready = false; // has layout been called at least once?
 
@@ -47,6 +57,7 @@ class ScrollView : public View
     void scrollAnimationTick();
 
   public:
+    ScrollView(ScrollingStrategy strategy = ScrollingStrategy::LAZY_DETACHED);
     ~ScrollView();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
