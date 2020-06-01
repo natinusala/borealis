@@ -452,33 +452,37 @@ void Application::navigate(FocusDirection direction)
 
 View* Application::getNextFocus(FocusDirection direction)
 {
-    if (Application::focusCache.matchesDirection(direction))
-        return Application::focusCache.getView();
-
-    View* currentFocus = Application::currentFocus;
-
-    // Do nothing if there is no current focus or if it doesn't have a parent
-    // (in which case there is nothing to traverse)
-    if (!currentFocus || !currentFocus->hasParent())
+    // Try to hit the cache - only compute the new view to focus
+    // if it's a miss
+    if (!Application::focusCache.matchesDirection(direction))
     {
-        Application::focusCache.update(nullptr, direction);
-        return nullptr;
+        View* currentFocus = Application::currentFocus;
+
+        // Do nothing if there is no current focus or if it doesn't have a parent
+        // (in which case there is nothing to traverse)
+        if (!currentFocus || !currentFocus->hasParent())
+        {
+            Application::focusCache.update(nullptr, direction);
+        }
+        else
+        {
+            // Get next view to focus by traversing the views tree upwards
+            View* nextFocus = currentFocus->getParent()->getNextFocus(direction, currentFocus->getParentUserData());
+
+            while (!nextFocus) // stop when we find a view to focus
+            {
+                if (!currentFocus->hasParent() || !currentFocus->getParent()->hasParent()) // stop when we reach the root of the tree
+                    break;
+
+                currentFocus = currentFocus->getParent();
+                nextFocus    = currentFocus->getParent()->getNextFocus(direction, currentFocus->getParentUserData());
+            }
+
+            Application::focusCache.update(nextFocus, direction);
+        }
     }
 
-    // Get next view to focus by traversing the views tree upwards
-    View* nextFocus = currentFocus->getParent()->getNextFocus(direction, currentFocus->getParentUserData());
-
-    while (!nextFocus) // stop when we find a view to focus
-    {
-        if (!currentFocus->hasParent() || !currentFocus->getParent()->hasParent()) // stop when we reach the root of the tree
-            break;
-
-        currentFocus = currentFocus->getParent();
-        nextFocus    = currentFocus->getParent()->getNextFocus(direction, currentFocus->getParentUserData());
-    }
-
-    Application::focusCache.update(nextFocus, direction);
-    return nextFocus;
+    return Application::focusCache.getView();
 }
 
 FocusDirection Application::getDirectionForInput(char button)
