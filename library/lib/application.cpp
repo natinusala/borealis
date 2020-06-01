@@ -1039,7 +1039,7 @@ void FocusCache::invalidate()
 
 void FocusCache::update(View* view, FocusDirection direction)
 {
-    this->view = view;
+    this->view      = view;
     this->direction = direction;
 
     this->valid = true;

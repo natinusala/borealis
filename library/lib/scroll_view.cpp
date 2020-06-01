@@ -24,9 +24,9 @@
 namespace brls
 {
 
-ScrollView::ScrollView(ScrollingStrategy stragegy) : scrollingStrategy(stragegy)
+ScrollView::ScrollView(ScrollingStrategy stragegy)
+    : scrollingStrategy(stragegy)
 {
-    
 }
 
 void ScrollView::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)

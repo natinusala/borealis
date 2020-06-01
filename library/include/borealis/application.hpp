@@ -43,8 +43,8 @@ namespace brls
 enum class DirectionalInputAction
 {
     NAVIGATE, // Change focus
-    SCROLL,   // Scroll
-    NOTHING   // Do nothing
+    SCROLL, // Scroll
+    NOTHING // Do nothing
 };
 
 // The top-right framerate counter

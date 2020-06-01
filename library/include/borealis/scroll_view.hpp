@@ -23,9 +23,9 @@ namespace brls
 
 enum class ScrollingStrategy
 {
-    MIDDLE,         // Focused view always in the middle (used by Sidebar)
+    MIDDLE, // Focused view always in the middle (used by Sidebar)
     // LAZY,           // Only scrolls when necessary TODO:implement it
-    LAZY_DETACHED   // Only scrolls when necessary, detached from focus (default, used by List)
+    LAZY_DETACHED // Only scrolls when necessary, detached from focus (default, used by List)
 };
 
 // TODO: horizontal scrolling, either in ScrollView or in a separate class (like Android has)
