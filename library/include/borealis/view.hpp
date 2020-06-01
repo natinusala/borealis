@@ -48,7 +48,8 @@ enum class FocusDirection
     UP,
     DOWN,
     LEFT,
-    RIGHT
+    RIGHT,
+    NONE
 };
 
 // View background

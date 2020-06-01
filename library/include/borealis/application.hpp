@@ -39,6 +39,14 @@
 namespace brls
 {
 
+// What to do when receiving a directional input
+enum class DirectionalInputAction
+{
+    NAVIGATE, // Change focus
+    SCROLL,   // Scroll
+    NOTHING   // Do nothing
+};
+
 // The top-right framerate counter
 class FramerateCounter : public Label
 {
@@ -50,6 +58,21 @@ class FramerateCounter : public Label
     FramerateCounter();
 
     void frame(FrameContext* ctx) override;
+};
+
+// Cache for the next view to focus in the given direction
+class FocusCache
+{
+  private:
+    bool valid = false;
+    View* view;
+    FocusDirection direction;
+
+  public:
+    void invalidate();
+    void update(View* view, FocusDirection direction);
+    View* getView();
+    bool matchesDirection(FocusDirection direction);
 };
 
 class Application
@@ -182,6 +205,14 @@ class Application
     static void navigate(FocusDirection direction);
 
     static void onWindowSizeChanged();
+
+    static View* getNextFocus();
+
+    static inline FocusCache focusCache;
+
+    static View* getNextFocus(FocusDirection direction);
+    static FocusDirection getDirectionForInput(char button);
+    static DirectionalInputAction getDirectionalAction(View* nextFocus, FocusDirection direction);
 
     static void frame();
     static void clear();

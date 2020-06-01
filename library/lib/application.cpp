@@ -437,12 +437,33 @@ void Application::quit()
 
 void Application::navigate(FocusDirection direction)
 {
+    View* toFocus = Application::getNextFocus(direction);
+
+    // No view to focus: wiggle and return
+    if (!toFocus)
+    {
+        Application::currentFocus->shakeHighlight(direction);
+        return;
+    }
+
+    // Otherwise give it focus
+    Application::giveFocus(toFocus);
+}
+
+View* Application::getNextFocus(FocusDirection direction)
+{
+    if (Application::focusCache.matchesDirection(direction))
+        return Application::focusCache.getView();
+
     View* currentFocus = Application::currentFocus;
 
     // Do nothing if there is no current focus or if it doesn't have a parent
     // (in which case there is nothing to traverse)
     if (!currentFocus || !currentFocus->hasParent())
-        return;
+    {
+        Application::focusCache.update(nullptr, direction);
+        return nullptr;
+    }
 
     // Get next view to focus by traversing the views tree upwards
     View* nextFocus = currentFocus->getParent()->getNextFocus(direction, currentFocus->getParentUserData());
@@ -456,23 +477,69 @@ void Application::navigate(FocusDirection direction)
         nextFocus    = currentFocus->getParent()->getNextFocus(direction, currentFocus->getParentUserData());
     }
 
-    // No view to focus at the end of the traversal: wiggle and return
-    if (!nextFocus)
-    {
-        Application::currentFocus->shakeHighlight(direction);
-        return;
-    }
-
-    // Otherwise give it focus
-    Application::giveFocus(nextFocus);
+    Application::focusCache.update(nextFocus, direction);
+    return nextFocus;
 }
 
+FocusDirection Application::getDirectionForInput(char button)
+{
+    switch (button)
+    {
+        case GLFW_GAMEPAD_BUTTON_DPAD_DOWN:
+            return FocusDirection::DOWN;
+        case GLFW_GAMEPAD_BUTTON_DPAD_UP:
+            return FocusDirection::UP;
+        case GLFW_GAMEPAD_BUTTON_DPAD_LEFT:
+            return FocusDirection::LEFT;
+        case GLFW_GAMEPAD_BUTTON_DPAD_RIGHT:
+            return FocusDirection::RIGHT;
+        default:
+            return FocusDirection::NONE;
+    }
+}
+
+DirectionalInputAction Application::getDirectionalAction(View* nextFocus, FocusDirection direction)
+{
+    return DirectionalInputAction::NAVIGATE; // TODO: traverse the tree starting by nextFocus, stop at the first call that does not return NAVIGATE
+}
+
+// Input flow:
+//      0. if inputs are blocked, do nothing
+// For directional inputs (DPAD or analogs):
+//      1. resolve and cache the next view to focus for that direction
+//      2. resolve the action for the button press (DirectionalInputAction) given the next view to focus (can be nullptr)
+//      3. if it's anything else than NAVIGATE, abort
+//      4. otherwise, handle the navigation event (with repeat throttler enabled)
+// For other inputs:
+//      1. call handleAction (with repeat throttler enabled if action has throttle flag)
 void Application::onGamepadButtonPressed(char button, bool repeating)
 {
+    // TODO: nuke repetition here, it needs to happen later in the flow
+
     if (Application::blockInputsTokens != 0)
         return;
 
-    if (repeating && Application::repetitionOldFocus == Application::currentFocus)
+    FocusDirection direction = Application::getDirectionForInput(button);
+
+    // Directional input
+    if (direction != FocusDirection::NONE)
+    {
+        View* nextFocus = Application::getNextFocus(direction);
+
+        // Resolve action for that button press and only navigate if it's NAVIGATE
+        DirectionalInputAction action = Application::getDirectionalAction(nextFocus, direction);
+
+        if (action == DirectionalInputAction::NAVIGATE)
+            Application::navigate(direction); // TODO: handle repetition here
+    }
+    // Non-directional input
+    else
+    {
+        // TODO: handle repetition here, with a flag in actions
+        Application::handleAction(button);
+    }
+
+    /*if (repeating && Application::repetitionOldFocus == Application::currentFocus)
         return;
 
     Application::repetitionOldFocus = Application::currentFocus;
@@ -500,7 +567,7 @@ void Application::onGamepadButtonPressed(char button, bool repeating)
             break;
         default:
             break;
-    }
+    }*/
 }
 
 View* Application::getCurrentFocus()
@@ -668,6 +735,8 @@ void Application::giveFocus(View* view)
     {
         if (oldFocus)
             oldFocus->onFocusLost();
+
+        Application::focusCache.invalidate();
 
         Application::currentFocus = newFocus;
         Application::globalFocusChangeEvent.fire(newFocus);
@@ -961,6 +1030,29 @@ GenericEvent* Application::getGlobalFocusChangeEvent()
 VoidEvent* Application::getGlobalHintsUpdateEvent()
 {
     return &Application::globalHintsUpdateEvent;
+}
+
+void FocusCache::invalidate()
+{
+    this->valid = false;
+}
+
+void FocusCache::update(View* view, FocusDirection direction)
+{
+    this->view = view;
+    this->direction = direction;
+
+    this->valid = true;
+}
+
+View* FocusCache::getView()
+{
+    return this->valid ? this->view : nullptr;
+}
+
+bool FocusCache::matchesDirection(FocusDirection direction)
+{
+    return this->valid && this->direction == direction;
 }
 
 } // namespace brls
