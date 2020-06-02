@@ -52,6 +52,14 @@ enum class FocusDirection
     NONE
 };
 
+// What to do when receiving a directional input
+enum class DirectionalInputAction
+{
+    NAVIGATE, // Change focus
+    SCROLL, // Scroll
+    NOTHING // Do nothing
+};
+
 // View background
 enum class Background
 {
@@ -378,6 +386,16 @@ class View
     {
         if (this->hasParent())
             this->getParent()->onChildFocusLost(this);
+    }
+
+    /**
+     * Called when a directional input event is fired, before the next view is focused
+     * nextFocus is guaranteed to be either ourselves or one of our children
+     * Allows to override navigation by returning something else than NAVIGATE
+     */
+    virtual DirectionalInputAction getDirectionalAction(View* nextFocus, FocusDirection direction)
+    {
+        return DirectionalInputAction::NAVIGATE;
     }
 
     /**

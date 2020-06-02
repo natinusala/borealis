@@ -504,7 +504,26 @@ FocusDirection Application::getDirectionForInput(char button)
 
 DirectionalInputAction Application::getDirectionalAction(View* nextFocus, FocusDirection direction)
 {
-    return DirectionalInputAction::NAVIGATE; // TODO: traverse the tree starting by nextFocus, stop at the first call that does not return NAVIGATE
+    // Return NAVIGATE to wiggle if there is no view to focus
+    if (!nextFocus)
+    {
+        return DirectionalInputAction::NAVIGATE;
+    }
+    else
+    {
+        // Traverse the views tree upwards, stop at the first one
+        // that does not return NAVIGATE
+        View* view = currentFocus;
+        DirectionalInputAction action = view->getDirectionalAction(nextFocus, direction);
+
+        while (action == DirectionalInputAction::NAVIGATE && view->hasParent())
+        {
+            view    = view->getParent();
+            action  = view->getDirectionalAction(nextFocus, direction);
+        }
+
+        return action;
+    }
 }
 
 // Input flow:

@@ -39,14 +39,6 @@
 namespace brls
 {
 
-// What to do when receiving a directional input
-enum class DirectionalInputAction
-{
-    NAVIGATE, // Change focus
-    SCROLL, // Scroll
-    NOTHING // Do nothing
-};
-
 // The top-right framerate counter
 class FramerateCounter : public Label
 {
