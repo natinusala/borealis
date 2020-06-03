@@ -442,6 +442,7 @@ void Application::navigate(FocusDirection direction)
     // No view to focus: wiggle and return
     if (!toFocus)
     {
+        // TODO: only wiggle once per direction - do not keep wiggling when holding key
         Application::currentFocus->shakeHighlight(direction);
         return;
     }
