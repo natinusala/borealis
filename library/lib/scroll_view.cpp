@@ -230,6 +230,8 @@ DirectionalInputAction ScrollView::getDirectionalAction(View* newFocus, FocusDir
     if (direction == FocusDirection::LEFT || direction == FocusDirection::RIGHT)
         return DirectionalInputAction::NAVIGATE;
 
+    // TODO: always scroll if newFocus == nullptr and current scroll isn't 0.0f or 1.0f
+
     // Check view position, scroll if child is out of bounds, return NAVIGATE otherwise
     Style* style = Application::getStyle();
 
