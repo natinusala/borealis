@@ -24,6 +24,9 @@
 #include <nanovg.h>
 #define FONTSTASH_IMPLEMENTATION
 #include <fontstash.h>
+#ifdef __SWITCH__
+#define STBI_NEON
+#endif
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
@@ -804,7 +807,7 @@ int nvgCreateImage(NVGcontext* ctx, const char* filename, int imageFlags)
 	return image;
 }
 
-int nvgCreateImageMem(NVGcontext* ctx, int imageFlags, unsigned char* data, int ndata)
+int nvgCreateImageMem(NVGcontext* ctx, int imageFlags, const unsigned char* data, int ndata)
 {
 	int w, h, n, image;
 	unsigned char* img = stbi_load_from_memory(data, ndata, &w, &h, &n, 4);
@@ -827,6 +830,37 @@ void nvgUpdateImage(NVGcontext* ctx, int image, const unsigned char* data)
 	int w, h;
 	ctx->params.renderGetTextureSize(ctx->params.userPtr, image, &w, &h);
 	ctx->params.renderUpdateTexture(ctx->params.userPtr, image, 0,0, w,h, data);
+}
+
+void nvgUpdateImageYUV(NVGcontext* ctx, int image, unsigned char* data[3], int linesize[3], unsigned char* work)
+{
+	int w, h;
+	ctx->params.renderGetTextureSize(ctx->params.userPtr, image, &w, &h);
+
+	uint8_t *pimg	= work;
+	uint8_t *rowu	= malloc(w + 32);
+	uint8_t *rowv	= malloc(w + 32);
+	uint8_t *py		= data[0];
+	uint8_t *pu		= data[1];
+	uint8_t *pv		= data[2];
+	for (int y = 0; y < h / 2; y++)
+	{
+		stbi__resample_row_hv_2_simd(rowu, pu, pu, w / 2, 0);
+		stbi__resample_row_hv_2_simd(rowv, pv, pv, w / 2, 0);
+		stbi__YCbCr_to_RGB_simd(pimg, py, rowu, rowv, w, 4);
+		pimg += w * 4;
+		int last = (y == (h / 2 - 1));
+		stbi__resample_row_hv_2_simd(rowu, pu, pu + (last ? 0 : linesize[1]), w / 2, 0);
+		stbi__resample_row_hv_2_simd(rowv, pv, pv + (last ? 0 : linesize[2]), w / 2, 0);
+		stbi__YCbCr_to_RGB_simd(pimg, py + linesize[0], rowu, rowv, w, 4);
+		pimg += w * 4;
+		py += linesize[0] * 2;
+		pu += linesize[1];
+		pv += linesize[2];
+	}
+	free(rowu);
+	free(rowv);
+	ctx->params.renderUpdateTexture(ctx->params.userPtr, image, 0,0, w,h, work);
 }
 
 void nvgImageSize(NVGcontext* ctx, int image, int* w, int* h)

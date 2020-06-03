@@ -134,26 +134,24 @@ void ListItem::setThumbnail(Image* image)
 
 void ListItem::setThumbnail(std::string imagePath)
 {
-    if (this->thumbnailView)
-        this->thumbnailView->setImage(imagePath);
-    else
-        this->thumbnailView = new Image(imagePath);
+    if (this->thumbnailView == nullptr) {
+        this->thumbnailView = new Image();
+        this->thumbnailView->setParent(this);
+        this->thumbnailView->setScaleType(ImageScaleType::FIT);
+    }
 
-    this->thumbnailView->setParent(this);
-    this->thumbnailView->setScaleType(ImageScaleType::FIT);
-    this->invalidate();
+    this->thumbnailView->setImage(imagePath);
 }
 
-void ListItem::setThumbnail(unsigned char* buffer, size_t bufferSize)
+void ListItem::setThumbnail(const unsigned char* buffer, size_t bufferSize)
 {
-    if (this->thumbnailView)
-        this->thumbnailView->setImage(buffer, bufferSize);
-    else
-        this->thumbnailView = new Image(buffer, bufferSize);
+    if (this->thumbnailView == nullptr) {
+        this->thumbnailView = new Image();
+        this->thumbnailView->setParent(this);
+        this->thumbnailView->setScaleType(ImageScaleType::FIT);
+    }
 
-    this->thumbnailView->setParent(this);
-    this->thumbnailView->setScaleType(ImageScaleType::FIT);
-    this->invalidate();
+    this->thumbnailView->setImage(buffer, bufferSize);
 }
 
 bool ListItem::getReduceDescriptionSpacing()

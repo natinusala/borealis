@@ -71,7 +71,7 @@ class Button : public View
 
     Button* setLabel(std::string label);
     Button* setImage(std::string path);
-    Button* setImage(unsigned char* buffer, size_t bufferSize);
+    Button* setImage(const unsigned char* buffer, size_t bufferSize);
 
     GenericEvent* getClickEvent();
 

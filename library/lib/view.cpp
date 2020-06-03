@@ -430,6 +430,12 @@ int View::getY()
     return this->y;
 }
 
+bool View::intersects(const View *other)
+{
+    return ((this->x + (int)this->width) >= other->x) && ((other->x + (int)other->width) >= this->x) &&
+            ((this->y + (int)this->height) >= other->y) && ((other->y + (int)other->height) >= this->y);
+}
+
 unsigned View::getHeight(bool includeCollapse)
 {
     return this->height * (includeCollapse ? this->collapseState : 1.0f);

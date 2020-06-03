@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include <cxxabi.h>
 #include <features/features_cpu.h>
 #include <stdio.h>
 
@@ -27,6 +28,7 @@
 #include <borealis/frame_context.hpp>
 #include <functional>
 #include <map>
+#include <memory>
 #include <string>
 
 namespace brls
@@ -191,6 +193,8 @@ class View
     unsigned getWidth();
     unsigned getHeight(bool includeCollapse = true);
 
+    bool intersects(const View* other);
+
     void setForceTranslucent(bool translucent);
 
     void setParent(View* parent, void* parentUserdata = nullptr);
@@ -203,7 +207,19 @@ class View
     void updateActionHint(Key key, std::string hintText);
     void setActionAvailable(Key key, bool available);
 
-    std::string describe() const { return typeid(*this).name(); }
+    std::string describe() const
+    {
+        const char* name = typeid(*this).name();
+        int status       = -4; // some arbitrary value to eliminate the compiler warning
+
+        // enable c++11 by passing the flag -std=c++11 to g++
+        std::unique_ptr<char, void (*)(void*)> res {
+            abi::__cxa_demangle(name, NULL, NULL, &status),
+            std::free
+        };
+
+        return (status == 0) ? res.get() : name;
+    }
 
     const std::vector<Action>& getActions()
     {

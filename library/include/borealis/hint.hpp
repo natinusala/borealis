@@ -43,9 +43,11 @@ class Hint : public BoxLayout
     static void popHint(Hint* hint);
     static void animateHints();
 
+  protected:
     static std::string getKeyIcon(Key key);
+    static bool actionsSortFunc(Action a, Action b);
 
-    void rebuildHints();
+    virtual void rebuildHints();
 
   public:
     Hint(bool animate = true);

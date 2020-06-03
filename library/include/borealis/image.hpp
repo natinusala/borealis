@@ -38,15 +38,17 @@ enum class ImageScaleType
 class Image : public View
 {
   public:
-    Image(std::string imagePath);
-    Image(unsigned char* buffer, size_t bufferSize);
+    Image() = default;
     ~Image();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
 
-    void setImage(unsigned char* buffer, size_t bufferSize);
     void setImage(std::string imagePath);
+    void setImage(const unsigned char* buffer, size_t bufferSize);
+    void setRGBAImage(unsigned width, unsigned height, const unsigned char* buffer);
+    void updateRGBA(const unsigned char* buffer);
+    void updateYUV(unsigned char* data[3], int linesize[3], unsigned char* work);
 
     void setScaleType(ImageScaleType imageScaleType);
     void setOpacity(float opacity);
@@ -57,10 +59,6 @@ class Image : public View
     }
 
   private:
-    std::string imagePath;
-    unsigned char* imageBuffer = nullptr;
-    size_t imageBufferSize     = 0;
-
     int texture = -1;
     NVGpaint imgPaint;
 
@@ -71,8 +69,6 @@ class Image : public View
     int imageX = 0, imageY = 0;
     int imageWidth = 0, imageHeight = 0;
     int origViewWidth = 0, origViewHeight = 0;
-
-    void reloadTexture();
 };
 
 } // namespace brls

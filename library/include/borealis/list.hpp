@@ -33,7 +33,7 @@ namespace brls
 // TODO: Use a Label with integrated ticker
 class ListItem : public View
 {
-  private:
+  protected:
     std::string label;
     std::string subLabel;
     std::string value;
@@ -71,7 +71,7 @@ class ListItem : public View
 
     void setThumbnail(Image* image);
     void setThumbnail(std::string imagePath);
-    void setThumbnail(unsigned char* buffer, size_t bufferSize);
+    void setThumbnail(const unsigned char* buffer, size_t bufferSize);
 
     bool hasDescription();
     void setDrawTopSeparator(bool draw);

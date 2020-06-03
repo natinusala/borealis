@@ -45,7 +45,7 @@ class ThumbnailSidebar : public View
     View* getDefaultFocus() override;
 
     void setThumbnail(std::string imagePath);
-    void setThumbnail(unsigned char* buffer, size_t bufferSize);
+    void setThumbnail(const unsigned char* buffer, size_t bufferSize);
 
     void setTitle(std::string title);
     void setSubtitle(std::string subTitle);

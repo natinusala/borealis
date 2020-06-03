@@ -46,7 +46,7 @@ Hint::Hint(bool animate)
     });
 }
 
-bool actionsSortFunc(Action a, Action b)
+bool Hint::actionsSortFunc(Action a, Action b)
 {
     // From left to right:
     //  - first +
@@ -124,7 +124,7 @@ void Hint::rebuildHints()
     std::stable_sort(actions.begin(), actions.end(), actionsSortFunc);
 
     // Populate the layout with labels
-    for (Action action : actions)
+    for (const Action &action : actions)
     {
         std::string hintText = Hint::getKeyIcon(action.key) + "  " + action.hintText;
 

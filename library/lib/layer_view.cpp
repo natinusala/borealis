@@ -57,7 +57,7 @@ void LayerView::changeLayer(int index, bool focus)
 
         this->selectedIndex = index;
         this->layers[this->selectedIndex]->willAppear(true);
-        this->layers[this->selectedIndex]->show([=]() {
+        this->layers[this->selectedIndex]->show([this, focus]() {
             if (focus)
                 Application::giveFocus(this->layers[this->selectedIndex]->getDefaultFocus());
             Application::unblockInputs();
