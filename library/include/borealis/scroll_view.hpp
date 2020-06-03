@@ -68,6 +68,7 @@ class ScrollView : public View
     View* getDefaultFocus() override;
     void onChildFocusGained(View* child) override;
     void onWindowSizeChanged() override;
+    DirectionalInputAction getDirectionalAction(View* nextFocus, FocusDirection direction) override;
 
     void setContentView(View* view);
     View* getContentView();

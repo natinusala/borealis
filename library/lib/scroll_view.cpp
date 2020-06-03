@@ -24,6 +24,8 @@
 namespace brls
 {
 
+#define SCROLLING_SPEED 10 // TODO: make this framerate independent and fine tune based on HOS
+
 ScrollView::ScrollView(ScrollingStrategy stragegy)
     : scrollingStrategy(stragegy)
 {
@@ -216,6 +218,44 @@ void ScrollView::onWindowSizeChanged()
 
     if (this->contentView)
         this->contentView->onWindowSizeChanged();
+}
+
+DirectionalInputAction ScrollView::getDirectionalAction(View* newFocus, FocusDirection direction)
+{
+    // Only used for LAZY_DETACHED scrolling strategy
+    if (this->scrollingStrategy != ScrollingStrategy::LAZY_DETACHED)
+        return DirectionalInputAction::NAVIGATE;
+
+    // If direction isn't up or down, always return NAVIGATE
+    if (direction == FocusDirection::LEFT || direction == FocusDirection::RIGHT)
+        return DirectionalInputAction::NAVIGATE;
+
+    // Check view position, scroll if child is out of bounds, return NAVIGATE otherwise
+    Style* style = Application::getStyle();
+
+    unsigned highlightSize  = style->Highlight.strokeWidth + style->Highlight.shadowWidth;
+    int newFocusTop         = newFocus->getY() - highlightSize;
+    unsigned newFocusBottom = newFocusTop + newFocus->getHeight() + highlightSize * 2;
+
+    if (newFocusTop < this->getY() || newFocusBottom > this->bottomY)
+    {
+        // Scrolling time~
+        int speed = SCROLLING_SPEED;
+
+        if (direction == FocusDirection::UP)
+            speed = -speed;
+
+        float contentHeight = (float)this->contentView->getHeight();
+
+        float newScroll = this->scrollY  + ((float)speed / contentHeight); // 0.0f -> 1.0f scale
+
+        this->startScrolling(true, newScroll);
+
+        return DirectionalInputAction::SCROLL;
+    }
+
+    // All good
+    return DirectionalInputAction::NAVIGATE;
 }
 
 ScrollView::~ScrollView()

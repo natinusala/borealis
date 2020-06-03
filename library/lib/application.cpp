@@ -513,13 +513,13 @@ DirectionalInputAction Application::getDirectionalAction(View* nextFocus, FocusD
     {
         // Traverse the views tree upwards, stop at the first one
         // that does not return NAVIGATE
-        View* view = currentFocus;
+        View* view                    = currentFocus;
         DirectionalInputAction action = view->getDirectionalAction(nextFocus, direction);
 
         while (action == DirectionalInputAction::NAVIGATE && view->hasParent())
         {
-            view    = view->getParent();
-            action  = view->getDirectionalAction(nextFocus, direction);
+            view   = view->getParent();
+            action = view->getDirectionalAction(nextFocus, direction);
         }
 
         return action;
