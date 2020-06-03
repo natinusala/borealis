@@ -52,9 +52,10 @@ class ScrollView : public View
     unsigned getYCenter(View* view);
 
     void prebakeScrolling();
-    void updateScrolling(bool animated);
     void startScrolling(bool animated, float newScroll);
     void scrollAnimationTick();
+
+    void updateMiddleScrolling(bool animated);
 
   public:
     ScrollView(ScrollingStrategy strategy = ScrollingStrategy::LAZY_DETACHED);

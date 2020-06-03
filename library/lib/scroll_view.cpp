@@ -54,10 +54,15 @@ void ScrollView::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
     this->prebakeScrolling();
 
+    // Scrolling update
     if (this->updateScrollingOnNextLayout)
     {
         this->updateScrollingOnNextLayout = false;
-        this->updateScrolling(false);
+
+        if (this->scrollingStrategy == ScrollingStrategy::MIDDLE)
+            this->updateMiddleScrolling(false);
+
+        // TODO: add other strategies here
     }
 
     // Layout content view
@@ -124,7 +129,7 @@ void ScrollView::prebakeScrolling()
     this->bottomY = this->y + this->height;
 }
 
-void ScrollView::updateScrolling(bool animated)
+void ScrollView::updateMiddleScrolling(bool animated)
 {
     // Don't scroll if layout hasn't been called yet
     if (!this->ready || !this->contentView)
@@ -198,8 +203,9 @@ void ScrollView::onChildFocusGained(View* child)
     if (child != this->contentView)
         return;
 
-    // Start scrolling
-    this->updateScrolling(true);
+    // Start scrolling if current strategy is MIDDLE
+    if (this->scrollingStrategy == ScrollingStrategy::MIDDLE)
+        this->updateMiddleScrolling(true);
 
     View::onChildFocusGained(child);
 }
