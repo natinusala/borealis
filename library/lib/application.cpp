@@ -362,30 +362,10 @@ bool Application::mainLoop()
     // Trigger gamepad events
     // TODO: Translate axis events to dpad events here
 
-    bool anyButtonPressed               = false;
-    bool repeating                      = false;
-    static retro_time_t buttonPressTime = 0;
-    static int repeatingButtonTimer     = 0;
-
     for (int i = GLFW_GAMEPAD_BUTTON_A; i <= GLFW_GAMEPAD_BUTTON_LAST; i++)
     {
         if (Application::gamepad.buttons[i] == GLFW_PRESS)
-        {
-            anyButtonPressed = true;
-            repeating        = (repeatingButtonTimer > BUTTON_REPEAT_DELAY && repeatingButtonTimer % BUTTON_REPEAT_CADENCY == 0);
-
-            if (Application::oldGamepad.buttons[i] != GLFW_PRESS || repeating)
-                Application::onGamepadButtonPressed(i, repeating);
-        }
-
-        if (Application::gamepad.buttons[i] != Application::oldGamepad.buttons[i])
-            buttonPressTime = repeatingButtonTimer = 0;
-    }
-
-    if (anyButtonPressed && cpu_features_get_time_usec() - buttonPressTime > 1000)
-    {
-        buttonPressTime = cpu_features_get_time_usec();
-        repeatingButtonTimer++; // Increased once every ~1ms
+            Application::onGamepadButtonPressed(i, Application::oldGamepad.buttons[i] == GLFW_PRESS);
     }
 
     Application::oldGamepad = Application::gamepad;
@@ -535,11 +515,9 @@ DirectionalInputAction Application::getDirectionalAction(View* nextFocus, FocusD
 //      3. if it's anything else than NAVIGATE, abort
 //      4. otherwise, handle the navigation event (with repeat throttler enabled)
 // For other inputs:
-//      1. call handleAction (with repeat throttler enabled if action has throttle flag)
-void Application::onGamepadButtonPressed(char button, bool repeating)
+//      1. call handleAction (only once per button press!)
+void Application::onGamepadButtonPressed(char button, bool wasPressed)
 {
-    // TODO: nuke repetition here, it needs to happen later in the flow
-
     if (Application::blockInputsTokens != 0)
         return;
 
@@ -559,39 +537,10 @@ void Application::onGamepadButtonPressed(char button, bool repeating)
     // Non-directional input
     else
     {
-        // TODO: handle repetition here, with a flag in actions
-        Application::handleAction(button);
+        // Only call action once per button press
+        if (!wasPressed)
+            Application::handleAction(button);
     }
-
-    /*if (repeating && Application::repetitionOldFocus == Application::currentFocus)
-        return;
-
-    Application::repetitionOldFocus = Application::currentFocus;
-
-    // Actions
-    if (Application::handleAction(button))
-        return;
-
-    // Navigation
-    // Only navigate if the button hasn't been consumed by an action
-    // (allows overriding DPAD buttons using actions)
-    switch (button)
-    {
-        case GLFW_GAMEPAD_BUTTON_DPAD_DOWN:
-            Application::navigate(FocusDirection::DOWN);
-            break;
-        case GLFW_GAMEPAD_BUTTON_DPAD_UP:
-            Application::navigate(FocusDirection::UP);
-            break;
-        case GLFW_GAMEPAD_BUTTON_DPAD_LEFT:
-            Application::navigate(FocusDirection::LEFT);
-            break;
-        case GLFW_GAMEPAD_BUTTON_DPAD_RIGHT:
-            Application::navigate(FocusDirection::RIGHT);
-            break;
-        default:
-            break;
-    }*/
 }
 
 View* Application::getCurrentFocus()

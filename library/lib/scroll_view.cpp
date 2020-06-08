@@ -24,7 +24,7 @@
 namespace brls
 {
 
-#define SCROLLING_SPEED 10 // TODO: make this framerate independent and fine tune based on HOS
+#define SCROLLING_SPEED 10 // TODO: make this framerate independent, resolution independant and fine tune based on HOS
 
 ScrollView::ScrollView(ScrollingStrategy stragegy)
     : scrollingStrategy(stragegy)

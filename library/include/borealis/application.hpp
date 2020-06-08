@@ -113,7 +113,7 @@ class Application
 
     static void notify(std::string text);
 
-    static void onGamepadButtonPressed(char button, bool repeating);
+    static void onGamepadButtonPressed(char button, bool wasPressed);
 
     /**
       * "Crashes" the app (displays a fullscreen CrashFrame)
