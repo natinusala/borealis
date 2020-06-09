@@ -38,7 +38,6 @@ enum class ImageScaleType
 class Image : public View
 {
   public:
-    Image() = default;
     ~Image();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
