@@ -130,6 +130,9 @@ class Application
 
     static void setMaximumFPS(unsigned fps);
 
+    static void setQuitOnPopRoot(bool enabled);
+    static void setGlobalQuit(bool enabled);
+
     // public so that the glfw callback can access it
     inline static unsigned contentWidth, contentHeight;
     inline static float windowScale;
@@ -173,6 +176,9 @@ class Application
     inline static FramerateCounter* framerateCounter = nullptr;
 
     inline static float frameTime = 0.0f;
+
+    inline static bool quitOnPopRoot = false;
+    inline static bool globalQuit = true;
 
     inline static View* repetitionOldFocus = nullptr;
 

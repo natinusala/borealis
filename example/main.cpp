@@ -48,6 +48,12 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
+    // Close application by on back press at the root view. Disabled by default
+    brls::Application::setQuitOnPopRoot(false);
+
+    // Close application with PLUS key. Enabled by default
+    brls::Application::setGlobalQuit(true);
+
     // Create a sample view
     brls::TabFrame* rootFrame = new brls::TabFrame();
     rootFrame->setTitle("Borealis Example App");
