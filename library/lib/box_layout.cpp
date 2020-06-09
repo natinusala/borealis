@@ -41,8 +41,7 @@ void BoxLayout::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heig
 {
     // Draw children
     for (BoxLayoutChild* child : this->children)
-        if (this->intersects(child->view))
-            child->view->frame(ctx);
+        child->view->frame(ctx);
 }
 
 void BoxLayout::setGravity(BoxLayoutGravity gravity)
