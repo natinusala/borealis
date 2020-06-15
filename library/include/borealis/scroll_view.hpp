@@ -38,7 +38,7 @@ class ScrollView : public View
     float scrollY = 0.0f; // from 0.0f to 1.0f, in % of content view height
 
     bool updateScrollingOnNextLayout = false;
-    bool updateScrollingOnNextFrame = false;
+    bool updateScrollingOnNextFrame  = false;
 
     unsigned getYCenter(View* view);
 
