@@ -2,6 +2,8 @@
 
 Hardware accelerated, Nintendo Switch inspired UI library for PC and Nintendo Switch. Powered by nanovg. Skeleton based on the [hybrid glfw app](https://github.com/fincs/hybrid_app) by fincs.
 
+Documentation is available [right here](https://github.com/natinusala/borealis/wiki). Warning: may not be up to date.
+
 ## Building the example for Switch
 
 To build for Switch, a standard development environment must first be set up. In order to do so, [refer to the Getting Started guide](https://devkitpro.org/wiki/Getting_Started).
@@ -42,7 +44,7 @@ ninja -C build
 ./build/borealis_example
 ```
 
-### How to use (TL;DR: see the example in this repo)
+### Including in your project (TL;DR: see the example makefile in this repo)
 0. Your project must be built as C++17 (`-std=c++1z`). You also need to remove `-fno-rtti` and `-fno-exceptions` if you have them
 1. Use a submodule (or even better, a [subrepo](https://github.com/ingydotnet/git-subrepo)) to clone this repository in your project
 2. Copy the `resources` folder to the root of your project
