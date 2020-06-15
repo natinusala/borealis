@@ -136,7 +136,7 @@ void ThumbnailSidebar::layout(NVGcontext* vg, Style* style, FontStash* stash)
         );
 
         // Call layout directly to update height
-        this->title->layout(vg, style, stash);
+        this->title->invalidate(true);
 
         yAdvance += this->title->getHeight() + style->ThumbnailSidebar.marginTopBottom / 2;
     }

@@ -798,9 +798,12 @@ void Application::pushView(View* view, ViewAnimation animation)
         Application::focusStack.push_back(Application::currentFocus);
     }
 
+    // Layout and prepare view
+    view->invalidate(true);
     view->willAppear(true);
     Application::giveFocus(view->getDefaultFocus());
 
+    // And push it
     Application::viewStack.push_back(view);
 }
 

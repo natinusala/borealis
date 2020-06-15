@@ -162,7 +162,7 @@ void Dropdown::layout(NVGcontext* vg, Style* style, FontStash* stash)
         this->height - style->AppletFrame.footerHeight - listHeight - style->Dropdown.listPadding + (unsigned)this->topOffset,
         listWidth,
         listHeight);
-    this->list->invalidate();
+    this->list->invalidate(true); // call layout directly to update scrolling
 
     // Hint
     // TODO: convert the bottom-left footer into a Label to get its width and avoid clipping with the hint

@@ -29,6 +29,10 @@ void ScrollView::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned hei
     if (!this->contentView)
         return;
 
+    // Update scrolling if needed - try until it works
+    if (this->updateScrollingOnNextFrame && this->updateScrolling(false))
+        this->updateScrollingOnNextFrame = false;
+
     // Enable scissoring
     nvgSave(vg);
     nvgScissor(vg, x, y, this->width, this->height);
@@ -49,6 +53,7 @@ void ScrollView::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
     this->prebakeScrolling();
 
+    // Update scrolling if needed
     if (this->updateScrollingOnNextLayout)
     {
         this->updateScrollingOnNextLayout = false;
@@ -74,9 +79,12 @@ void ScrollView::willAppear(bool resetState)
 {
     this->prebakeScrolling();
 
-    // Reset scrolling to the top if asked to
+    // Reset scrolling if asked to
     if (resetState)
+    {
         this->startScrolling(false, 0.0f);
+        this->updateScrollingOnNextFrame = true; // focus may have changed since
+    }
 
     if (this->contentView)
         this->contentView->willAppear(resetState);
@@ -119,13 +127,18 @@ void ScrollView::prebakeScrolling()
     this->bottomY = this->y + this->height;
 }
 
-void ScrollView::updateScrolling(bool animated)
+bool ScrollView::updateScrolling(bool animated)
 {
     // Don't scroll if layout hasn't been called yet
     if (!this->ready || !this->contentView)
-        return;
+        return false;
 
-    float contentHeight                = (float)this->contentView->getHeight();
+    float contentHeight = (float)this->contentView->getHeight();
+
+    // Ensure content is laid out too
+    if (contentHeight == 0)
+        return false;
+
     View* focusedView                  = Application::getCurrentFocus();
     int currentSelectionMiddleOnScreen = focusedView->getY() + focusedView->getHeight() / 2;
     float newScroll                    = -(this->scrollY * contentHeight) - ((float)currentSelectionMiddleOnScreen - (float)this->middleY);
@@ -143,6 +156,8 @@ void ScrollView::updateScrolling(bool animated)
 
     //Start animation
     this->startScrolling(animated, newScroll);
+
+    return true;
 }
 
 void ScrollView::startScrolling(bool animated, float newScroll)
@@ -174,7 +189,7 @@ void ScrollView::startScrolling(bool animated, float newScroll)
         this->scrollY = newScroll;
     }
 
-    this->invalidate();
+    this->invalidate(!animated); // layout immediately if not animated
 }
 
 void ScrollView::scrollAnimationTick()
