@@ -2,6 +2,10 @@
 
 Hardware accelerated, Nintendo Switch inspired UI library for PC and Nintendo Switch. Powered by nanovg. Skeleton based on the [hybrid glfw app](https://github.com/fincs/hybrid_app) by fincs.
 
+The library is still in early development and WILL lack features and contain bugs. Feel free to report them in the issues, or make a pull request if you happen to fix some.
+
+You can see the planned features in the Projects tab.
+
 Documentation is available [right here](https://github.com/natinusala/borealis/wiki). Warning: may not be up to date.
 
 ## Building the example for Switch
