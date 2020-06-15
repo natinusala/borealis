@@ -79,7 +79,9 @@ void ScrollView::willAppear(bool resetState)
 {
     this->prebakeScrolling();
 
-    // Reset scrolling if asked to
+    // First scroll all the way to the top
+    // then wait for the first frame to scroll
+    // to the selected view if needed (only known then)
     if (resetState)
     {
         this->startScrolling(false, 0.0f);
