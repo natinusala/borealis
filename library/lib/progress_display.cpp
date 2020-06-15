@@ -51,7 +51,7 @@ void ProgressDisplay::layout(NVGcontext* vg, Style* style, FontStash* stash)
     if (this->label)
     {
         this->label->setWidth(style->ProgressDisplay.percentageLabelWidth);
-        this->label->layout(vg, style, stash);
+        this->label->invalidate(true);
         this->label->setBoundaries(
             this->x + this->width - this->label->getWidth() / 2,
             this->y + this->height / 2 - this->label->getHeight() / 2,

@@ -80,7 +80,7 @@ void View::frame(FrameContext* ctx)
     // Layout if needed
     if (this->dirty)
     {
-        this->layout(ctx->vg, style, ctx->fontStash);
+        this->invalidate(true);
         this->dirty = false;
     }
 

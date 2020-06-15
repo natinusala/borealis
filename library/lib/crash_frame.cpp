@@ -114,7 +114,7 @@ void CrashFrame::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
     // Label
     this->label->setWidth(roundf((float)this->width * style->CrashFrame.labelWidth));
-    this->label->layout(vg, style, stash);
+    this->label->invalidate(true);
 
     this->label->setBoundaries(
         this->x + this->width / 2 - this->label->getWidth() / 2,

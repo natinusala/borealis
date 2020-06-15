@@ -181,7 +181,7 @@ void Notification::layout(NVGcontext* vg, Style* style, FontStash* stash)
     this->label->setWidth(this->getWidth() - padding * 2);
     this->label->setHeight(0); // height is dynamic
 
-    this->label->layout(vg, style, stash); // layout directly to update height
+    this->label->invalidate(true); // layout directly to update height
 
     unsigned minLabelHeight = (unsigned int)(lineHeight * fontSize) + fontSize; // 2 lines
     unsigned labelYAdvance  = padding;

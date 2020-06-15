@@ -65,7 +65,7 @@ void Button::layout(NVGcontext* vg, Style* style, FontStash* stash)
     if (this->label != nullptr)
     {
         this->label->setWidth(this->getWidth() - imageWidth);
-        this->label->layout(vg, style, stash);
+        this->label->invalidate(true);
         this->label->setBoundaries(
             this->x + imageWidth,
             this->y + this->getHeight() / 2 - this->label->getHeight() / 2,
@@ -77,7 +77,7 @@ void Button::layout(NVGcontext* vg, Style* style, FontStash* stash)
     {
         this->image->setHeight(imageHeight);
         this->image->setWidth(imageWidth);
-        this->image->layout(vg, style, stash);
+        this->image->invalidate(true);
         this->image->setBoundaries(
             this->x,
             this->y + this->getHeight() / 2 - this->image->getHeight() / 2,

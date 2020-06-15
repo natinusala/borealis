@@ -204,7 +204,7 @@ void Dialog::layout(NVGcontext* vg, Style* style, FontStash* stash)
             contentWidth,
             contentHeight);
 
-        this->contentView->layout(vg, style, stash); // layout directly to get height
+        this->contentView->invalidate(true); // layout directly to get height
 
         // Center the content view in the dialog
         // or resize it if needed

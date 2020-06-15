@@ -52,7 +52,7 @@ brls::View* SampleInstallerPage::getDefaultFocus()
 void SampleInstallerPage::layout(NVGcontext* vg, brls::Style* style, brls::FontStash* stash)
 {
     this->label->setWidth(roundf((float)this->width * style->CrashFrame.labelWidth));
-    this->label->layout(vg, style, stash);
+    this->label->invalidate(true);
 
     this->label->setBoundaries(
         this->x + this->width / 2 - this->label->getWidth() / 2,
