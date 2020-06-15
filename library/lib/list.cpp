@@ -33,8 +33,8 @@
 namespace brls
 {
 
-ListContentView::ListContentView(size_t defaultFocus)
-    : BoxLayout(BoxLayoutOrientation::VERTICAL, defaultFocus)
+ListContentView::ListContentView(List* list, size_t defaultFocus)
+    : BoxLayout(BoxLayoutOrientation::VERTICAL, defaultFocus), list(list)
 {
     Style* style = Application::getStyle();
     this->setMargins(style->List.marginTopBottom, style->List.marginLeftRight, style->List.marginTopBottom, style->List.marginLeftRight);
@@ -100,6 +100,10 @@ void ListContentView::customSpacing(View* current, View* next, int* spacing)
             *spacing     = style->Header.padding;
         }
     }
+
+    // Call list custom spacing
+    if (this->list)
+        this->list->customSpacing(current, next, spacing);
 }
 
 ListItem::ListItem(std::string label, std::string description, std::string subLabel)
@@ -561,7 +565,7 @@ ValueSelectedEvent* SelectListItem::getValueSelectedEvent()
 
 List::List(size_t defaultFocus)
 {
-    this->layout = new ListContentView(defaultFocus);
+    this->layout = new ListContentView(this, defaultFocus);
 
     this->layout->setResize(true);
     this->layout->setParent(this);
@@ -583,6 +587,26 @@ void List::setMargins(unsigned top, unsigned right, unsigned bottom, unsigned le
         right,
         bottom,
         left);
+}
+
+void List::setSpacing(unsigned spacing)
+{
+    this->layout->setSpacing(spacing);
+}
+
+unsigned List::getSpacing()
+{
+    return this->layout->getSpacing();
+}
+
+void List::setMarginBottom(unsigned bottom)
+{
+    this->layout->setMarginBottom(bottom);
+}
+
+void List::customSpacing(View* current, View* next, int* spacing)
+{
+    // Nothing to do by default
 }
 
 List::~List()
