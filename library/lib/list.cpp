@@ -34,7 +34,8 @@ namespace brls
 {
 
 ListContentView::ListContentView(List* list, size_t defaultFocus)
-    : BoxLayout(BoxLayoutOrientation::VERTICAL, defaultFocus), list(list)
+    : BoxLayout(BoxLayoutOrientation::VERTICAL, defaultFocus)
+    , list(list)
 {
     Style* style = Application::getStyle();
     this->setMargins(style->List.marginTopBottom, style->List.marginLeftRight, style->List.marginTopBottom, style->List.marginLeftRight);

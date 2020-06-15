@@ -53,8 +53,8 @@
 
 // Constants used for scaling as well as
 // creating a window of the right size on PC
-constexpr uint32_t WINDOW_WIDTH    = 1280;
-constexpr uint32_t WINDOW_HEIGHT   = 720;
+constexpr uint32_t WINDOW_WIDTH  = 1280;
+constexpr uint32_t WINDOW_HEIGHT = 720;
 
 #define DEFAULT_FPS 60
 #define BUTTON_REPEAT_DELAY 15
@@ -151,7 +151,7 @@ bool Application::init(std::string title, Style style, Theme theme)
     Application::currentFocus = nullptr;
     Application::oldGamepad   = {};
     Application::gamepad      = {};
-    Application::title = title;
+    Application::title        = title;
 
     // Init theme to defaults
     Application::setTheme(theme);
