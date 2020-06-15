@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
     // Init the app
     brls::Logger::setLogLevel(brls::LogLevel::DEBUG);
 
-    if (!brls::Application::init())
+    if (!brls::Application::init("Borealis example"))
     {
         brls::Logger::error("Unable to init Borealis application");
         return EXIT_FAILURE;

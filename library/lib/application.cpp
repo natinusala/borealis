@@ -55,7 +55,6 @@
 // creating a window of the right size on PC
 constexpr uint32_t WINDOW_WIDTH    = 1280;
 constexpr uint32_t WINDOW_HEIGHT   = 720;
-constexpr const char* WINDOW_TITLE = WINDOW_NAME;
 
 #define DEFAULT_FPS 60
 #define BUTTON_REPEAT_DELAY 15
@@ -133,12 +132,12 @@ static void windowKeyCallback(GLFWwindow* window, int key, int scancode, int act
     }
 }
 
-bool Application::init()
+bool Application::init(std::string title)
 {
-    return Application::init(Style::horizon(), Theme::horizon());
+    return Application::init(title, Style::horizon(), Theme::horizon());
 }
 
-bool Application::init(Style style, Theme theme)
+bool Application::init(std::string title, Style style, Theme theme)
 {
     // Init rng
     std::srand(std::time(nullptr));
@@ -152,6 +151,7 @@ bool Application::init(Style style, Theme theme)
     Application::currentFocus = nullptr;
     Application::oldGamepad   = {};
     Application::gamepad      = {};
+    Application::title = title;
 
     // Init theme to defaults
     Application::setTheme(theme);
@@ -180,7 +180,7 @@ bool Application::init(Style style, Theme theme)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #endif
 
-    Application::window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, nullptr, nullptr);
+    Application::window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, title.c_str(), nullptr, nullptr);
     if (!window)
     {
         Logger::error("glfw: failed to create window\n");
@@ -951,6 +951,11 @@ void Application::setMaximumFPS(unsigned fps)
     }
 
     Logger::info("Maximum FPS set to %d - using a frame time of %.2f ms", fps, Application::frameTime);
+}
+
+std::string Application::getTitle()
+{
+    return Application::title;
 }
 
 GenericEvent* Application::getGlobalFocusChangeEvent()

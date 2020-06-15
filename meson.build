@@ -3,8 +3,6 @@ project('borealis_example', ['c', 'cpp'],
     default_options: [ 'buildtype=release', 'strip=true', 'b_ndebug=if-release', 'cpp_std=c++1z' ],
 )
 
-add_global_arguments('-DWINDOW_NAME="Borealis example"', language : 'cpp')
-
 subdir('library')
 
 example_files = files(

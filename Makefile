@@ -60,7 +60,6 @@ CFLAGS	:=	-g -Wall -O2 -ffunction-sections \
 			$(ARCH) $(DEFINES)
 
 CFLAGS	+=	$(INCLUDE) -D__SWITCH__ \
-			-DWINDOW_NAME="\"$(APP_TITLE)\"" \
 			-DBOREALIS_RESOURCES="\"$(BOREALIS_RESOURCES)\""
 
 CXXFLAGS	:= $(CFLAGS) -fno-exceptions -std=c++1z -O2

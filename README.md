@@ -45,8 +45,15 @@ ninja -C build
 ### How to use (TL;DR: see the example in this repo)
 0. Your project must be built as C++17 (`-std=c++1z`). You also need to remove `-fno-rtti` and `-fno-exceptions` if you have them
 1. Use a submodule (or even better, a [subrepo](https://github.com/ingydotnet/git-subrepo)) to clone this repository in your project
-2. For PC (meson) : use `subdir` to import the library folder, then use the `borealis_files`, `borealis_dependencies` and `borealis_include` variables to link and add the dependencies and the includes of the library
-3. For Switch : take a standard homebrew makefile and use include to load `borealis.mk` (after the `LIBDIRS` definition). Add a `BOREALIS_PATH` variable before the include, specifying the subfolder you put the library in
-4. Then, add a `WINDOW_NAME` define that will be, you guessed it, the title of your window
-5. Finally, add a `BOREALIS_RESOURCES` define pointing to the resources folder, and do the same for the `ROMFS` definition on the Switch makefile
-5. Finally, copy the resources folder to the root of your project
+2. Copy the `resources` folder to the root of your project
+3. For PC (meson):
+    1. take a standard meson file
+    2. use `subdir` to import the library folder
+    3. use the `borealis_files`, `borealis_dependencies` and `borealis_include` variables for respectively objects to build, dependencies (glfw...) and includes directory
+    4. add a `BOREALIS_RESOURCES` define pointing to the resources folder at runtime (so `resources`)
+4. For Switch:
+    1. take a standard homebrew makefile
+    2. add a `BOREALIS_PATH` variable containing the subfolder you put the library in
+    3. use `include` to load `borealis.mk` (after `LIBDIRS` and `BOREALIS_PATH`)
+    4. set `ROMFS` to the resources folder
+    5. add a `BOREALIS_RESOURCES` define pointing to the resources folder at runtime (so `romfs:/`)
