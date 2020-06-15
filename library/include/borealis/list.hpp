@@ -211,7 +211,7 @@ class List : public ScrollView
     void setMarginBottom(unsigned bottom);
     void setSpacing(unsigned spacing);
     unsigned getSpacing();
-    void customSpacing(View* current, View* next, int* spacing);
+    virtual void customSpacing(View* current, View* next, int* spacing);
 };
 
 } // namespace brls
