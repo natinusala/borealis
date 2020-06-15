@@ -300,11 +300,10 @@ class View
 
     /**
       * Calls layout() on next frame
+      * unless immediate is true in which case
+      * it's called immediately
       */
-    void invalidate()
-    {
-        this->dirty = true;
-    }
+    void invalidate(bool immediate = false);
 
     /**
       * Is this view translucent?

@@ -968,4 +968,9 @@ VoidEvent* Application::getGlobalHintsUpdateEvent()
     return &Application::globalHintsUpdateEvent;
 }
 
+FontStash* Application::getFontStash()
+{
+    return &Application::fontStash;
+}
+
 } // namespace brls

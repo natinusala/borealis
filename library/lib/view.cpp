@@ -619,4 +619,12 @@ View::~View()
         Application::giveFocus(nullptr);
 }
 
+void View::invalidate(bool immediate)
+{
+    if (immediate)
+        this->layout(Application::getNVGContext(), Application::getStyle(), Application::getFontStash());
+    else
+        this->dirty = true;
+}
+
 } // namespace brls

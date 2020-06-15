@@ -208,7 +208,7 @@ void ListItem::layout(NVGcontext* vg, Style* style, FontStash* stash)
 
         this->height = style->List.Item.height;
         this->descriptionView->setBoundaries(this->x + indent, this->y + this->height + style->List.Item.descriptionSpacing, this->width - indent * 2, 0);
-        this->descriptionView->layout(vg, style, stash); // we must call layout directly
+        this->descriptionView->invalidate(true); // we must call layout directly
         this->height += this->descriptionView->getHeight() + style->List.Item.descriptionSpacing;
     }
 

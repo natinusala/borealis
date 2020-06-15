@@ -96,6 +96,8 @@ class Application
     static int loadFontFromMemory(const char* fontName, void* data, size_t size, bool freeData);
     static int findFont(const char* fontName);
 
+    static FontStash* getFontStash();
+
     static void notify(std::string text);
 
     static void onGamepadButtonPressed(char button, bool repeating);

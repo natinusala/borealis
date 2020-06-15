@@ -172,7 +172,7 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
                     this->width - this->marginLeft - this->marginRight,
                     child->view->getHeight(false));
 
-            child->view->layout(vg, style, stash); // call layout directly in case height is updated
+            child->view->invalidate(true); // call layout directly in case height is updated
             childHeight = child->view->getHeight();
 
             int spacing = (int)this->spacing;
@@ -216,7 +216,7 @@ void BoxLayout::layout(NVGcontext* vg, Style* style, FontStash* stash)
                     childWidth,
                     this->height - this->marginTop - this->marginBottom);
 
-            child->view->layout(vg, style, stash); // call layout directly in case width is updated
+            child->view->invalidate(true); // call layout directly in case width is updated
             childWidth = child->view->getWidth();
 
             int spacing = (int)this->spacing;
