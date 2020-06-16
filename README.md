@@ -1,4 +1,4 @@
-# Borealis
+# borealis
 
 Hardware accelerated, Nintendo Switch inspired UI library for PC and Nintendo Switch. Powered by nanovg. Skeleton based on the [hybrid glfw app](https://github.com/fincs/hybrid_app) by fincs.
 
