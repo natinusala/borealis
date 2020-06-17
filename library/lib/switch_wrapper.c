@@ -28,7 +28,7 @@ void userAppInit()
     romfsInit();
     socketInitializeDefault();
     nxlink_sock = nxlinkStdio();
-    plInitialize();
+    plInitialize(PlServiceType_User);
     setsysInitialize();
 }
 
