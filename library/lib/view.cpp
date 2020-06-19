@@ -194,8 +194,8 @@ void View::drawHighlight(NVGcontext* vg, ThemeValues* theme, float alpha, Style*
 
     unsigned x      = this->x - insetLeft - style->Highlight.strokeWidth / 2;
     unsigned y      = this->y - insetTop - style->Highlight.strokeWidth / 2;
-    unsigned width  = this->width + insetLeft + insetRight + style->Highlight.strokeWidth;
-    unsigned height = this->height + insetTop + insetBottom + style->Highlight.strokeWidth;
+    unsigned width  = this->width + insetLeft + insetRight + style->Highlight.strokeWidth - 1;
+    unsigned height = this->height + insetTop + insetBottom + style->Highlight.strokeWidth - 1;
 
     // Shake animation
     if (this->highlightShaking)
