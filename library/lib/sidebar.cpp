@@ -41,8 +41,11 @@ View* Sidebar::getDefaultFocus()
     if (this->lastFocus >= this->children.size())
         this->lastFocus = 0;
 
+    View* toFocus{ nullptr };
     // Try to focus last focused one
-    View* toFocus = this->children[this->lastFocus]->view->getDefaultFocus();
+    if(this->children.size() != 0)
+        toFocus = this->children[this->lastFocus]->view->getDefaultFocus();
+    
     if (toFocus)
         return toFocus;
 

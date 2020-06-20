@@ -58,7 +58,7 @@ class Button : public View
     float cornerRadiusOverride = 0;
 
   public:
-    Button(ButtonStyle style);
+    Button(ButtonStyle style = ButtonStyle::PLAIN);
     ~Button();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
