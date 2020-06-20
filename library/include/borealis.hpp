@@ -20,7 +20,7 @@
 #pragma once
 
 #ifndef BOREALIS_RESOURCES
-#error BOREALIS_RESOURCES define missing
+#define BOREALIS_RESOURCES "romfs:/"
 #endif
 #define BOREALIS_ASSET(_str) BOREALIS_RESOURCES _str
 
