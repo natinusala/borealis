@@ -49,7 +49,6 @@ APP_VERSION	:=	1.0
 
 ROMFS				:=	resources
 BOREALIS_PATH		:=	.
-BOREALIS_RESOURCES	:=	romfs:/
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -59,8 +58,7 @@ ARCH	:=	-march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
 CFLAGS	:=	-g -Wall -O2 -ffunction-sections \
 			$(ARCH) $(DEFINES)
 
-CFLAGS	+=	$(INCLUDE) -D__SWITCH__ \
-			-DBOREALIS_RESOURCES="\"$(BOREALIS_RESOURCES)\""
+CFLAGS	+=	$(INCLUDE) -D__SWITCH__
 
 CXXFLAGS	:= $(CFLAGS) -fno-exceptions -std=c++1z -O2
 
