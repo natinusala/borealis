@@ -49,7 +49,7 @@ APP_VERSION	:=	1.0
 
 ROMFS				:=	resources
 BOREALIS_PATH		:=	.
-BOREALIS_RESOURCES	:=	romfs:/
+BOREALIS_RESOURCES	:=	romfs:\/
 
 #---------------------------------------------------------------------------------
 # options for code generation
