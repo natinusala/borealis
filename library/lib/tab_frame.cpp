@@ -64,11 +64,9 @@ void TabFrame::switchToView(View* view)
         this->layout->removeView(1, false);
     }
 
-    if (view != nullptr)
-    {
-        this->layout->addView(view, true, true); // addView() calls willAppear()
-        this->rightPane = view;
-    }
+    this->rightPane = view;
+    if (this->rightPane != nullptr)
+        this->layout->addView(this->rightPane, true, true); // addView() calls willAppear()
 }
 
 void TabFrame::addTab(std::string label, View* view)
