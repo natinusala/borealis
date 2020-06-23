@@ -22,6 +22,15 @@
 #include <borealis/frame_context.hpp>
 #include <borealis/view.hpp>
 
+// fwd for std::swap
+namespace brls {
+  class Image;
+}
+// fwd for friend declaration in brls::Image
+namespace std {
+  void swap(brls::Image& a, brls::Image& b);
+}
+
 namespace brls
 {
 
@@ -37,10 +46,17 @@ enum class ImageScaleType
 // An image
 class Image : public View
 {
+  friend void std::swap(Image& a, Image&b);
   public:
+    Image() = default;
     Image(std::string imagePath);
     Image(unsigned char* buffer, size_t bufferSize);
+
     ~Image();
+    Image(const Image& copy);
+    Image(Image&& move) noexcept;
+    Image& operator=(const Image& cp_assign);
+    Image& operator=(Image&& mv_assign);
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
@@ -55,6 +71,8 @@ class Image : public View
     {
         this->cornerRadius = radius;
     }
+
+    unsigned char* copyImgBuf() const;
 
   private:
     std::string imagePath;
