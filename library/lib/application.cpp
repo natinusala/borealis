@@ -21,35 +21,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 #include <algorithm>
 #include <borealis.hpp>
 #include <string>
 
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-#include <glad.h>
-
-#define GLM_FORCE_PURE
-#define GLM_ENABLE_EXPERIMENTAL
-#include <nanovg.h>
-
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/rotate_vector.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
-#define NANOVG_GL3_IMPLEMENTATION
-#include <nanovg_gl.h>
-
 #ifdef __SWITCH__
+
 #include <switch.h>
+
+#include <nanovg.h>
+#include <nanovg_dk.h>
+
 #endif
 
 #include <chrono>
 #include <set>
 #include <thread>
+
+#include <borealis/platform_driver/platform_driver_glfw.hpp>
 
 // Constants used for scaling as well as
 // creating a window of the right size on PC
@@ -65,72 +56,6 @@ constexpr uint32_t WINDOW_HEIGHT = 720;
 
 namespace brls
 {
-
-// TODO: Use this instead of a glViewport each frame
-static void windowFramebufferSizeCallback(GLFWwindow* window, int width, int height)
-{
-    if (!width || !height)
-        return;
-
-    glViewport(0, 0, width, height);
-    Application::windowScale = (float)width / (float)WINDOW_WIDTH;
-
-    float contentHeight = ((float)height / (Application::windowScale * (float)WINDOW_HEIGHT)) * (float)WINDOW_HEIGHT;
-
-    Application::contentWidth  = WINDOW_WIDTH;
-    Application::contentHeight = (unsigned)roundf(contentHeight);
-
-    Application::resizeNotificationManager();
-
-    Logger::info("Window size changed to %dx%d", width, height);
-    Logger::info("New scale factor is %f", Application::windowScale);
-}
-
-static void joystickCallback(int jid, int event)
-{
-    if (event == GLFW_CONNECTED)
-    {
-        Logger::info("Joystick %d connected", jid);
-        if (glfwJoystickIsGamepad(jid))
-            Logger::info("Joystick %d is gamepad: \"%s\"", jid, glfwGetGamepadName(jid));
-    }
-    else if (event == GLFW_DISCONNECTED)
-        Logger::info("Joystick %d disconnected", jid);
-}
-
-static void errorCallback(int errorCode, const char* description)
-{
-    Logger::error("[GLFW:%d] %s", errorCode, description);
-}
-
-static void windowKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    if (action == GLFW_PRESS)
-    {
-        // Check for toggle-fullscreen combo
-        if (key == GLFW_KEY_ENTER && mods == GLFW_MOD_ALT)
-        {
-            static int saved_x, saved_y, saved_width, saved_height;
-
-            if (!glfwGetWindowMonitor(window))
-            {
-                // Back up window position/size
-                glfwGetWindowPos(window, &saved_x, &saved_y);
-                glfwGetWindowSize(window, &saved_width, &saved_height);
-
-                // Switch to fullscreen mode
-                GLFWmonitor* monitor    = glfwGetPrimaryMonitor();
-                const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-                glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
-            }
-            else
-            {
-                // Switch back to windowed mode
-                glfwSetWindowMonitor(window, nullptr, saved_x, saved_y, saved_width, saved_height, GLFW_DONT_CARE);
-            }
-        }
-    }
-}
 
 bool Application::init(std::string title)
 {
@@ -149,78 +74,19 @@ bool Application::init(std::string title, Style style, Theme theme)
     // Init static variables
     Application::currentStyle = style;
     Application::currentFocus = nullptr;
-    Application::oldGamepad   = {};
-    Application::gamepad      = {};
     Application::title        = title;
 
     // Init theme to defaults
     Application::setTheme(theme);
 
-    // Init glfw
-    glfwSetErrorCallback(errorCallback);
-    glfwInitHint(GLFW_JOYSTICK_HAT_BUTTONS, GLFW_FALSE);
-    if (!glfwInit())
-    {
-        Logger::error("Failed to initialize glfw");
-        return false;
-    }
+    #ifdef __SWITCH__
 
-    // Create window
-#ifdef __APPLE__
-    // Explicitly ask for a 3.2 context on OS X
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    // Force scaling off to keep desired framebuffer size
-    glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
-#else
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#endif
+    #else
+        Application::platformDriver = new drv::PlatformDriverGLFW();
+    #endif
 
-    Application::window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, title.c_str(), nullptr, nullptr);
-    if (!window)
-    {
-        Logger::error("glfw: failed to create window\n");
-        glfwTerminate();
-        return false;
-    }
-
-    // Configure window
-    glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE);
-    glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, windowFramebufferSizeCallback);
-    glfwSetKeyCallback(window, windowKeyCallback);
-    glfwSetJoystickCallback(joystickCallback);
-
-    // Load OpenGL routines using glad
-    gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-    glfwSwapInterval(1);
-
-    Logger::info("GL Vendor: %s", glGetString(GL_VENDOR));
-    Logger::info("GL Renderer: %s", glGetString(GL_RENDERER));
-    Logger::info("GL Version: %s", glGetString(GL_VERSION));
-
-    if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
-    {
-        GLFWgamepadstate state;
-        Logger::info("Gamepad detected: %s", glfwGetGamepadName(GLFW_JOYSTICK_1));
-        glfwGetGamepadState(GLFW_JOYSTICK_1, &state);
-    }
-
-    // Initialize the scene
-    Application::vg = nvgCreateGL3(NVG_STENCIL_STROKES | NVG_ANTIALIAS);
-    if (!vg)
-    {
-        Logger::error("Unable to init nanovg");
-        glfwTerminate();
-        return false;
-    }
-
-    windowFramebufferSizeCallback(window, WINDOW_WIDTH, WINDOW_HEIGHT);
-    glfwSetTime(0.0);
+    Application::platformDriver->initialize(title, WINDOW_WIDTH, WINDOW_HEIGHT);
+    //windowFramebufferSizeCallback(window, WINDOW_WIDTH, WINDOW_HEIGHT);
 
     // Load fonts
 #ifdef __SWITCH__
@@ -306,13 +172,6 @@ bool Application::init(std::string title, Style style, Theme theme)
         Application::currentThemeVariant = ThemeVariant_LIGHT;
 #endif
 
-    // Init window size
-    GLint viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
-
-    Application::windowWidth  = viewport[2];
-    Application::windowHeight = viewport[3];
-
     // Init animations engine
     menu_animation_init();
 
@@ -329,22 +188,8 @@ bool Application::mainLoop()
     if (Application::frameTime > 0.0f)
         frameStart = cpu_features_get_time_usec();
 
-    // glfw events
-    bool is_active;
-    do
-    {
-        is_active = !glfwGetWindowAttrib(Application::window, GLFW_ICONIFIED);
-        if (is_active)
-            glfwPollEvents();
-        else
-            glfwWaitEvents();
-
-        if (glfwWindowShouldClose(Application::window))
-        {
-            Application::exit();
-            return false;
-        }
-    } while (!is_active);
+    if (!Application::platformDriver->update())
+        return false;
 
     // libnx applet main loop
 #ifdef __SWITCH__
@@ -355,22 +200,6 @@ bool Application::mainLoop()
     }
 #endif
 
-    // Gamepad
-    if (!glfwGetGamepadState(GLFW_JOYSTICK_1, &Application::gamepad))
-    {
-        // Keyboard -> DPAD Mapping
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT]    = glfwGetKey(window, GLFW_KEY_LEFT);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT]   = glfwGetKey(window, GLFW_KEY_RIGHT);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP]      = glfwGetKey(window, GLFW_KEY_UP);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN]    = glfwGetKey(window, GLFW_KEY_DOWN);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_START]        = glfwGetKey(window, GLFW_KEY_ESCAPE);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_BACK]         = glfwGetKey(window, GLFW_KEY_F1);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_A]            = glfwGetKey(window, GLFW_KEY_ENTER);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_B]            = glfwGetKey(window, GLFW_KEY_BACKSPACE);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER]  = glfwGetKey(window, GLFW_KEY_L);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER] = glfwGetKey(window, GLFW_KEY_R);
-    }
-
     // Trigger gamepad events
     // TODO: Translate axis events to dpad events here
 
@@ -379,18 +208,17 @@ bool Application::mainLoop()
     static retro_time_t buttonPressTime = 0;
     static int repeatingButtonTimer     = 0;
 
-    for (int i = GLFW_GAMEPAD_BUTTON_A; i <= GLFW_GAMEPAD_BUTTON_LAST; i++)
-    {
-        if (Application::gamepad.buttons[i] == GLFW_PRESS)
+    for (unsigned short key = 1; key > 0; key >>= 1) {
+        if (Application::platformDriver->isKeyHeld(static_cast<drv::Key>(key)))
         {
             anyButtonPressed = true;
             repeating        = (repeatingButtonTimer > BUTTON_REPEAT_DELAY && repeatingButtonTimer % BUTTON_REPEAT_CADENCY == 0);
 
-            if (Application::oldGamepad.buttons[i] != GLFW_PRESS || repeating)
-                Application::onGamepadButtonPressed(i, repeating);
+            if (Application::platformDriver->isKeyDown(static_cast<drv::Key>(key)) || repeating)
+                Application::onGamepadButtonPressed(key, repeating);
         }
 
-        if (Application::gamepad.buttons[i] != Application::oldGamepad.buttons[i])
+        if (Application::platformDriver->haveKeyStatesChanged())
             buttonPressTime = repeatingButtonTimer = 0;
     }
 
@@ -400,21 +228,19 @@ bool Application::mainLoop()
         repeatingButtonTimer++; // Increased once every ~1ms
     }
 
-    Application::oldGamepad = Application::gamepad;
-
     // Handle window size changes
-    GLint viewport[4];
+    /*GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
 
     unsigned newWidth  = viewport[2];
-    unsigned newHeight = viewport[3];
+    unsigned newHeight = viewport[3];*/
 
-    if (Application::windowWidth != newWidth || Application::windowHeight != newHeight)
+    /*if (Application::windowWidth != newWidth || Application::windowHeight != newHeight)
     {
         Application::windowWidth  = newWidth;
         Application::windowHeight = newHeight;
         Application::onWindowSizeChanged();
-    }
+    }*/
 
     // Animations
     menu_animation_update();
@@ -424,7 +250,7 @@ bool Application::mainLoop()
 
     // Render
     Application::frame();
-    glfwSwapBuffers(window);
+    Application::platformDriver->swapBuffers();
 
     // Sleep if necessary
     if (Application::frameTime > 0.0f)
@@ -559,14 +385,7 @@ void Application::frame()
     nvgBeginFrame(Application::vg, Application::windowWidth, Application::windowHeight, frameContext.pixelRatio);
     nvgScale(Application::vg, Application::windowScale, Application::windowScale);
 
-    // GL Clear
-    glClearColor(
-        frameContext.theme->backgroundColor[0],
-        frameContext.theme->backgroundColor[1],
-        frameContext.theme->backgroundColor[2],
-        1.0f);
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    Application::platformDriver->frame();
 
     std::vector<View*> viewsToDraw;
 
@@ -603,10 +422,7 @@ void Application::exit()
 {
     Application::clear();
 
-    if (Application::vg)
-        nvgDeleteGL3(Application::vg);
-
-    glfwTerminate();
+    Application::platformDriver->exit();
 
     menu_animation_free();
 
@@ -615,6 +431,7 @@ void Application::exit()
 
     delete Application::taskManager;
     delete Application::notificationManager;
+    delete Application::platformDriver;
 }
 
 void Application::setDisplayFramerate(bool enabled)

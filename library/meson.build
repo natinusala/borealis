@@ -43,7 +43,9 @@ borealis_files = files(
 
     'lib/repeating_task.cpp',
 
-    'lib/swkbd.cpp'
+    'lib/swkbd.cpp',
+
+    'lib/platform_driver/platform_driver_glfw.cpp'
 )
 
 borealis_include = include_directories('include', 'extern/nanovg-gl/src', 'extern/libretro-common/include')

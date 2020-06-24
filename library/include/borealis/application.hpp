@@ -19,11 +19,10 @@
 
 #pragma once
 
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
 #include <nanovg.h>
 
 #include <borealis/animations.hpp>
+#include <borealis/platform_driver/platform_driver.hpp>
 #include <borealis/frame_context.hpp>
 #include <borealis/hint.hpp>
 #include <borealis/label.hpp>
@@ -167,9 +166,6 @@ class Application
     inline static Theme currentTheme;
     inline static ThemeVariant currentThemeVariant;
 
-    inline static GLFWgamepadstate oldGamepad;
-    inline static GLFWgamepadstate gamepad;
-
     inline static Style currentStyle;
 
     inline static unsigned blockInputsTokens = 0; // any value > 0 means inputs are blocked
@@ -184,6 +180,8 @@ class Application
 
     inline static GenericEvent globalFocusChangeEvent;
     inline static VoidEvent globalHintsUpdateEvent;
+
+    inline static drv::PlatformDriver *platformDriver;
 
     static void navigate(FocusDirection direction);
 
