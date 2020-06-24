@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/Adubbz/nanovg-deko
+	branch = master
+	commit = 2458f7e32fed12d8793f23cc1bf8b752fca18d08
+	parent = eb3e4fe02014847a36357bee3718dfa177145695
+	method = merge
+	cmdver = 0.4.1
