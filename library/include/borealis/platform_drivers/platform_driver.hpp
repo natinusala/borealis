@@ -44,13 +44,8 @@ namespace brls::drv
         DDOWN  = (1 << 13),
     };
 
-    unsigned short operator|(const Key lhs, const Key rhs) {
-        return static_cast<unsigned short>(lhs) | static_cast<unsigned short>(rhs);
-    }
-
-    unsigned short operator&(const Key lhs, const Key rhs) {
-        return static_cast<unsigned short>(lhs) & static_cast<unsigned short>(rhs);
-    }
+    extern unsigned short operator|(const Key lhs, const Key rhs);
+    extern unsigned short operator&(const Key lhs, const Key rhs);
 
     class PlatformDriver {
     public:
@@ -72,12 +67,10 @@ namespace brls::drv
         virtual std::pair<int, int> getTouchPosition() const = 0;
         virtual int getTouchCount() const = 0;
  
-        virtual void playSoundById(const std::string &title) const = 0;
+        NVGcontext* getNVGContext();
 
-        NVGcontext* getNVGContext() { return this->vg; }
-
-        unsigned int getWindowWidth() { return this->windowWidth; }
-        unsigned int getWindowHeight() { return this->windowHeight; }
+        unsigned int getWindowWidth();
+        unsigned int getWindowHeight();
     protected:
         NVGcontext* vg;
 

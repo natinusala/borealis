@@ -8,6 +8,8 @@ borealis_files = files(
     'extern/libretro-common/features/features_cpu.c',
     'extern/libretro-common/encodings/encoding_utf.c',
 
+    'extern/glad/source/glad.c',
+
     'lib/application.cpp',
     'lib/view.cpp',
     'lib/applet_frame.cpp',
@@ -45,9 +47,10 @@ borealis_files = files(
 
     'lib/swkbd.cpp',
 
-    'lib/platform_driver/platform_driver_glfw.cpp'
+    'lib/platform_drivers/platform_driver.cpp',
+    'lib/platform_drivers/platform_driver_glfw.cpp'
 )
 
-borealis_include = include_directories('include', 'extern/nanovg-gl/src', 'extern/libretro-common/include')
+borealis_include = include_directories('include', 'extern/nanovg-gl/src', 'extern/libretro-common/include', 'extern/glad/include')
 
 borealis_dependencies = [ dep_glfw3, dep_glm ]

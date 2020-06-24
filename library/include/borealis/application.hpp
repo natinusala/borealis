@@ -22,7 +22,7 @@
 #include <nanovg.h>
 
 #include <borealis/animations.hpp>
-#include <borealis/platform_driver/platform_driver.hpp>
+#include <borealis/platform_drivers/platform_driver.hpp>
 #include <borealis/frame_context.hpp>
 #include <borealis/hint.hpp>
 #include <borealis/label.hpp>

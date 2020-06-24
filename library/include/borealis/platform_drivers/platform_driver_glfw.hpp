@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <borealis/platform_driver/platform_driver.hpp>
+#include <borealis/platform_drivers/platform_driver.hpp>
 
 struct GLFWwindow;
 
@@ -43,8 +43,6 @@ namespace brls::drv
         virtual std::pair<int, int> getTouchPosition() const;
         virtual int getTouchCount() const;
  
-        virtual void playSoundById(const std::string &title) const;
-
     private:
         GLFWwindow *window = nullptr;
 

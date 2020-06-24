@@ -10,10 +10,12 @@ SOURCES		:=	$(SOURCES) \
 				$(current_dir)/extern/nanovg-deko/source/framework \
 				$(current_dir)/extern/libretro-common/compat \
 				$(current_dir)/extern/libretro-common/encodings \
-				$(current_dir)/extern/libretro-common/features
+				$(current_dir)/extern/libretro-common/features \
+				$(current_dir)/extern/glad/source
 
 INCLUDES	:=	$(INCLUDES) \
 				$(current_dir)/include \
 				$(current_dir)/extern/glad \
 				$(current_dir)/extern/nanovg-deko/include \
-				$(current_dir)/extern/libretro-common/include
+				$(current_dir)/extern/libretro-common/include \
+				$(current_dir)/extern/glad/include

@@ -40,7 +40,7 @@
 #include <set>
 #include <thread>
 
-#include <borealis/platform_driver/platform_driver_glfw.hpp>
+#include <borealis/platform_drivers/platform_driver_glfw.hpp>
 
 // Constants used for scaling as well as
 // creating a window of the right size on PC
