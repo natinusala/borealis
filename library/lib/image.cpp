@@ -36,6 +36,50 @@ Image::Image(unsigned char* buffer, size_t bufferSize)
     this->setOpacity(1.0F);
 }
 
+Image::Image(Image&& move) noexcept
+    : Image()
+{
+    std::swap(*this, move);
+    move.texture = -1;
+    move.imageBuffer = nullptr;
+}
+
+Image::Image(const Image& copy)
+    : imagePath{ copy.imagePath }
+    , imageBuffer{ copy.copyImgBuf() }
+    , imageBufferSize{ copy.imageBufferSize }
+    , imgPaint{ copy.imgPaint}
+    , imageScaleType{ copy.imageScaleType }
+    , cornerRadius{ copy.cornerRadius }
+    , texture{ -1 } // We set as -1 so that reloadTexture() does not try to delete a texture.
+    , imageX{ copy.imageX }
+    , imageY{ copy.imageY }
+    , imageWidth{ copy.imageWidth }
+    , imageHeight{ copy.imageHeight }
+    , origViewWidth{ copy.origViewWidth }
+    , origViewHeight{ copy.origViewHeight }
+{
+    // Recreate the texture on copy.
+    reloadTexture();
+}
+
+unsigned char* Image::copyImgBuf() const {
+    if(imageBuffer && imageBufferSize){
+        unsigned char * imageBuffer = new unsigned char[imageBufferSize];
+        memcpy(imageBuffer, imageBuffer, imageBufferSize);
+    } else
+        return nullptr;
+}
+
+Image& Image::operator=(const Image& cp_assign){
+    return *this = cp_assign;
+}
+
+Image& Image::operator=(Image&& mv_assign){
+    std::swap(*this, mv_assign);
+    return *this;
+}
+
 Image::~Image()
 {
     if (this->imageBuffer != nullptr)
@@ -181,3 +225,20 @@ void Image::setScaleType(ImageScaleType imageScaleType)
 }
 
 } // namespace brls
+
+namespace std {
+    void swap(brls::Image& a, brls::Image& b){
+        swap(a.imagePath, b.imagePath);
+        swap(a.imageBuffer, b.imageBuffer);
+        swap(a.imageBufferSize, b.imageBufferSize);
+        swap(a.texture, b.texture);
+        swap(a.imgPaint, b.imgPaint);
+        swap(a.imageScaleType, b.imageScaleType);
+        swap(a.imageX, b.imageX);
+        swap(a.imageY, b.imageY);
+        swap(a.imageWidth, b.imageWidth);
+        swap(a.imageHeight, b.imageHeight);
+        swap(a.origViewWidth, b.origViewWidth);
+        swap(a.origViewHeight, b.origViewHeight);
+    }
+}
