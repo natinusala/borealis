@@ -132,6 +132,14 @@ View* BoxLayout::getNextFocus(FocusDirection direction, void* parentUserData)
     return currentFocus;
 }
 
+View* BoxLayout::getChildViewAtTouch(float xpos, float ypos) {
+    for(auto& child: children) {
+        if(child->view->withinBoundaries(xpos, ypos))
+            return child->view;
+    }
+    return nullptr;
+}
+
 void BoxLayout::removeView(int index, bool free)
 {
     BoxLayoutChild* toRemove = this->children[index];

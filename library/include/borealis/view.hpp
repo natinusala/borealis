@@ -81,7 +81,7 @@ class View
 {
   private:
     Background background = Background::NONE;
-
+    
     void drawBackground(NVGcontext* vg, FrameContext* ctx, Style* style);
     void drawHighlight(NVGcontext* vg, ThemeValues* theme, float alpha, Style* style, bool background);
 
@@ -178,6 +178,13 @@ class View
     }
 
   public:
+    inline bool withinBoundaries(float xpos, float ypos) {
+        return !(
+          (xpos < x || xpos > (x + width))
+          ||
+          (ypos < y || ypos > (y + height))
+        );
+    }
     void setBoundaries(int x, int y, unsigned width, unsigned height);
 
     void setBackground(Background background);
@@ -350,6 +357,29 @@ class View
     {
         return nullptr;
     }
+
+    /**
+     * Return the child at xpos and ypos (in screen coordinated), or null if
+     * there is none at the position.
+     */
+    virtual View* getChildViewAtTouch(float xpos, float ypos);
+
+    /**
+     * Self explanatory.
+     */
+    virtual bool isFocusable() const
+    { return false; }
+
+    /**
+     * Self explanatory.
+     */
+    virtual bool isDraggable() const
+    { return false; }
+
+    /**
+     * Drag a view with a drag delta of dx and dy.
+     */
+    virtual void dragView(float dx, float dy);
 
     /**
       * Fired when focus is gained

@@ -627,4 +627,13 @@ void View::invalidate(bool immediate)
         this->dirty = true;
 }
 
+View* View::getChildViewAtTouch(float xpos, float ypos){
+    Logger::debug("Touch position (x: %f, y: %f): %s does not provide a getChildViewAtTouch(...) override. Will check the default child.", xpos, ypos, describe().c_str());
+    return nullptr;
+}
+
+void View::dragView(float dx, float dy){
+    Logger::debug("Drag performed on %s, but it does nothing.", describe().c_str());
+}
+
 } // namespace brls

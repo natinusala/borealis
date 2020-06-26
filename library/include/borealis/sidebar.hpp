@@ -57,6 +57,9 @@ class SidebarItem : public View
     {
         return this;
     }
+    
+    bool isFocusable() const override
+    { return true; }
 
     virtual bool onClick();
 

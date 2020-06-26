@@ -174,6 +174,12 @@ void AppletFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned he
     }
 }
 
+View* AppletFrame::getChildViewAtTouch(float xpos, float ypos){
+    if(!contentView || !contentView->withinBoundaries(xpos, ypos))
+        return nullptr;
+    return contentView;
+}
+
 View* AppletFrame::getDefaultFocus()
 {
     if (this->contentView)

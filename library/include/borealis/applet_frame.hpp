@@ -65,6 +65,7 @@ class AppletFrame : public View
     AppletFrame(bool padLeft, bool padRight);
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
+    View* getChildViewAtTouch(float xpos, float ypos) override;
     View* getDefaultFocus() override;
     virtual bool onCancel();
     void willAppear(bool resetState = false) override;

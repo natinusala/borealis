@@ -132,6 +132,64 @@ static void windowKeyCallback(GLFWwindow* window, int key, int scancode, int act
     }
 }
 
+struct CursorPos {
+    double x{ NAN };
+    double y{ NAN };
+};
+
+CursorPos last_cursor_pos;
+CursorPos current_cursor_pos;
+CursorPos delta_cursor_pos;
+View* current_draggable{ nullptr };
+
+static void cursorPosCallback(GLFWwindow* window, double xpos, double ypos){
+    last_cursor_pos = current_cursor_pos;
+    glfwGetCursorPos(window, &current_cursor_pos.x, &current_cursor_pos.y);
+    delta_cursor_pos.x = current_cursor_pos.x - last_cursor_pos.x;
+    delta_cursor_pos.y = current_cursor_pos.y - last_cursor_pos.y;
+
+    if(current_draggable && (delta_cursor_pos.x || delta_cursor_pos.y))
+        // delta_cursor_pos is multiplied by 5 (which is a random number that works ok.)
+        current_draggable->dragView(delta_cursor_pos.x * 5, -delta_cursor_pos.y * 5);
+    //Logger::debug("Mouse pos: (x: %lf, y: %lf)", current_cursor_pos.x, current_cursor_pos.y);
+    //Logger::debug("Mouse delta: (x: %lf, y: %lf)", delta_cursor_pos.x, delta_cursor_pos.y);
+}
+
+bool is_mouse_left_down{ false };
+CursorPos cursor_drag_start_pos;
+
+static void mouseBtnCallback(GLFWwindow* window, int button, int action, int mods){
+    switch(button){
+        case GLFW_MOUSE_BUTTON_LEFT:
+            if(action == GLFW_PRESS){
+                is_mouse_left_down = true;
+                cursor_drag_start_pos = current_cursor_pos;
+                current_draggable = Application::getDraggable(cursor_drag_start_pos.x, cursor_drag_start_pos.y);
+                Logger::debug("Mouse Left down.");
+            } else
+            // is equivalent to "else if(action == GLFW_RELEASE" since action can
+            // only be GLFW_PRESS or GLFW_RELEASE
+            {
+                current_draggable = nullptr;
+                is_mouse_left_down = false;
+                const double xdrag{ current_cursor_pos.x - cursor_drag_start_pos.x };
+                const double ydrag{ current_cursor_pos.y - cursor_drag_start_pos.y };
+
+                if(!(xdrag || ydrag))
+                    // Try to focus on the position of the mouse up.
+                    Application::giveFocus(current_cursor_pos.x, current_cursor_pos.y);
+
+                Logger::debug("Mouse Left up.");
+                Logger::debug("Mouse Left drag delta (x: %lf, y: %lf)", xdrag, ydrag);
+            }
+        break;
+    }
+
+    Logger::debug("Mouse button: %d", button);
+    Logger::debug("Mouse button action: %d", action);
+    Logger::debug("Mouse button mods: %d", mods);
+}
+
 bool Application::init(std::string title)
 {
     return Application::init(title, Style::horizon(), Theme::horizon());
@@ -194,6 +252,8 @@ bool Application::init(std::string title, Style style, Theme theme)
     glfwSetFramebufferSizeCallback(window, windowFramebufferSizeCallback);
     glfwSetKeyCallback(window, windowKeyCallback);
     glfwSetJoystickCallback(joystickCallback);
+    glfwSetCursorPosCallback(window, cursorPosCallback);
+    glfwSetMouseButtonCallback(window, mouseBtnCallback);
 
     // Load OpenGL routines using glad
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -451,9 +511,18 @@ void Application::navigate(FocusDirection direction)
 {
     View* currentFocus = Application::currentFocus;
 
-    // Do nothing if there is no current focus or if it doesn't have a parent
+    // We should allow the user to regain focus to a default focus view,
+    // in the most recent view in the stack, in a case where the user is
+    // unable to navigate through normal means, because currentFocus is nullptr.
+    // It will happen with mouse and touch controls, it has happened to me.
+    if(!currentFocus){
+        Application::giveFocus(viewStack.back()->getDefaultFocus());
+        return;
+    }
+
+    // Do nothing if there is no parent
     // (in which case there is nothing to traverse)
-    if (!currentFocus || !currentFocus->hasParent())
+    if (!currentFocus->hasParent())
         return;
 
     // Get next view to focus by traversing the views tree upwards
@@ -690,6 +759,33 @@ void Application::giveFocus(View* view)
             Logger::debug("Giving focus to %s", newFocus->describe().c_str());
         }
     }
+}
+
+void Application::giveFocus(double xpos, double ypos){
+    auto current_view { Application::viewStack.back() };
+    Logger::debug("Will try to get focus from position (x: %lf, y: %lf) in %s", xpos, ypos, current_view->describe().c_str());
+    View* last_focusable{ nullptr };
+    while(current_view){
+        if(current_view->isFocusable())
+            last_focusable = current_view;
+        current_view = current_view->getChildViewAtTouch(xpos, ypos);
+    }
+    Application::giveFocus(last_focusable);
+}
+
+View* Application::getDraggable(double xpos, double ypos){
+    auto current_view{ Application::viewStack.back() };
+    Logger::debug("Will look for a draggable at position (x: %lf, y: %lf) in %s", xpos, ypos, current_view->describe().c_str());
+    View* last_draggable{ nullptr };
+    while(current_view){
+        Logger::debug("%s", current_view->describe().c_str());
+        if(current_view->isDraggable()) {
+            last_draggable = current_view;
+            Logger::debug("^-- Draggable");
+        }
+        current_view = current_view->getChildViewAtTouch(xpos, ypos);
+    }
+    return last_draggable;
 }
 
 void Application::popView(ViewAnimation animation, std::function<void(void)> cb)

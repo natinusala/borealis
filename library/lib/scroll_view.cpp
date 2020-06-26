@@ -104,6 +104,12 @@ View* ScrollView::getDefaultFocus()
     return this->contentView;
 }
 
+View* ScrollView::getChildViewAtTouch(float xpos, float ypos){
+    if(!contentView || !contentView->withinBoundaries(xpos, ypos))
+        return nullptr;
+    return contentView;
+}
+
 void ScrollView::setContentView(View* view)
 {
     this->contentView = view;
@@ -231,6 +237,16 @@ ScrollView::~ScrollView()
         this->contentView->willDisappear(true);
         delete this->contentView;
     }
+}
+
+void ScrollView::dragView(float dx, float dy) {
+    auto y_scroll_delta{ dy / height };
+    // The scroll position.
+    auto y_scroll{ scrollY + y_scroll_delta };
+
+    Logger::debug("View Height[ %d ] Drag dy[ %lf ] scrollY[ %f ] y_scroll[ %lf ] y_scroll_delta[ %lf ]", height, dy, scrollY, y_scroll, y_scroll_delta);
+    
+    startScrolling(true, y_scroll);
 }
 
 } // namespace brls

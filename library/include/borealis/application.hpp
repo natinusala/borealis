@@ -85,6 +85,14 @@ class Application
      * or clears the focus if given nullptr
      */
     static void giveFocus(View* view);
+    /**
+     * Give the focus to a view at a position in screen coordinates.
+     */
+    static void giveFocus(double xpos, double ypos);
+    /**
+     * Get a draggable at a position in screen coordinates, if any.
+     */
+    static View* getDraggable(double xpos, double ypos);
 
     static Style* getStyle();
     static void setTheme(Theme theme);
