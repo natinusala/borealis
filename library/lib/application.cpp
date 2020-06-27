@@ -132,55 +132,58 @@ static void windowKeyCallback(GLFWwindow* window, int key, int scancode, int act
     }
 }
 
-struct CursorPos {
-    double x{ NAN };
-    double y{ NAN };
-};
-
-CursorPos last_cursor_pos;
-CursorPos current_cursor_pos;
-CursorPos delta_cursor_pos;
-View* current_draggable{ nullptr };
-
 static void cursorPosCallback(GLFWwindow* window, double xpos, double ypos){
+    auto& last_cursor_pos{ Application::getLastPointerPos() };
+    auto& current_cursor_pos{ Application::getCurrPointerPos() };
+    auto& delta_cursor_pos{ Application::getDeltaPointerPos() };
+
     last_cursor_pos = current_cursor_pos;
-    glfwGetCursorPos(window, &current_cursor_pos.x, &current_cursor_pos.y);
+    double x;
+    double y;
+    glfwGetCursorPos(window, &x, &y);
+    current_cursor_pos.x = x;
+    current_cursor_pos.y = y;
     delta_cursor_pos.x = current_cursor_pos.x - last_cursor_pos.x;
     delta_cursor_pos.y = current_cursor_pos.y - last_cursor_pos.y;
 
-    if(current_draggable && (delta_cursor_pos.x || delta_cursor_pos.y))
-        // delta_cursor_pos is multiplied by 5 (which is a random number that works ok.)
-        current_draggable->dragView(delta_cursor_pos.x * 5, -delta_cursor_pos.y * 5);
+    if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS
+    && (delta_cursor_pos.x || delta_cursor_pos.y)
+    ){
+        TouchEvent touch_event;
+        touch_event.type = TouchEventType::DRAG;
+        touch_event.pos = current_cursor_pos;
+        touch_event.delta = delta_cursor_pos;
+        // Set the touch event.
+        Application::getTouchEvent() = std::move(touch_event);
+    }
     //Logger::debug("Mouse pos: (x: %lf, y: %lf)", current_cursor_pos.x, current_cursor_pos.y);
     //Logger::debug("Mouse delta: (x: %lf, y: %lf)", delta_cursor_pos.x, delta_cursor_pos.y);
 }
 
-bool is_mouse_left_down{ false };
-CursorPos cursor_drag_start_pos;
-
 static void mouseBtnCallback(GLFWwindow* window, int button, int action, int mods){
+    auto& current_cursor_pos{ Application::getCurrPointerPos() };
+    auto& delta_cursor_pos{ Application::getDeltaPointerPos() };
+
     switch(button){
         case GLFW_MOUSE_BUTTON_LEFT:
             if(action == GLFW_PRESS){
-                is_mouse_left_down = true;
-                cursor_drag_start_pos = current_cursor_pos;
-                current_draggable = Application::getDraggable(cursor_drag_start_pos.x, cursor_drag_start_pos.y);
+                TouchEvent touch_event;
+                touch_event.type = TouchEventType::TOUCH;
+                touch_event.pos = current_cursor_pos;
+                touch_event.delta = delta_cursor_pos;
+                Application::getTouchEvent() = std::move(touch_event);
                 Logger::debug("Mouse Left down.");
             } else
             // is equivalent to "else if(action == GLFW_RELEASE" since action can
             // only be GLFW_PRESS or GLFW_RELEASE
             {
-                current_draggable = nullptr;
-                is_mouse_left_down = false;
-                const double xdrag{ current_cursor_pos.x - cursor_drag_start_pos.x };
-                const double ydrag{ current_cursor_pos.y - cursor_drag_start_pos.y };
-
-                if(!(xdrag || ydrag))
-                    // Try to focus on the position of the mouse up.
-                    Application::giveFocus(current_cursor_pos.x, current_cursor_pos.y);
+                TouchEvent touch_event;
+                touch_event.type = TouchEventType::RELEASE;
+                touch_event.pos = current_cursor_pos;
+                touch_event.delta = delta_cursor_pos;
+                Application::getTouchEvent() = std::move(touch_event);
 
                 Logger::debug("Mouse Left up.");
-                Logger::debug("Mouse Left drag delta (x: %lf, y: %lf)", xdrag, ydrag);
             }
         break;
     }
@@ -461,6 +464,8 @@ bool Application::mainLoop()
     }
 
     Application::oldGamepad = Application::gamepad;
+
+    processTouchEvent();
 
     // Handle window size changes
     GLint viewport[4];
@@ -761,7 +766,7 @@ void Application::giveFocus(View* view)
     }
 }
 
-void Application::giveFocus(double xpos, double ypos){
+View* Application::getFocusable(double xpos, double ypos){
     auto current_view { Application::viewStack.back() };
     Logger::debug("Will try to get focus from position (x: %lf, y: %lf) in %s", xpos, ypos, current_view->describe().c_str());
     View* last_focusable{ nullptr };
@@ -770,7 +775,7 @@ void Application::giveFocus(double xpos, double ypos){
             last_focusable = current_view;
         current_view = current_view->getChildViewAtTouch(xpos, ypos);
     }
-    Application::giveFocus(last_focusable);
+    return last_focusable;
 }
 
 View* Application::getDraggable(double xpos, double ypos){
@@ -1082,6 +1087,49 @@ VoidEvent* Application::getGlobalHintsUpdateEvent()
 FontStash* Application::getFontStash()
 {
     return &Application::fontStash;
+}
+
+TouchEvent& Application::getTouchEvent(){
+    return current_touch_event;
+}
+
+void Application::processTouchEvent() {
+    switch(current_touch_event.type){
+        case TouchEventType::TOUCH:
+        break;
+        case TouchEventType::DRAG:
+            if(last_touch_event.type != TouchEventType::DRAG) {
+                current_draggable = Application::getDraggable(
+                    current_touch_event.pos.x,
+                    current_touch_event.pos.y
+                );
+            }
+            if(current_draggable)
+                // delta_cursor_pos is multiplied by 5 (which is a random number that works ok.)
+                current_draggable->dragView(5 * current_touch_event.delta.x, -5 * current_touch_event.delta.y);
+        break;
+        case TouchEventType::RELEASE:
+            if(last_touch_event.type == TouchEventType::DRAG)
+                current_draggable = nullptr;
+            else {
+                // Try to focus on the position of the touch release.
+                auto focusable{ Application::getFocusable(
+                    current_touch_event.pos.x,
+                    current_touch_event.pos.y
+                )};
+                Application::giveFocus(focusable);
+            }
+        break;
+        case TouchEventType::NONE:
+        default:
+            // Do nothing
+            return;
+        break;
+    }
+
+    // Done with the current event.
+    last_touch_event = std::move(current_touch_event);
+    current_touch_event = TouchEvent{}; // Set to a TouchEventType of NONE.
 }
 
 } // namespace brls

@@ -628,7 +628,7 @@ void View::invalidate(bool immediate)
 }
 
 View* View::getChildViewAtTouch(float xpos, float ypos){
-    Logger::debug("Touch position (x: %f, y: %f): %s does not provide a getChildViewAtTouch(...) override. Will check the default child.", xpos, ypos, describe().c_str());
+    Logger::debug("Touch position (x: %f, y: %f): %s does not provide a getChildViewAtTouch(...) override.", xpos, ypos, describe().c_str());
     return nullptr;
 }
 

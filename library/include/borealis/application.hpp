@@ -52,6 +52,32 @@ class FramerateCounter : public Label
     void frame(FrameContext* ctx) override;
 };
 
+enum class TouchEventType {
+  NONE,
+  TOUCH,
+  DRAG,
+  RELEASE
+};
+
+/**
+ * Pointer is used as a term for mouse/touch.
+ */
+struct PointerPos {
+  float x{};
+  float y{};
+};
+
+/**
+ * TODO:
+ * - A touch event may have multiple pointers.
+ *   - We have five fingers on each hand, unless you unfortunately had one removed.
+ */
+struct TouchEvent {
+  TouchEventType type{ TouchEventType::NONE };
+  PointerPos pos;
+  PointerPos delta;
+};
+
 class Application
 {
   public:
@@ -85,10 +111,12 @@ class Application
      * or clears the focus if given nullptr
      */
     static void giveFocus(View* view);
+
     /**
-     * Give the focus to a view at a position in screen coordinates.
+     * Get a focusable at a position in screen coordinates, if any.
      */
-    static void giveFocus(double xpos, double ypos);
+    static View* getFocusable(double xpos, double ypos);
+
     /**
      * Get a draggable at a position in screen coordinates, if any.
      */
@@ -154,6 +182,17 @@ class Application
 
     static std::string getTitle();
 
+    inline static PointerPos& getLastPointerPos()
+    { return last_pointer_pos; }
+    inline static PointerPos& getCurrPointerPos()
+    { return current_pointer_pos; }
+    inline static PointerPos& getDeltaPointerPos()
+    { return delta_pointer_pos; }
+    /**
+     * Get the current touch event.
+     */
+    static TouchEvent& getTouchEvent();
+
   private:
     inline static GLFWwindow* window;
     inline static NVGcontext* vg;
@@ -193,6 +232,14 @@ class Application
     inline static GenericEvent globalFocusChangeEvent;
     inline static VoidEvent globalHintsUpdateEvent;
 
+    inline static PointerPos last_pointer_pos;
+    inline static PointerPos current_pointer_pos;
+    inline static PointerPos delta_pointer_pos;
+
+    inline static TouchEvent last_touch_event;
+    inline static TouchEvent current_touch_event;
+    inline static View* current_draggable{ nullptr };
+
     static void navigate(FocusDirection direction);
 
     static void onWindowSizeChanged();
@@ -207,6 +254,8 @@ class Application
      * Returns true if at least one action has been fired
      */
     static bool handleAction(char button);
+
+    static void processTouchEvent();
 };
 
 } // namespace brls
