@@ -132,47 +132,56 @@ static void windowKeyCallback(GLFWwindow* window, int key, int scancode, int act
     }
 }
 
-static void cursorPosCallback(GLFWwindow* window, double xpos, double ypos){
+static void updatePointerPos(float xpos, float ypos){
     auto& last_cursor_pos{ Application::getLastPointerPos() };
     auto& current_cursor_pos{ Application::getCurrPointerPos() };
     auto& delta_cursor_pos{ Application::getDeltaPointerPos() };
 
     last_cursor_pos = current_cursor_pos;
-    double x;
-    double y;
-    glfwGetCursorPos(window, &x, &y);
-    current_cursor_pos.x = x;
-    current_cursor_pos.y = y;
+    current_cursor_pos.x = xpos;
+    current_cursor_pos.y = ypos;
     delta_cursor_pos.x = current_cursor_pos.x - last_cursor_pos.x;
     delta_cursor_pos.y = current_cursor_pos.y - last_cursor_pos.y;
+}
+
+/**
+ * PC Mouse cursor.
+ */
+static void cursorPosCallback(GLFWwindow* window, double xpos, double ypos){
+    updatePointerPos(xpos, ypos);
 
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS
-    && (delta_cursor_pos.x || delta_cursor_pos.y)
+    && (Application::getDeltaPointerPos().x || Application::getDeltaPointerPos().y)
     ){
         TouchEvent touch_event;
         touch_event.type = TouchEventType::DRAG;
-        touch_event.pos = current_cursor_pos;
-        touch_event.delta = delta_cursor_pos;
+        touch_event.pos = Application::getCurrPointerPos();
+        touch_event.delta = Application::getDeltaPointerPos();
         // Set the touch event.
         Application::getTouchEvent() = std::move(touch_event);
     }
-    //Logger::debug("Mouse pos: (x: %lf, y: %lf)", current_cursor_pos.x, current_cursor_pos.y);
-    //Logger::debug("Mouse delta: (x: %lf, y: %lf)", delta_cursor_pos.x, delta_cursor_pos.y);
 }
 
+/**
+ * PC mouse click.
+ */
 static void mouseBtnCallback(GLFWwindow* window, int button, int action, int mods){
     auto& current_cursor_pos{ Application::getCurrPointerPos() };
-    auto& delta_cursor_pos{ Application::getDeltaPointerPos() };
 
     switch(button){
         case GLFW_MOUSE_BUTTON_LEFT:
             if(action == GLFW_PRESS){
+                double x, y;
+                glfwGetCursorPos(window, &x, &y);
+                updatePointerPos(x, y);
+
                 TouchEvent touch_event;
                 touch_event.type = TouchEventType::TOUCH;
                 touch_event.pos = current_cursor_pos;
-                touch_event.delta = delta_cursor_pos;
+                touch_event.delta = {};
                 Application::getTouchEvent() = std::move(touch_event);
-                Logger::debug("Mouse Left down.");
+
+                Logger::debug("Mouse Left down. (x: %f, y: %f)", current_cursor_pos.x, current_cursor_pos.y);
             } else
             // is equivalent to "else if(action == GLFW_RELEASE" since action can
             // only be GLFW_PRESS or GLFW_RELEASE
@@ -180,10 +189,10 @@ static void mouseBtnCallback(GLFWwindow* window, int button, int action, int mod
                 TouchEvent touch_event;
                 touch_event.type = TouchEventType::RELEASE;
                 touch_event.pos = current_cursor_pos;
-                touch_event.delta = delta_cursor_pos;
+                touch_event.delta = {};
                 Application::getTouchEvent() = std::move(touch_event);
 
-                Logger::debug("Mouse Left up.");
+                Logger::debug("Mouse Left up. (x: %f, y: %f)", current_cursor_pos.x, current_cursor_pos.y);
             }
         break;
     }
@@ -255,8 +264,10 @@ bool Application::init(std::string title, Style style, Theme theme)
     glfwSetFramebufferSizeCallback(window, windowFramebufferSizeCallback);
     glfwSetKeyCallback(window, windowKeyCallback);
     glfwSetJoystickCallback(joystickCallback);
+    #ifndef __SWITCH__
     glfwSetCursorPosCallback(window, cursorPosCallback);
     glfwSetMouseButtonCallback(window, mouseBtnCallback);
+    #endif
 
     // Load OpenGL routines using glad
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -416,8 +427,64 @@ bool Application::mainLoop()
         Application::exit();
         return false;
     }
-#endif
+    // Poll Touches from the switch's touch screen.
+    {
+        static touchPosition touch_last;
+        static touchPosition touch_begin;
+        static u32 prev_touch_count{0};
+        u32 touch_count = hidTouchCount();
+        touchPosition touch_buf;
 
+        if(touch_count && (prev_touch_count == 0))
+            // Touch begin
+        {
+            hidTouchRead(&touch_buf, 0);
+
+            TouchEvent touch_event;
+            touch_event.type = TouchEventType::TOUCH;
+            touch_event.pos.x = touch_buf.px;
+            touch_event.pos.y = touch_buf.py;
+            touch_event.delta = PointerPos{};
+            Application::getTouchEvent() = std::move(touch_event);
+            Logger::debug("TouchEventType::TOUCH created");
+
+            touch_last = touch_begin = touch_buf;
+        } else if((touch_count == 0) && prev_touch_count)
+            // Touch(es) were released.
+        {
+            TouchEvent touch_event;
+            touch_event.type = TouchEventType::RELEASE;
+            touch_event.pos.x = touch_last.px;
+            touch_event.pos.y = touch_last.py;
+            touch_event.delta = PointerPos{};
+            Application::getTouchEvent() = std::move(touch_event);   
+            Logger::debug("TouchEventType::Release created");
+            hidTouchRead(&touch_last, 0);
+        } else if((touch_count > 0) && (touch_count == prev_touch_count))
+            // There is a possibility a touch drag happened.
+        {
+            hidTouchRead(&touch_buf, 0);
+            int delta_x{touch_buf.px - touch_last.px};
+            int delta_y{touch_buf.py - touch_last.py};
+            // The approximate amount of pixels a drag needs to travel in order to be considered a drag.
+            const int DRAG_ACTIVATE_AMT{ 20 }; // 20 is a random number
+            if((abs((int)touch_buf.px - (int)touch_begin.px) + abs((int)touch_buf.py - (int)touch_begin.py)) > DRAG_ACTIVATE_AMT) {
+                if(delta_x || delta_y) {
+                    TouchEvent touch_event;
+                    touch_event.type = TouchEventType::DRAG;
+                    touch_event.pos.x = touch_buf.px;
+                    touch_event.pos.y = touch_buf.py;
+                    touch_event.delta.x = delta_x;
+                    touch_event.delta.y = delta_y;
+                    Application::getTouchEvent() = std::move(touch_event);
+                    Logger::debug("TouchEventType::DRAG created");
+                }
+            }
+            touch_last = touch_buf;
+        }
+        prev_touch_count = touch_count;
+    }
+#endif
     // Gamepad
     if (!glfwGetGamepadState(GLFW_JOYSTICK_1, &Application::gamepad))
     {
@@ -516,19 +583,19 @@ void Application::navigate(FocusDirection direction)
 {
     View* currentFocus = Application::currentFocus;
 
-    // We should allow the user to regain focus to a default focus view,
-    // in the most recent view in the stack, in a case where the user is
-    // unable to navigate through normal means, because currentFocus is nullptr.
-    // It will happen with mouse and touch controls, it has happened to me.
-    if(!currentFocus){
-        Application::giveFocus(viewStack.back()->getDefaultFocus());
+    // Do nothing if there is no current focus or if it doesn't have a parent
+    // (in which case there is nothing to traverse)
+    if (!currentFocus || !currentFocus->hasParent())
+        return;
+
+    // The item was "loosely" unfocused, i.e. we just wanted the highlight
+    // to disappear. Now we need it to reappear because the gamepad is
+    // navigating
+    // Almost like HOS, its not perfect.
+    if(!currentFocus->isFocused()){
+        currentFocus->onFocusGained();
         return;
     }
-
-    // Do nothing if there is no parent
-    // (in which case there is nothing to traverse)
-    if (!currentFocus->hasParent())
-        return;
 
     // Get next view to focus by traversing the views tree upwards
     View* nextFocus = currentFocus->getParent()->getNextFocus(direction, currentFocus->getParentUserData());
@@ -1096,28 +1163,57 @@ TouchEvent& Application::getTouchEvent(){
 void Application::processTouchEvent() {
     switch(current_touch_event.type){
         case TouchEventType::TOUCH:
+            Logger::debug("TouchEventType::TOUCH");
+            if(currentFocus)
+                // Don't actually lose focus, but make the highlight disappear.
+                // "loosely" unfocus the item.
+                // Note: currentFocus will still be non-nullptr.
+                currentFocus->onFocusLost();
         break;
         case TouchEventType::DRAG:
+            Logger::debug("TouchEventType::DRAG");
             if(last_touch_event.type != TouchEventType::DRAG) {
                 current_draggable = Application::getDraggable(
                     current_touch_event.pos.x,
                     current_touch_event.pos.y
                 );
+            } else {
+                if(current_draggable)
+                    current_draggable->dragView(current_touch_event.delta.x, current_touch_event.delta.y);
             }
-            if(current_draggable)
-                // delta_cursor_pos is multiplied by 5 (which is a random number that works ok.)
-                current_draggable->dragView(5 * current_touch_event.delta.x, -5 * current_touch_event.delta.y);
         break;
         case TouchEventType::RELEASE:
+            Logger::debug("TouchEventType::Release");
             if(last_touch_event.type == TouchEventType::DRAG)
                 current_draggable = nullptr;
-            else {
+            else if(auto focusable{
+                    Application::getFocusable(
+                        current_touch_event.pos.x,
+                        current_touch_event.pos.y
+                    )
+                }
+            )
                 // Try to focus on the position of the touch release.
-                auto focusable{ Application::getFocusable(
-                    current_touch_event.pos.x,
-                    current_touch_event.pos.y
-                )};
-                Application::giveFocus(focusable);
+            {
+
+                static const auto click = [](auto clickable){
+                    /* Give loose focus */ {
+                        // Give "loose" focus to the clicked item, i.e. we do not
+                        // want to give the item a higlight but we do want to set
+                        // it as the currentFocus.
+                        Application::currentFocus = clickable;
+                    }
+                    clickable->onClick();
+                };
+
+                // Use dynamic casts to check if the view can be cast to a type
+                // that is clickable.
+                if(auto clickable{ dynamic_cast<ListItem*>(focusable) })
+                    click(clickable);
+                else if(auto clickable{ dynamic_cast<Button*>(focusable) })
+                    click(clickable);
+                else if(auto clickable{ dynamic_cast<SidebarItem*>(focusable) })
+                    click(clickable);
             }
         break;
         case TouchEventType::NONE:

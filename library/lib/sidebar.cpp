@@ -122,6 +122,17 @@ void SidebarItem::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned he
 
 bool SidebarItem::onClick()
 {
+    this->sidebar->setActive(this);
+    // We are borrowing the focusEvent since it already exists, and because
+    // there is no onClick event.
+    this->focusEvent.fire(this); // Switch to the sidebar's associated view.
+    
+    // Check if the click was triggered by a TouchEvent, specifically a RELEASE,
+    // return from the function so that we do not simulate a gamepad button
+    // press that triggers a default focus for the item's associated view.
+    if(Application::getTouchEvent().type == TouchEventType::RELEASE)
+        return true;
+
     Application::onGamepadButtonPressed(GLFW_GAMEPAD_BUTTON_DPAD_RIGHT, false);
     return true;
 }

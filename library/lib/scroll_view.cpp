@@ -240,13 +240,16 @@ ScrollView::~ScrollView()
 }
 
 void ScrollView::dragView(float dx, float dy) {
-    auto y_scroll_delta{ dy / height };
+    if(!contentView)
+        // Nothing to scroll
+        return;
+    auto scroll_delta{ -dy / contentView->getHeight() };
     // The scroll position.
-    auto y_scroll{ scrollY + y_scroll_delta };
+    //scrollY += scroll_delta;
 
-    Logger::debug("View Height[ %d ] Drag dy[ %lf ] scrollY[ %f ] y_scroll[ %lf ] y_scroll_delta[ %lf ]", height, dy, scrollY, y_scroll, y_scroll_delta);
+    Logger::debug("View Height[ %d ] Drag dy[ %lf ] scrollY[ %f ] y_scroll_delta[ %lf ]", height, dy, scrollY, scroll_delta);
     
-    startScrolling(true, y_scroll);
+    startScrolling(false, scrollY + scroll_delta);
 }
 
 } // namespace brls
