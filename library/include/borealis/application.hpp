@@ -115,7 +115,7 @@ class Application
     /**
      * Get a focusable at a position in screen coordinates, if any.
      */
-    static View* getFocusable(double xpos, double ypos);
+    static View* getTouchable(double xpos, double ypos);
 
     /**
      * Get a draggable at a position in screen coordinates, if any.
@@ -191,8 +191,9 @@ class Application
     /**
      * Get the current touch event.
      */
-    static TouchEvent& getTouchEvent();
-
+    static const TouchEvent& getTouchEvent()
+    { return current_touch_event; }
+    static void setTouchEvent(TouchEvent touch_event);
   private:
     inline static GLFWwindow* window;
     inline static NVGcontext* vg;

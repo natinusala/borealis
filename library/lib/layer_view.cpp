@@ -124,12 +124,4 @@ void LayerView::willDisappear(bool resetState)
         this->layers[this->selectedIndex]->willDisappear(true);
 }
 
-View* LayerView::getChildViewAtTouch(float xpos, float ypos){
-    for(auto& layer: layers){
-        if(layer->withinBoundaries(xpos, ypos))
-            return layer;
-    }
-    return nullptr;
-}
-
 }

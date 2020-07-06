@@ -80,9 +80,6 @@ class Button : public View
         return this;
     }
 
-    bool isFocusable() const override
-    { return true; }
-
     void setCornerRadius(float cornerRadius);
 
     void getHighlightMetrics(Style* style, float* cornerRadius) override

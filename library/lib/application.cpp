@@ -158,7 +158,7 @@ static void cursorPosCallback(GLFWwindow* window, double xpos, double ypos){
         touch_event.pos = Application::getCurrPointerPos();
         touch_event.delta = Application::getDeltaPointerPos();
         // Set the touch event.
-        Application::getTouchEvent() = std::move(touch_event);
+        Application::setTouchEvent(std::move(touch_event));
     }
 }
 
@@ -179,7 +179,7 @@ static void mouseBtnCallback(GLFWwindow* window, int button, int action, int mod
                 touch_event.type = TouchEventType::TOUCH;
                 touch_event.pos = current_cursor_pos;
                 touch_event.delta = {};
-                Application::getTouchEvent() = std::move(touch_event);
+                Application::setTouchEvent(std::move(touch_event));
 
                 Logger::debug("Mouse Left down. (x: %f, y: %f)", current_cursor_pos.x, current_cursor_pos.y);
             } else
@@ -190,7 +190,7 @@ static void mouseBtnCallback(GLFWwindow* window, int button, int action, int mod
                 touch_event.type = TouchEventType::RELEASE;
                 touch_event.pos = current_cursor_pos;
                 touch_event.delta = {};
-                Application::getTouchEvent() = std::move(touch_event);
+                Application::setTouchEvent(std::move(touch_event));
 
                 Logger::debug("Mouse Left up. (x: %f, y: %f)", current_cursor_pos.x, current_cursor_pos.y);
             }
@@ -445,7 +445,7 @@ bool Application::mainLoop()
             touch_event.pos.x = touch_buf.px;
             touch_event.pos.y = touch_buf.py;
             touch_event.delta = PointerPos{};
-            Application::getTouchEvent() = std::move(touch_event);
+            Application::setTouchEvent(std::move(touch_event));
             Logger::debug("TouchEventType::TOUCH created");
 
             touch_last = touch_begin = touch_buf;
@@ -457,7 +457,7 @@ bool Application::mainLoop()
             touch_event.pos.x = touch_last.px;
             touch_event.pos.y = touch_last.py;
             touch_event.delta = PointerPos{};
-            Application::getTouchEvent() = std::move(touch_event);   
+            Application::setTouchEvent(std::move(touch_event));
             Logger::debug("TouchEventType::Release created");
             hidTouchRead(&touch_last, 0);
         } else if((touch_count > 0) && (touch_count == prev_touch_count))
@@ -476,7 +476,7 @@ bool Application::mainLoop()
                     touch_event.pos.y = touch_buf.py;
                     touch_event.delta.x = delta_x;
                     touch_event.delta.y = delta_y;
-                    Application::getTouchEvent() = std::move(touch_event);
+                    Application::setTouchEvent(std::move(touch_event));
                     Logger::debug("TouchEventType::DRAG created");
                 }
             }
@@ -589,8 +589,8 @@ void Application::navigate(FocusDirection direction)
         return;
 
     // The item was "loosely" unfocused, i.e. we just wanted the highlight
-    // to disappear. Now we need it to reappear because the gamepad is
-    // navigating
+    // to disappear because the touch screen was navigating due to a touch
+    // event. Now we need it to reappear because the gamepad is navigating.
     // Almost like HOS, its not perfect.
     if(!currentFocus->isFocused()){
         currentFocus->onFocusGained();
@@ -833,16 +833,34 @@ void Application::giveFocus(View* view)
     }
 }
 
-View* Application::getFocusable(double xpos, double ypos){
-    auto current_view { Application::viewStack.back() };
-    Logger::debug("Will try to get focus from position (x: %lf, y: %lf) in %s", xpos, ypos, current_view->describe().c_str());
-    View* last_focusable{ nullptr };
-    while(current_view){
-        if(current_view->isFocusable())
-            last_focusable = current_view;
-        current_view = current_view->getChildViewAtTouch(xpos, ypos);
+/**
+ * Helper
+ */
+static View* getChildAtTouch(View* parent, double xpos, double ypos){
+    for(auto child: parent->getChildren()){
+        if(child->withinBoundaries(xpos, ypos))
+            return child;
     }
-    return last_focusable;
+    return nullptr;
+}
+
+View* Application::getTouchable(double xpos, double ypos){
+    auto current_view { Application::viewStack.back() };
+    View* last_view{ nullptr};
+    View* last_touchable{ nullptr };
+    while(current_view != last_view){
+        last_view = current_view;
+        if (auto child_at_touch{ getChildAtTouch(current_view, xpos, ypos) })
+            // Continue if there is a child at the touch position.
+        {
+            // Check if the child is touchable.
+            if (child_at_touch == child_at_touch->getDefaultFocus())
+                last_touchable = child_at_touch;
+
+            current_view = child_at_touch;
+        }
+    }
+    return last_touchable;
 }
 
 View* Application::getDraggable(double xpos, double ypos){
@@ -855,7 +873,8 @@ View* Application::getDraggable(double xpos, double ypos){
             last_draggable = current_view;
             Logger::debug("^-- Draggable");
         }
-        current_view = current_view->getChildViewAtTouch(xpos, ypos);
+
+        current_view = getChildAtTouch(current_view, xpos, ypos);
     }
     return last_draggable;
 }
@@ -1156,8 +1175,8 @@ FontStash* Application::getFontStash()
     return &Application::fontStash;
 }
 
-TouchEvent& Application::getTouchEvent(){
-    return current_touch_event;
+void Application::setTouchEvent(TouchEvent touch_event){
+    current_touch_event = std::move(touch_event);
 }
 
 void Application::processTouchEvent() {
@@ -1187,7 +1206,7 @@ void Application::processTouchEvent() {
             if(last_touch_event.type == TouchEventType::DRAG)
                 current_draggable = nullptr;
             else if(auto focusable{
-                    Application::getFocusable(
+                    Application::getTouchable(
                         current_touch_event.pos.x,
                         current_touch_event.pos.y
                     )

@@ -121,6 +121,7 @@ class View
     bool focused = false;
 
     View* parent = nullptr;
+    std::vector<View*> children;
 
     GenericEvent focusEvent;
 
@@ -203,6 +204,8 @@ class View
 
     void setParent(View* parent, void* parentUserdata = nullptr);
     View* getParent();
+    std::vector<View*>& getChildren()
+    { return children; }
     bool hasParent();
 
     void* getParentUserData();
@@ -357,18 +360,6 @@ class View
     {
         return nullptr;
     }
-
-    /**
-     * Return the child at xpos and ypos (in screen coordinated), or null if
-     * there is none at the position.
-     */
-    virtual View* getChildViewAtTouch(float xpos, float ypos);
-
-    /**
-     * Self explanatory.
-     */
-    virtual bool isFocusable() const
-    { return false; }
 
     /**
      * Self explanatory.

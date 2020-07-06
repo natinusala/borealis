@@ -35,7 +35,6 @@ class LayerView : public View
     void changeLayer(int index, bool focus = false);
     int getLayerIndex();
 
-    View* getChildViewAtTouch(float xpos, float ypos) override;
     View* getDefaultFocus() override;
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;

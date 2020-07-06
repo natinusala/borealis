@@ -104,12 +104,6 @@ View* ScrollView::getDefaultFocus()
     return this->contentView;
 }
 
-View* ScrollView::getChildViewAtTouch(float xpos, float ypos){
-    if(!contentView || !contentView->withinBoundaries(xpos, ypos))
-        return nullptr;
-    return contentView;
-}
-
 void ScrollView::setContentView(View* view)
 {
     this->contentView = view;

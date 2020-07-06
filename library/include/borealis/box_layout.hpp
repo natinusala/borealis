@@ -94,7 +94,6 @@ class BoxLayout : public View
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     View* getNextFocus(FocusDirection direction, void* parentUserdata) override;
     View* getDefaultFocus() override;
-    View* getChildViewAtTouch(float xpos, float ypos) override;
     void onChildFocusGained(View* child) override;
     void onChildFocusLost(View* child) override;
     void willAppear(bool resetState = false) override;

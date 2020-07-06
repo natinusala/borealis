@@ -68,9 +68,6 @@ class ListItem : public View
     void getHighlightInsets(unsigned* top, unsigned* right, unsigned* bottom, unsigned* left) override;
     virtual bool onClick();
     View* getDefaultFocus() override;
-    
-    bool isFocusable() const override
-    { return true; }
 
     void setThumbnail(Image* image);
     void setThumbnail(std::string imagePath);

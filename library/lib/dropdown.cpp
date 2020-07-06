@@ -176,10 +176,6 @@ void Dropdown::layout(NVGcontext* vg, Style* style, FontStash* stash)
     this->hint->invalidate();
 }
 
-View* Dropdown::getChildViewAtTouch(float xpos, float ypos){
-    return list->getChildViewAtTouch(xpos, ypos);
-}
-
 View* Dropdown::getDefaultFocus()
 {
     return this->list->getDefaultFocus();

@@ -55,7 +55,6 @@ class ScrollView : public View
     void willAppear(bool resetState = false) override;
     void willDisappear(bool resetState = false) override;
     View* getDefaultFocus() override;
-    View* getChildViewAtTouch(float xpos, float ypos) override;
     void onChildFocusGained(View* child) override;
     void onWindowSizeChanged() override;
 

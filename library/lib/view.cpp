@@ -388,6 +388,7 @@ void View::setParent(View* parent, void* parentUserdata)
 {
     this->parent         = parent;
     this->parentUserdata = parentUserdata;
+    parent->children.push_back(this);
 }
 
 void* View::getParentUserData()
@@ -625,11 +626,6 @@ void View::invalidate(bool immediate)
         this->layout(Application::getNVGContext(), Application::getStyle(), Application::getFontStash());
     else
         this->dirty = true;
-}
-
-View* View::getChildViewAtTouch(float xpos, float ypos){
-    Logger::debug("Touch position (x: %f, y: %f): %s does not provide a getChildViewAtTouch(...) override.", xpos, ypos, describe().c_str());
-    return nullptr;
 }
 
 void View::dragView(float dx, float dy){
