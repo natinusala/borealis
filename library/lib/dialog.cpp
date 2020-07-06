@@ -294,6 +294,7 @@ void Dialog::rebuildButtons()
         else if (this->buttons.size() == 2)
         {
             this->horizontalButtonsLayout = new BoxLayout(BoxLayoutOrientation::HORIZONTAL);
+            this->horizontalButtonsLayout->setParent(this);
             this->verticalButtonsLayout->addView(this->horizontalButtonsLayout);
 
             for (DialogButton* dialogButton : this->buttons)
@@ -311,6 +312,7 @@ void Dialog::rebuildButtons()
             this->verticalButtonsLayout->addView(button);
 
             this->horizontalButtonsLayout = new BoxLayout(BoxLayoutOrientation::HORIZONTAL);
+            this->horizontalButtonsLayout->setParent(this);
             this->verticalButtonsLayout->addView(this->horizontalButtonsLayout);
 
             for (size_t i = 1; i < this->buttons.size(); i++)

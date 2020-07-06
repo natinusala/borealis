@@ -27,6 +27,24 @@
 namespace brls
 {
 
+class ViewContainer : public View {
+public:
+  void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
+  void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
+  View* getDefaultFocus() override;
+
+  /**
+   * Set the view for the view container. 
+   * Calling this will call willDisappear for the previous view, and
+   * setParent and willAppear for the new view.
+   */
+  void setView(View* view);
+  bool hasView()
+  { return associated_view != nullptr; }
+private:
+  View* associated_view{ nullptr };
+};
+
 // An applet frame containing a sidebar on the left with multiple tabs
 class TabFrame : public AppletFrame
 {
@@ -51,9 +69,7 @@ class TabFrame : public AppletFrame
   private:
     Sidebar* sidebar;
     BoxLayout* layout;
-    View* rightPane = nullptr;
-
-    void switchToView(View* view);
+    ViewContainer* rightPane;
 };
 
 } // namespace brls
