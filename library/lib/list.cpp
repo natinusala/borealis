@@ -592,6 +592,11 @@ void List::clear(bool free)
     this->layout->clear(free);
 }
 
+size_t List::getViewsCount()
+{
+    return this->layout->getViewsCount();
+}
+
 View* List::getChild(size_t i)
 {
     return this->layout->getChild(i);
