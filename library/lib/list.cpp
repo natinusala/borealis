@@ -581,6 +581,22 @@ void List::addView(View* view, bool fill)
     this->layout->addView(view, fill);
 }
 
+
+void List::removeView(int index, bool free)
+{
+    this->layout->removeView(index, free);
+}
+
+void List::clear(bool free)
+{
+    this->layout->clear(free);
+}
+
+View* List::getChild(size_t i)
+{
+    return this->layout->getChild(i);
+}
+
 void List::setMargins(unsigned top, unsigned right, unsigned bottom, unsigned left)
 {
     this->layout->setMargins(

@@ -207,6 +207,9 @@ class List : public ScrollView
 
     // Wrapped BoxLayout methods
     void addView(View* view, bool fill = false);
+    void removeView(int index, bool free = true);
+    void clear(bool free = true);
+    View* getChild(size_t i);
     void setMargins(unsigned top, unsigned right, unsigned bottom, unsigned left);
     void setMarginBottom(unsigned bottom);
     void setSpacing(unsigned spacing);
