@@ -209,6 +209,7 @@ class List : public ScrollView
     void addView(View* view, bool fill = false);
     void removeView(int index, bool free = true);
     void clear(bool free = true);
+    size_t getViewsCount();
     View* getChild(size_t i);
     void setMargins(unsigned top, unsigned right, unsigned bottom, unsigned left);
     void setMarginBottom(unsigned bottom);
