@@ -515,7 +515,7 @@ unsigned View::getShowAnimationDuration(ViewAnimation animation)
 
 void View::show(std::function<void(void)> cb, bool animate, ViewAnimation animation)
 {
-    brls::Logger::debug("Showing %s with animation %d", this->describe().c_str(), animation);
+    brls::Logger::debug("Showing {} with animation {}", this->describe(), animation);
 
     this->hidden = false;
 
@@ -555,7 +555,7 @@ void View::show(std::function<void(void)> cb, bool animate, ViewAnimation animat
 
 void View::hide(std::function<void(void)> cb, bool animated, ViewAnimation animation)
 {
-    brls::Logger::debug("Hiding %s with animation %d", this->describe().c_str(), animation);
+    brls::Logger::debug("Hiding {} with animation {}", this->describe(), animation);
 
     this->hidden = true;
     this->fadeIn = false;

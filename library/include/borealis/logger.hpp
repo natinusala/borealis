@@ -19,8 +19,7 @@
 
 #pragma once
 
-#include <stdarg.h>
-
+#include <fmt/core.h>
 #include <string>
 
 namespace brls
@@ -38,12 +37,48 @@ class Logger
   public:
     static void setLogLevel(LogLevel logLevel);
 
-    static void error(const char* format, ...);
-    static void info(const char* format, ...);
-    static void debug(const char* format, ...);
+    template <typename... Args>
+    inline static void log(LogLevel logLevel, std::string prefix, std::string color, std::string format, Args&&... args)
+    {
+        if (Logger::logLevel < logLevel)
+            return;
 
-  protected:
-    static void log(LogLevel logLevel, const char* prefix, const char* color, const char* format, va_list ap);
+        try
+        {
+            fmt::print("\033{}[{}]\033[0m ", color, prefix);
+            fmt::print(format, args...);
+            fmt::print("\n");
+        }
+        catch (...)
+        {
+            Logger::error("Invalid log format string: \"{}\"", format);
+        }
+
+#ifdef __MINGW32__
+        fflush(0);
+#endif
+    }
+
+    template <typename... Args>
+    inline static void error(std::string format, Args&&... args)
+    {
+        Logger::log(LogLevel::ERROR, "ERROR", "[0;31m", format, args...);
+    }
+
+    template <typename... Args>
+    inline static void info(std::string format, Args&&... args)
+    {
+        Logger::log(LogLevel::INFO, "INFO", "[0;34m", format, args...);
+    }
+
+    template <typename... Args>
+    inline static void debug(std::string format, Args&&... args)
+    {
+        Logger::log(LogLevel::DEBUG, "DEBUG", "[0;32m", format, args...);
+    }
+
+  private:
+    static inline LogLevel logLevel = LogLevel::INFO;
 };
 
 } // namespace brls
