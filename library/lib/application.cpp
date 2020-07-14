@@ -524,6 +524,9 @@ bool Application::handleAction(char button)
 {
     View* hintParent = Application::currentFocus;
     std::set<Key> consumedKeys;
+    
+    if (hintParent == nullptr)
+        hintParent = Application::viewStack[Application::viewStack.size() - 1];
 
     while (hintParent != nullptr)
     {
