@@ -804,7 +804,7 @@ void Application::pushView(View* view, ViewAnimation animation)
         view->alpha = 0.0f;
 
     // Focus
-    if (Application::viewStack.size() > 0)
+    if (Application::viewStack.size() > 0 && Application::currentFocus != nullptr)
     {
         Logger::debug("Pushing %s to the focus stack", Application::currentFocus->describe().c_str());
         Application::focusStack.push_back(Application::currentFocus);
