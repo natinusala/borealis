@@ -44,8 +44,9 @@ class ThumbnailSidebar : public View
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
     View* getDefaultFocus() override;
 
-    void setThumbnail(std::string imagePath);
-    void setThumbnail(unsigned char* buffer, size_t bufferSize);
+    void setThumbnail(const std::string &imagePath);
+    void setThumbnail(const unsigned char* buffer, size_t bufferSize);
+    void setThumbnailRGBA(const unsigned char* buffer, size_t width, size_t height);
 
     void setTitle(std::string title);
     void setSubtitle(std::string subTitle);

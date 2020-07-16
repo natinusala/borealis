@@ -256,11 +256,12 @@ void AppletFrame::setSubtitle(std::string left, std::string right)
     this->subTitleRight = right;
 }
 
-void AppletFrame::setIcon(unsigned char* buffer, size_t bufferSize)
+void AppletFrame::setIcon(const unsigned char* buffer, size_t bufferSize)
 {
     if (!this->icon)
     {
-        Image* icon = new Image(buffer, bufferSize);
+        Image* icon = new Image();
+        icon->setImage(buffer, bufferSize);
         icon->setScaleType(ImageScaleType::SCALE);
         icon->setParent(this);
 
@@ -274,11 +275,31 @@ void AppletFrame::setIcon(unsigned char* buffer, size_t bufferSize)
     this->icon->invalidate();
 }
 
-void AppletFrame::setIcon(std::string imagePath)
+void AppletFrame::setIconRGBA(const unsigned char* buffer, size_t width, size_t height)
 {
     if (!this->icon)
     {
-        Image* icon = new Image(imagePath);
+        Image* icon = new Image();
+        icon->setImageRGBA(buffer, width, height);
+        icon->setScaleType(ImageScaleType::SCALE);
+        icon->setParent(this);
+
+        this->icon = icon;
+    }
+    else if (Image* icon = dynamic_cast<Image*>(this->icon))
+    {
+        icon->setImageRGBA(buffer, width, height);
+    }
+
+    this->icon->invalidate();
+}
+
+void AppletFrame::setIcon(const std::string &imagePath)
+{
+    if (!this->icon)
+    {
+        Image* icon = new Image();
+        icon->setImage(imagePath);
         icon->setScaleType(ImageScaleType::SCALE);
         icon->setParent(this);
 

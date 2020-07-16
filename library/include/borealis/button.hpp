@@ -70,8 +70,9 @@ class Button : public View
     void setState(ButtonState state);
 
     Button* setLabel(std::string label);
-    Button* setImage(std::string path);
-    Button* setImage(unsigned char* buffer, size_t bufferSize);
+    Button* setImage(const std::string &path);
+    Button* setImage(const unsigned char* buffer, size_t bufferSize);
+    Button* setImageRGBA(const unsigned char* buffer, size_t width, size_t height);
 
     GenericEvent* getClickEvent();
 

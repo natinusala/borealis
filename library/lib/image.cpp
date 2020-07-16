@@ -24,67 +24,8 @@
 namespace brls
 {
 
-Image::Image(std::string imagePath)
-{
-    this->setImage(imagePath);
-    this->setOpacity(1.0F);
-}
-
-Image::Image(unsigned char* buffer, size_t bufferSize)
-{
-    this->setImage(buffer, bufferSize);
-    this->setOpacity(1.0F);
-}
-
-Image::Image(Image&& move) noexcept
-    : Image()
-{
-    std::swap(*this, move);
-    move.texture = -1;
-    move.imageBuffer = nullptr;
-}
-
-Image::Image(const Image& copy)
-    : imagePath{ copy.imagePath }
-    , imageBuffer{ copy.copyImgBuf() }
-    , imageBufferSize{ copy.imageBufferSize }
-    , imgPaint{ copy.imgPaint}
-    , imageScaleType{ copy.imageScaleType }
-    , cornerRadius{ copy.cornerRadius }
-    , texture{ -1 } // We set as -1 so that reloadTexture() does not try to delete a texture.
-    , imageX{ copy.imageX }
-    , imageY{ copy.imageY }
-    , imageWidth{ copy.imageWidth }
-    , imageHeight{ copy.imageHeight }
-    , origViewWidth{ copy.origViewWidth }
-    , origViewHeight{ copy.origViewHeight }
-{
-    // Recreate the texture on copy.
-    reloadTexture();
-}
-
-unsigned char* Image::copyImgBuf() const {
-    if(imageBuffer && imageBufferSize){
-        unsigned char * imageBuffer = new unsigned char[imageBufferSize];
-        memcpy(imageBuffer, imageBuffer, imageBufferSize);
-    } else
-        return nullptr;
-}
-
-Image& Image::operator=(const Image& cp_assign){
-    return *this = cp_assign;
-}
-
-Image& Image::operator=(Image&& mv_assign){
-    std::swap(*this, mv_assign);
-    return *this;
-}
-
 Image::~Image()
 {
-    if (this->imageBuffer != nullptr)
-        delete[] this->imageBuffer;
-
     if (this->texture != -1)
         nvgDeleteImage(Application::getNVGContext(), this->texture);
 }
@@ -102,19 +43,6 @@ void Image::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, 
     }
 
     nvgRestore(vg);
-}
-
-void Image::reloadTexture()
-{
-    NVGcontext* vg = Application::getNVGContext();
-
-    if (this->texture != -1)
-        nvgDeleteImage(vg, this->texture);
-
-    if (!this->imagePath.empty())
-        this->texture = nvgCreateImage(vg, this->imagePath.c_str(), 0);
-    else if (this->imageBuffer != nullptr)
-        this->texture = nvgCreateImageMem(vg, 0, this->imageBuffer, this->imageBufferSize);
 }
 
 void Image::layout(NVGcontext* vg, Style* style, FontStash* stash)
@@ -152,7 +80,7 @@ void Image::layout(NVGcontext* vg, Style* style, FontStash* stash)
             else
             {
                 this->imageWidth  = this->getWidth();
-                this->imageHeight = this->imageWidth * imageAspectRatio;
+                this->imageHeight = this->imageWidth / imageAspectRatio;
                 this->imageY      = (this->origViewHeight - this->imageHeight) / 2.0F;
             }
             break;
@@ -166,7 +94,7 @@ void Image::layout(NVGcontext* vg, Style* style, FontStash* stash)
             else
             {
                 this->imageWidth  = this->getWidth();
-                this->imageHeight = this->imageWidth * imageAspectRatio;
+                this->imageHeight = this->imageWidth / imageAspectRatio;
                 this->imageY      = (this->origViewHeight - this->imageHeight) / 2.0F;
             }
             break;
@@ -183,39 +111,42 @@ void Image::layout(NVGcontext* vg, Style* style, FontStash* stash)
     this->imgPaint = nvgImagePattern(vg, getX() + this->imageX, getY() + this->imageY, this->imageWidth, this->imageHeight, 0, this->texture, this->alpha);
 }
 
-void Image::setImage(unsigned char* buffer, size_t bufferSize)
-{
-    if (this->imageBuffer != nullptr)
-        delete[] this->imageBuffer;
-
-    this->imagePath = "";
-
-    this->imageBuffer = new unsigned char[bufferSize];
-    std::memcpy(this->imageBuffer, buffer, bufferSize);
-    this->imageBufferSize = bufferSize;
-
-    this->reloadTexture();
-    this->invalidate();
-}
-
-void Image::setImage(std::string imagePath)
-{
-    this->imagePath = imagePath;
-
-    if (this->imageBuffer != nullptr)
-        delete[] this->imageBuffer;
-
-    this->imageBuffer = nullptr;
-
-    this->reloadTexture();
-
-    this->invalidate();
-}
-
 void Image::setOpacity(float opacity)
 {
     this->alpha = opacity;
     this->invalidate();
+}
+
+void Image::setImage(const std::string &path)
+{
+    NVGcontext *vg = Application::getNVGContext();
+
+    if (this->texture != -1)
+        nvgDeleteImage(vg, this->texture);
+
+    this->texture = nvgCreateImage(vg, path.c_str(), 0);
+}
+
+void Image::setImage(const unsigned char* buffer, size_t bufferSize)
+{
+    NVGcontext *vg = Application::getNVGContext();
+
+    if (this->texture != -1)
+        nvgDeleteImage(vg, this->texture);
+
+    // const_cast because nanovg takes a unsigned char* and not a const unsigned char* even though it passes it
+    // directly on to stb as a const unsigned char*
+    this->texture = nvgCreateImageMem(vg, 0, const_cast<unsigned char*>(buffer), bufferSize);
+}
+
+void Image::setImageRGBA(const unsigned char* buffer, size_t width, size_t height)
+{
+    NVGcontext *vg = Application::getNVGContext();
+
+    if (this->texture != -1)
+        nvgDeleteImage(vg, this->texture);
+
+    this->texture = nvgCreateImageRGBA(vg, width, height, 0, buffer);
 }
 
 void Image::setScaleType(ImageScaleType imageScaleType)
@@ -225,20 +156,3 @@ void Image::setScaleType(ImageScaleType imageScaleType)
 }
 
 } // namespace brls
-
-namespace std {
-    void swap(brls::Image& a, brls::Image& b){
-        swap(a.imagePath, b.imagePath);
-        swap(a.imageBuffer, b.imageBuffer);
-        swap(a.imageBufferSize, b.imageBufferSize);
-        swap(a.texture, b.texture);
-        swap(a.imgPaint, b.imgPaint);
-        swap(a.imageScaleType, b.imageScaleType);
-        swap(a.imageX, b.imageX);
-        swap(a.imageY, b.imageY);
-        swap(a.imageWidth, b.imageWidth);
-        swap(a.imageHeight, b.imageHeight);
-        swap(a.origViewWidth, b.origViewWidth);
-        swap(a.origViewHeight, b.origViewHeight);
-    }
-}

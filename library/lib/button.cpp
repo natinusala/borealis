@@ -98,16 +98,26 @@ Button* Button::setLabel(std::string label)
     return this;
 }
 
-Button* Button::setImage(std::string path)
+Button* Button::setImage(const std::string &path)
 {
-    this->image = new Image(path);
+    this->image = new Image();
+    this->image->setImage(path);
     this->image->setParent(this);
     return this;
 }
 
-Button* Button::setImage(unsigned char* buffer, size_t bufferSize)
+Button* Button::setImage(const unsigned char* buffer, size_t bufferSize)
 {
-    this->image = new Image(buffer, bufferSize);
+    this->image = new Image();
+    this->image->setImage(buffer, bufferSize);
+    this->image->setParent(this);
+    return this;
+}
+
+Button* Button::setImageRGBA(const unsigned char* buffer, size_t width, size_t height)
+{
+    this->image = new Image();
+    this->image->setImageRGBA(buffer, width, height);
     this->image->setParent(this);
     return this;
 }

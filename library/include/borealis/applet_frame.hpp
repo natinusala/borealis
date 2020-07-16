@@ -76,8 +76,9 @@ class AppletFrame : public View
     void setTitle(std::string title);
     void setFooterText(std::string footerText);
     void setSubtitle(std::string left, std::string right);
-    void setIcon(unsigned char* buffer, size_t bufferSize);
-    void setIcon(std::string imagePath);
+    void setIcon(const unsigned char* buffer, size_t bufferSize);
+    void setIconRGBA(const unsigned char* buffer, size_t width, size_t height);
+    void setIcon(const std::string &imagePath);
     void setIcon(View* view);
     virtual void setContentView(View* view);
     bool hasContentView();

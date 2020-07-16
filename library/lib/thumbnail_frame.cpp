@@ -170,32 +170,37 @@ View* ThumbnailSidebar::getDefaultFocus()
     return this->button->getDefaultFocus();
 }
 
-void ThumbnailSidebar::setThumbnail(std::string imagePath)
+void ThumbnailSidebar::setThumbnail(const std::string &imagePath)
 {
-    if (this->image)
-    {
-        this->image->setImage(imagePath);
-    }
-    else
-    {
-        this->image = new Image(imagePath);
-        this->image->setParent(this);
-        this->invalidate();
-    }
+    if (!this->image)
+        this->image = new Image();
+
+    this->image->setImage(imagePath);
+    this->image->setScaleType(ImageScaleType::FIT);
+    this->image->setParent(this);
+    this->invalidate();
 }
 
-void ThumbnailSidebar::setThumbnail(unsigned char* buffer, size_t bufferSize)
+void ThumbnailSidebar::setThumbnail(const unsigned char* buffer, size_t bufferSize)
 {
-    if (this->image)
-    {
-        this->image->setImage(buffer, bufferSize);
-    }
-    else
-    {
-        this->image = new Image(buffer, bufferSize);
-        this->image->setParent(this);
-        this->invalidate();
-    }
+    if (!this->image)
+        this->image = new Image();
+
+    this->image->setImage(buffer, bufferSize);
+    this->image->setScaleType(ImageScaleType::FIT);
+    this->image->setParent(this);
+    this->invalidate();
+}
+
+void ThumbnailSidebar::setThumbnailRGBA(const unsigned char* buffer, size_t width, size_t height)
+{
+    if (!this->image)
+        this->image = new Image();
+
+    this->image->setImageRGBA(buffer, width, height);
+    this->image->setScaleType(ImageScaleType::FIT);
+    this->image->setParent(this);
+    this->invalidate();
 }
 
 void ThumbnailSidebar::setSubtitle(std::string subTitle)

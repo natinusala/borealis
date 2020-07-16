@@ -22,15 +22,6 @@
 #include <borealis/frame_context.hpp>
 #include <borealis/view.hpp>
 
-// fwd for std::swap
-namespace brls {
-  class Image;
-}
-// fwd for friend declaration in brls::Image
-namespace std {
-  void swap(brls::Image& a, brls::Image& b);
-}
-
 namespace brls
 {
 
@@ -46,23 +37,17 @@ enum class ImageScaleType
 // An image
 class Image : public View
 {
-  friend void std::swap(Image& a, Image&b);
   public:
     Image() = default;
-    Image(std::string imagePath);
-    Image(unsigned char* buffer, size_t bufferSize);
 
     ~Image();
-    Image(const Image& copy);
-    Image(Image&& move) noexcept;
-    Image& operator=(const Image& cp_assign);
-    Image& operator=(Image&& mv_assign);
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
 
-    void setImage(unsigned char* buffer, size_t bufferSize);
-    void setImage(std::string imagePath);
+    void setImage(const std::string &path);
+    void setImage(const unsigned char* buffer, size_t bufferSize);
+    void setImageRGBA(const unsigned char* buffer, size_t width, size_t height);
 
     void setScaleType(ImageScaleType imageScaleType);
     void setOpacity(float opacity);
@@ -72,13 +57,7 @@ class Image : public View
         this->cornerRadius = radius;
     }
 
-    unsigned char* copyImgBuf() const;
-
   private:
-    std::string imagePath;
-    unsigned char* imageBuffer = nullptr;
-    size_t imageBufferSize     = 0;
-
     int texture = -1;
     NVGpaint imgPaint;
 
@@ -89,8 +68,6 @@ class Image : public View
     int imageX = 0, imageY = 0;
     int imageWidth = 0, imageHeight = 0;
     int origViewWidth = 0, origViewHeight = 0;
-
-    void reloadTexture();
 };
 
 } // namespace brls

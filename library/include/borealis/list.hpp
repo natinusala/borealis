@@ -70,8 +70,9 @@ class ListItem : public View
     View* getDefaultFocus() override;
 
     void setThumbnail(Image* image);
-    void setThumbnail(std::string imagePath);
-    void setThumbnail(unsigned char* buffer, size_t bufferSize);
+    void setThumbnail(const std::string &imagePath);
+    void setThumbnail(const unsigned char* buffer, size_t bufferSize);
+    void setThumbnailRGBA(const unsigned char* buffer, size_t width, size_t height);
 
     bool hasDescription();
     void setDrawTopSeparator(bool draw);
@@ -150,6 +151,7 @@ class ToggleListItem : public ListItem
 
     virtual bool onClick() override;
 
+    void setToggleState(bool state);
     bool getToggleState();
 };
 

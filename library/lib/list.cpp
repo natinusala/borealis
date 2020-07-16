@@ -137,24 +137,36 @@ void ListItem::setThumbnail(Image* image)
     }
 }
 
-void ListItem::setThumbnail(std::string imagePath)
+void ListItem::setThumbnail(const std::string &imagePath)
 {
-    if (this->thumbnailView)
-        this->thumbnailView->setImage(imagePath);
-    else
-        this->thumbnailView = new Image(imagePath);
+    if (!this->thumbnailView)
+        this->thumbnailView = new Image();
+    
+    this->thumbnailView->setImage(imagePath);        
 
     this->thumbnailView->setParent(this);
     this->thumbnailView->setScaleType(ImageScaleType::FIT);
     this->invalidate();
 }
 
-void ListItem::setThumbnail(unsigned char* buffer, size_t bufferSize)
+void ListItem::setThumbnail(const unsigned char* buffer, size_t bufferSize)
 {
-    if (this->thumbnailView)
-        this->thumbnailView->setImage(buffer, bufferSize);
-    else
-        this->thumbnailView = new Image(buffer, bufferSize);
+    if (!this->thumbnailView)
+        this->thumbnailView = new Image();
+
+    this->thumbnailView->setImage(buffer, bufferSize);
+
+    this->thumbnailView->setParent(this);
+    this->thumbnailView->setScaleType(ImageScaleType::FIT);
+    this->invalidate();
+}
+
+void ListItem::setThumbnailRGBA(const unsigned char* buffer, size_t width, size_t height)
+{
+    if (!this->thumbnailView)
+        this->thumbnailView = new Image();
+
+    this->thumbnailView->setImageRGBA(buffer, width, height);
 
     this->thumbnailView->setParent(this);
     this->thumbnailView->setScaleType(ImageScaleType::FIT);
@@ -478,6 +490,12 @@ bool ToggleListItem::onClick()
 
     ListItem::onClick();
     return true;
+}
+
+void ToggleListItem::setToggleState(bool state)
+{
+    this->toggleState = state;
+    this->updateValue();
 }
 
 bool ToggleListItem::getToggleState()
