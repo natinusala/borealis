@@ -120,7 +120,7 @@ typedef Event<int> ValueSelectedEvent;
 class SelectListItem : public ListItem
 {
   public:
-    SelectListItem(std::string label, std::vector<std::string> values, unsigned selectedValue = 0);
+    SelectListItem(std::string label, std::vector<std::string> values, unsigned selectedValue = 0, std::string description = "");
 
     void setSelectedValue(unsigned value);
 
