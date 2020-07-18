@@ -529,8 +529,8 @@ ListItemGroupSpacing::ListItemGroupSpacing(bool separator)
         this->setColor(theme->listItemSeparatorColor);
 }
 
-SelectListItem::SelectListItem(std::string label, std::vector<std::string> values, unsigned selectedValue)
-    : ListItem(label, "")
+SelectListItem::SelectListItem(std::string label, std::vector<std::string> values, unsigned selectedValue, std::string description)
+    : ListItem(label, description)
     , values(values)
     , selectedValue(selectedValue)
 {
