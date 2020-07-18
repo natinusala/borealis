@@ -53,7 +53,7 @@ enum class FocusDirection
 };
 
 // View background
-enum class Background
+enum class ViewBackground
 {
     NONE,
     SIDEBAR,
@@ -80,7 +80,7 @@ typedef Event<> VoidEvent;
 class View
 {
   private:
-    Background background = Background::NONE;
+    ViewBackground background = ViewBackground::NONE;
 
     void drawBackground(NVGcontext* vg, FrameContext* ctx, Style* style);
     void drawHighlight(NVGcontext* vg, ThemeValues* theme, float alpha, Style* style, bool background);
@@ -180,7 +180,7 @@ class View
   public:
     void setBoundaries(int x, int y, unsigned width, unsigned height);
 
-    void setBackground(Background background);
+    void setBackground(ViewBackground background);
 
     void setWidth(unsigned width);
     void setHeight(unsigned height);

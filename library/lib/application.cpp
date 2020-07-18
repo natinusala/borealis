@@ -559,6 +559,9 @@ void Application::frame()
     frameContext.fontStash  = &Application::fontStash;
     frameContext.theme      = Application::getThemeValues();
 
+    if (Application::background)
+        Application::background->preFrame();
+
     nvgBeginFrame(Application::vg, Application::windowWidth, Application::windowHeight, frameContext.pixelRatio);
     nvgScale(Application::vg, Application::windowScale, Application::windowScale);
 
@@ -584,6 +587,9 @@ void Application::frame()
             break;
     }
 
+    if (Application::background)
+        Application::background->frame(&frameContext);
+
     for (size_t i = 0; i < viewsToDraw.size(); i++)
     {
         View* view = viewsToDraw[viewsToDraw.size() - 1 - i];
@@ -600,6 +606,9 @@ void Application::frame()
     // End frame
     nvgResetTransform(Application::vg); // scale
     nvgEndFrame(Application::vg);
+
+    if (Application::background)
+        Application::background->postFrame();
 }
 
 void Application::exit()
@@ -834,6 +843,19 @@ void Application::onWindowSizeChanged()
         view->onWindowSizeChanged();
     }
 
+    if (Application::background)
+    {
+        Application::background->setBoundaries(
+            0,
+            0,
+            Application::contentWidth,
+            Application::contentHeight
+        );
+
+        Application::background->invalidate();
+        Application::background->onWindowSizeChanged();
+    }
+
     Application::resizeNotificationManager();
     Application::resizeFramerateCounter();
 }
@@ -932,7 +954,7 @@ FramerateCounter::FramerateCounter()
     this->setColor(nvgRGB(255, 255, 255));
     this->setVerticalAlign(NVG_ALIGN_MIDDLE);
     this->setHorizontalAlign(NVG_ALIGN_RIGHT);
-    this->setBackground(Background::BACKDROP);
+    this->setBackground(ViewBackground::BACKDROP);
 
     this->lastSecond = cpu_features_get_time_usec() / 1000;
 }
@@ -989,6 +1011,21 @@ VoidEvent* Application::getGlobalHintsUpdateEvent()
 FontStash* Application::getFontStash()
 {
     return &Application::fontStash;
+}
+
+void Application::setBackground(Background* background)
+{
+    if (Application::background)
+    {
+        Application::background->willDisappear();
+        delete Application::background;
+    }
+
+    Application::background = background;
+
+    background->setBoundaries(0, 0, Application::contentWidth, Application::contentHeight);
+    background->invalidate(true);
+    background->willAppear(true);
 }
 
 } // namespace brls

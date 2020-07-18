@@ -32,7 +32,7 @@ Sidebar::Sidebar()
     this->setWidth(style->Sidebar.width);
     this->setSpacing(style->Sidebar.spacing);
     this->setMargins(style->Sidebar.marginTop, style->Sidebar.marginRight, style->Sidebar.marginBottom, style->Sidebar.marginLeft);
-    this->setBackground(Background::SIDEBAR);
+    this->setBackground(ViewBackground::SIDEBAR);
 }
 
 View* Sidebar::getDefaultFocus()

@@ -77,7 +77,7 @@ ThumbnailSidebar::ThumbnailSidebar()
 {
     Style* style = Application::getStyle();
 
-    this->setBackground(Background::SIDEBAR);
+    this->setBackground(ViewBackground::SIDEBAR);
     this->setWidth(style->Sidebar.width);
 
     this->button = (new Button(ButtonStyle::PLAIN))->setLabel("Save");

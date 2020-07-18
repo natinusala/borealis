@@ -155,7 +155,7 @@ NotificationManager::~NotificationManager()
 
 Notification::Notification(std::string text)
 {
-    this->setBackground(Background::BACKDROP);
+    this->setBackground(ViewBackground::BACKDROP);
 
     this->label = new Label(LabelStyle::NOTIFICATION, text, true);
     label->setParent(this);

@@ -33,6 +33,7 @@
 #include <borealis/task_manager.hpp>
 #include <borealis/theme.hpp>
 #include <borealis/view.hpp>
+#include <borealis/background.hpp>
 #include <map>
 #include <vector>
 
@@ -62,6 +63,8 @@ class Application
     static bool init(std::string title, Style style, Theme theme);
 
     static bool mainLoop();
+
+    static void setBackground(Background* background);
 
     /**
       * Pushes a view on this applications's view stack
@@ -151,6 +154,8 @@ class Application
     inline static NVGcontext* vg;
 
     inline static std::string title;
+
+    inline static Background* background = nullptr;
 
     inline static TaskManager* taskManager;
     inline static NotificationManager* notificationManager;
