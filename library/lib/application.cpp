@@ -1028,4 +1028,9 @@ void Application::setBackground(Background* background)
     background->willAppear(true);
 }
 
+ThemeVariant Application::getCurrentThemeVariant()
+{
+    return Application::currentThemeVariant;
+}
+
 } // namespace brls
