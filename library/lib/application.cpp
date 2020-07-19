@@ -559,12 +559,6 @@ void Application::frame()
     frameContext.fontStash  = &Application::fontStash;
     frameContext.theme      = Application::getThemeValues();
 
-    if (Application::background)
-        Application::background->preFrame();
-
-    nvgBeginFrame(Application::vg, Application::windowWidth, Application::windowHeight, frameContext.pixelRatio);
-    nvgScale(Application::vg, Application::windowScale, Application::windowScale);
-
     // GL Clear
     glClearColor(
         frameContext.theme->backgroundColor[0],
@@ -573,6 +567,12 @@ void Application::frame()
         1.0f);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    if (Application::background)
+        Application::background->preFrame();
+
+    nvgBeginFrame(Application::vg, Application::windowWidth, Application::windowHeight, frameContext.pixelRatio);
+    nvgScale(Application::vg, Application::windowScale, Application::windowScale);
 
     std::vector<View*> viewsToDraw;
 
