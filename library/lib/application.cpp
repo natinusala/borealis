@@ -1028,4 +1028,13 @@ void Application::setBackground(Background* background)
     background->willAppear(true);
 }
 
+void Application::cleanupNvgGlState()
+{
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_SCISSOR_TEST);
+    glDisable(GL_STENCIL_TEST);
+}
+
 } // namespace brls

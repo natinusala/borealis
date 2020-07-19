@@ -149,6 +149,12 @@ class Application
 
     static std::string getTitle();
 
+    /**
+     * Cleans up GL state after nanovg
+     * So that we can draw regular stuff over it
+     */
+    static void cleanupNvgGlState();
+
   private:
     inline static GLFWwindow* window;
     inline static NVGcontext* vg;
