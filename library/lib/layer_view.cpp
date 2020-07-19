@@ -83,6 +83,11 @@ int LayerView::getLayerIndex()
     return this->selectedIndex;
 }
 
+int LayerView::getLayerCount()
+{
+    return static_cast<int>(this->layers.size());
+}
+
 View* LayerView::getDefaultFocus()
 {
     if (this->selectedIndex >= 0 && this->selectedIndex < static_cast<int>(this->layers.size()))

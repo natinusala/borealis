@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <borealis/List.hpp>
+#include <borealis/list.hpp>
 #include <string>
 #include <vector>
 
@@ -47,6 +47,7 @@ class SidebarItem : public View
 
     Sidebar* sidebar     = nullptr;
     View* associatedView = nullptr;
+    u_int64_t   associatedViewId;
 
   public:
     SidebarItem(std::string label, Sidebar* sidebar);
@@ -68,6 +69,9 @@ class SidebarItem : public View
     void setAssociatedView(View* view);
     View* getAssociatedView();
 
+    void setAssociatedViewId(u_int64_t viewId);
+    u_int64_t  getAssociatedViewId();
+
     ~SidebarItem();
 };
 
@@ -76,11 +80,12 @@ class Sidebar : public List
 {
   private:
     SidebarItem* currentActive = nullptr;
+    std::vector<SidebarItem*> sidebarItems;
 
   public:
     Sidebar();
 
-    SidebarItem* addItem(std::string label, View* view);
+    SidebarItem* addItem(std::string label, u_int64_t viewId);
     void addSeparator();
 
     void setActive(SidebarItem* item);

@@ -23,10 +23,13 @@
 #include <borealis/sidebar.hpp>
 #include <string>
 #include <vector>
+#include <map>
 
 namespace brls
 {
 
+//fwd declaration
+class LayerView;
 // An applet frame containing a sidebar on the left with multiple tabs
 class TabFrame : public AppletFrame
 {
@@ -51,9 +54,10 @@ class TabFrame : public AppletFrame
   private:
     Sidebar* sidebar;
     BoxLayout* layout;
-    View* rightPane = nullptr;
+    LayerView* rightPane = nullptr;
+    std::map<u_int64_t, int> panelMap;
 
-    void switchToView(View* view);
+    void switchToView(u_int64_t viewIndex);
 };
 
 } // namespace brls

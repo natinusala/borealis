@@ -34,6 +34,7 @@ class LayerView : public View
     void addLayer(View* view);
     void changeLayer(int index, bool focus = false);
     int getLayerIndex();
+    int getLayerCount();
 
     View* getDefaultFocus() override;
 

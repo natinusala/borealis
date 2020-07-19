@@ -37,15 +37,10 @@ Sidebar::Sidebar()
 
 View* Sidebar::getDefaultFocus()
 {
-    // Sanity check
-    //Fix this
-    if (this->lastFocus >= this->getViewsCount())
-        this->lastFocus = 0;
-
     View* toFocus{ nullptr };
     // Try to focus last focused one
-    if(this->getViewsCount() != 0)
-        toFocus = this->getChild(this->lastFocus)->getDefaultFocus();
+    if(this->sidebarItems.size() != 0)
+        toFocus = this->currentActive->getDefaultFocus();
     
     if (toFocus)
         return toFocus;
@@ -56,23 +51,20 @@ View* Sidebar::getDefaultFocus()
 
 void Sidebar::onChildFocusGained(View* child)
 {
-    //Fix this
-    size_t position = 0;//*((size_t*)child->getParentUserData());
-
-    this->lastFocus = position;
-
     List::onChildFocusGained(child);
 }
 
-SidebarItem* Sidebar::addItem(std::string label, View* view)
+SidebarItem* Sidebar::addItem(std::string label, u_int64_t viewId)
 {
     SidebarItem* item = new SidebarItem(label, this);
-    item->setAssociatedView(view);
+    item->setAssociatedViewId(viewId);
+    this->sidebarItems.push_back(item);
 
-    if (this->getViewsCount())
+    if (this->sidebarItems.size() == 1)
         setActive(item);
 
     this->addView(item);
+    
 
     return item;
 }
@@ -152,6 +144,11 @@ void SidebarItem::setAssociatedView(View* view)
     this->associatedView = view;
 }
 
+void SidebarItem::setAssociatedViewId(u_int64_t viewId)
+{
+    this->associatedViewId = viewId;
+}
+
 bool SidebarItem::isActive()
 {
     return this->active;
@@ -166,6 +163,11 @@ void SidebarItem::onFocusGained()
 View* SidebarItem::getAssociatedView()
 {
     return this->associatedView;
+}
+
+u_int64_t SidebarItem::getAssociatedViewId()
+{
+    return this->associatedViewId;
 }
 
 SidebarItem::~SidebarItem()
