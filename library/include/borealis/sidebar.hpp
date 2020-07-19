@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <borealis/box_layout.hpp>
+#include <borealis/List.hpp>
 #include <string>
 #include <vector>
 
@@ -72,7 +72,7 @@ class SidebarItem : public View
 };
 
 // TODO: Add a style with icons, make it collapsible?
-class Sidebar : public BoxLayout
+class Sidebar : public List
 {
   private:
     SidebarItem* currentActive = nullptr;

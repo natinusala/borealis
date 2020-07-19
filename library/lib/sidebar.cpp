@@ -25,7 +25,7 @@ namespace brls
 {
 
 Sidebar::Sidebar()
-    : BoxLayout(BoxLayoutOrientation::VERTICAL)
+    : List()
 {
     Style* style = Application::getStyle();
 
@@ -38,28 +38,30 @@ Sidebar::Sidebar()
 View* Sidebar::getDefaultFocus()
 {
     // Sanity check
-    if (this->lastFocus >= this->children.size())
+    //Fix this
+    if (this->lastFocus >= this->getViewsCount())
         this->lastFocus = 0;
 
     View* toFocus{ nullptr };
     // Try to focus last focused one
-    if(this->children.size() != 0)
-        toFocus = this->children[this->lastFocus]->view->getDefaultFocus();
+    if(this->getViewsCount() != 0)
+        toFocus = this->getChild(this->lastFocus)->getDefaultFocus();
     
     if (toFocus)
         return toFocus;
 
     // Otherwise just get the first available item
-    return BoxLayout::getDefaultFocus();
+    return List::getDefaultFocus();
 }
 
 void Sidebar::onChildFocusGained(View* child)
 {
-    size_t position = *((size_t*)child->getParentUserData());
+    //Fix this
+    size_t position = 0;//*((size_t*)child->getParentUserData());
 
     this->lastFocus = position;
 
-    BoxLayout::onChildFocusGained(child);
+    List::onChildFocusGained(child);
 }
 
 SidebarItem* Sidebar::addItem(std::string label, View* view)
@@ -67,7 +69,7 @@ SidebarItem* Sidebar::addItem(std::string label, View* view)
     SidebarItem* item = new SidebarItem(label, this);
     item->setAssociatedView(view);
 
-    if (this->isEmpty())
+    if (this->getViewsCount())
         setActive(item);
 
     this->addView(item);

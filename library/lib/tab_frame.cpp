@@ -43,7 +43,7 @@ TabFrame::TabFrame()
 bool TabFrame::onCancel()
 {
     // Go back to sidebar if not already focused
-    if (!this->sidebar->isChildFocused())
+    if (!this->sidebar->isFocused())
     {
         Application::onGamepadButtonPressed(GLFW_GAMEPAD_BUTTON_DPAD_LEFT, false);
         return true;
