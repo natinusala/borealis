@@ -149,8 +149,6 @@ class Application
 
     static std::string getTitle();
 
-    static ThemeVariant getCurrentThemeVariant();
-
   private:
     inline static GLFWwindow* window;
     inline static NVGcontext* vg;
