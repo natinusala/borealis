@@ -522,13 +522,16 @@ View* Application::getCurrentFocus()
 
 bool Application::handleAction(char button)
 {
+    if (Application::viewStack.empty())
+        return false;
+
     View* hintParent = Application::currentFocus;
     std::set<Key> consumedKeys;
-    
-    if (hintParent == nullptr)
+
+    if (!hintParent)
         hintParent = Application::viewStack[Application::viewStack.size() - 1];
 
-    while (hintParent != nullptr)
+    while (hintParent)
     {
         for (auto& action : hintParent->getActions())
         {
