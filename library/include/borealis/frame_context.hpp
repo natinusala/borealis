@@ -32,6 +32,7 @@ class FontStash
   public:
     int regular = 0;
     int korean  = 0;
+    int chinese = 0;
 
     int material      = 0;
     int sharedSymbols = 0;
