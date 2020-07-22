@@ -852,8 +852,7 @@ void Application::onWindowSizeChanged()
             0,
             0,
             Application::contentWidth,
-            Application::contentHeight
-        );
+            Application::contentHeight);
 
         Application::background->invalidate();
         Application::background->onWindowSizeChanged();

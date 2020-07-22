@@ -23,12 +23,14 @@
 #include <borealis/view.hpp>
 
 // fwd for std::swap
-namespace brls {
-  class Image;
+namespace brls
+{
+class Image;
 }
 // fwd for friend declaration in brls::Image
-namespace std {
-  void swap(brls::Image& a, brls::Image& b);
+namespace std
+{
+void swap(brls::Image& a, brls::Image& b);
 }
 
 namespace brls
@@ -46,7 +48,8 @@ enum class ImageScaleType
 // An image
 class Image : public View
 {
-  friend void std::swap(Image& a, Image&b);
+    friend void std::swap(Image& a, Image& b);
+
   public:
     Image() = default;
     Image(std::string imagePath);

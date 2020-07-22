@@ -581,7 +581,6 @@ void List::addView(View* view, bool fill)
     this->layout->addView(view, fill);
 }
 
-
 void List::removeView(int index, bool free)
 {
     this->layout->removeView(index, free);

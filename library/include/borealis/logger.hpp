@@ -20,6 +20,7 @@
 #pragma once
 
 #include <fmt/core.h>
+
 #include <string>
 
 namespace brls

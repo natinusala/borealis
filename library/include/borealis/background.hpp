@@ -28,16 +28,16 @@ namespace brls
 // An application can only have one background
 class Background : public View
 {
-    public:
-        /**
+  public:
+    /**
           * Called before the nanovg frame starts
           */
-        virtual void preFrame() = 0;
+    virtual void preFrame() = 0;
 
-        /**
+    /**
          * Called after the end of the nanovg frame
          */
-        virtual void postFrame() = 0;
+    virtual void postFrame() = 0;
 };
 
 } // namespace brls
