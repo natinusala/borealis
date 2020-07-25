@@ -39,7 +39,7 @@ View* Sidebar::getDefaultFocus()
 {
     View* toFocus{ nullptr };
     // Try to focus last focused one
-    if(this->sidebarItems.size() != 0)
+    if(this->currentActive != nullptr)
         toFocus = this->currentActive->getDefaultFocus();
     
     if (toFocus)
@@ -54,13 +54,13 @@ void Sidebar::onChildFocusGained(View* child)
     List::onChildFocusGained(child);
 }
 
-SidebarItem* Sidebar::addItem(std::string label, u_int64_t viewId)
+SidebarItem* Sidebar::addItem(std::string label, void* userdata)
 {
     SidebarItem* item = new SidebarItem(label, this);
-    item->setAssociatedViewId(viewId);
-    this->sidebarItems.push_back(item);
+    item->setAssociatedViewUserData(userdata);
 
-    if (this->sidebarItems.size() == 1)
+    /*focus first item as soon as we add it*/
+    if (currentActive == nullptr)
         setActive(item);
 
     this->addView(item);
@@ -144,9 +144,9 @@ void SidebarItem::setAssociatedView(View* view)
     this->associatedView = view;
 }
 
-void SidebarItem::setAssociatedViewId(u_int64_t viewId)
+void SidebarItem::setAssociatedViewUserData(void* userdata)
 {
-    this->associatedViewId = viewId;
+    this->associatedViewUserData = userdata;
 }
 
 bool SidebarItem::isActive()
@@ -165,15 +165,21 @@ View* SidebarItem::getAssociatedView()
     return this->associatedView;
 }
 
-u_int64_t SidebarItem::getAssociatedViewId()
+void* SidebarItem::getAssociatedViewUserData()
 {
-    return this->associatedViewId;
+    return this->associatedViewUserData;
 }
 
 SidebarItem::~SidebarItem()
 {
     if (this->associatedView)
         delete this->associatedView;
+
+    if (this->associatedViewUserData)
+    {
+        free(this->associatedViewUserData);
+        this->associatedViewUserData = nullptr;
+    }
 }
 
 } // namespace brls

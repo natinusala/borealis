@@ -78,15 +78,21 @@ void TabFrame::switchToView(u_int64_t viewIndex)
 
 void TabFrame::addTab(std::string label, View* view)
 {
-    //Add to map
-    u_int64_t viewID = reinterpret_cast<u_int64_t>(view);
-    panelMap[viewID] = rightPane->getLayerCount();
+
+    size_t viewIndex        = rightPane->getLayerCount();
+    size_t* viewUserData = (size_t*)malloc(sizeof(size_t));
+    *viewUserData        = viewIndex;
+
     rightPane->addLayer(view);
 
-    SidebarItem* item = this->sidebar->addItem(label, viewID);
+    SidebarItem* item = this->sidebar->addItem(label, viewUserData);
+
     item->getFocusEvent()->subscribe([this](View* view) {
         if (SidebarItem* item = dynamic_cast<SidebarItem*>(view))
-            this->switchToView(panelMap[item->getAssociatedViewId()]);
+        {
+            int viewIndex = static_cast<int>(*((size_t*)item->getAssociatedViewUserData()));
+            this->switchToView(viewIndex);
+        }
     });
 
     // Switch to first one as soon as we add it

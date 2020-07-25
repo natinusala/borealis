@@ -21,6 +21,7 @@
 
 #include <borealis/applet_frame.hpp>
 #include <borealis/sidebar.hpp>
+#include <borealis/layer_view.hpp>
 #include <string>
 #include <vector>
 #include <map>
@@ -28,8 +29,6 @@
 namespace brls
 {
 
-//fwd declaration
-class LayerView;
 // An applet frame containing a sidebar on the left with multiple tabs
 class TabFrame : public AppletFrame
 {
@@ -55,7 +54,6 @@ class TabFrame : public AppletFrame
     Sidebar* sidebar;
     BoxLayout* layout;
     LayerView* rightPane = nullptr;
-    std::map<u_int64_t, int> panelMap;
 
     void switchToView(u_int64_t viewIndex);
 };

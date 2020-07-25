@@ -45,9 +45,9 @@ class SidebarItem : public View
     std::string label;
     bool active = false;
 
-    Sidebar* sidebar     = nullptr;
-    View* associatedView = nullptr;
-    u_int64_t   associatedViewId;
+    Sidebar* sidebar              = nullptr;
+    View* associatedView          = nullptr;
+    void* associatedViewUserData  = nullptr;
 
   public:
     SidebarItem(std::string label, Sidebar* sidebar);
@@ -69,8 +69,8 @@ class SidebarItem : public View
     void setAssociatedView(View* view);
     View* getAssociatedView();
 
-    void setAssociatedViewId(u_int64_t viewId);
-    u_int64_t  getAssociatedViewId();
+    void   setAssociatedViewUserData(void* userdata);
+    void*  getAssociatedViewUserData();
 
     ~SidebarItem();
 };
@@ -80,12 +80,11 @@ class Sidebar : public List
 {
   private:
     SidebarItem* currentActive = nullptr;
-    std::vector<SidebarItem*> sidebarItems;
 
   public:
     Sidebar();
 
-    SidebarItem* addItem(std::string label, u_int64_t viewId);
+    SidebarItem* addItem(std::string label, void* userdata);
     void addSeparator();
 
     void setActive(SidebarItem* item);
