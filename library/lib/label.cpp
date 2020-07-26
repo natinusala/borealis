@@ -164,10 +164,10 @@ void Label::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, 
 
         // TODO: Ticker
 
-        if (this->verticalAlign == NVG_ALIGN_BOTTOM)
+        if (this->verticalAlign == NVG_ALIGN_BOTTOM || this->verticalAlign == NVG_ALIGN_BASELINE)
             nvgText(vg, x, y + height, this->text.c_str(), nullptr);
         else
-            nvgText(vg, x, y + height / 2, this->text.c_str(), nullptr);
+            nvgText(vg, x, y + height / 2, this->text.c_str(), nullptr); // NVG_ALIGN_MIDDLE
     }
 }
 
