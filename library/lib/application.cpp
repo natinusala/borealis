@@ -259,6 +259,9 @@ bool Application::init(std::string title, Style style, Theme theme)
     else
         Application::fontStash.regular = Application::loadFont("regular", BOREALIS_ASSET("inter/Inter-Switch.ttf"));
 
+    if (Application::fontStash.regular == -1)
+        brls::Logger::error("Couldn't load regular font, no text will be displayed!");
+
     if (access(BOREALIS_ASSET("Wingdings.ttf"), F_OK) != -1)
         Application::fontStash.sharedSymbols = Application::loadFont("sharedSymbols", BOREALIS_ASSET("Wingdings.ttf"));
 #endif
