@@ -25,6 +25,7 @@
 #define BOREALIS_ASSET(_str) BOREALIS_RESOURCES _str
 
 // Library
+#include <borealis/absolute_layout.hpp>
 #include <borealis/animations.hpp>
 #include <borealis/applet_frame.hpp>
 #include <borealis/application.hpp>
@@ -56,5 +57,3 @@
 #include <borealis/theme.hpp>
 #include <borealis/thumbnail_frame.hpp>
 #include <borealis/view.hpp>
-#include <borealis/background.hpp>
-#include <borealis/absolute_layout.hpp>
