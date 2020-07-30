@@ -28,7 +28,7 @@ MaterialIcon::MaterialIcon(std::string icon)
 
 void MaterialIcon::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
 {
-    NVGcolor color = a(ctx->theme->textColor);
+    NVGcolor color = a(this->getColor(ctx->theme));
 
     nvgTextLineHeight(vg, 1.0f);
     nvgFillColor(vg, color);
@@ -43,6 +43,20 @@ void MaterialIcon::layout(NVGcontext* vg, Style* style, FontStash* stash)
 {
     this->middleX = this->getX() + this->getWidth() / 2;
     this->middleY = this->getY() + this->getHeight() / 2;
+}
+
+void MaterialIcon::setColor(NVGcolor color)
+{
+    this->customColor    = color;
+    this->useCustomColor = true;
+}
+
+NVGcolor MaterialIcon::getColor(ThemeValues* theme)
+{
+    if (this->useCustomColor)
+        return this->customColor;
+
+    return theme->textColor;
 }
 
 }; // namespace brls
