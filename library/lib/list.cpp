@@ -309,6 +309,11 @@ void ListItem::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heigh
         width -= style->List.Item.indent;
     }
 
+    if (this->isFocused())
+        frames_selected += 1;
+    else
+        frames_selected = 0;
+
     // Description
     if (this->descriptionView)
     {
@@ -408,10 +413,44 @@ void ListItem::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heigh
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
         nvgFontFaceId(vg, ctx->fontStash->regular);
         nvgBeginPath(vg);
-        if (this->isFocused())
-            nvgText(vg, x + leftPadding, y + baseHeight - baseHeight / 3, ("focus: " + this->subLabel).c_str(), nullptr);
-        else
-            nvgText(vg, x + leftPadding, y + baseHeight - baseHeight / 3, this->subLabel.c_str(), nullptr);
+
+        std::string str = this->subLabel;
+
+        unsigned int speed_factor = 8; //higher is slower
+        int clip_letters          = 0;
+        unsigned int time_since   = 0;
+
+        if (str.length() > 50)
+        {
+            unsigned int len = (str.length() - 50);
+            time_since       = (frames_selected / speed_factor) % ((int)len * 2);
+
+            if (time_since < len)
+                clip_letters = time_since;
+            else
+                clip_letters = len * 2 - time_since;
+
+            clip_letters *= 2;
+            clip_letters -= len / 2;
+
+            if (clip_letters < 0)
+                clip_letters = 0;
+            else if (clip_letters > ((int)len * 1)-1)
+                clip_letters = ((int)len * 1)-1;
+
+            if (clip_letters > 0)
+            {
+                str = "..." + str.substr(clip_letters);
+            }
+
+            if (str.length() > 50 + 4)
+            {
+                str = str.substr(0, 54) + "...";
+            }
+        }
+
+        //nvgText(vg, x + leftPadding, y + baseHeight - baseHeight / 3, (std::to_string(time_since) + ":" + str).c_str(), nullptr);
+        nvgText(vg, x + leftPadding, y + baseHeight - baseHeight / 3, str.c_str(), nullptr);
     }
 
     // Thumbnail

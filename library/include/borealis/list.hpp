@@ -60,6 +60,8 @@ class ListItem : public View
 
     void resetValueAnimation();
 
+    unsigned int frames_selected = 0;
+
   public:
     ListItem(std::string label, std::string description = "", std::string subLabel = "");
 

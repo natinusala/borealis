@@ -135,9 +135,9 @@ int main(int argc, char* argv[])
     brls::List* layerList2      = new brls::List();
 
     layerList1->addView(new brls::Header("Layer 1", false));
-    layerList1->addView(new brls::ListItem("Item 1", "Description", "subLabel"));
-    layerList1->addView(new brls::ListItem("Item 2"));
-    layerList1->addView(new brls::ListItem("Item 3"));
+    layerList1->addView(new brls::ListItem("Item 1", "", "This is a super long sublabel."));
+    layerList1->addView(new brls::ListItem("Item 2", "", "This is an even longer sublabel that hopefully goes all the way past the edge of where it should!!"));
+    layerList1->addView(new brls::ListItem("Item 3", "", "This is an even longer sublabel that hopefully goes past!"));
 
     layerList2->addView(new brls::Header("Layer 2", false));
     layerList2->addView(new brls::ListItem("Item 1"));
