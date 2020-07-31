@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
     brls::List* layerList2      = new brls::List();
 
     layerList1->addView(new brls::Header("Layer 1", false));
-    layerList1->addView(new brls::ListItem("Item 1"));
+    layerList1->addView(new brls::ListItem("Item 1", "Description", "subLabel"));
     layerList1->addView(new brls::ListItem("Item 2"));
     layerList1->addView(new brls::ListItem("Item 3"));
 

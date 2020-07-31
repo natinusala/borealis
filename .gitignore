@@ -8,3 +8,4 @@ build.nx/
 *.elf
 .vscode
 builddir
+build_and_run.sh

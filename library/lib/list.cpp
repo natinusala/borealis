@@ -408,7 +408,10 @@ void ListItem::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heigh
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
         nvgFontFaceId(vg, ctx->fontStash->regular);
         nvgBeginPath(vg);
-        nvgText(vg, x + leftPadding, y + baseHeight - baseHeight / 3, this->subLabel.c_str(), nullptr);
+        if (this->isFocused())
+            nvgText(vg, x + leftPadding, y + baseHeight - baseHeight / 3, ("focus: " + this->subLabel).c_str(), nullptr);
+        else
+            nvgText(vg, x + leftPadding, y + baseHeight - baseHeight / 3, this->subLabel.c_str(), nullptr);
     }
 
     // Thumbnail
