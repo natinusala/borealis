@@ -416,36 +416,37 @@ void ListItem::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heigh
 
         std::string str = this->subLabel;
 
-        unsigned int speed_factor = 8; //higher is slower
-        int clip_letters          = 0;
-        unsigned int time_since   = 0;
+        unsigned int max_len = 50;
 
-        if (str.length() > 50)
+        if (str.length() > max_len)
         {
-            unsigned int len = (str.length() - 50);
-            time_since       = (frames_selected / speed_factor) % ((int)len * 2);
+            unsigned int length_past  = str.length() - max_len;
+            unsigned int speed_factor = 8; //higher is slower
+            unsigned int time_since   = (frames_selected / speed_factor) % (length_past * 2);
 
-            if (time_since < len)
+            int clip_letters = 0;
+
+            if (time_since < length_past)
                 clip_letters = time_since;
             else
-                clip_letters = len * 2 - time_since;
+                clip_letters = length_past * 2 - time_since;
 
             clip_letters *= 2;
-            clip_letters -= len / 2;
+            clip_letters -= length_past / 2;
 
-            if (clip_letters < 0)
-                clip_letters = 0;
-            else if (clip_letters > ((int)len * 1)-1)
-                clip_letters = ((int)len * 1)-1;
+            // clamp
+            clip_letters = fmax(0, fmin(clip_letters, length_past));
 
+            int extra_off = 0;
             if (clip_letters > 0)
             {
-                str = "..." + str.substr(clip_letters);
+                str       = "..." + str.substr(clip_letters);
+                extra_off = 3;
             }
 
-            if (str.length() > 50 + 4)
+            if (str.length() > max_len + extra_off)
             {
-                str = str.substr(0, 54) + "...";
+                str = str.substr(0, max_len + extra_off) + "...";
             }
         }
 
