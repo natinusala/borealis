@@ -416,7 +416,7 @@ void ListItem::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heigh
 
         std::string str = this->subLabel;
 
-        unsigned int max_len = 50;
+        unsigned int max_len = 35;
 
         if (str.length() > max_len)
         {
@@ -437,20 +437,23 @@ void ListItem::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heigh
             // clamp
             clip_letters = fmax(0, fmin(clip_letters, length_past));
 
-            int extra_off = 0;
+            int extra_off = 4;
             if (clip_letters > 0)
             {
-                str       = "..." + str.substr(clip_letters);
-                extra_off = 3;
+                str       = " ..." + str.substr(clip_letters);
+                extra_off = 4;
             }
+            else
+                str = "    " + str;
 
             if (str.length() > max_len + extra_off)
             {
                 str = str.substr(0, max_len + extra_off) + "...";
             }
         }
+        else
+            str = "    " + str;
 
-        //nvgText(vg, x + leftPadding, y + baseHeight - baseHeight / 3, (std::to_string(time_since) + ":" + str).c_str(), nullptr);
         nvgText(vg, x + leftPadding, y + baseHeight - baseHeight / 3, str.c_str(), nullptr);
     }
 
