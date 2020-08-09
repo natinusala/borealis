@@ -23,8 +23,6 @@
 #include <borealis/sidebar.hpp>
 #include <borealis/layer_view.hpp>
 #include <string>
-#include <vector>
-#include <map>
 
 namespace brls
 {
@@ -55,7 +53,7 @@ class TabFrame : public AppletFrame
     BoxLayout* layout;
     LayerView* rightPane = nullptr;
 
-    void switchToView(u_int64_t viewIndex);
+    void switchToView(int viewIndex);
 };
 
 } // namespace brls

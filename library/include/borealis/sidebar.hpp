@@ -21,7 +21,6 @@
 
 #include <borealis/list.hpp>
 #include <string>
-#include <vector>
 
 namespace brls
 {

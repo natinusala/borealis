@@ -39,7 +39,7 @@ View* Sidebar::getDefaultFocus()
 {
     View* toFocus{ nullptr };
     // Try to focus last focused one
-    if(this->currentActive != nullptr)
+    if(this->currentActive)
         toFocus = this->currentActive->getDefaultFocus();
     
     if (toFocus)
@@ -60,12 +60,11 @@ SidebarItem* Sidebar::addItem(std::string label, void* userdata)
     item->setAssociatedViewUserData(userdata);
 
     /*focus first item as soon as we add it*/
-    if (currentActive == nullptr)
+    if (!this->currentActive)
         setActive(item);
 
     this->addView(item);
     
-
     return item;
 }
 

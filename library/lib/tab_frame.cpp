@@ -57,9 +57,8 @@ bool TabFrame::onCancel()
     return AppletFrame::onCancel();
 }
 
-void TabFrame::switchToView(u_int64_t viewIndex)
+void TabFrame::switchToView(int viewIndex)
 {
-    
     if(this->rightPane->getLayerIndex() == viewIndex)
         return;
 
