@@ -107,7 +107,7 @@ void ListContentView::customSpacing(View* current, View* next, int* spacing)
         this->list->customSpacing(current, next, spacing);
 }
 
-ListItem::ListItem(std::string label, std::string description, std::string subLabel, List* list)
+ListItem::ListItem(std::string label, std::string description, std::string subLabel)
     : label(label)
     , subLabel(subLabel)
 {
@@ -120,14 +120,6 @@ ListItem::ListItem(std::string label, std::string description, std::string subLa
     {
         this->descriptionView = new Label(LabelStyle::DESCRIPTION, description, true);
         this->descriptionView->setParent(this);
-    }
-
-    if(list)
-    {
-        this->listItemUserData = new ListItemUserData(list);
-        this->isSidebarItem = true;
-        this->drawTopSeparator = false;
-        this->drawBottomSeparator = false;
     }
 
     this->registerAction("OK", Key::A, [this] { return this->onClick(); });
@@ -517,6 +509,18 @@ void* ListItem::getAssociatedViewUserData()
     return static_cast<ListItemUserData*>(this->listItemUserData)->associatedViewUserData;
 }
 
+void ListItem::setUserData(void* userdata)
+{
+    this->listItemUserData = userdata;
+        
+    if(static_cast<ListItemUserData*>(userdata)->list)
+    {
+        this->isSidebarItem = true;
+        this->drawTopSeparator = false;
+        this->drawBottomSeparator = false;
+    }
+}
+
 ListItem::~ListItem()
 {
     if (this->descriptionView)
@@ -720,7 +724,9 @@ void List::setSidebarStyle()
 
 ListItem* List::addItem(std::string label, void* userdata)
 {
-    ListItem* item = new ListItem(label, "", "", this);
+    ListItemUserData* listItemUserData = new ListItemUserData(this);
+    ListItem* item = new ListItem(label, "", "");
+    item->setUserData(listItemUserData);
     item->setAssociatedViewUserData(userdata);
 
     /*focus first item as soon as we add it*/

@@ -89,7 +89,7 @@ class ListItem : public View
     void resetValueAnimation();
 
   public:
-    ListItem(std::string label, std::string description = "", std::string subLabel = "", List* list = nullptr);
+    ListItem(std::string label, std::string description = "", std::string subLabel = "");
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
@@ -113,6 +113,8 @@ class ListItem : public View
     void setTextSize(unsigned textSize);
 
     void setChecked(bool checked);
+    
+    void setUserData(void* userdata);
 
     std::string getLabel();
 
