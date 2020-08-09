@@ -75,9 +75,8 @@ void TabFrame::switchToView(int viewIndex)
         this->layout->addView(this->rightPane, true, true); // addView() calls willAppear()
 }
 
-void TabFrame::addTab(std::string label, View* view)
+ListItem* TabFrame::addListItem(std::string label, View* view)
 {
-
     size_t viewIndex        = rightPane->getLayerCount();
     size_t* viewUserData = (size_t*)malloc(sizeof(size_t));
     *viewUserData        = viewIndex;
@@ -100,6 +99,31 @@ void TabFrame::addTab(std::string label, View* view)
         Logger::debug("Switching to the first tab");
         this->switchToView(0);
     }
+
+    return item;
+}
+
+void TabFrame::addTab(std::string label, View* view, Image* image)
+{
+    ListItem* item = this->addListItem(label, view);
+    item->setThumbnail(image);
+}
+
+void TabFrame::addTab(std::string label, View* view, std::string imagePath)
+{
+    ListItem* item = this->addListItem(label, view);
+    item->setThumbnail(imagePath);
+}
+
+void TabFrame::addTab(std::string label, View* view, unsigned char* buffer, size_t bufferSize)
+{
+    ListItem* item = this->addListItem(label, view);
+    item->setThumbnail(buffer, bufferSize);
+}
+
+void TabFrame::addTab(std::string label, View* view)
+{
+    this->addListItem(label, view);
 }
 
 void TabFrame::addSeparator()

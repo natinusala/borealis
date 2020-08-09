@@ -30,6 +30,9 @@ namespace brls
 // An applet frame containing a sidebar on the left with multiple tabs
 class TabFrame : public AppletFrame
 {
+  private:
+    ListItem* addListItem(std::string label, View* view);
+    
   public:
     TabFrame();
 
@@ -40,6 +43,9 @@ class TabFrame : public AppletFrame
      * the view hierarchy
      */
     void addTab(std::string label, View* view);
+    void addTab(std::string label, View* view, Image* image);
+    void addTab(std::string label, View* view, std::string imagePath);
+    void addTab(std::string label, View* view, unsigned char* buffer, size_t bufferSize);
     void addSeparator();
 
     View* getDefaultFocus() override;
