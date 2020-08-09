@@ -36,6 +36,19 @@ class SidebarSeparator : public View
 
 class Sidebar;
 
+class ListItemUserData
+{
+  public:
+    ListItemUserData(Sidebar* sidebar);
+
+    Sidebar* sidebar              = nullptr;
+    View* associatedView          = nullptr;
+    void* associatedViewUserData  = nullptr;
+
+  ~ListItemUserData();
+
+};
+
 // TODO: Use a Label view with integrated ticker for label and sublabel
 // TODO: Have the label always tick when active
 class SidebarItem : public View
@@ -44,9 +57,7 @@ class SidebarItem : public View
     std::string label;
     bool active = false;
 
-    Sidebar* sidebar              = nullptr;
-    View* associatedView          = nullptr;
-    void* associatedViewUserData  = nullptr;
+    void* listItemUserData = nullptr;
 
   public:
     SidebarItem(std::string label, Sidebar* sidebar);

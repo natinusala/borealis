@@ -85,10 +85,11 @@ void Sidebar::setActive(SidebarItem* active)
 
 SidebarItem::SidebarItem(std::string label, Sidebar* sidebar)
     : label(label)
-    , sidebar(sidebar)
 {
     Style* style = Application::getStyle();
     this->setHeight(style->Sidebar.Item.height);
+
+    this->listItemUserData = new ListItemUserData(sidebar);
 
     this->registerAction("OK", Key::A, [this] { return this->onClick(); });
 }
@@ -140,12 +141,12 @@ void SidebarSeparator::draw(NVGcontext* vg, int x, int y, unsigned width, unsign
 
 void SidebarItem::setAssociatedView(View* view)
 {
-    this->associatedView = view;
+    static_cast<ListItemUserData*>(this->listItemUserData)->associatedView = view;
 }
 
 void SidebarItem::setAssociatedViewUserData(void* userdata)
 {
-    this->associatedViewUserData = userdata;
+    static_cast<ListItemUserData*>(this->listItemUserData)->associatedViewUserData = userdata;
 }
 
 bool SidebarItem::isActive()
@@ -155,21 +156,31 @@ bool SidebarItem::isActive()
 
 void SidebarItem::onFocusGained()
 {
-    this->sidebar->setActive(this);
+    static_cast<ListItemUserData*>(this->listItemUserData)->sidebar->setActive(this);
     View::onFocusGained();
 }
 
 View* SidebarItem::getAssociatedView()
 {
-    return this->associatedView;
+    return static_cast<ListItemUserData*>(this->listItemUserData)->associatedView;
 }
 
 void* SidebarItem::getAssociatedViewUserData()
 {
-    return this->associatedViewUserData;
+    return static_cast<ListItemUserData*>(this->listItemUserData)->associatedViewUserData;
 }
 
 SidebarItem::~SidebarItem()
+{
+    delete static_cast<ListItemUserData*>(this->listItemUserData);
+}
+
+ListItemUserData::ListItemUserData(Sidebar* sidebar)
+{
+    this->sidebar = sidebar;
+}
+
+ListItemUserData::~ListItemUserData()
 {
     if (this->associatedView)
         delete this->associatedView;
