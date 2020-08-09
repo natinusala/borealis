@@ -107,7 +107,7 @@ void ListContentView::customSpacing(View* current, View* next, int* spacing)
         this->list->customSpacing(current, next, spacing);
 }
 
-ListItem::ListItem(std::string label, std::string description, std::string subLabel)
+ListItem::ListItem(std::string label, std::string description, std::string subLabel, List* list)
     : label(label)
     , subLabel(subLabel)
 {
@@ -120,6 +120,14 @@ ListItem::ListItem(std::string label, std::string description, std::string subLa
     {
         this->descriptionView = new Label(LabelStyle::DESCRIPTION, description, true);
         this->descriptionView->setParent(this);
+    }
+
+    if(list)
+    {
+        this->listItemUserData = new ListItemUserData(list);
+        this->isSidebarItem = true;
+        this->drawTopSeparator = false;
+        this->drawBottomSeparator = false;
     }
 
     this->registerAction("OK", Key::A, [this] { return this->onClick(); });
@@ -188,6 +196,11 @@ void ListItem::setChecked(bool checked)
 
 bool ListItem::onClick()
 {
+    if(this->isSidebarItem)
+    {
+        Application::onGamepadButtonPressed(GLFW_GAMEPAD_BUTTON_DPAD_RIGHT, false);
+        return true;
+    }
     return this->clickEvent.fire(this);
 }
 
@@ -287,6 +300,11 @@ void ListItem::setDrawTopSeparator(bool draw)
     this->drawTopSeparator = draw;
 }
 
+void ListItem::setDrawBottomSeparator(bool draw)
+{
+    this->drawBottomSeparator = draw;
+}
+
 View* ListItem::getDefaultFocus()
 {
     if (this->collapseState != 1.0f)
@@ -302,6 +320,7 @@ void ListItem::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heigh
     bool hasThumbnail   = this->thumbnailView;
 
     unsigned leftPadding = hasThumbnail ? this->thumbnailView->getWidth() + style->List.Item.thumbnailPadding * 2 : style->List.Item.padding;
+    leftPadding += isSidebarItem ? style->Sidebar.Item.textOffsetX : 0;
 
     if (this->indented)
     {
@@ -393,13 +412,13 @@ void ListItem::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heigh
     }
 
     // Label
-    nvgFillColor(vg, a(ctx->theme->textColor));
+    nvgFillColor(vg, a(this->active ? ctx->theme->activeTabColor : ctx->theme->textColor));
     nvgFontSize(vg, this->textSize);
     nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
     nvgFontFaceId(vg, ctx->fontStash->regular);
     nvgBeginPath(vg);
     nvgText(vg, x + leftPadding, y + baseHeight / (hasSubLabel ? 3 : 2), this->label.c_str(), nullptr);
-
+    
     // Sub Label
     if (hasSubLabel)
     {
@@ -428,9 +447,21 @@ void ListItem::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heigh
     }
 
     // Bottom
-    nvgBeginPath(vg);
-    nvgRect(vg, x, y + 1 + baseHeight, width, 1);
-    nvgFill(vg);
+    if (this->drawBottomSeparator)
+    {
+        nvgBeginPath(vg);
+        nvgRect(vg, x, y + 1 + baseHeight, width, 1);
+        nvgFill(vg);
+    }
+    
+    // Active marker
+    if (this->active)
+    {
+        nvgFillColor(vg, a(ctx->theme->activeTabColor));
+        nvgBeginPath(vg);
+        nvgRect(vg, x + style->Sidebar.Item.padding, y + style->Sidebar.Item.padding, style->Sidebar.Item.activeMarkerWidth, style->Sidebar.Item.height - style->Sidebar.Item.padding * 2);
+        nvgFill(vg);
+    }
 }
 
 bool ListItem::hasDescription()
@@ -443,6 +474,49 @@ std::string ListItem::getLabel()
     return this->label;
 }
 
+void ListItem::setActive(bool active)
+{
+    this->active = active;
+}
+
+bool ListItem::isActive()
+{
+    return this->active;
+}
+
+void ListItem::onFocusGained()
+{
+    ListItemUserData* userData = static_cast<ListItemUserData*>(this->listItemUserData);
+
+    //Sanity check
+    if(userData && userData->list)
+    {
+        userData->list->setActive(this);
+    }
+
+    View::onFocusGained();
+}
+
+void ListItem::setAssociatedView(View* view)
+{
+    static_cast<ListItemUserData*>(this->listItemUserData)->associatedView = view;
+}
+
+void ListItem::setAssociatedViewUserData(void* userdata)
+{
+    static_cast<ListItemUserData*>(this->listItemUserData)->associatedViewUserData = userdata;
+}
+
+View* ListItem::getAssociatedView()
+{
+    return static_cast<ListItemUserData*>(this->listItemUserData)->associatedView;
+}
+
+void* ListItem::getAssociatedViewUserData()
+{
+    return static_cast<ListItemUserData*>(this->listItemUserData)->associatedViewUserData;
+}
+
 ListItem::~ListItem()
 {
     if (this->descriptionView)
@@ -450,6 +524,9 @@ ListItem::~ListItem()
 
     if (this->thumbnailView)
         delete this->thumbnailView;
+
+    if (this->listItemUserData)
+        delete static_cast<ListItemUserData*>(this->listItemUserData);
 
     this->resetValueAnimation();
 }
@@ -631,9 +708,79 @@ void List::customSpacing(View* current, View* next, int* spacing)
     // Nothing to do by default
 }
 
+void List::setSidebarStyle()
+{
+    Style* style = Application::getStyle();
+
+    this->setWidth(style->Sidebar.width);
+    this->setSpacing(style->Sidebar.spacing);
+    this->setMargins(style->Sidebar.marginTop, style->Sidebar.marginRight, style->Sidebar.marginBottom, style->Sidebar.marginLeft);
+    this->setBackground(ViewBackground::SIDEBAR);
+}
+
+ListItem* List::addItem(std::string label, void* userdata)
+{
+    ListItem* item = new ListItem(label, "", "", this);
+    item->setAssociatedViewUserData(userdata);
+
+    /*focus first item as soon as we add it*/
+    if (!this->currentActive)
+        setActive(item);
+
+    this->addView(item);
+    
+    return item;
+}
+
+void List::setActive(ListItem* active)
+{
+    if (currentActive)
+        currentActive->setActive(false);
+
+    currentActive = active;
+    active->setActive(true);
+}
+
+void List::addSeparator()
+{
+    ListSeparator* separator = new ListSeparator();
+    this->addView(separator);
+}
+
 List::~List()
 {
     // ScrollView already deletes the content view
+}
+
+ListSeparator::ListSeparator()
+{
+    Style* style = Application::getStyle();
+    this->setHeight(style->Sidebar.Separator.height);
+}
+
+void ListSeparator::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)
+{
+    nvgFillColor(vg, a(ctx->theme->sidebarSeparatorColor));
+    nvgBeginPath(vg);
+    nvgRect(vg, x, y + height / 2, width, 1);
+    nvgFill(vg);
+}
+
+ListItemUserData::ListItemUserData(List* list)
+{
+    this->list = list;
+}
+
+ListItemUserData::~ListItemUserData()
+{
+    if (this->associatedView)
+        delete this->associatedView;
+
+    if (this->associatedViewUserData)
+    {
+        free(this->associatedViewUserData);
+        this->associatedViewUserData = nullptr;
+    }
 }
 
 } // namespace brls

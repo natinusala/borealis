@@ -84,10 +84,10 @@ void TabFrame::addTab(std::string label, View* view)
 
     rightPane->addLayer(view);
 
-    SidebarItem* item = this->sidebar->addItem(label, viewUserData);
+    ListItem* item = this->sidebar->addItem(label, viewUserData);
 
     item->getFocusEvent()->subscribe([this](View* view) {
-        if (SidebarItem* item = dynamic_cast<SidebarItem*>(view))
+        if (ListItem* item = dynamic_cast<ListItem*>(view))
         {
             int viewIndex = static_cast<int>(*((size_t*)item->getAssociatedViewUserData()));
             this->switchToView(viewIndex);

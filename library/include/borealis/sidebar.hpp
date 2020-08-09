@@ -25,84 +25,12 @@
 namespace brls
 {
 
-// A sidebar with multiple tabs
-class SidebarSeparator : public View
-{
-  public:
-    SidebarSeparator();
-
-    void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-};
-
-class Sidebar;
-
-class ListItemUserData
-{
-  public:
-    ListItemUserData(Sidebar* sidebar);
-
-    Sidebar* sidebar              = nullptr;
-    View* associatedView          = nullptr;
-    void* associatedViewUserData  = nullptr;
-
-  ~ListItemUserData();
-
-};
-
-// TODO: Use a Label view with integrated ticker for label and sublabel
-// TODO: Have the label always tick when active
-class SidebarItem : public View
-{
-  private:
-    std::string label;
-    bool active = false;
-
-    void* listItemUserData = nullptr;
-
-  public:
-    SidebarItem(std::string label, Sidebar* sidebar);
-
-    void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
-
-    View* getDefaultFocus() override
-    {
-        return this;
-    }
-
-    virtual bool onClick();
-
-    void setActive(bool active);
-    bool isActive();
-
-    void onFocusGained() override;
-
-    void setAssociatedView(View* view);
-    View* getAssociatedView();
-
-    void   setAssociatedViewUserData(void* userdata);
-    void*  getAssociatedViewUserData();
-
-    ~SidebarItem();
-};
-
 // TODO: Add a style with icons, make it collapsible?
 class Sidebar : public List
 {
-  private:
-    SidebarItem* currentActive = nullptr;
-
   public:
     Sidebar();
-
-    SidebarItem* addItem(std::string label, void* userdata);
-    void addSeparator();
-
-    void setActive(SidebarItem* item);
-
-    View* getDefaultFocus() override;
-    void onChildFocusGained(View* child) override;
-
-    size_t lastFocus = 0;
+    
 };
 
 } // namespace brls

@@ -29,6 +29,29 @@
 namespace brls
 {
 
+class List;
+
+class ListItemUserData
+{
+  public:
+    ListItemUserData(List* sidebar);
+
+    List* list                    = nullptr;
+    View* associatedView          = nullptr;
+    void* associatedViewUserData  = nullptr;
+
+  ~ListItemUserData();
+
+};
+
+class ListSeparator : public View
+{
+  public:
+    ListSeparator();
+
+    void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
+};
+
 // A list item
 // TODO: Use a Label with integrated ticker
 class ListItem : public View
@@ -38,6 +61,8 @@ class ListItem : public View
     std::string subLabel;
     std::string value;
     bool valueFaint;
+    bool active = false;
+    bool isSidebarItem = false;
 
     std::string oldValue;
     bool oldValueFaint;
@@ -47,7 +72,8 @@ class ListItem : public View
 
     unsigned textSize;
 
-    bool drawTopSeparator = true;
+    bool drawTopSeparator    = true;
+    bool drawBottomSeparator = true;
 
     Label* descriptionView = nullptr;
     Image* thumbnailView   = nullptr;
@@ -58,10 +84,12 @@ class ListItem : public View
 
     bool indented = false;
 
+    void* listItemUserData = nullptr;
+
     void resetValueAnimation();
 
   public:
-    ListItem(std::string label, std::string description = "", std::string subLabel = "");
+    ListItem(std::string label, std::string description = "", std::string subLabel = "", List* list = nullptr);
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
@@ -75,6 +103,7 @@ class ListItem : public View
 
     bool hasDescription();
     void setDrawTopSeparator(bool draw);
+    void setDrawBottomSeparator(bool draw);
 
     bool getReduceDescriptionSpacing();
     void setReduceDescriptionSpacing(bool value);
@@ -97,6 +126,17 @@ class ListItem : public View
     std::string getValue();
 
     GenericEvent* getClickEvent();
+
+    void setActive(bool active);
+    bool isActive();
+
+    void onFocusGained() override;
+
+    void setAssociatedView(View* view);
+    View* getAssociatedView();
+
+    void   setAssociatedViewUserData(void* userdata);
+    void*  getAssociatedViewUserData();
 
     ~ListItem();
 };
@@ -200,6 +240,7 @@ class List : public ScrollView
 {
   private:
     ListContentView* layout;
+    ListItem* currentActive = nullptr;
 
   public:
     List(size_t defaultFocus = 0);
@@ -216,6 +257,12 @@ class List : public ScrollView
     void setSpacing(unsigned spacing);
     unsigned getSpacing();
     virtual void customSpacing(View* current, View* next, int* spacing);
+
+    void setSidebarStyle();
+    ListItem* addItem(std::string label, void* userdata);
+    void addSeparator();
+    void setActive(ListItem* item);
+    size_t lastFocus = 0;
 };
 
 } // namespace brls
