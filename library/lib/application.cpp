@@ -381,7 +381,7 @@ bool Application::mainLoop()
     const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
 
     //Make sure we got all our expected sticks before reading from them
-    if (count == 4)
+    if (count >= 4)
     {
         // Left Stick Y
         if (axes[1] < -.5)
