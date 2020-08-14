@@ -101,7 +101,7 @@ class View
 
     bool hidden = false;
 
-    bool clipping = true;
+    bool clipped = true;
 
     std::vector<Action> actions;
 
@@ -301,8 +301,8 @@ class View
 
     bool isHidden();
 
-    void setClipping(bool enable) { clipping = enable; }
-    bool isClipping() const { return clipping; };
+    void enableClipping(bool enable) { clipped = enable; }
+    bool isClippingEnabled(void) const { return clipped; };
 
     /**
       * Calls layout() on next frame

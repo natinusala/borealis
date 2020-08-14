@@ -84,7 +84,7 @@ void View::frame(FrameContext* ctx)
         this->dirty = false;
     }
 
-    if (this->alpha > 0.0f && this->collapseState != 0.0f && (!this->clipping ||
+    if (this->alpha > 0.0f && this->collapseState != 0.0f && (!this->clipped ||
         ((this->x + static_cast<int>(this->width)) >= 0 && this->x <= static_cast<int>(Application::contentWidth) &&
         (this->y + static_cast<int>(this->height)) >= 0 && this->y <= static_cast<int>(Application::contentHeight))))
     {

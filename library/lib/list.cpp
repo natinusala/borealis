@@ -39,7 +39,7 @@ ListContentView::ListContentView(List* list, size_t defaultFocus)
 {
     // We need to disable clipping so that this container will still be drawn.
     // The children will only be drawn if in-bounds.
-    this->setClipping(false);
+    this->enableClipping(false);
 
     Style* style = Application::getStyle();
     this->setMargins(style->List.marginTopBottom, style->List.marginLeftRight, style->List.marginTopBottom, style->List.marginLeftRight);
