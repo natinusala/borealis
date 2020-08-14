@@ -37,10 +37,6 @@ ListContentView::ListContentView(List* list, size_t defaultFocus)
     : BoxLayout(BoxLayoutOrientation::VERTICAL, defaultFocus)
     , list(list)
 {
-    // We need to disable clipping so that this container will still be drawn.
-    // The children will only be drawn if in-bounds.
-    this->enableClipping(false);
-
     Style* style = Application::getStyle();
     this->setMargins(style->List.marginTopBottom, style->List.marginLeftRight, style->List.marginTopBottom, style->List.marginLeftRight);
     this->setSpacing(style->List.spacing);
