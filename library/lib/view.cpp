@@ -85,8 +85,8 @@ void View::frame(FrameContext* ctx)
     }
 
     if (this->alpha > 0.0f && this->collapseState != 0.0f && (!this->clipping ||
-        (this->x >= 0 && this->x <= (int)Application::contentWidth &&
-        this->y >= 0 && this->y <= (int)Application::contentHeight)))
+        (this->x >= 0 && this->x <= static_cast<int>(Application::contentWidth) &&
+        this->y >= 0 && this->y <= static_cast<int>(Application::contentHeight))))
     {
         // Draw background
         this->drawBackground(ctx->vg, ctx, style);
