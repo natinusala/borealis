@@ -101,6 +101,8 @@ class View
 
     bool hidden = false;
 
+    bool clipping = true;
+
     std::vector<Action> actions;
 
     /**
@@ -298,6 +300,9 @@ class View
     virtual void hide(std::function<void(void)> cb, bool animated = true, ViewAnimation animation = ViewAnimation::FADE);
 
     bool isHidden();
+
+    void setClipping(bool enable) { clipping = enable; }
+    bool isClipping() const { return clipping; };
 
     /**
       * Calls layout() on next frame
