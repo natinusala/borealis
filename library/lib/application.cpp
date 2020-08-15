@@ -383,33 +383,29 @@ bool Application::mainLoop()
     //Make sure we got all our expected sticks before reading from them
     if (count >= 4)
     {
+        // Left Stick X
+        if (axes[0] < -.5)
+            Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT] = GLFW_PRESS;
+        else if (axes[0] > .5)
+            Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT] = GLFW_PRESS;
+
         // Left Stick Y
         if (axes[1] < -.5)
             Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP] = GLFW_PRESS;
         else if (axes[1] > .5)
             Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] = GLFW_PRESS;
-        else
-        {
-            // Left Stick X
-            if (axes[0] < -.5)
-                Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT] = GLFW_PRESS;
-            else if (axes[0] > .5)
-                Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT] = GLFW_PRESS;
-        }
+
+        // Right Stick X
+        if (axes[2] < -.5)
+            Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT] = GLFW_PRESS;
+        else if (axes[2] > .5)
+            Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT] = GLFW_PRESS;
 
         // Right Stick Y
         if (axes[3] < -.5)
             Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP] = GLFW_PRESS;
         else if (axes[3] > .5)
             Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] = GLFW_PRESS;
-        else
-        {
-            // Right Stick X
-            if (axes[2] < -.5)
-                Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT] = GLFW_PRESS;
-            else if (axes[2] > .5)
-                Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT] = GLFW_PRESS;
-        }
     }
 
     bool anyButtonPressed               = false;
