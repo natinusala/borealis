@@ -454,13 +454,8 @@ void Application::quit()
 
 void Application::navigate(FocusDirection direction)
 {
-    printf("Navigate: %i\n", direction);
-
     if (focusLocked)
-    {
-        printf("Locked\n");
         return;
-    }
 
     View* currentFocus = Application::currentFocus;
 
