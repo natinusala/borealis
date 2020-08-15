@@ -156,6 +156,8 @@ class Application
     static void cleanupNvgGlState();
 
   private:
+    inline static bool focusLocked = false;
+
     inline static GLFWwindow* window;
     inline static NVGcontext* vg;
 

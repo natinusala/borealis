@@ -442,6 +442,8 @@ bool Application::mainLoop()
         }
     }
 
+    focusLocked = false;
+
     return true;
 }
 
@@ -452,6 +454,14 @@ void Application::quit()
 
 void Application::navigate(FocusDirection direction)
 {
+    printf("Navigate: %i\n", direction);
+
+    if (focusLocked)
+    {
+        printf("Locked\n");
+        return;
+    }
+
     View* currentFocus = Application::currentFocus;
 
     // Do nothing if there is no current focus or if it doesn't have a parent
@@ -479,6 +489,7 @@ void Application::navigate(FocusDirection direction)
     }
 
     // Otherwise give it focus
+    focusLocked = true;
     Application::giveFocus(nextFocus);
 }
 
