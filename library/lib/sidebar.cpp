@@ -27,7 +27,7 @@ namespace brls
 Sidebar::Sidebar()
     : List()
 {
-      List::setSidebarStyle();
+    List::setSidebarStyle();
 }
 
 } // namespace brls
