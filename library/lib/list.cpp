@@ -125,6 +125,19 @@ ListItem::ListItem(std::string label, std::string description, std::string subLa
     this->registerAction("OK", Key::A, [this] { return this->onClick(); });
 }
 
+void ListItem::setThumbnail(View* view)
+{
+    if (this->thumbnailView)
+        delete this->thumbnailView;
+    if (view != NULL)
+    {
+        this->thumbnailView = view;
+        this->thumbnailView->setParent(this);
+        this->thumbnailIsImage = false;
+        this->invalidate();
+    }
+}
+
 void ListItem::setThumbnail(Image* image)
 {
     if (this->thumbnailView)
@@ -133,31 +146,60 @@ void ListItem::setThumbnail(Image* image)
     {
         this->thumbnailView = image;
         this->thumbnailView->setParent(this);
+        this->thumbnailIsImage = true;
         this->invalidate();
     }
 }
 
 void ListItem::setThumbnail(std::string imagePath)
 {
+    // check if previous view exists and reuse if it's an Image
     if (this->thumbnailView)
-        this->thumbnailView->setImage(imagePath);
+    {
+        if (this->thumbnailIsImage)
+        {
+            dynamic_cast<Image*>(this->thumbnailView)->setImage(imagePath);
+        }
+        else
+        {
+            delete this->thumbnailView;
+            this->thumbnailView = new Image(imagePath);
+        }
+    }
     else
+    {
         this->thumbnailView = new Image(imagePath);
+    }
 
     this->thumbnailView->setParent(this);
-    this->thumbnailView->setScaleType(ImageScaleType::FIT);
+    dynamic_cast<Image*>(this->thumbnailView)->setScaleType(ImageScaleType::FIT);
+    this->thumbnailIsImage = true;
     this->invalidate();
 }
 
 void ListItem::setThumbnail(unsigned char* buffer, size_t bufferSize)
 {
+    // check if previous view exists and reuse if it's an Image
     if (this->thumbnailView)
-        this->thumbnailView->setImage(buffer, bufferSize);
+    {
+        if (this->thumbnailIsImage)
+        {
+            dynamic_cast<Image*>(this->thumbnailView)->setImage(buffer, bufferSize);
+        }
+        else
+        {
+            delete this->thumbnailView;
+            this->thumbnailView = new Image(buffer, bufferSize);
+        }
+    }
     else
+    {
         this->thumbnailView = new Image(buffer, bufferSize);
+    }
 
     this->thumbnailView->setParent(this);
-    this->thumbnailView->setScaleType(ImageScaleType::FIT);
+    dynamic_cast<Image*>(this->thumbnailView)->setScaleType(ImageScaleType::FIT);
+    this->thumbnailIsImage = true;
     this->invalidate();
 }
 
@@ -215,14 +257,31 @@ void ListItem::layout(NVGcontext* vg, Style* style, FontStash* stash)
     // Thumbnail
     if (this->thumbnailView)
     {
-        Style* style           = Application::getStyle();
-        unsigned thumbnailSize = height - style->List.Item.thumbnailPadding * 2;
+        Style* style = Application::getStyle();
+        unsigned thumbnailWidth, thumnailHeight;
+
+        if (this->thumbnailIsImage)
+        {
+            thumbnailWidth = thumnailHeight = this->height - style->List.Item.thumbnailPadding * 2;
+        }
+        else
+        {
+            thumbnailWidth = this->thumbnailView->getWidth();
+            thumnailHeight = this->thumbnailView->getHeight();
+
+            unsigned newHeight = thumnailHeight + style->List.Item.thumbnailPadding * 2;
+
+            // Increase height if view doesnt fit
+            if (newHeight > this->height) {
+                this->height = newHeight;
+            }
+        }
 
         this->thumbnailView->setBoundaries(
             x + style->List.Item.thumbnailPadding,
             y + style->List.Item.thumbnailPadding,
-            thumbnailSize,
-            thumbnailSize);
+            thumbnailWidth,
+            thumnailHeight);
         this->thumbnailView->invalidate();
     }
 }

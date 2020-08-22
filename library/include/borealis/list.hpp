@@ -50,7 +50,9 @@ class ListItem : public View
     bool drawTopSeparator = true;
 
     Label* descriptionView = nullptr;
-    Image* thumbnailView   = nullptr;
+    View* thumbnailView    = nullptr;
+
+    bool thumbnailIsImage = false;
 
     bool reduceDescriptionSpacing = false;
 
@@ -69,6 +71,7 @@ class ListItem : public View
     virtual bool onClick();
     View* getDefaultFocus() override;
 
+    void setThumbnail(View* view);
     void setThumbnail(Image* image);
     void setThumbnail(std::string imagePath);
     void setThumbnail(unsigned char* buffer, size_t bufferSize);
