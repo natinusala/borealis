@@ -1,6 +1,6 @@
 /*
     Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2019  natinusala
+    Copyright (C) 2020  natinusala
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,30 +18,34 @@
 
 #pragma once
 
-#include <borealis/view.hpp>
+#include "borealis/view.hpp"
 
 namespace brls
 {
 
-// A Material icon (from the Material font)
-class MaterialIcon : public View
+// A "layout" that takes a list of views and takes care of all the plumbing
+// The user is responsible for calling setBoundaries on all the child views
+// as well as implementing navigation (getDefaultFocus(), getNextFocus())
+//
+// Override layout() and reposition your views here, then call the super method
+class AbsoluteLayout : public View
 {
+    // TODO: rewrite some of the base views (AppletFrame, CrashFrame, PopupView...) using AbsoluteLayout
+
   private:
-    std::string icon;
-    unsigned middleX, middleY;
-
-    bool useCustomColor = false;
-    NVGcolor customColor;
-
-    NVGcolor getColor(ThemeValues* theme);
+    std::vector<View*> children;
 
   public:
-    MaterialIcon(std::string icon);
+    ~AbsoluteLayout();
 
+    void addView(View* view);
+
+    // Plumbing
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
-
-    void setColor(NVGcolor color);
+    void onWindowSizeChanged() override;
+    void willAppear(bool resetState = false) override;
+    void willDisappear(bool resetState = false) override;
 };
 
 } // namespace brls

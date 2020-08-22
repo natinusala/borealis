@@ -72,7 +72,6 @@ class ThumbnailFrame : public AppletFrame
 
   protected:
     void layout(NVGcontext* vg, Style* style, FontStash* stash) override;
-
 };
 
 } // namespace brls

@@ -259,6 +259,9 @@ bool Application::init(std::string title, Style style, Theme theme)
     else
         Application::fontStash.regular = Application::loadFont("regular", BOREALIS_ASSET("inter/Inter-Switch.ttf"));
 
+    if (Application::fontStash.regular == -1)
+        brls::Logger::error("Couldn't load regular font, no text will be displayed!");
+
     if (access(BOREALIS_ASSET("Wingdings.ttf"), F_OK) != -1)
         Application::fontStash.sharedSymbols = Application::loadFont("sharedSymbols", BOREALIS_ASSET("Wingdings.ttf"));
 #endif
@@ -522,13 +525,16 @@ View* Application::getCurrentFocus()
 
 bool Application::handleAction(char button)
 {
+    if (Application::viewStack.empty())
+        return false;
+
     View* hintParent = Application::currentFocus;
     std::set<Key> consumedKeys;
-    
-    if (hintParent == nullptr)
+
+    if (!hintParent)
         hintParent = Application::viewStack[Application::viewStack.size() - 1];
 
-    while (hintParent != nullptr)
+    while (hintParent)
     {
         for (auto& action : hintParent->getActions())
         {
@@ -559,12 +565,6 @@ void Application::frame()
     frameContext.fontStash  = &Application::fontStash;
     frameContext.theme      = Application::getThemeValues();
 
-    if (Application::background)
-        Application::background->preFrame();
-
-    nvgBeginFrame(Application::vg, Application::windowWidth, Application::windowHeight, frameContext.pixelRatio);
-    nvgScale(Application::vg, Application::windowScale, Application::windowScale);
-
     // GL Clear
     glClearColor(
         frameContext.theme->backgroundColor[0],
@@ -573,6 +573,12 @@ void Application::frame()
         1.0f);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    if (Application::background)
+        Application::background->preFrame();
+
+    nvgBeginFrame(Application::vg, Application::windowWidth, Application::windowHeight, frameContext.pixelRatio);
+    nvgScale(Application::vg, Application::windowScale, Application::windowScale);
 
     std::vector<View*> viewsToDraw;
 
@@ -849,8 +855,7 @@ void Application::onWindowSizeChanged()
             0,
             0,
             Application::contentWidth,
-            Application::contentHeight
-        );
+            Application::contentHeight);
 
         Application::background->invalidate();
         Application::background->onWindowSizeChanged();
@@ -1028,9 +1033,13 @@ void Application::setBackground(Background* background)
     background->willAppear(true);
 }
 
-ThemeVariant Application::getCurrentThemeVariant()
+void Application::cleanupNvgGlState()
 {
-    return Application::currentThemeVariant;
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_SCISSOR_TEST);
+    glDisable(GL_STENCIL_TEST);
 }
 
 } // namespace brls

@@ -24,6 +24,7 @@
 #include <nanovg.h>
 
 #include <borealis/animations.hpp>
+#include <borealis/background.hpp>
 #include <borealis/frame_context.hpp>
 #include <borealis/hint.hpp>
 #include <borealis/label.hpp>
@@ -33,7 +34,6 @@
 #include <borealis/task_manager.hpp>
 #include <borealis/theme.hpp>
 #include <borealis/view.hpp>
-#include <borealis/background.hpp>
 #include <map>
 #include <vector>
 
@@ -149,7 +149,11 @@ class Application
 
     static std::string getTitle();
 
-    static ThemeVariant getCurrentThemeVariant();
+    /**
+     * Cleans up GL state after nanovg
+     * So that we can draw regular stuff over it
+     */
+    static void cleanupNvgGlState();
 
   private:
     inline static GLFWwindow* window;
