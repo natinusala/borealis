@@ -123,6 +123,7 @@ class SelectListItem : public ListItem
     SelectListItem(std::string label, std::vector<std::string> values, unsigned selectedValue = 0, std::string description = "");
 
     void setSelectedValue(unsigned value);
+    int getSelectedValue();
 
     ValueSelectedEvent* getValueSelectedEvent();
 
