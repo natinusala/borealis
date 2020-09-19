@@ -1,0 +1,2 @@
+# Requirements for the various programs in the scripts folder
+jsonpointer==2.0

@@ -23,10 +23,13 @@
 #include <borealis/application.hpp>
 #include <borealis/dropdown.hpp>
 #include <borealis/header.hpp>
+#include <borealis/i18n.hpp>
 #include <borealis/list.hpp>
 #include <borealis/logger.hpp>
 #include <borealis/swkbd.hpp>
 #include <borealis/table.hpp>
+
+using namespace brls::i18n::literals;
 
 // TODO: Scrollbar
 
@@ -122,7 +125,7 @@ ListItem::ListItem(std::string label, std::string description, std::string subLa
         this->descriptionView->setParent(this);
     }
 
-    this->registerAction("OK", Key::A, [this] { return this->onClick(); });
+    this->registerAction("brls/hints/ok"_i18n, Key::A, [this] { return this->onClick(); });
 }
 
 void ListItem::setThumbnail(Image* image)

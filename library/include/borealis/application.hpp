@@ -21,7 +21,7 @@
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#include <nanovg.h>
+#include <nanovg/nanovg.h>
 
 #include <borealis/animations.hpp>
 #include <borealis/background.hpp>

@@ -21,6 +21,9 @@
 #include <borealis/application.hpp>
 #include <borealis/dropdown.hpp>
 #include <borealis/logger.hpp>
+#include <borealis/i18n.hpp>
+
+using namespace brls::i18n::literals;
 
 #define SELECT_VIEW_MAX_ITEMS 6 // for max height
 
@@ -69,7 +72,7 @@ Dropdown::Dropdown(std::string title, std::vector<std::string> values, ValueSele
     this->hint = new Hint();
     this->hint->setParent(this);
 
-    this->registerAction("Back", Key::B, [this] { return this->onCancel(); });
+    this->registerAction("brls/hints/back"_i18n, Key::B, [this] { return this->onCancel(); });
 }
 
 void Dropdown::show(std::function<void(void)> cb, bool animate, ViewAnimation animation)

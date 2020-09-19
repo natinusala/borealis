@@ -25,11 +25,11 @@
 #include <stddef.h>
 #include <string.h>
 
-#include <boolean.h>
-#include <compat/strl.h>
-#include <retro_inline.h>
+#include <libretro-common/boolean.h>
+#include <libretro-common/compat/strl.h>
+#include <libretro-common/retro_inline.h>
 
-#include <encodings/utf.h>
+#include <libretro-common/encodings/utf.h>
 
 #if defined(_WIN32) && !defined(_XBOX)
 #include <windows.h>

@@ -19,7 +19,10 @@
 */
 
 #include <borealis/application.hpp>
+#include <borealis/i18n.hpp>
 #include <borealis/sidebar.hpp>
+
+using namespace brls::i18n::literals;
 
 namespace brls
 {
@@ -97,7 +100,7 @@ SidebarItem::SidebarItem(std::string label, Sidebar* sidebar)
     Style* style = Application::getStyle();
     this->setHeight(style->Sidebar.Item.height);
 
-    this->registerAction("OK", Key::A, [this] { return this->onClick(); });
+    this->registerAction("brls/hints/ok"_i18n, Key::A, [this] { return this->onClick(); });
 }
 
 void SidebarItem::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)

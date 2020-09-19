@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <features/features_cpu.h>
+#include <libretro-common/features/features_cpu.h>
 #include <stdio.h>
 
 #include <borealis/actions.hpp>

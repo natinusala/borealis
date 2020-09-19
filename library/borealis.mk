@@ -17,7 +17,5 @@ SOURCES		:=	$(SOURCES) \
 
 INCLUDES	:=	$(INCLUDES) \
 				$(current_dir)/include \
-				$(current_dir)/include/borealis/extern/glad \
-				$(current_dir)/include/borealis/extern/nanovg \
-				$(current_dir)/include/borealis/extern/libretro-common \
-				$(current_dir)/lib/extern/fmt/include
+				$(current_dir)/lib/extern/fmt/include \
+				$(current_dir)/include/borealis/extern
