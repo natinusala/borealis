@@ -129,7 +129,7 @@ class SelectListItem : public ListItem
 
   private:
     std::vector<std::string> values;
-    unsigned selectedValue;
+    unsigned selectedValue = 0;
 
     ValueSelectedEvent valueEvent;
 };
