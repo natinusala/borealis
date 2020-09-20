@@ -559,6 +559,11 @@ void SelectListItem::setSelectedValue(unsigned value)
     }
 }
 
+unsigned SelectListItem::getSelectedValue()
+{
+    return this->selectedValue;
+}
+
 ValueSelectedEvent* SelectListItem::getValueSelectedEvent()
 {
     return &this->valueEvent;
