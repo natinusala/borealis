@@ -559,7 +559,7 @@ void SelectListItem::setSelectedValue(unsigned value)
     }
 }
 
-int SelectListItem::getSelectedValue()
+unsigned SelectListItem::getSelectedValue()
 {
     return this->selectedValue;
 }
