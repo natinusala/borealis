@@ -27,11 +27,11 @@
 #include <stddef.h>
 #include <ctype.h>
 #include <string.h>
-#include <boolean.h>
+#include <libretro-common/boolean.h>
 
-#include <retro_common_api.h>
-#include <retro_inline.h>
-#include <compat/strl.h>
+#include <libretro-common/retro_common_api.h>
+#include <libretro-common/retro_inline.h>
+#include <libretro-common/compat/strl.h>
 
 RETRO_BEGIN_DECLS
 

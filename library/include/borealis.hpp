@@ -37,6 +37,7 @@
 #include <borealis/dropdown.hpp>
 #include <borealis/event.hpp>
 #include <borealis/header.hpp>
+#include <borealis/i18n.hpp>
 #include <borealis/image.hpp>
 #include <borealis/label.hpp>
 #include <borealis/layer_view.hpp>

@@ -17,16 +17,16 @@
  *  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <compat/strl.h>
-#include <encodings/utf.h>
-#include <features/features_cpu.h>
+#include <libretro-common/compat/strl.h>
+#include <libretro-common/encodings/utf.h>
+#include <libretro-common/features/features_cpu.h>
+#include <libretro-common/retro_assert.h>
+#include <libretro-common/retro_math.h>
+#include <libretro-common/retro_miscellaneous.h>
+#include <libretro-common/string/stdstring.h>
 #include <math.h>
-#include <retro_assert.h>
-#include <retro_math.h>
-#include <retro_miscellaneous.h>
 #include <stdio.h>
 #include <string.h>
-#include <string/stdstring.h>
 
 #include <borealis/animations.hpp>
 #include <vector>

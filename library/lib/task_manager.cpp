@@ -17,7 +17,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <features/features_cpu.h>
+#include <libretro-common/features/features_cpu.h>
 
 #include <borealis/task_manager.hpp>
 

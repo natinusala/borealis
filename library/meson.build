@@ -47,15 +47,15 @@ borealis_files = files(
 
     'lib/repeating_task.cpp',
 
-    'lib/swkbd.cpp'
+    'lib/swkbd.cpp',
+
+    'lib/i18n.cpp',
 )
 
 borealis_include = include_directories(
     'include',
-    'include/borealis/extern/glad',
-    'include/borealis/extern/nanovg',
-    'include/borealis/extern/libretro-common',
-    'lib/extern/fmt/include'
+    'lib/extern/fmt/include',
+    'include/borealis/extern',
 )
 
 borealis_dependencies = [ dep_glfw3, dep_glm ]

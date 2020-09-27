@@ -30,10 +30,10 @@
 
 #include <sys/types.h>
 
-#include <libretro.h>
-#include <retro_common_api.h>
-#include <retro_inline.h>
-#include <boolean.h>
+#include <libretro-common/libretro.h>
+#include <libretro-common/retro_common_api.h>
+#include <libretro-common/retro_inline.h>
+#include <libretro-common/boolean.h>
 
 #include <stdarg.h>
 

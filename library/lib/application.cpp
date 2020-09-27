@@ -28,11 +28,11 @@
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#include <glad.h>
+#include <glad/glad.h>
 
 #define GLM_FORCE_PURE
 #define GLM_ENABLE_EXPERIMENTAL
-#include <nanovg.h>
+#include <nanovg/nanovg.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -41,7 +41,7 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #define NANOVG_GL3_IMPLEMENTATION
-#include <nanovg_gl.h>
+#include <nanovg/nanovg_gl.h>
 
 #ifdef __SWITCH__
 #include <switch.h>
@@ -62,6 +62,8 @@ constexpr uint32_t WINDOW_HEIGHT = 720;
 
 // glfw code from the glfw hybrid app by fincs
 // https://github.com/fincs/hybrid_app
+
+using namespace brls::i18n::literals;
 
 namespace brls
 {
@@ -260,7 +262,7 @@ bool Application::init(std::string title, Style style, Theme theme)
         Application::fontStash.regular = Application::loadFont("regular", BOREALIS_ASSET("inter/Inter-Switch.ttf"));
 
     if (Application::fontStash.regular == -1)
-        brls::Logger::error("Couldn't load regular font, no text will be displayed!");
+        brls::Logger::warning("Couldn't load regular font, no text will be displayed!");
 
     if (access(BOREALIS_ASSET("Wingdings.ttf"), F_OK) != -1)
         Application::fontStash.sharedSymbols = Application::loadFont("sharedSymbols", BOREALIS_ASSET("Wingdings.ttf"));
@@ -278,7 +280,7 @@ bool Application::init(std::string title, Style style, Theme theme)
     }
     else
     {
-        Logger::error("Shared symbols font not found");
+        Logger::warning("Shared symbols font not found");
     }
 
     // Set Material as fallback
@@ -289,7 +291,7 @@ bool Application::init(std::string title, Style style, Theme theme)
     }
     else
     {
-        Logger::error("Material font not found");
+        Logger::warning("Material font not found");
     }
 
     // Load theme
@@ -639,13 +641,13 @@ void Application::setDisplayFramerate(bool enabled)
 {
     if (!Application::framerateCounter && enabled)
     {
-        Logger::info("Enabling framerate counter");
+        Logger::debug("Enabling framerate counter");
         Application::framerateCounter = new FramerateCounter();
         Application::resizeFramerateCounter();
     }
     else if (Application::framerateCounter && !enabled)
     {
-        Logger::info("Disabling framerate counter");
+        Logger::debug("Disabling framerate counter");
         delete Application::framerateCounter;
         Application::framerateCounter = nullptr;
     }
@@ -784,7 +786,7 @@ void Application::pushView(View* view, ViewAnimation animation)
     bool fadeOut = last && !last->isTranslucent() && !view->isTranslucent(); // play the fade out animation?
     bool wait    = animation == ViewAnimation::FADE; // wait for the old view animation to be done before showing the new one?
 
-    view->registerAction("Exit", Key::PLUS, [] { Application::quit(); return true; });
+    view->registerAction("brls/hints/exit"_i18n, Key::PLUS, [] { Application::quit(); return true; });
     view->registerAction(
         "FPS", Key::MINUS, [] { Application::toggleFramerateDisplay(); return true; }, true);
 

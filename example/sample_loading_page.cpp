@@ -22,6 +22,8 @@
 
 #include <math.h>
 
+using namespace brls::i18n::literals;
+
 SampleLoadingPage::SampleLoadingPage(brls::StagedAppletFrame* frame)
     : frame(frame)
 {
@@ -29,7 +31,7 @@ SampleLoadingPage::SampleLoadingPage(brls::StagedAppletFrame* frame)
     this->progressDisp = new brls::ProgressDisplay();
     this->progressDisp->setProgress(this->progressValue, 1000);
     this->progressDisp->setParent(this);
-    this->label = new brls::Label(brls::LabelStyle::DIALOG, "Example loading display", true);
+    this->label = new brls::Label(brls::LabelStyle::DIALOG, "installer/stage2/text"_i18n, true);
     this->label->setHorizontalAlign(NVG_ALIGN_CENTER);
     this->label->setParent(this);
 }

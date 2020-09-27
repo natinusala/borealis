@@ -27,8 +27,8 @@
 #define RARCH_MAX_SUBSYSTEM_ROMS 10
 
 #include <stdint.h>
-#include <boolean.h>
-#include <retro_inline.h>
+#include <libretro-common/boolean.h>
+#include <libretro-common/retro_inline.h>
 
 #if defined(_WIN32) && !defined(_XBOX)
 #ifndef WIN32_LEAN_AND_MEAN
@@ -46,7 +46,7 @@
 #include <limits.h>
 
 #ifdef _MSC_VER
-#include <compat/msvc.h>
+#include <libretro-common/compat/msvc.h>
 #endif
 
 static INLINE void bits_or_bits(uint32_t *a, uint32_t *b, uint32_t count)

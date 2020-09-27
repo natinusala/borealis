@@ -29,11 +29,11 @@
 #include <unistd.h>
 #endif
 
-#include <compat/strl.h>
-#include <streams/file_stream.h>
-#include <libretro.h>
-#include <features/features_cpu.h>
-#include <retro_timers.h>
+#include <libretro-common/compat/strl.h>
+#include <libretro-common/streams/file_stream.h>
+#include <libretro-common/libretro.h>
+#include <libretro-common/features/features_cpu.h>
+#include <libretro-common/retro_timers.h>
 
 #if defined(_WIN32) && !defined(_XBOX)
 #include <windows.h>

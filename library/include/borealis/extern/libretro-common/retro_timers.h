@@ -55,9 +55,9 @@
 #include <limits.h>
 
 #ifdef _MSC_VER
-#include <compat/msvc.h>
+#include <libretro-common/compat/msvc.h>
 #endif
-#include <retro_inline.h>
+#include <libretro-common/retro_inline.h>
 
 #ifdef DJGPP
 #define timespec timeval
