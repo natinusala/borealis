@@ -29,6 +29,8 @@ namespace brls
 NotificationManager::NotificationManager()
 {
     std::memset(this->notifications, 0, sizeof(Notification*) * BRLS_NOTIFICATIONS_MAX);
+
+    this->setBoundaries(0, 0, 1280, 720);
 }
 
 void NotificationManager::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx)

@@ -104,7 +104,8 @@ bool Application::mainLoop()
     if (Application::frameTime > 0.0f)
         frameStart = cpu_features_get_time_usec();
 
-    if (!nvg::MainLoop()) {
+    if (!nvg::MainLoop())
+    {
         nvg::Exit();
         return false;
     }
@@ -191,13 +192,20 @@ void Application::onGamepadButtonPressed(uint64_t button, bool repeating)
     // Navigation
     // Only navigate if the button hasn't been consumed by an action
     // (allows overriding DPAD buttons using actions)
-    if (button & KEY_DDOWN) {
+    if (button & KEY_DDOWN)
+    {
         Application::navigate(FocusDirection::DOWN);
-    } else if (button & KEY_DUP) {
+    }
+    else if (button & KEY_DUP)
+    {
         Application::navigate(FocusDirection::UP);
-    } else if (button & KEY_DLEFT) {
+    }
+    else if (button & KEY_DLEFT)
+    {
         Application::navigate(FocusDirection::LEFT);
-    } else if (button & KEY_DRIGHT) {
+    }
+    else if (button & KEY_DRIGHT)
+    {
         Application::navigate(FocusDirection::RIGHT);
     }
 }
@@ -245,9 +253,9 @@ void Application::frame()
 
     // Frame context
     FrameContext frameContext = {
-        .vg         = vg,
-        .fontStash  = &Application::fontStash,
-        .theme      = Application::getThemeValues(),
+        .vg        = vg,
+        .fontStash = &Application::fontStash,
+        .theme     = Application::getThemeValues(),
     };
 
     // Clear background
@@ -572,6 +580,16 @@ FramerateCounter::FramerateCounter()
     this->setVerticalAlign(NVG_ALIGN_MIDDLE);
     this->setHorizontalAlign(NVG_ALIGN_RIGHT);
     this->setBackground(ViewBackground::BACKDROP);
+
+    Style* style                   = Application::getStyle();
+    unsigned framerateCounterWidth = style->FramerateCounter.width;
+    unsigned width                 = WINDOW_WIDTH;
+
+    this->setBoundaries(
+        width - framerateCounterWidth,
+        0,
+        framerateCounterWidth,
+        style->FramerateCounter.height);
 
     this->lastSecond = cpu_features_get_time_usec() / 1000;
 }
