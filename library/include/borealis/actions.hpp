@@ -20,9 +20,8 @@
 
 #include <functional>
 #include <string>
-
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#include <wrapper.hpp>
+#include <borealis/logger.hpp>
 
 namespace brls
 {
@@ -34,20 +33,20 @@ typedef std::function<bool(void)> ActionListener;
 // ZL and ZR do not exist here because GLFW doesn't know them
 enum class Key
 {
-    A      = GLFW_GAMEPAD_BUTTON_A,
-    B      = GLFW_GAMEPAD_BUTTON_B,
-    X      = GLFW_GAMEPAD_BUTTON_X,
-    Y      = GLFW_GAMEPAD_BUTTON_Y,
-    LSTICK = GLFW_GAMEPAD_BUTTON_LEFT_THUMB,
-    RSTICK = GLFW_GAMEPAD_BUTTON_RIGHT_THUMB,
-    L      = GLFW_GAMEPAD_BUTTON_LEFT_BUMPER,
-    R      = GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER,
-    PLUS   = GLFW_GAMEPAD_BUTTON_START,
-    MINUS  = GLFW_GAMEPAD_BUTTON_BACK,
-    DLEFT  = GLFW_GAMEPAD_BUTTON_DPAD_LEFT,
-    DUP    = GLFW_GAMEPAD_BUTTON_DPAD_UP,
-    DRIGHT = GLFW_GAMEPAD_BUTTON_DPAD_RIGHT,
-    DDOWN  = GLFW_GAMEPAD_BUTTON_DPAD_DOWN,
+    A      = KEY_A,
+    B      = KEY_B,
+    X      = KEY_X,
+    Y      = KEY_Y,
+    LSTICK = KEY_LSTICK,
+    RSTICK = KEY_RSTICK,
+    L      = KEY_L,
+    R      = KEY_R,
+    PLUS   = KEY_PLUS,
+    MINUS  = KEY_MINUS,
+    DLEFT  = KEY_DLEFT,
+    DUP    = KEY_DUP,
+    DRIGHT = KEY_DRIGHT,
+    DDOWN  = KEY_DDOWN,
 };
 
 struct Action
@@ -61,6 +60,7 @@ struct Action
 
     bool operator==(const Key other)
     {
+        Logger::info("keys: {} vs {}", this->key, other);
         return this->key == other;
     }
 };

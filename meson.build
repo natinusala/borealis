@@ -1,6 +1,6 @@
 project('borealis_example', ['c', 'cpp'],
     version: '1.0.0',
-    default_options: [ 'buildtype=release', 'strip=true', 'b_ndebug=if-release', 'cpp_std=c++1z' ],
+    default_options: [ 'buildtype=debug', 'cpp_std=c++1z' ],
 )
 
 subdir('library')
@@ -17,5 +17,5 @@ borealis_example = executable(
     dependencies : borealis_dependencies,
     install: true,
     include_directories: [ borealis_include, include_directories('example')],
-    cpp_args: [ '-g', '-O2', '-DBOREALIS_RESOURCES="./resources/"' ]
+    cpp_args: [ '-g', '-O2', '-DBOREALIS_RESOURCES="./resources/"', '-DFMT_HEADER_ONLY' ]
 )

@@ -1,0 +1,1284 @@
+example/sample_installer_page.cpp:30:    this->button = (new brls::Button(brls::ButtonStyle::BORDERLESS))->setLabel(label)->setImage(BOREALIS_ASSET("icon/borealis.jpg"));
+example/sample_installer_page.cpp:31:    this->button->setParent(this);
+example/sample_installer_page.cpp:32:    this->button->getClickEvent()->subscribe([frame](View* view) {
+example/sample_installer_page.cpp:38:    this->label = new brls::Label(brls::LabelStyle::DIALOG, "installer/stage1/text"_i18n, true);
+example/sample_installer_page.cpp:39:    this->label->setHorizontalAlign(NVG_ALIGN_CENTER);
+example/sample_installer_page.cpp:40:    this->label->setParent(this);
+example/sample_installer_page.cpp:45:    this->label->frame(ctx);
+example/sample_installer_page.cpp:46:    this->button->frame(ctx);
+example/sample_installer_page.cpp:51:    return this->button;
+example/sample_installer_page.cpp:56:    this->label->setWidth(roundf((float)this->width * style->CrashFrame.labelWidth));
+example/sample_installer_page.cpp:57:    this->label->invalidate(true);
+example/sample_installer_page.cpp:59:    this->label->setBoundaries(
+example/sample_installer_page.cpp:60:        this->x + this->width / 2 - this->label->getWidth() / 2,
+example/sample_installer_page.cpp:61:        this->y + (this->height - style->AppletFrame.footerHeight) / 2,
+example/sample_installer_page.cpp:62:        this->label->getWidth(),
+example/sample_installer_page.cpp:63:        this->label->getHeight());
+example/sample_installer_page.cpp:65:    this->button->setBoundaries(
+example/sample_installer_page.cpp:66:        this->x + this->width / 2 - style->CrashFrame.buttonWidth / 2,
+example/sample_installer_page.cpp:67:        this->y + this->height / 2 + style->CrashFrame.buttonHeight,
+example/sample_installer_page.cpp:70:    this->button->invalidate();
+example/sample_installer_page.cpp:75:    delete this->label;
+example/sample_installer_page.cpp:76:    delete this->button;
+example/sample_loading_page.cpp:31:    this->progressDisp = new brls::ProgressDisplay();
+example/sample_loading_page.cpp:32:    this->progressDisp->setProgress(this->progressValue, 1000);
+example/sample_loading_page.cpp:33:    this->progressDisp->setParent(this);
+example/sample_loading_page.cpp:34:    this->label = new brls::Label(brls::LabelStyle::DIALOG, "installer/stage2/text"_i18n, true);
+example/sample_loading_page.cpp:35:    this->label->setHorizontalAlign(NVG_ALIGN_CENTER);
+example/sample_loading_page.cpp:36:    this->label->setParent(this);
+example/sample_loading_page.cpp:42:        this->frame->nextStage();
+example/sample_loading_page.cpp:44:    this->progressValue++;
+example/sample_loading_page.cpp:45:    this->progressDisp->setProgress(this->progressValue, 500);
+example/sample_loading_page.cpp:46:    this->progressDisp->frame(ctx);
+example/sample_loading_page.cpp:47:    this->label->frame(ctx);
+example/sample_loading_page.cpp:52:    this->label->setWidth(roundf((float)this->width * style->CrashFrame.labelWidth));
+example/sample_loading_page.cpp:53:    this->label->invalidate(true);
+example/sample_loading_page.cpp:55:    this->label->setBoundaries(
+example/sample_loading_page.cpp:56:        this->x + this->width / 2 - this->label->getWidth() / 2,
+example/sample_loading_page.cpp:57:        this->y + (this->height - style->AppletFrame.footerHeight) / 2,
+example/sample_loading_page.cpp:58:        this->label->getWidth(),
+example/sample_loading_page.cpp:59:        this->label->getHeight());
+example/sample_loading_page.cpp:61:    this->progressDisp->setBoundaries(
+example/sample_loading_page.cpp:62:        this->x + this->width / 2 - style->CrashFrame.buttonWidth,
+example/sample_loading_page.cpp:63:        this->y + this->height / 2,
+example/sample_loading_page.cpp:70:    this->progressDisp->willAppear(resetState);
+example/sample_loading_page.cpp:75:    this->progressDisp->willDisappear(resetState);
+example/sample_loading_page.cpp:80:    delete this->progressDisp;
+example/sample_loading_page.cpp:81:    delete this->label;
+Binary file build/borealis_example.p/library_lib_i18n.cpp.o matches
+Binary file build/borealis_example matches
+Binary file borealis_example.nro matches
+Binary file borealis_example.elf matches
+Binary file build.nx/i18n.o matches
+Binary file .git/objects/pack/pack-03e3ef0d6c512e89e99bc58ebcae37a87735fbb8.pack matches
+library/include/borealis/hint.hpp:59:        this->animate = animate;
+library/include/borealis/actions.hpp:63:        Logger::info("keys: {} vs {}", this->key, other);
+library/include/borealis/actions.hpp:64:        return this->key == other;
+library/include/borealis/applet_frame.hpp:88:        this->hint->setAnimate(animate);
+library/include/borealis/image.hpp:75:        this->cornerRadius = radius;
+library/include/borealis/extern/nlohmann/json.hpp:11511:        return *(this->operator+(n));
+library/include/borealis/extern/nlohmann/json.hpp:11517:        auto it = --this->base();
+library/include/borealis/extern/nlohmann/json.hpp:11524:        auto it = --this->base();
+library/include/borealis/extern/nlohmann/json.hpp:16426:        for (auto it = this->begin(); it != this->end(); ++it)
+library/include/borealis/extern/nlohmann/json.hpp:16434:        return {--this->end(), true};
+library/include/borealis/extern/nlohmann/json.hpp:16449:        for (auto it = this->begin(); it != this->end(); ++it)
+library/include/borealis/extern/nlohmann/json.hpp:16462:        for (auto it = this->begin(); it != this->end(); ++it)
+library/include/borealis/extern/nlohmann/json.hpp:16475:        for (auto it = this->begin(); it != this->end(); ++it)
+library/include/borealis/extern/nlohmann/json.hpp:16480:                for (auto next = it; ++next != this->end(); ++it)
+library/include/borealis/extern/nlohmann/json.hpp:16497:        for (auto next = it; ++next != this->end(); ++it)
+library/include/borealis/extern/nlohmann/json.hpp:16508:        for (auto it = this->begin(); it != this->end(); ++it)
+library/include/borealis/extern/nlohmann/json.hpp:16520:        for (auto it = this->begin(); it != this->end(); ++it)
+library/include/borealis/extern/nlohmann/json.hpp:16532:        for (auto it = this->begin(); it != this->end(); ++it)
+library/include/borealis/extern/nlohmann/json.hpp:16549:        for (auto it = this->begin(); it != this->end(); ++it)
+library/include/borealis/extern/nlohmann/json.hpp:16557:        return {--this->end(), true};
+library/include/borealis/view.hpp:153:        return this->a(nvgRGB(r, g, b));
+library/include/borealis/view.hpp:158:        return this->a(nvgRGBA(r, g, b, a));
+library/include/borealis/view.hpp:163:        return this->a(nvgRGBf(r, g, b));
+library/include/borealis/view.hpp:168:        return this->a(nvgRGBAf(r, g, b, a));
+library/include/borealis/view.hpp:211:        return this->actions;
+library/include/borealis/view.hpp:369:        if (this->hasParent())
+library/include/borealis/view.hpp:370:            this->getParent()->onChildFocusGained(this);
+library/include/borealis/view.hpp:378:        if (this->hasParent())
+library/include/borealis/view.hpp:379:            this->getParent()->onChildFocusLost(this);
+library/include/borealis/event.hpp:56:    this->callbacks.push_back(cb);
+library/include/borealis/event.hpp:57:    return --this->callbacks.end();
+library/include/borealis/event.hpp:63:    this->callbacks.erase(subscription);
+library/include/borealis/event.hpp:69:    for (Callback cb : this->callbacks)
+library/include/borealis/event.hpp:72:    return !this->callbacks.empty();
+library/nanovg/source/nx/wrapper.cpp:52:                this->UpdateFrameBufferSize();
+library/nanovg/source/nx/wrapper.cpp:74:                this->renderer.emplace(framebuffer_width, framebuffer_height, this->device, this->queue, *this->pool_images, *this->pool_code, *this->pool_data);
+library/nanovg/source/nx/wrapper.cpp:75:                this->vg = nvgCreateDk(&*this->renderer, NVG_ANTIALIAS | NVG_STENCIL_STROKES);
+library/nanovg/source/nx/wrapper.cpp:83:                    regular = nvgCreateFontMem(this->vg, "regular", (unsigned char *)font.address, font.size, false);
+library/nanovg/source/nx/wrapper.cpp:88:                    symbols = nvgCreateFontMem(this->vg, "symbols", (unsigned char *)font.address, font.size, false);
+library/nanovg/source/nx/wrapper.cpp:91:                nvgAddFallbackFontId(this->vg, regular, symbols);
+library/nanovg/source/nx/wrapper.cpp:102:                this->renderer.reset();
+library/nanovg/source/nx/wrapper.cpp:329:        this->impl = s_Dk->vg;
+library/nanovg/source/nx/wrapper.cpp:330:        this->slot = s_Dk->BeginFrame();
+library/nanovg/source/nx/wrapper.cpp:334:        s_Dk->EndFrame(this->slot);
+library/nanovg/source/nx/dk_renderer.cpp:239:        const auto texture = this->FindTexture(image);
+library/nanovg/source/nx/dk_renderer.cpp:245:        const int image_desc_id = this->AcquireImageDescriptor(texture, image);
+library/nanovg/source/nx/dk_renderer.cpp:283:        this->SetUniforms(ctx, call.uniformOffset, 0);
+library/nanovg/source/nx/dk_renderer.cpp:292:        this->SetUniforms(ctx, call.uniformOffset + ctx.fragSize, call.image);
+library/nanovg/source/nx/dk_renderer.cpp:336:        this->SetUniforms(ctx, call.uniformOffset, call.image);
+library/nanovg/source/nx/dk_renderer.cpp:364:            this->SetUniforms(ctx, call.uniformOffset + ctx.fragSize, call.image);
+library/nanovg/source/nx/dk_renderer.cpp:374:            this->SetUniforms(ctx, call.uniformOffset, call.image);
+library/nanovg/source/nx/dk_renderer.cpp:398:            this->SetUniforms(ctx, call.uniformOffset, call.image);
+library/nanovg/source/nx/dk_renderer.cpp:408:        this->SetUniforms(ctx, call.uniformOffset, call.image);
+library/nanovg/source/nx/dk_renderer.cpp:459:        this->FreeImageDescriptor(image);
+library/nanovg/source/nx/dk_renderer.cpp:464:        const std::shared_ptr<Texture> texture = this->FindTexture(image);
+library/nanovg/source/nx/dk_renderer.cpp:485:        const auto descriptor = this->GetTextureDescriptor(ctx, image);
+library/nanovg/source/nx/dk_renderer.cpp:511:            this->UpdateVertexBuffer(ctx.verts, ctx.nverts * sizeof(NVGvertex));
+library/nanovg/source/nx/dk_renderer.cpp:535:                    this->DrawFill(ctx, call);
+library/nanovg/source/nx/dk_renderer.cpp:537:                    this->DrawConvexFill(ctx, call);
+library/nanovg/source/nx/dk_renderer.cpp:539:                    this->DrawStroke(ctx, call);
+library/nanovg/source/nx/dk_renderer.cpp:541:                    this->DrawTriangles(ctx, call);
+library/nanovg/source/pc/wrapper.cpp:275:        this->impl = s_vg;
+library/lib/progress_spinner.cpp:35:    menu_animation_ctx_tag tag = (uintptr_t) & this->animationValue;
+library/lib/progress_spinner.cpp:38:    this->animationValue = 0.0f;
+library/lib/progress_spinner.cpp:42:    entry.cb           = [this](void* userdata) { this->restartAnimation(); };
+library/lib/progress_spinner.cpp:45:    entry.subject      = &this->animationValue;
+library/lib/progress_spinner.cpp:56:    this->height = std::min(this->width, this->height);
+library/lib/progress_spinner.cpp:57:    this->width  = this->height;
+library/lib/progress_spinner.cpp:84:    this->restartAnimation();
+library/lib/progress_spinner.cpp:89:    menu_animation_ctx_tag tag = (uintptr_t) & this->animationValue;
+library/lib/progress_spinner.cpp:91:    this->animationValue = 0.0f;
+library/lib/view.cpp:42:    this->highlightShaking        = true;
+library/lib/view.cpp:43:    this->highlightShakeStart     = cpu_features_get_time_usec() / 1000;
+library/lib/view.cpp:44:    this->highlightShakeDirection = direction;
+library/lib/view.cpp:45:    this->highlightShakeAmplitude = std::rand() % 15 + 10;
+library/lib/view.cpp:50:    return this->alpha * (this->parent ? this->parent->getAlpha(true) : 1.0f);
+library/lib/view.cpp:56:    newColor.a *= this->getAlpha();
+library/lib/view.cpp:63:    newPaint.innerColor.a *= this->getAlpha();
+library/lib/view.cpp:64:    newPaint.outerColor.a *= this->getAlpha();
+library/lib/view.cpp:77:    if (this->themeOverride)
+library/lib/view.cpp:81:    if (this->dirty)
+library/lib/view.cpp:83:        this->invalidate(true);
+library/lib/view.cpp:84:        this->dirty = false;
+library/lib/view.cpp:87:    if (this->alpha > 0.0f && this->collapseState != 0.0f)
+library/lib/view.cpp:90:        this->drawBackground(ctx->vg, ctx, style);
+library/lib/view.cpp:93:        if (this->highlightAlpha > 0.0f && this->isHighlightBackgroundEnabled())
+library/lib/view.cpp:94:            this->drawHighlight(ctx->vg, ctx->theme, this->highlightAlpha, style, true);
+library/lib/view.cpp:97:        if (this->collapseState < 1.0f)
+library/lib/view.cpp:100:            nvgIntersectScissor(ctx->vg, x, y, this->width, this->height * this->collapseState);
+library/lib/view.cpp:104:        this->draw(ctx->vg, this->x, this->y, this->width, this->height, style, ctx);
+library/lib/view.cpp:107:        if (this->highlightAlpha > 0.0f)
+library/lib/view.cpp:108:            this->drawHighlight(ctx->vg, ctx->theme, this->highlightAlpha, style, false);
+library/lib/view.cpp:111:        if (this->collapseState < 1.0f)
+library/lib/view.cpp:116:    if (this->themeOverride)
+library/lib/view.cpp:124:    menu_animation_ctx_tag tag = (uintptr_t) & this->collapseState;
+library/lib/view.cpp:136:        entry.subject      = &this->collapseState;
+library/lib/view.cpp:139:        entry.tick         = [this](void* userdata) { if (this->hasParent()) this->getParent()->invalidate(); };
+library/lib/view.cpp:146:        this->collapseState = 0.0f;
+library/lib/view.cpp:152:    return this->collapseState < 1.0f;
+library/lib/view.cpp:157:    menu_animation_ctx_tag tag = (uintptr_t) & this->collapseState;
+library/lib/view.cpp:169:        entry.subject      = &this->collapseState;
+library/lib/view.cpp:172:        entry.tick         = [this](void* userdata) { if (this->hasParent()) this->getParent()->invalidate(); };
+library/lib/view.cpp:179:        this->collapseState = 1.0f;
+library/lib/view.cpp:190:    this->getHighlightInsets(&insetTop, &insetRight, &insetBottom, &insetLeft);
+library/lib/view.cpp:193:    this->getHighlightMetrics(style, &cornerRadius);
+library/lib/view.cpp:195:    unsigned x      = this->x - insetLeft - style->Highlight.strokeWidth / 2;
+library/lib/view.cpp:196:    unsigned y      = this->y - insetTop - style->Highlight.strokeWidth / 2;
+library/lib/view.cpp:197:    unsigned width  = this->width + insetLeft + insetRight + style->Highlight.strokeWidth - 1;
+library/lib/view.cpp:198:    unsigned height = this->height + insetTop + insetBottom + style->Highlight.strokeWidth - 1;
+library/lib/view.cpp:201:    if (this->highlightShaking)
+library/lib/view.cpp:208:            this->highlightShaking = false;
+library/lib/view.cpp:212:            switch (this->highlightShakeDirection)
+library/lib/view.cpp:215:                    x += shakeAnimation(t, this->highlightShakeAmplitude);
+library/lib/view.cpp:218:                    x -= shakeAnimation(t, this->highlightShakeAmplitude);
+library/lib/view.cpp:221:                    y += shakeAnimation(t, this->highlightShakeAmplitude);
+library/lib/view.cpp:224:                    y -= shakeAnimation(t, this->highlightShakeAmplitude);
+library/lib/view.cpp:236:        nvgFillColor(vg, RGBAf(theme->highlightBackgroundColor.r, theme->highlightBackgroundColor.g, theme->highlightBackgroundColor.b, this->highlightAlpha));
+library/lib/view.cpp:268:        borderColor.a        = 0.5f * alpha * this->getAlpha();
+library/lib/view.cpp:304:    this->background = background;
+library/lib/view.cpp:309:    switch (this->background)
+library/lib/view.cpp:318:            nvgRect(vg, this->x, this->y + backdropHeight, this->width, this->height - backdropHeight * 2);
+library/lib/view.cpp:323:            NVGpaint topGradient = nvgLinearGradient(vg, this->x, this->y + backdropHeight, this->x, this->y, a(ctx->theme->sidebarColor), transparent);
+library/lib/view.cpp:326:            nvgRect(vg, this->x, this->y, this->width, backdropHeight);
+library/lib/view.cpp:330:            NVGpaint bottomGradient = nvgLinearGradient(vg, this->x, this->y + this->height - backdropHeight, this->x, this->y + this->height, a(ctx->theme->sidebarColor), transparent);
+library/lib/view.cpp:333:            nvgRect(vg, this->x, this->y + this->height - backdropHeight, this->width, backdropHeight);
+library/lib/view.cpp:341:            nvgRect(vg, this->x, this->y, this->width, this->height);
+library/lib/view.cpp:349:            nvgRect(vg, this->x, this->y, this->width, this->height);
+library/lib/view.cpp:359:    if (auto it = std::find(this->actions.begin(), this->actions.end(), key); it != this->actions.end())
+library/lib/view.cpp:362:        this->actions.push_back({ key, hintText, true, hidden, actionListener });
+library/lib/view.cpp:367:    if (auto it = std::find(this->actions.begin(), this->actions.end(), key); it != this->actions.end())
+library/lib/view.cpp:375:    if (auto it = std::find(this->actions.begin(), this->actions.end(), key); it != this->actions.end())
+library/lib/view.cpp:381:    this->x      = x;
+library/lib/view.cpp:382:    this->y      = y;
+library/lib/view.cpp:383:    this->width  = width;
+library/lib/view.cpp:384:    this->height = height;
+library/lib/view.cpp:389:    this->parent         = parent;
+library/lib/view.cpp:390:    this->parentUserdata = parentUserdata;
+library/lib/view.cpp:395:    return this->parentUserdata;
+library/lib/view.cpp:400:    return this->focused;
+library/lib/view.cpp:405:    return this->parent;
+library/lib/view.cpp:410:    return this->parent;
+library/lib/view.cpp:415:    this->width = width;
+library/lib/view.cpp:420:    this->height = height;
+library/lib/view.cpp:425:    return this->x;
+library/lib/view.cpp:430:    return this->y;
+library/lib/view.cpp:435:    return this->height * (includeCollapse ? this->collapseState : 1.0f);
+library/lib/view.cpp:440:    return this->width;
+library/lib/view.cpp:445:    this->focused = true;
+library/lib/view.cpp:449:    menu_animation_ctx_tag tag = (uintptr_t)this->highlightAlpha;
+library/lib/view.cpp:455:    entry.subject      = &this->highlightAlpha;
+library/lib/view.cpp:463:    this->focusEvent.fire(this);
+library/lib/view.cpp:465:    if (this->hasParent())
+library/lib/view.cpp:466:        this->getParent()->onChildFocusGained(this);
+library/lib/view.cpp:471:    return &this->focusEvent;
+library/lib/view.cpp:479:    this->focused = false;
+library/lib/view.cpp:483:    menu_animation_ctx_tag tag = (uintptr_t)this->highlightAlpha;
+library/lib/view.cpp:489:    entry.subject      = &this->highlightAlpha;
+library/lib/view.cpp:497:    if (this->hasParent())
+library/lib/view.cpp:498:        this->getParent()->onChildFocusLost(this);
+library/lib/view.cpp:503:    this->forceTranslucent = translucent;
+library/lib/view.cpp:518:    brls::Logger::debug("Showing {} with animation {}", this->describe(), animation);
+library/lib/view.cpp:520:    this->hidden = false;
+library/lib/view.cpp:522:    menu_animation_ctx_tag tag = (uintptr_t) & this->alpha;
+library/lib/view.cpp:525:    this->fadeIn = true;
+library/lib/view.cpp:529:        this->alpha = 0.0f;
+library/lib/view.cpp:533:            this->fadeIn = false;
+library/lib/view.cpp:534:            this->onShowAnimationEnd();
+library/lib/view.cpp:537:        entry.duration     = this->getShowAnimationDuration(animation);
+library/lib/view.cpp:539:        entry.subject      = &this->alpha;
+library/lib/view.cpp:549:        this->alpha  = 1.0f;
+library/lib/view.cpp:550:        this->fadeIn = false;
+library/lib/view.cpp:551:        this->onShowAnimationEnd();
+library/lib/view.cpp:558:    brls::Logger::debug("Hiding {} with animation {}", this->describe(), animation);
+library/lib/view.cpp:560:    this->hidden = true;
+library/lib/view.cpp:561:    this->fadeIn = false;
+library/lib/view.cpp:563:    menu_animation_ctx_tag tag = (uintptr_t) & this->alpha;
+library/lib/view.cpp:568:        this->alpha = 1.0f;
+library/lib/view.cpp:572:        entry.duration     = this->getShowAnimationDuration(animation);
+library/lib/view.cpp:574:        entry.subject      = &this->alpha;
+library/lib/view.cpp:584:        this->alpha = 0.0f;
+library/lib/view.cpp:591:    return this->hidden;
+library/lib/view.cpp:596:    this->themeOverride = theme;
+library/lib/view.cpp:601:    menu_animation_ctx_tag alphaTag = (uintptr_t) & this->alpha;
+library/lib/view.cpp:604:    menu_animation_ctx_tag highlightTag = (uintptr_t) & this->highlightAlpha;
+library/lib/view.cpp:607:    menu_animation_ctx_tag collapseTag = (uintptr_t) & this->collapseState;
+library/lib/view.cpp:611:    if (this->parentUserdata)
+library/lib/view.cpp:613:        free(this->parentUserdata);
+library/lib/view.cpp:614:        this->parentUserdata = nullptr;
+library/lib/view.cpp:625:        this->layout(Application::getNVGContext(), Application::getStyle(), Application::getFontStash());
+library/lib/view.cpp:627:        this->dirty = true;
+library/lib/thumbnail_frame.cpp:29:    this->sidebar = new ThumbnailSidebar();
+library/lib/thumbnail_frame.cpp:32:    this->boxLayout = new BoxLayout(BoxLayoutOrientation::HORIZONTAL);
+library/lib/thumbnail_frame.cpp:33:    AppletFrame::setContentView(this->boxLayout);
+library/lib/thumbnail_frame.cpp:38:    this->thumbnailContentView = view;
+library/lib/thumbnail_frame.cpp:41:    this->boxLayout->clear();
+library/lib/thumbnail_frame.cpp:44:    this->boxLayout->addView(view);
+library/lib/thumbnail_frame.cpp:45:    this->boxLayout->addView(this->sidebar);
+library/lib/thumbnail_frame.cpp:48:    this->invalidate();
+library/lib/thumbnail_frame.cpp:54:    if (this->thumbnailContentView)
+library/lib/thumbnail_frame.cpp:56:        unsigned sidebarWidth = this->sidebar->getWidth();
+library/lib/thumbnail_frame.cpp:57:        this->thumbnailContentView->setWidth(this->getWidth() - sidebarWidth - this->leftPadding - this->rightPadding);
+library/lib/thumbnail_frame.cpp:66:    return this->sidebar;
+library/lib/thumbnail_frame.cpp:72:    if (!this->thumbnailContentView)
+library/lib/thumbnail_frame.cpp:73:        delete this->sidebar;
+library/lib/thumbnail_frame.cpp:80:    this->setBackground(ViewBackground::SIDEBAR);
+library/lib/thumbnail_frame.cpp:81:    this->setWidth(style->Sidebar.width);
+library/lib/thumbnail_frame.cpp:83:    this->button = (new Button(ButtonStyle::PLAIN))->setLabel("Save");
+library/lib/thumbnail_frame.cpp:84:    this->button->setParent(this);
+library/lib/thumbnail_frame.cpp:89:    return this->button;
+library/lib/thumbnail_frame.cpp:94:    if (this->image)
+library/lib/thumbnail_frame.cpp:95:        this->image->frame(ctx);
+library/lib/thumbnail_frame.cpp:97:    if (this->title)
+library/lib/thumbnail_frame.cpp:98:        this->title->frame(ctx);
+library/lib/thumbnail_frame.cpp:100:    if (this->subTitle)
+library/lib/thumbnail_frame.cpp:101:        this->subTitle->frame(ctx);
+library/lib/thumbnail_frame.cpp:103:    this->button->frame(ctx);
+library/lib/thumbnail_frame.cpp:114:    if (this->image)
+library/lib/thumbnail_frame.cpp:119:        this->image->setBoundaries(
+library/lib/thumbnail_frame.cpp:125:        yAdvance += this->image->getHeight() + style->ThumbnailSidebar.marginTopBottom;
+library/lib/thumbnail_frame.cpp:129:    if (this->title)
+library/lib/thumbnail_frame.cpp:131:        this->title->setBoundaries(
+library/lib/thumbnail_frame.cpp:139:        this->title->invalidate(true);
+library/lib/thumbnail_frame.cpp:141:        yAdvance += this->title->getHeight() + style->ThumbnailSidebar.marginTopBottom / 2;
+library/lib/thumbnail_frame.cpp:145:    if (this->subTitle)
+library/lib/thumbnail_frame.cpp:147:        this->subTitle->setBoundaries(
+library/lib/thumbnail_frame.cpp:154:        this->subTitle->invalidate();
+library/lib/thumbnail_frame.cpp:161:    this->button->setBoundaries(
+library/lib/thumbnail_frame.cpp:170:    return this->button->getDefaultFocus();
+library/lib/thumbnail_frame.cpp:175:    if (this->image)
+library/lib/thumbnail_frame.cpp:177:        this->image->setImage(imagePath);
+library/lib/thumbnail_frame.cpp:181:        this->image = new Image(imagePath);
+library/lib/thumbnail_frame.cpp:182:        this->image->setParent(this);
+library/lib/thumbnail_frame.cpp:183:        this->invalidate();
+library/lib/thumbnail_frame.cpp:189:    if (this->image)
+library/lib/thumbnail_frame.cpp:191:        this->image->setImage(buffer, bufferSize);
+library/lib/thumbnail_frame.cpp:195:        this->image = new Image(buffer, bufferSize);
+library/lib/thumbnail_frame.cpp:196:        this->image->setParent(this);
+library/lib/thumbnail_frame.cpp:197:        this->invalidate();
+library/lib/thumbnail_frame.cpp:203:    if (!this->subTitle)
+library/lib/thumbnail_frame.cpp:205:        this->subTitle = new Label(LabelStyle::DESCRIPTION, "");
+library/lib/thumbnail_frame.cpp:206:        this->subTitle->setParent(this);
+library/lib/thumbnail_frame.cpp:209:    this->subTitle->setText(subTitle);
+library/lib/thumbnail_frame.cpp:211:    this->invalidate();
+library/lib/thumbnail_frame.cpp:217:    if (!this->title)
+library/lib/thumbnail_frame.cpp:219:        this->title = new Label(LabelStyle::REGULAR, "", true);
+library/lib/thumbnail_frame.cpp:220:        this->title->setParent(this);
+library/lib/thumbnail_frame.cpp:223:    this->title->setText(title);
+library/lib/thumbnail_frame.cpp:225:    this->invalidate();
+library/lib/thumbnail_frame.cpp:230:    if (this->image)
+library/lib/thumbnail_frame.cpp:231:        delete this->image;
+library/lib/thumbnail_frame.cpp:233:    if (this->title)
+library/lib/thumbnail_frame.cpp:234:        delete this->title;
+library/lib/thumbnail_frame.cpp:236:    if (this->subTitle)
+library/lib/thumbnail_frame.cpp:237:        delete this->subTitle;
+library/lib/thumbnail_frame.cpp:239:    delete this->button;
+library/lib/image.cpp:29:    this->setImage(imagePath);
+library/lib/image.cpp:30:    this->setOpacity(1.0F);
+library/lib/image.cpp:35:    this->setImage(buffer, bufferSize);
+library/lib/image.cpp:36:    this->setOpacity(1.0F);
+library/lib/image.cpp:90:    if (this->imageBuffer != nullptr)
+library/lib/image.cpp:91:        delete[] this->imageBuffer;
+library/lib/image.cpp:93:    if (this->texture != -1)
+library/lib/image.cpp:94:        nvgDeleteImage(Application::getNVGContext(), this->texture);
+library/lib/image.cpp:101:    if (this->texture != -1)
+library/lib/image.cpp:104:        nvgRoundedRect(vg, x + this->imageX, y + this->imageY, this->imageWidth, this->imageHeight, this->cornerRadius);
+library/lib/image.cpp:105:        nvgFillPaint(vg, a(this->imgPaint));
+library/lib/image.cpp:116:    if (this->texture != -1)
+library/lib/image.cpp:117:        nvgDeleteImage(vg, this->texture);
+library/lib/image.cpp:119:    if (!this->imagePath.empty())
+library/lib/image.cpp:120:        this->texture = nvgCreateImage(vg, this->imagePath.c_str(), 0);
+library/lib/image.cpp:121:    else if (this->imageBuffer != nullptr)
+library/lib/image.cpp:122:        this->texture = nvgCreateImageMem(vg, 0, this->imageBuffer, this->imageBufferSize);
+library/lib/image.cpp:127:    if (this->origViewWidth == 0 || this->origViewHeight == 0)
+library/lib/image.cpp:129:        this->origViewWidth  = this->getWidth();
+library/lib/image.cpp:130:        this->origViewHeight = this->getHeight();
+library/lib/image.cpp:133:    nvgImageSize(vg, this->texture, &this->imageWidth, &this->imageHeight);
+library/lib/image.cpp:135:    this->setWidth(this->origViewWidth);
+library/lib/image.cpp:136:    this->setHeight(this->origViewHeight);
+library/lib/image.cpp:138:    this->imageX = 0;
+library/lib/image.cpp:139:    this->imageY = 0;
+library/lib/image.cpp:141:    float viewAspectRatio  = static_cast<float>(this->getWidth()) / static_cast<float>(this->getHeight());
+library/lib/image.cpp:142:    float imageAspectRatio = static_cast<float>(this->imageWidth) / static_cast<float>(this->imageHeight);
+library/lib/image.cpp:147:            this->imageX = (this->origViewWidth - this->imageWidth) / 2.0F;
+library/lib/image.cpp:148:            this->imageY = (this->origViewHeight - this->imageHeight) / 2.0F;
+library/lib/image.cpp:153:                this->imageHeight = this->getHeight();
+library/lib/image.cpp:154:                this->imageWidth  = this->imageHeight * imageAspectRatio;
+library/lib/image.cpp:155:                this->imageX      = (this->origViewWidth - this->imageWidth) / 2.0F;
+library/lib/image.cpp:159:                this->imageWidth  = this->getWidth();
+library/lib/image.cpp:160:                this->imageHeight = this->imageWidth * imageAspectRatio;
+library/lib/image.cpp:161:                this->imageY      = (this->origViewHeight - this->imageHeight) / 2.0F;
+library/lib/image.cpp:167:                this->imageHeight = this->getHeight();
+library/lib/image.cpp:168:                this->imageWidth  = this->imageHeight * imageAspectRatio;
+library/lib/image.cpp:169:                this->imageX      = (this->origViewWidth - this->imageWidth) / 2.0F;
+library/lib/image.cpp:173:                this->imageWidth  = this->getWidth();
+library/lib/image.cpp:174:                this->imageHeight = this->imageWidth * imageAspectRatio;
+library/lib/image.cpp:175:                this->imageY      = (this->origViewHeight - this->imageHeight) / 2.0F;
+library/lib/image.cpp:179:            this->imageWidth  = this->getWidth();
+library/lib/image.cpp:180:            this->imageHeight = this->getHeight();
+library/lib/image.cpp:183:            this->setWidth(this->imageWidth);
+library/lib/image.cpp:184:            this->setHeight(this->imageHeight);
+library/lib/image.cpp:188:    this->imgPaint = nvgImagePattern(vg, getX() + this->imageX, getY() + this->imageY, this->imageWidth, this->imageHeight, 0, this->texture, this->alpha);
+library/lib/image.cpp:193:    if (this->imageBuffer != nullptr)
+library/lib/image.cpp:194:        delete[] this->imageBuffer;
+library/lib/image.cpp:196:    this->imagePath = "";
+library/lib/image.cpp:198:    this->imageBuffer = new unsigned char[bufferSize];
+library/lib/image.cpp:199:    std::memcpy(this->imageBuffer, buffer, bufferSize);
+library/lib/image.cpp:200:    this->imageBufferSize = bufferSize;
+library/lib/image.cpp:202:    this->reloadTexture();
+library/lib/image.cpp:203:    this->invalidate();
+library/lib/image.cpp:208:    this->imagePath = imagePath;
+library/lib/image.cpp:210:    if (this->imageBuffer != nullptr)
+library/lib/image.cpp:211:        delete[] this->imageBuffer;
+library/lib/image.cpp:213:    this->imageBuffer = nullptr;
+library/lib/image.cpp:215:    this->reloadTexture();
+library/lib/image.cpp:217:    this->invalidate();
+library/lib/image.cpp:222:    this->alpha = opacity;
+library/lib/image.cpp:223:    this->invalidate();
+library/lib/image.cpp:228:    this->imageScaleType = imageScaleType;
+library/lib/image.cpp:229:    this->invalidate();
+library/lib/repeating_task.cpp:34:    this->lastRun = currentTime;
+library/lib/repeating_task.cpp:39:    this->onStart();
+library/lib/repeating_task.cpp:40:    this->running = true;
+library/lib/repeating_task.cpp:45:    this->running = false;
+library/lib/repeating_task.cpp:50:    this->pause();
+library/lib/repeating_task.cpp:51:    this->stopRequested = true;
+library/lib/repeating_task.cpp:56:    if (!this->isRunning())
+library/lib/repeating_task.cpp:60:    this->run(currentTime);
+library/lib/repeating_task.cpp:65:    return this->interval;
+library/lib/repeating_task.cpp:70:    return this->lastRun;
+library/lib/repeating_task.cpp:75:    return this->running;
+library/lib/repeating_task.cpp:80:    return this->stopRequested;
+library/lib/tab_frame.cpp:34:    this->sidebar = new Sidebar();
+library/lib/tab_frame.cpp:37:    this->layout = new BoxLayout(BoxLayoutOrientation::HORIZONTAL);
+library/lib/tab_frame.cpp:40:    this->setContentView(layout);
+library/lib/tab_frame.cpp:46:    if (!this->sidebar->isChildFocused())
+library/lib/tab_frame.cpp:57:    if (this->rightPane == view)
+library/lib/tab_frame.cpp:60:    if (this->layout->getViewsCount() > 1)
+library/lib/tab_frame.cpp:62:        if (this->rightPane)
+library/lib/tab_frame.cpp:63:            this->rightPane->willDisappear(true);
+library/lib/tab_frame.cpp:64:        this->layout->removeView(1, false);
+library/lib/tab_frame.cpp:67:    this->rightPane = view;
+library/lib/tab_frame.cpp:68:    if (this->rightPane != nullptr)
+library/lib/tab_frame.cpp:69:        this->layout->addView(this->rightPane, true, true); // addView() calls willAppear()
+library/lib/tab_frame.cpp:74:    SidebarItem* item = this->sidebar->addItem(label, view);
+library/lib/tab_frame.cpp:77:            this->switchToView(item->getAssociatedView());
+library/lib/tab_frame.cpp:81:    if (!this->rightPane)
+library/lib/tab_frame.cpp:84:        this->switchToView(view);
+library/lib/tab_frame.cpp:90:    this->sidebar->addSeparator();
+library/lib/tab_frame.cpp:96:    if (this->layout->getViewsCount() > 1)
+library/lib/tab_frame.cpp:98:        View* newFocus = this->rightPane->getDefaultFocus();
+library/lib/tab_frame.cpp:105:    return this->sidebar->getDefaultFocus();
+library/lib/absolute_layout.cpp:28:    this->children.push_back(view);
+library/lib/absolute_layout.cpp:29:    this->invalidate();
+library/lib/absolute_layout.cpp:34:    for (View* view : this->children)
+library/lib/absolute_layout.cpp:40:    for (View* view : this->children)
+library/lib/absolute_layout.cpp:46:    for (View* view : this->children)
+library/lib/absolute_layout.cpp:52:    for (View* view : this->children)
+library/lib/absolute_layout.cpp:58:    for (View* view : this->children)
+library/lib/absolute_layout.cpp:64:    for (View* view : this->children)
+library/lib/notification_manager.cpp:31:    std::memset(this->notifications, 0, sizeof(Notification*) * BRLS_NOTIFICATIONS_MAX);
+library/lib/notification_manager.cpp:38:        if (this->notifications[i])
+library/lib/notification_manager.cpp:40:            Notification* notification = this->notifications[i];
+library/lib/notification_manager.cpp:51:            this->notifications[i]->frame(ctx);
+library/lib/notification_manager.cpp:66:        if (!this->notifications[i])
+library/lib/notification_manager.cpp:95:            this->notifications[i] = nullptr;
+library/lib/notification_manager.cpp:101:    this->notifications[i] = notification;
+library/lib/notification_manager.cpp:104:    this->layoutNotification(i);
+library/lib/notification_manager.cpp:109:    Notification* notification = this->notifications[index];
+library/lib/notification_manager.cpp:120:        if (this->notifications[i])
+library/lib/notification_manager.cpp:121:            lastNotification = this->notifications[i];
+library/lib/notification_manager.cpp:129:        this->getX() + this->getWidth() - width,
+library/lib/notification_manager.cpp:130:        this->getY() + y,
+library/lib/notification_manager.cpp:142:        if (this->notifications[i])
+library/lib/notification_manager.cpp:143:            this->layoutNotification(i);
+library/lib/notification_manager.cpp:151:        if (this->notifications[i])
+library/lib/notification_manager.cpp:152:            delete this->notifications[i];
+library/lib/notification_manager.cpp:158:    this->setBackground(ViewBackground::BACKDROP);
+library/lib/notification_manager.cpp:160:    this->label = new Label(LabelStyle::NOTIFICATION, text, true);
+library/lib/notification_manager.cpp:166:    delete this->label;
+library/lib/notification_manager.cpp:171:    this->label->frame(ctx);
+library/lib/notification_manager.cpp:181:    this->label->setWidth(this->getWidth() - padding * 2);
+library/lib/notification_manager.cpp:182:    this->label->setHeight(0); // height is dynamic
+library/lib/notification_manager.cpp:184:    this->label->invalidate(true); // layout directly to update height
+library/lib/notification_manager.cpp:188:    if (this->label->getHeight() < minLabelHeight)
+library/lib/notification_manager.cpp:190:        labelYAdvance += (minLabelHeight - this->label->getHeight()) / 2;
+library/lib/notification_manager.cpp:193:    this->label->setBoundaries(
+library/lib/notification_manager.cpp:194:        this->getX() + padding,
+library/lib/notification_manager.cpp:195:        this->getY() + labelYAdvance,
+library/lib/notification_manager.cpp:196:        this->label->getWidth(),
+library/lib/notification_manager.cpp:197:        this->label->getHeight());
+library/lib/notification_manager.cpp:200:    this->setHeight(std::max(
+library/lib/notification_manager.cpp:201:        this->label->getHeight() + padding * 2,
+library/lib/dropdown.cpp:42:    this->valueEvent.subscribe(cb);
+library/lib/dropdown.cpp:44:    this->topOffset = (float)style->Dropdown.listPadding / 8.0f;
+library/lib/dropdown.cpp:46:    this->valuesCount = values.size();
+library/lib/dropdown.cpp:48:    this->list = new List(selected);
+library/lib/dropdown.cpp:49:    this->list->setParent(this);
+library/lib/dropdown.cpp:50:    this->list->setMargins(1, 0, 1, 0);
+library/lib/dropdown.cpp:65:            this->valueEvent.fire(i);
+library/lib/dropdown.cpp:69:        this->list->addView(item);
+library/lib/dropdown.cpp:72:    this->hint = new Hint();
+library/lib/dropdown.cpp:73:    this->hint->setParent(this);
+library/lib/dropdown.cpp:75:    this->registerAction("brls/hints/back"_i18n, Key::B, [this] { return this->onCancel(); });
+library/lib/dropdown.cpp:84:    entry.duration     = this->getShowAnimationDuration(animation);
+library/lib/dropdown.cpp:86:    entry.subject      = &this->topOffset;
+library/lib/dropdown.cpp:89:    entry.tick         = [this](void* userdata) { this->invalidate(); };
+library/lib/dropdown.cpp:97:    unsigned top = this->list->getY() - style->Dropdown.headerHeight - style->Dropdown.listPadding;
+library/lib/dropdown.cpp:114:    this->list->frame(ctx);
+library/lib/dropdown.cpp:117:    this->hint->frame(ctx);
+library/lib/dropdown.cpp:142:    nvgText(vg, x + style->Dropdown.headerPadding, top + style->Dropdown.headerHeight / 2, this->title.c_str(), nullptr);
+library/lib/dropdown.cpp:147:    this->valueEvent.fire(-1);
+library/lib/dropdown.cpp:160:    unsigned listHeight = min(SELECT_VIEW_MAX_ITEMS, this->valuesCount) * style->Dropdown.listItemHeight - (unsigned)this->topOffset;
+library/lib/dropdown.cpp:163:    this->list->setBoundaries(
+library/lib/dropdown.cpp:164:        this->width / 2 - listWidth / 2,
+library/lib/dropdown.cpp:165:        this->height - style->AppletFrame.footerHeight - listHeight - style->Dropdown.listPadding + (unsigned)this->topOffset,
+library/lib/dropdown.cpp:168:    this->list->invalidate(true); // call layout directly to update scrolling
+library/lib/dropdown.cpp:172:    unsigned hintWidth = this->width - style->AppletFrame.separatorSpacing * 2 - style->AppletFrame.footerTextSpacing * 2;
+library/lib/dropdown.cpp:174:    this->hint->setBoundaries(
+library/lib/dropdown.cpp:175:        this->x + this->width - hintWidth - style->AppletFrame.separatorSpacing - style->AppletFrame.footerTextSpacing,
+library/lib/dropdown.cpp:176:        this->y + this->height - style->AppletFrame.footerHeight,
+library/lib/dropdown.cpp:179:    this->hint->invalidate();
+library/lib/dropdown.cpp:184:    return this->list->getDefaultFocus();
+library/lib/dropdown.cpp:195:    if (this->list)
+library/lib/dropdown.cpp:196:        this->list->willAppear(resetState);
+library/lib/dropdown.cpp:198:    if (this->hint)
+library/lib/dropdown.cpp:199:        this->hint->willAppear(resetState);
+library/lib/dropdown.cpp:204:    if (this->list)
+library/lib/dropdown.cpp:205:        this->list->willDisappear(resetState);
+library/lib/dropdown.cpp:207:    if (this->hint)
+library/lib/dropdown.cpp:208:        this->hint->willDisappear(resetState);
+library/lib/dropdown.cpp:213:    delete this->list;
+library/lib/dropdown.cpp:214:    delete this->hint;
+library/lib/rectangle.cpp:28:    this->setColor(color);
+library/lib/rectangle.cpp:33:    NVGcolor color = a(this->color);
+library/lib/rectangle.cpp:47:    this->color = color;
+library/lib/dialog.cpp:37:    this->registerAction("brls/hints/back"_i18n, Key::B, [this] { return this->onCancel(); });
+library/lib/dialog.cpp:47:    if (this->buttons.size() >= 3)
+library/lib/dialog.cpp:54:    this->buttons.push_back(button);
+library/lib/dialog.cpp:56:    this->rebuildButtons();
+library/lib/dialog.cpp:57:    this->invalidate();
+library/lib/dialog.cpp:64:    if (this->buttons.size() == 0)
+library/lib/dialog.cpp:73:    if (this->buttons.size() == 0)
+library/lib/dialog.cpp:79:    this->cancelable = cancelable;
+library/lib/dialog.cpp:97:        this->frameX, this->frameY + shadowWidth,
+library/lib/dialog.cpp:98:        this->frameWidth, this->frameHeight,
+library/lib/dialog.cpp:103:    nvgRect(vg, this->frameX - shadowOffset, this->frameY - shadowOffset,
+library/lib/dialog.cpp:104:        this->frameWidth + shadowOffset * 2, this->frameHeight + shadowOffset * 3);
+library/lib/dialog.cpp:105:    nvgRoundedRect(vg, this->frameX, this->frameY, this->frameWidth, this->frameHeight, style->Dialog.cornerRadius);
+library/lib/dialog.cpp:113:    nvgRoundedRect(vg, this->frameX, this->frameY, this->frameWidth, this->frameHeight, style->Dialog.cornerRadius);
+library/lib/dialog.cpp:117:    if (this->contentView)
+library/lib/dialog.cpp:118:        this->contentView->frame(ctx);
+library/lib/dialog.cpp:121:    if (this->buttons.size() > 0)
+library/lib/dialog.cpp:123:        unsigned buttonsHeight = this->getButtonsHeight();
+library/lib/dialog.cpp:128:        nvgRect(vg, this->frameX, this->frameY + this->frameHeight - buttonsHeight, this->frameWidth, style->Dialog.buttonSeparatorHeight);
+library/lib/dialog.cpp:132:        if (this->buttons.size() == 3)
+library/lib/dialog.cpp:135:            nvgRect(vg, this->frameX, this->frameY + this->frameHeight - style->Dialog.buttonHeight, this->frameWidth, style->Dialog.buttonSeparatorHeight);
+library/lib/dialog.cpp:140:        if (this->buttons.size() >= 2)
+library/lib/dialog.cpp:145:                this->frameX + this->frameWidth / 2 + style->Dialog.buttonSeparatorHeight / 2,
+library/lib/dialog.cpp:146:                this->frameY + this->frameHeight - style->Dialog.buttonHeight + 1, // offset by 1 to fix aliasing artifact
+library/lib/dialog.cpp:154:    if (this->verticalButtonsLayout)
+library/lib/dialog.cpp:155:        this->verticalButtonsLayout->frame(ctx);
+library/lib/dialog.cpp:160:    if (this->buttons.size() > 0 && this->verticalButtonsLayout)
+library/lib/dialog.cpp:161:        return this->verticalButtonsLayout->getDefaultFocus();
+library/lib/dialog.cpp:168:    if (this->cancelable)
+library/lib/dialog.cpp:169:        this->close();
+library/lib/dialog.cpp:171:    return this->cancelable;
+library/lib/dialog.cpp:177:    if (this->buttons.size() == 3)
+library/lib/dialog.cpp:179:    else if (this->buttons.size() > 0) // 1 or 2
+library/lib/dialog.cpp:187:    this->frameWidth  = style->Dialog.width;
+library/lib/dialog.cpp:188:    this->frameHeight = style->Dialog.height;
+library/lib/dialog.cpp:190:    unsigned buttonsHeight = this->getButtonsHeight();
+library/lib/dialog.cpp:191:    this->frameHeight += buttonsHeight;
+library/lib/dialog.cpp:193:    this->frameX = getWidth() / 2 - this->frameWidth / 2;
+library/lib/dialog.cpp:194:    this->frameY = getHeight() / 2 - this->frameHeight / 2;
+library/lib/dialog.cpp:196:    unsigned contentX      = this->frameX + style->Dialog.paddingLeftRight;
+library/lib/dialog.cpp:197:    unsigned contentY      = this->frameY + style->Dialog.paddingTopBottom;
+library/lib/dialog.cpp:198:    unsigned contentWidth  = this->frameWidth - style->Dialog.paddingLeftRight * 2;
+library/lib/dialog.cpp:199:    unsigned contentHeight = this->frameHeight - style->Dialog.paddingTopBottom * 2 - buttonsHeight;
+library/lib/dialog.cpp:201:    if (this->contentView)
+library/lib/dialog.cpp:204:        this->contentView->setBoundaries(
+library/lib/dialog.cpp:210:        this->contentView->invalidate(true); // layout directly to get height
+library/lib/dialog.cpp:214:        unsigned newContentHeight = this->contentView->getHeight();
+library/lib/dialog.cpp:220:            this->frameHeight += -difference;
+library/lib/dialog.cpp:226:            this->contentView->setBoundaries(
+library/lib/dialog.cpp:232:            this->contentView->invalidate();
+library/lib/dialog.cpp:237:    if (this->verticalButtonsLayout)
+library/lib/dialog.cpp:239:        this->verticalButtonsLayout->setBoundaries(
+library/lib/dialog.cpp:240:            this->frameX,
+library/lib/dialog.cpp:241:            this->frameY + this->frameHeight - buttonsHeight,
+library/lib/dialog.cpp:242:            this->frameWidth,
+library/lib/dialog.cpp:246:        if (this->buttons.size() == 1)
+library/lib/dialog.cpp:248:            this->verticalButtonsLayout->getChild(0)->setHeight(style->Dialog.buttonHeight);
+library/lib/dialog.cpp:251:        else if (this->buttons.size() == 2)
+library/lib/dialog.cpp:253:            this->horizontalButtonsLayout->setHeight(style->Dialog.buttonHeight);
+library/lib/dialog.cpp:255:            this->horizontalButtonsLayout->getChild(0)->setWidth(this->frameWidth / 2);
+library/lib/dialog.cpp:256:            this->horizontalButtonsLayout->getChild(1)->setWidth(this->frameWidth / 2);
+library/lib/dialog.cpp:259:        else if (this->buttons.size() == 3)
+library/lib/dialog.cpp:261:            this->verticalButtonsLayout->getChild(0)->setHeight(style->Dialog.buttonHeight);
+library/lib/dialog.cpp:263:            this->horizontalButtonsLayout->setHeight(style->Dialog.buttonHeight);
+library/lib/dialog.cpp:265:            this->horizontalButtonsLayout->getChild(0)->setWidth(this->frameWidth / 2);
+library/lib/dialog.cpp:266:            this->horizontalButtonsLayout->getChild(1)->setWidth(this->frameWidth / 2);
+library/lib/dialog.cpp:269:        this->verticalButtonsLayout->invalidate();
+library/lib/dialog.cpp:270:        if (this->horizontalButtonsLayout)
+library/lib/dialog.cpp:271:            this->horizontalButtonsLayout->invalidate();
+library/lib/dialog.cpp:277:    if (this->verticalButtonsLayout)
+library/lib/dialog.cpp:278:        delete this->verticalButtonsLayout;
+library/lib/dialog.cpp:279:    this->verticalButtonsLayout = nullptr;
+library/lib/dialog.cpp:284:    if (this->buttons.size() > 0)
+library/lib/dialog.cpp:286:        this->verticalButtonsLayout = new BoxLayout(BoxLayoutOrientation::VERTICAL);
+library/lib/dialog.cpp:287:        this->verticalButtonsLayout->setParent(this);
+library/lib/dialog.cpp:290:        if (this->buttons.size() == 1)
+library/lib/dialog.cpp:292:            Button* button = (new Button(ButtonStyle::DIALOG))->setLabel(this->buttons[0]->label);
+library/lib/dialog.cpp:293:            button->getClickEvent()->subscribe(this->buttons[0]->cb);
+library/lib/dialog.cpp:294:            this->verticalButtonsLayout->addView(button);
+library/lib/dialog.cpp:297:        else if (this->buttons.size() == 2)
+library/lib/dialog.cpp:299:            this->horizontalButtonsLayout = new BoxLayout(BoxLayoutOrientation::HORIZONTAL);
+library/lib/dialog.cpp:300:            this->verticalButtonsLayout->addView(this->horizontalButtonsLayout);
+library/lib/dialog.cpp:302:            for (DialogButton* dialogButton : this->buttons)
+library/lib/dialog.cpp:306:                this->horizontalButtonsLayout->addView(button);
+library/lib/dialog.cpp:310:        else if (this->buttons.size() == 3)
+library/lib/dialog.cpp:312:            Button* button = (new Button(ButtonStyle::DIALOG))->setLabel(this->buttons[0]->label);
+library/lib/dialog.cpp:313:            button->getClickEvent()->subscribe(this->buttons[0]->cb);
+library/lib/dialog.cpp:314:            this->verticalButtonsLayout->addView(button);
+library/lib/dialog.cpp:316:            this->horizontalButtonsLayout = new BoxLayout(BoxLayoutOrientation::HORIZONTAL);
+library/lib/dialog.cpp:317:            this->verticalButtonsLayout->addView(this->horizontalButtonsLayout);
+library/lib/dialog.cpp:319:            for (size_t i = 1; i < this->buttons.size(); i++)
+library/lib/dialog.cpp:321:                DialogButton* dialogButton = this->buttons[i];
+library/lib/dialog.cpp:324:                this->horizontalButtonsLayout->addView(button);
+library/lib/dialog.cpp:332:    if (this->contentView)
+library/lib/dialog.cpp:333:        delete this->contentView;
+library/lib/dialog.cpp:335:    if (this->verticalButtonsLayout)
+library/lib/dialog.cpp:336:        delete this->verticalButtonsLayout;
+library/lib/dialog.cpp:338:    for (DialogButton* dialogButton : this->buttons)
+library/lib/label.cpp:32:    this->lineHeight = style->Label.lineHeight;
+library/lib/label.cpp:37:            this->fontSize = style->Label.regularFontSize;
+library/lib/label.cpp:40:            this->fontSize = style->Label.mediumFontSize;
+library/lib/label.cpp:43:            this->fontSize = style->Label.smallFontSize;
+library/lib/label.cpp:46:            this->fontSize = style->Label.descriptionFontSize;
+library/lib/label.cpp:49:            this->fontSize = style->Label.crashFontSize;
+library/lib/label.cpp:55:            this->fontSize = style->Label.buttonFontSize;
+library/lib/label.cpp:58:            this->fontSize = style->Label.listItemFontSize;
+library/lib/label.cpp:61:            this->fontSize   = style->Label.notificationFontSize;
+library/lib/label.cpp:62:            this->lineHeight = style->Label.notificationLineHeight;
+library/lib/label.cpp:65:            this->fontSize = style->Label.dialogFontSize;
+library/lib/label.cpp:68:            this->fontSize = style->Label.hintFontSize;
+library/lib/label.cpp:74:    this->horizontalAlign = align;
+library/lib/label.cpp:79:    this->verticalAlign = align;
+library/lib/label.cpp:84:    this->fontSize = size;
+library/lib/label.cpp:86:    if (this->getParent())
+library/lib/label.cpp:87:        this->getParent()->invalidate();
+library/lib/label.cpp:92:    this->text = text;
+library/lib/label.cpp:94:    if (this->hasParent())
+library/lib/label.cpp:95:        this->getParent()->invalidate();
+library/lib/label.cpp:100:    this->labelStyle = style;
+library/lib/label.cpp:108:    nvgFontSize(vg, this->fontSize);
+library/lib/label.cpp:109:    nvgTextAlign(vg, this->horizontalAlign | NVG_ALIGN_TOP);
+library/lib/label.cpp:110:    nvgFontFaceId(vg, this->getFont(stash));
+library/lib/label.cpp:111:    nvgTextLineHeight(vg, this->lineHeight);
+library/lib/label.cpp:116:    if (this->multiline)
+library/lib/label.cpp:118:        nvgTextBoxBounds(vg, this->x, this->y, this->width, this->text.c_str(), nullptr, bounds);
+library/lib/label.cpp:120:        this->height = bounds[3] - bounds[1]; // ymax - ymin
+library/lib/label.cpp:124:        nvgTextBounds(vg, this->x, this->y, this->text.c_str(), nullptr, bounds);
+library/lib/label.cpp:126:        unsigned oldWidth = this->width;
+library/lib/label.cpp:127:        this->width       = bounds[2] - bounds[0]; // xmax - xmin
+library/lib/label.cpp:131:        if (this->horizontalAlign == NVG_ALIGN_RIGHT)
+library/lib/label.cpp:132:            this->x += oldWidth - this->width;
+library/lib/label.cpp:140:    nvgFillColor(vg, this->getColor(ctx->theme));
+library/lib/label.cpp:143:    nvgFontSize(vg, this->fontSize);
+library/lib/label.cpp:144:    nvgFontFaceId(vg, this->getFont(ctx->fontStash));
+library/lib/label.cpp:146:    if (this->multiline)
+library/lib/label.cpp:148:        nvgTextLineHeight(vg, this->lineHeight);
+library/lib/label.cpp:149:        nvgTextAlign(vg, this->horizontalAlign | NVG_ALIGN_TOP);
+library/lib/label.cpp:152:        nvgTextBox(vg, x, y, width, this->text.c_str(), nullptr);
+library/lib/label.cpp:157:        nvgTextAlign(vg, this->horizontalAlign | this->verticalAlign);
+library/lib/label.cpp:160:        if (this->horizontalAlign == NVG_ALIGN_RIGHT)
+library/lib/label.cpp:162:        else if (this->horizontalAlign == NVG_ALIGN_CENTER)
+library/lib/label.cpp:167:        if (this->verticalAlign == NVG_ALIGN_BOTTOM || this->verticalAlign == NVG_ALIGN_BASELINE)
+library/lib/label.cpp:168:            nvgText(vg, x, y + height, this->text.c_str(), nullptr);
+library/lib/label.cpp:170:            nvgText(vg, x, y + height / 2, this->text.c_str(), nullptr); // NVG_ALIGN_MIDDLE
+library/lib/label.cpp:176:    this->customColor    = color;
+library/lib/label.cpp:177:    this->useCustomColor = true;
+library/lib/label.cpp:182:    this->useCustomColor = false;
+library/lib/label.cpp:188:    if (this->useCustomColor)
+library/lib/label.cpp:189:        return a(this->customColor);
+library/lib/label.cpp:191:    switch (this->labelStyle)
+library/lib/label.cpp:212:    this->customFont    = font;
+library/lib/label.cpp:213:    this->useCustomFont = true;
+library/lib/label.cpp:218:    this->useCustomFont = false;
+library/lib/label.cpp:223:    if (this->useCustomFont)
+library/lib/label.cpp:224:        return this->customFont;
+library/lib/application.cpp:571:    this->setColor(nvgRGB(255, 255, 255));
+library/lib/application.cpp:572:    this->setVerticalAlign(NVG_ALIGN_MIDDLE);
+library/lib/application.cpp:573:    this->setHorizontalAlign(NVG_ALIGN_RIGHT);
+library/lib/application.cpp:574:    this->setBackground(ViewBackground::BACKDROP);
+library/lib/application.cpp:576:    this->lastSecond = cpu_features_get_time_usec() / 1000;
+library/lib/application.cpp:584:    if (current - this->lastSecond >= 1000)
+library/lib/application.cpp:587:        snprintf(fps, sizeof(fps), "FPS: %03d", this->frames);
+library/lib/application.cpp:588:        this->setText(std::string(fps));
+library/lib/application.cpp:589:        this->invalidate(); // update width for background
+library/lib/application.cpp:591:        this->frames     = 0;
+library/lib/application.cpp:592:        this->lastSecond = current;
+library/lib/application.cpp:595:    this->frames++;
+library/lib/box_layout.cpp:43:    for (BoxLayoutChild* child : this->children)
+library/lib/box_layout.cpp:49:    this->gravity = gravity;
+library/lib/box_layout.cpp:50:    this->invalidate();
+library/lib/box_layout.cpp:55:    this->spacing = spacing;
+library/lib/box_layout.cpp:56:    this->invalidate();
+library/lib/box_layout.cpp:61:    return this->spacing;
+library/lib/box_layout.cpp:66:    this->marginBottom = bottom;
+library/lib/box_layout.cpp:67:    this->marginLeft   = left;
+library/lib/box_layout.cpp:68:    this->marginRight  = right;
+library/lib/box_layout.cpp:69:    this->marginTop    = top;
+library/lib/box_layout.cpp:70:    this->invalidate();
+library/lib/box_layout.cpp:75:    this->marginBottom = bottom;
+library/lib/box_layout.cpp:76:    this->invalidate();
+library/lib/box_layout.cpp:81:    return this->children.size();
+library/lib/box_layout.cpp:87:    if (this->defaultFocusedIndex < this->children.size())
+library/lib/box_layout.cpp:89:        View* newFocus = this->children[this->defaultFocusedIndex]->view->getDefaultFocus();
+library/lib/box_layout.cpp:96:    for (size_t i = 0; i < this->children.size(); i++)
+library/lib/box_layout.cpp:98:        View* newFocus = this->children[i]->view->getDefaultFocus();
+library/lib/box_layout.cpp:110:    if ((this->orientation == BoxLayoutOrientation::HORIZONTAL && direction != FocusDirection::LEFT && direction != FocusDirection::RIGHT) || (this->orientation == BoxLayoutOrientation::VERTICAL && direction != FocusDirection::UP && direction != FocusDirection::DOWN))
+library/lib/box_layout.cpp:118:    if ((this->orientation == BoxLayoutOrientation::HORIZONTAL && direction == FocusDirection::LEFT) || (this->orientation == BoxLayoutOrientation::VERTICAL && direction == FocusDirection::UP))
+library/lib/box_layout.cpp:126:    while (!currentFocus && currentFocusIndex >= 0 && currentFocusIndex < this->children.size())
+library/lib/box_layout.cpp:128:        currentFocus = this->children[currentFocusIndex]->view->getDefaultFocus();
+library/lib/box_layout.cpp:137:    BoxLayoutChild* toRemove = this->children[index];
+library/lib/box_layout.cpp:142:    this->children.erase(this->children.begin() + index);
+library/lib/box_layout.cpp:147:    while (!this->children.empty())
+library/lib/box_layout.cpp:148:        this->removeView(0, free);
+library/lib/box_layout.cpp:154:    if (this->orientation == BoxLayoutOrientation::VERTICAL)
+library/lib/box_layout.cpp:157:        int yAdvance           = this->y + this->marginTop;
+library/lib/box_layout.cpp:159:        for (size_t i = 0; i < this->children.size(); i++)
+library/lib/box_layout.cpp:161:            BoxLayoutChild* child = this->children[i];
+library/lib/box_layout.cpp:165:                child->view->setBoundaries(this->x + this->marginLeft,
+library/lib/box_layout.cpp:167:                    this->width - this->marginLeft - this->marginRight,
+library/lib/box_layout.cpp:168:                    this->y + this->height - yAdvance - this->marginBottom);
+library/lib/box_layout.cpp:170:                child->view->setBoundaries(this->x + this->marginLeft,
+library/lib/box_layout.cpp:172:                    this->width - this->marginLeft - this->marginRight,
+library/lib/box_layout.cpp:178:            int spacing = (int)this->spacing;
+library/lib/box_layout.cpp:179:            View* next  = (this->children.size() > 1 && i <= this->children.size() - 2) ? this->children[i + 1]->view : nullptr;
+library/lib/box_layout.cpp:181:            this->customSpacing(child->view, next, &spacing);
+library/lib/box_layout.cpp:195:        if (this->resize)
+library/lib/box_layout.cpp:196:            this->setHeight(entriesHeight - spacing + this->marginTop + this->marginBottom);
+library/lib/box_layout.cpp:199:    else if (this->orientation == BoxLayoutOrientation::HORIZONTAL)
+library/lib/box_layout.cpp:202:        int xAdvance = this->x + this->marginLeft;
+library/lib/box_layout.cpp:203:        for (size_t i = 0; i < this->children.size(); i++)
+library/lib/box_layout.cpp:205:            BoxLayoutChild* child = this->children[i];
+library/lib/box_layout.cpp:210:                    this->y + this->marginTop,
+library/lib/box_layout.cpp:211:                    this->x + this->width - xAdvance - this->marginRight,
+library/lib/box_layout.cpp:212:                    this->height - this->marginTop - this->marginBottom);
+library/lib/box_layout.cpp:215:                    this->y + this->marginTop,
+library/lib/box_layout.cpp:217:                    this->height - this->marginTop - this->marginBottom);
+library/lib/box_layout.cpp:222:            int spacing = (int)this->spacing;
+library/lib/box_layout.cpp:224:            View* next = (this->children.size() > 1 && i <= this->children.size() - 2) ? this->children[i + 1]->view : nullptr;
+library/lib/box_layout.cpp:226:            this->customSpacing(child->view, next, &spacing);
+library/lib/box_layout.cpp:236:        if (!this->children.empty())
+library/lib/box_layout.cpp:238:            switch (this->gravity)
+library/lib/box_layout.cpp:244:                    View* lastView = this->children[this->children.size() - 1]->view;
+library/lib/box_layout.cpp:247:                    unsigned ourRight      = this->getX() + this->getWidth();
+library/lib/box_layout.cpp:253:                        for (BoxLayoutChild* child : this->children)
+library/lib/box_layout.cpp:278:    this->resize = resize;
+library/lib/box_layout.cpp:279:    this->invalidate();
+library/lib/box_layout.cpp:288:    this->children.push_back(child);
+library/lib/box_layout.cpp:290:    size_t position = this->children.size() - 1;
+library/lib/box_layout.cpp:298:    this->invalidate();
+library/lib/box_layout.cpp:303:    return this->children[index]->view;
+library/lib/box_layout.cpp:308:    return this->children.size() == 0;
+library/lib/box_layout.cpp:313:    return this->childFocused;
+library/lib/box_layout.cpp:318:    this->childFocused = true;
+library/lib/box_layout.cpp:321:    if (this->rememberFocus)
+library/lib/box_layout.cpp:324:        this->defaultFocusedIndex = index;
+library/lib/box_layout.cpp:332:    this->childFocused = false;
+library/lib/box_layout.cpp:339:    for (BoxLayoutChild* child : this->children)
+library/lib/box_layout.cpp:346:    this->children.clear();
+library/lib/box_layout.cpp:351:    for (BoxLayoutChild* child : this->children)
+library/lib/box_layout.cpp:357:    for (BoxLayoutChild* child : this->children)
+library/lib/box_layout.cpp:361:    if (this->rememberFocus)
+library/lib/box_layout.cpp:362:        this->defaultFocusedIndex = this->originalDefaultFocus;
+library/lib/box_layout.cpp:367:    for (BoxLayoutChild* child : this->children)
+library/lib/box_layout.cpp:373:    this->rememberFocus = remember;
+library/lib/crash_frame.cpp:35:    this->label = new Label(LabelStyle::CRASH, text, true);
+library/lib/crash_frame.cpp:36:    this->label->setHorizontalAlign(NVG_ALIGN_CENTER);
+library/lib/crash_frame.cpp:37:    this->label->setParent(this);
+library/lib/crash_frame.cpp:40:    this->button = (new Button(ButtonStyle::CRASH))->setLabel("brls/crash_frame/button"_i18n);
+library/lib/crash_frame.cpp:41:    this->button->setParent(this);
+library/lib/crash_frame.cpp:42:    this->button->alpha = 0.0f;
+library/lib/crash_frame.cpp:43:    this->button->getClickEvent()->subscribe([](View* view) { Application::quit(); });
+library/lib/crash_frame.cpp:44:    this->button->overrideThemeVariant(Application::getThemeValuesForVariant(ThemeVariant_DARK));
+library/lib/crash_frame.cpp:47:    this->hint = new Hint();
+library/lib/crash_frame.cpp:48:    this->hint->setParent(this);
+library/lib/crash_frame.cpp:62:    float scale = (this->alpha + 2.0f) / 3.0f;
+library/lib/crash_frame.cpp:67:    this->label->frame(ctx);
+library/lib/crash_frame.cpp:100:    this->button->frame(ctx);
+library/lib/crash_frame.cpp:103:    this->hint->frame(ctx);
+library/lib/crash_frame.cpp:108:    this->button->show([]() {});
+library/lib/crash_frame.cpp:113:    return this->button->getDefaultFocus();
+library/lib/crash_frame.cpp:119:    this->label->setWidth(roundf((float)this->width * style->CrashFrame.labelWidth));
+library/lib/crash_frame.cpp:120:    this->label->invalidate(true);
+library/lib/crash_frame.cpp:122:    this->label->setBoundaries(
+library/lib/crash_frame.cpp:123:        this->x + this->width / 2 - this->label->getWidth() / 2,
+library/lib/crash_frame.cpp:124:        this->y + (this->height - style->AppletFrame.footerHeight) / 2,
+library/lib/crash_frame.cpp:125:        this->label->getWidth(),
+library/lib/crash_frame.cpp:126:        this->label->getHeight());
+library/lib/crash_frame.cpp:129:    this->button->setBoundaries(
+library/lib/crash_frame.cpp:130:        this->x + this->width / 2 - style->CrashFrame.buttonWidth / 2,
+library/lib/crash_frame.cpp:131:        this->y + this->height - style->AppletFrame.footerHeight - style->CrashFrame.boxSpacing - style->CrashFrame.buttonHeight,
+library/lib/crash_frame.cpp:134:    this->button->invalidate();
+library/lib/crash_frame.cpp:138:    unsigned hintWidth = this->width - style->AppletFrame.separatorSpacing * 2 - style->AppletFrame.footerTextSpacing * 2;
+library/lib/crash_frame.cpp:140:    this->hint->setBoundaries(
+library/lib/crash_frame.cpp:141:        this->x + this->width - hintWidth - style->AppletFrame.separatorSpacing - style->AppletFrame.footerTextSpacing,
+library/lib/crash_frame.cpp:142:        this->y + this->height - style->AppletFrame.footerHeight,
+library/lib/crash_frame.cpp:145:    this->hint->invalidate();
+library/lib/crash_frame.cpp:150:    delete this->label;
+library/lib/crash_frame.cpp:151:    delete this->hint;
+library/lib/list.cpp:44:    this->setMargins(style->List.marginTopBottom, style->List.marginLeftRight, style->List.marginTopBottom, style->List.marginLeftRight);
+library/lib/list.cpp:45:    this->setSpacing(style->List.spacing);
+library/lib/list.cpp:46:    this->setRememberFocus(true);
+library/lib/list.cpp:109:    if (this->list)
+library/lib/list.cpp:110:        this->list->customSpacing(current, next, spacing);
+library/lib/list.cpp:119:    this->setHeight(subLabel != "" ? style->List.Item.heightWithSubLabel : style->List.Item.height);
+library/lib/list.cpp:120:    this->setTextSize(style->Label.listItemFontSize);
+library/lib/list.cpp:124:        this->descriptionView = new Label(LabelStyle::DESCRIPTION, description, true);
+library/lib/list.cpp:125:        this->descriptionView->setParent(this);
+library/lib/list.cpp:128:    this->registerAction("brls/hints/ok"_i18n, Key::A, [this] { return this->onClick(); });
+library/lib/list.cpp:133:    if (this->thumbnailView)
+library/lib/list.cpp:134:        delete this->thumbnailView;
+library/lib/list.cpp:137:        this->thumbnailView = image;
+library/lib/list.cpp:138:        this->thumbnailView->setParent(this);
+library/lib/list.cpp:139:        this->invalidate();
+library/lib/list.cpp:145:    if (this->thumbnailView)
+library/lib/list.cpp:146:        this->thumbnailView->setImage(imagePath);
+library/lib/list.cpp:148:        this->thumbnailView = new Image(imagePath);
+library/lib/list.cpp:150:    this->thumbnailView->setParent(this);
+library/lib/list.cpp:151:    this->thumbnailView->setScaleType(ImageScaleType::FIT);
+library/lib/list.cpp:152:    this->invalidate();
+library/lib/list.cpp:157:    if (this->thumbnailView)
+library/lib/list.cpp:158:        this->thumbnailView->setImage(buffer, bufferSize);
+library/lib/list.cpp:160:        this->thumbnailView = new Image(buffer, bufferSize);
+library/lib/list.cpp:162:    this->thumbnailView->setParent(this);
+library/lib/list.cpp:163:    this->thumbnailView->setScaleType(ImageScaleType::FIT);
+library/lib/list.cpp:164:    this->invalidate();
+library/lib/list.cpp:169:    return this->reduceDescriptionSpacing;
+library/lib/list.cpp:174:    this->reduceDescriptionSpacing = value;
+library/lib/list.cpp:179:    this->indented = indented;
+library/lib/list.cpp:184:    this->textSize = textSize;
+library/lib/list.cpp:189:    this->checked = checked;
+library/lib/list.cpp:194:    return this->clickEvent.fire(this);
+library/lib/list.cpp:199:    return &this->clickEvent;
+library/lib/list.cpp:205:    if (this->descriptionView)
+library/lib/list.cpp:209:        if (this->indented)
+library/lib/list.cpp:212:        this->height = style->List.Item.height;
+library/lib/list.cpp:213:        this->descriptionView->setBoundaries(this->x + indent, this->y + this->height + style->List.Item.descriptionSpacing, this->width - indent * 2, 0);
+library/lib/list.cpp:214:        this->descriptionView->invalidate(true); // we must call layout directly
+library/lib/list.cpp:215:        this->height += this->descriptionView->getHeight() + style->List.Item.descriptionSpacing;
+library/lib/list.cpp:219:    if (this->thumbnailView)
+library/lib/list.cpp:224:        this->thumbnailView->setBoundaries(
+library/lib/list.cpp:229:        this->thumbnailView->invalidate();
+library/lib/list.cpp:247:    this->valueAnimation = 0.0f;
+library/lib/list.cpp:249:    menu_animation_ctx_tag tag = (uintptr_t) & this->valueAnimation;
+library/lib/list.cpp:255:    this->oldValue      = this->value;
+library/lib/list.cpp:256:    this->oldValueFaint = this->valueFaint;
+library/lib/list.cpp:258:    this->value      = value;
+library/lib/list.cpp:259:    this->valueFaint = faint;
+library/lib/list.cpp:261:    this->resetValueAnimation();
+library/lib/list.cpp:263:    if (animate && this->oldValue != "")
+library/lib/list.cpp:267:        menu_animation_ctx_tag tag = (uintptr_t) & this->valueAnimation;
+library/lib/list.cpp:270:        entry.cb           = [this](void* userdata) { this->resetValueAnimation(); };
+library/lib/list.cpp:273:        entry.subject      = &this->valueAnimation;
+library/lib/list.cpp:285:    return this->value;
+library/lib/list.cpp:290:    this->drawTopSeparator = draw;
+library/lib/list.cpp:295:    if (this->collapseState != 1.0f)
+library/lib/list.cpp:303:    unsigned baseHeight = this->height;
+library/lib/list.cpp:304:    bool hasSubLabel    = this->subLabel != "";
+library/lib/list.cpp:305:    bool hasThumbnail   = this->thumbnailView;
+library/lib/list.cpp:307:    unsigned leftPadding = hasThumbnail ? this->thumbnailView->getWidth() + style->List.Item.thumbnailPadding * 2 : style->List.Item.padding;
+library/lib/list.cpp:309:    if (this->indented)
+library/lib/list.cpp:316:    if (this->descriptionView)
+library/lib/list.cpp:319:        baseHeight -= this->descriptionView->getHeight() + style->List.Item.descriptionSpacing;
+library/lib/list.cpp:320:        this->descriptionView->frame(ctx);
+library/lib/list.cpp:329:    if (this->valueAnimation != 0.0f)
+library/lib/list.cpp:332:        NVGcolor valueColor = a(this->oldValueFaint ? ctx->theme->listItemFaintValueColor : ctx->theme->listItemValueColor);
+library/lib/list.cpp:333:        valueColor.a *= (1.0f - this->valueAnimation);
+library/lib/list.cpp:335:        nvgFontSize(vg, style->List.Item.valueSize * (1.0f - this->valueAnimation));
+library/lib/list.cpp:337:        nvgText(vg, valueX, valueY, this->oldValue.c_str(), nullptr);
+library/lib/list.cpp:340:        valueColor = a(this->valueFaint ? ctx->theme->listItemFaintValueColor : ctx->theme->listItemValueColor);
+library/lib/list.cpp:341:        valueColor.a *= this->valueAnimation;
+library/lib/list.cpp:343:        nvgFontSize(vg, style->List.Item.valueSize * this->valueAnimation);
+library/lib/list.cpp:345:        nvgText(vg, valueX, valueY, this->value.c_str(), nullptr);
+library/lib/list.cpp:349:        nvgFillColor(vg, a(this->valueFaint ? ctx->theme->listItemFaintValueColor : ctx->theme->listItemValueColor));
+library/lib/list.cpp:353:        nvgText(vg, valueX, valueY, this->value.c_str(), nullptr);
+library/lib/list.cpp:357:    if (this->checked)
+library/lib/list.cpp:400:    nvgFontSize(vg, this->textSize);
+library/lib/list.cpp:404:    nvgText(vg, x + leftPadding, y + baseHeight / (hasSubLabel ? 3 : 2), this->label.c_str(), nullptr);
+library/lib/list.cpp:414:        nvgText(vg, x + leftPadding, y + baseHeight - baseHeight / 3, this->subLabel.c_str(), nullptr);
+library/lib/list.cpp:419:        this->thumbnailView->frame(ctx);
+library/lib/list.cpp:426:    if (this->drawTopSeparator)
+library/lib/list.cpp:441:    return this->descriptionView;
+library/lib/list.cpp:446:    return this->label;
+library/lib/list.cpp:451:    if (this->descriptionView)
+library/lib/list.cpp:452:        delete this->descriptionView;
+library/lib/list.cpp:454:    if (this->thumbnailView)
+library/lib/list.cpp:455:        delete this->thumbnailView;
+library/lib/list.cpp:457:    this->resetValueAnimation();
+library/lib/list.cpp:466:    this->updateValue();
+library/lib/list.cpp:471:    if (this->toggleState)
+library/lib/list.cpp:472:        this->setValue(this->onValue, false);
+library/lib/list.cpp:474:        this->setValue(this->offValue, true);
+library/lib/list.cpp:479:    this->toggleState = !this->toggleState;
+library/lib/list.cpp:480:    this->updateValue();
+library/lib/list.cpp:488:    return this->toggleState;
+library/lib/list.cpp:496:    this->setValue(initialValue, false);
+library/lib/list.cpp:502:        this->setValue(text, false);
+library/lib/list.cpp:504:        this->helpText, "", this->maxInputLength, this->getValue());
+library/lib/list.cpp:518:        this->setValue(std::to_string(number), false);
+library/lib/list.cpp:520:        this->helpText, "", this->maxInputLength, this->getValue());
+library/lib/list.cpp:532:        this->setColor(theme->listItemSeparatorColor);
+library/lib/list.cpp:540:    this->setValue(values[selectedValue], false, false);
+library/lib/list.cpp:542:    this->getClickEvent()->subscribe([this](View* view) {
+library/lib/list.cpp:547:            this->setValue(this->values[result], false, false);
+library/lib/list.cpp:548:            this->selectedValue = result;
+library/lib/list.cpp:550:            this->valueEvent.fire(result);
+library/lib/list.cpp:552:        Dropdown::open(this->getLabel(), this->values, valueCallback, this->selectedValue);
+library/lib/list.cpp:558:    if (value >= 0 && value < this->values.size())
+library/lib/list.cpp:560:        this->selectedValue = value;
+library/lib/list.cpp:561:        this->setValue(this->values[value], false, false);
+library/lib/list.cpp:567:    return this->selectedValue;
+library/lib/list.cpp:572:    return &this->valueEvent;
+library/lib/list.cpp:577:    this->layout = new ListContentView(this, defaultFocus);
+library/lib/list.cpp:579:    this->layout->setResize(true);
+library/lib/list.cpp:580:    this->layout->setParent(this);
+library/lib/list.cpp:582:    this->setContentView(this->layout);
+library/lib/list.cpp:589:    this->layout->addView(view, fill);
+library/lib/list.cpp:594:    this->layout->removeView(index, free);
+library/lib/list.cpp:599:    this->layout->clear(free);
+library/lib/list.cpp:604:    return this->layout->getViewsCount();
+library/lib/list.cpp:609:    return this->layout->getChild(i);
+library/lib/list.cpp:614:    this->layout->setMargins(
+library/lib/list.cpp:623:    this->layout->setSpacing(spacing);
+library/lib/list.cpp:628:    return this->layout->getSpacing();
+library/lib/list.cpp:633:    this->layout->setMarginBottom(bottom);
+library/lib/task_manager.cpp:31:    for (auto i = this->repeatingTasks.begin(); i != this->repeatingTasks.end(); i++)
+library/lib/task_manager.cpp:38:            this->stopRepeatingTask(task);
+library/lib/task_manager.cpp:39:            this->repeatingTasks.erase(i--);
+library/lib/task_manager.cpp:51:    this->repeatingTasks.push_back(task);
+library/lib/task_manager.cpp:63:    for (RepeatingTask* task : this->repeatingTasks)
+library/lib/task_manager.cpp:64:        this->stopRepeatingTask(task);
+library/lib/task_manager.cpp:66:    this->repeatingTasks.clear();
+library/lib/table.cpp:28:    this->rows.push_back(row);
+library/lib/table.cpp:37:    for (size_t i = 0; i < this->rows.size(); i++)
+library/lib/table.cpp:40:        TableRow* row = this->rows[i];
+library/lib/table.cpp:96:    for (TableRow* row : this->rows)
+library/lib/table.cpp:109:    this->setHeight(height);
+library/lib/table.cpp:114:    for (TableRow* row : this->rows)
+library/lib/table.cpp:129:    return &this->label;
+library/lib/table.cpp:134:    return &this->value;
+library/lib/table.cpp:139:    this->value = value;
+library/lib/table.cpp:144:    return this->type;
+library/lib/header.cpp:32:    this->setHeight(style->Header.height);
+library/lib/header.cpp:51:    nvgText(vg, x + style->Header.rectangleWidth + padding, y + height / 2, this->label.c_str(), nullptr);
+library/lib/header.cpp:54:    if (this->sublabel != "")
+library/lib/header.cpp:61:        nvgText(vg, x + width - style->Header.rectangleWidth - padding, y + height / 2, this->sublabel.c_str(), nullptr);
+library/lib/header.cpp:65:    if (this->separator)
+library/lib/layer_view.cpp:31:    for (unsigned int i = 0; i < this->layers.size(); i++)
+library/lib/layer_view.cpp:32:        delete this->layers[i];
+library/lib/layer_view.cpp:34:    this->layers.clear();
+library/lib/layer_view.cpp:42:        this->layers.push_back(view);
+library/lib/layer_view.cpp:48:    if (index >= 0 && index < static_cast<int>(this->layers.size()))
+library/lib/layer_view.cpp:52:        if (this->selectedIndex >= 0)
+library/lib/layer_view.cpp:54:            this->layers[this->selectedIndex]->willDisappear(true);
+library/lib/layer_view.cpp:55:            this->layers[this->selectedIndex]->hide([]() {});
+library/lib/layer_view.cpp:58:        this->selectedIndex = index;
+library/lib/layer_view.cpp:59:        this->layers[this->selectedIndex]->willAppear(true);
+library/lib/layer_view.cpp:60:        this->layers[this->selectedIndex]->show([=]() {
+library/lib/layer_view.cpp:62:                Application::giveFocus(this->layers[this->selectedIndex]->getDefaultFocus());
+library/lib/layer_view.cpp:66:        this->layers[index]->invalidate();
+library/lib/layer_view.cpp:71:        if (this->selectedIndex > 0)
+library/lib/layer_view.cpp:73:            this->layers[this->selectedIndex]->willDisappear(true);
+library/lib/layer_view.cpp:74:            this->layers[this->selectedIndex]->hide([]() {});
+library/lib/layer_view.cpp:77:        this->selectedIndex = index;
+library/lib/layer_view.cpp:83:    return this->selectedIndex;
+library/lib/layer_view.cpp:88:    if (this->selectedIndex >= 0 && this->selectedIndex < static_cast<int>(this->layers.size()))
+library/lib/layer_view.cpp:90:        View* newFocus = this->layers[this->selectedIndex]->getDefaultFocus();
+library/lib/layer_view.cpp:102:    if (this->selectedIndex >= 0 && this->selectedIndex < static_cast<int>(this->layers.size()))
+library/lib/layer_view.cpp:103:        this->layers[this->selectedIndex]->frame(ctx);
+library/lib/layer_view.cpp:108:    if (this->selectedIndex >= 0 && this->selectedIndex < static_cast<int>(this->layers.size()))
+library/lib/layer_view.cpp:110:        this->layers[this->selectedIndex]->setBoundaries(this->getX(), this->getY(), this->getWidth(), this->getHeight());
+library/lib/layer_view.cpp:111:        this->layers[this->selectedIndex]->invalidate();
+library/lib/layer_view.cpp:117:    if (this->selectedIndex >= 0 && this->selectedIndex < static_cast<int>(this->layers.size()))
+library/lib/layer_view.cpp:118:        this->layers[this->selectedIndex]->willAppear(true);
+library/lib/layer_view.cpp:123:    if (this->selectedIndex >= 0 && this->selectedIndex < static_cast<int>(this->layers.size()))
+library/lib/layer_view.cpp:124:        this->layers[this->selectedIndex]->willDisappear(true);
+library/lib/popup_frame.cpp:35:    if (this->contentView)
+library/lib/popup_frame.cpp:37:        this->contentView->setParent(this);
+library/lib/popup_frame.cpp:38:        this->contentView->setHeaderStyle(HeaderStyle::POPUP);
+library/lib/popup_frame.cpp:39:        this->contentView->setTitle(title);
+library/lib/popup_frame.cpp:40:        this->contentView->setSubtitle(subTitleLeft, subTitleRight);
+library/lib/popup_frame.cpp:41:        this->contentView->setIcon(imageBuffer, imageBufferSize);
+library/lib/popup_frame.cpp:42:        this->contentView->invalidate();
+library/lib/popup_frame.cpp:46:    this->registerAction("brls/hints/back"_i18n, Key::B, [this] { return this->onCancel(); });
+library/lib/popup_frame.cpp:52:    if (this->contentView)
+library/lib/popup_frame.cpp:54:        this->contentView->setParent(this);
+library/lib/popup_frame.cpp:55:        this->contentView->setHeaderStyle(HeaderStyle::POPUP);
+library/lib/popup_frame.cpp:56:        this->contentView->setTitle(title);
+library/lib/popup_frame.cpp:57:        this->contentView->setSubtitle(subTitleLeft, subTitleRight);
+library/lib/popup_frame.cpp:58:        this->contentView->setIcon(imagePath);
+library/lib/popup_frame.cpp:59:        this->contentView->invalidate();
+library/lib/popup_frame.cpp:63:    this->registerAction("brls/hints/back"_i18n, Key::B, [this] { return this->onCancel(); });
+library/lib/popup_frame.cpp:69:    if (this->contentView)
+library/lib/popup_frame.cpp:71:        this->contentView->setParent(this);
+library/lib/popup_frame.cpp:72:        this->contentView->setHeaderStyle(HeaderStyle::POPUP);
+library/lib/popup_frame.cpp:73:        this->contentView->setTitle(title);
+library/lib/popup_frame.cpp:74:        this->contentView->setSubtitle(subTitleLeft, subTitleRight);
+library/lib/popup_frame.cpp:75:        this->contentView->invalidate();
+library/lib/popup_frame.cpp:79:    this->registerAction("brls/hints/back"_i18n, Key::B, [this] { return this->onCancel(); });
+library/lib/popup_frame.cpp:102:    this->contentView->frame(ctx);
+library/lib/popup_frame.cpp:120:    this->contentView->setBoundaries(style->PopupFrame.edgePadding, 0, style->PopupFrame.contentWidth, this->getHeight());
+library/lib/popup_frame.cpp:121:    this->contentView->invalidate();
+library/lib/popup_frame.cpp:126:    if (this->contentView)
+library/lib/popup_frame.cpp:127:        return this->contentView->getDefaultFocus();
+library/lib/popup_frame.cpp:152:    this->contentView->willAppear(resetState);
+library/lib/popup_frame.cpp:157:    this->contentView->willDisappear(resetState);
+library/lib/popup_frame.cpp:162:    if (this->contentView)
+library/lib/popup_frame.cpp:163:        delete this->contentView;
+library/lib/sidebar.cpp:35:    this->setWidth(style->Sidebar.width);
+library/lib/sidebar.cpp:36:    this->setSpacing(style->Sidebar.spacing);
+library/lib/sidebar.cpp:37:    this->setMargins(style->Sidebar.marginTop, style->Sidebar.marginRight, style->Sidebar.marginBottom, style->Sidebar.marginLeft);
+library/lib/sidebar.cpp:38:    this->setBackground(ViewBackground::SIDEBAR);
+library/lib/sidebar.cpp:44:    if (this->lastFocus >= this->children.size())
+library/lib/sidebar.cpp:45:        this->lastFocus = 0;
+library/lib/sidebar.cpp:49:    if (this->children.size() != 0)
+library/lib/sidebar.cpp:50:        toFocus = this->children[this->lastFocus]->view->getDefaultFocus();
+library/lib/sidebar.cpp:63:    this->lastFocus = position;
+library/lib/sidebar.cpp:73:    if (this->isEmpty())
+library/lib/sidebar.cpp:76:    this->addView(item);
+library/lib/sidebar.cpp:84:    this->addView(separator);
+library/lib/sidebar.cpp:101:    this->setHeight(style->Sidebar.Item.height);
+library/lib/sidebar.cpp:103:    this->registerAction("brls/hints/ok"_i18n, Key::A, [this] { return this->onClick(); });
+library/lib/sidebar.cpp:109:    nvgFillColor(vg, a(this->active ? ctx->theme->activeTabColor : ctx->theme->textColor));
+library/lib/sidebar.cpp:114:    nvgText(vg, x + style->Sidebar.Item.textOffsetX + style->Sidebar.Item.padding, y + height / 2, this->label.c_str(), nullptr);
+library/lib/sidebar.cpp:117:    if (this->active)
+library/lib/sidebar.cpp:134:    this->active = active;
+library/lib/sidebar.cpp:140:    this->setHeight(style->Sidebar.Separator.height);
+library/lib/sidebar.cpp:153:    this->associatedView = view;
+library/lib/sidebar.cpp:158:    return this->active;
+library/lib/sidebar.cpp:163:    this->sidebar->setActive(this);
+library/lib/sidebar.cpp:169:    return this->associatedView;
+library/lib/sidebar.cpp:174:    if (this->associatedView)
+library/lib/sidebar.cpp:175:        delete this->associatedView;
+library/lib/material_icon.cpp:31:    NVGcolor color = a(this->getColor(ctx->theme));
+library/lib/material_icon.cpp:39:    nvgText(vg, this->middleX, this->middleY, this->icon.c_str(), nullptr);
+library/lib/material_icon.cpp:44:    this->middleX = this->getX() + this->getWidth() / 2;
+library/lib/material_icon.cpp:45:    this->middleY = this->getY() + this->getHeight() / 2;
+library/lib/material_icon.cpp:50:    this->customColor    = color;
+library/lib/material_icon.cpp:51:    this->useCustomColor = true;
+library/lib/material_icon.cpp:56:    if (this->useCustomColor)
+library/lib/material_icon.cpp:57:        return this->customColor;
+library/lib/progress_display.cpp:29:        this->label = new Label(LabelStyle::DIALOG, "0%", false);
+library/lib/progress_display.cpp:31:        this->spinner = new ProgressSpinner();
+library/lib/progress_display.cpp:39:    this->progressPercentage = ((current * 100) / max);
+library/lib/progress_display.cpp:41:    if (!this->label)
+library/lib/progress_display.cpp:44:    std::string labelText = std::to_string((unsigned)this->progressPercentage);
+library/lib/progress_display.cpp:46:    this->label->setText(labelText);
+library/lib/progress_display.cpp:51:    if (this->label)
+library/lib/progress_display.cpp:53:        this->label->setWidth(style->ProgressDisplay.percentageLabelWidth);
+library/lib/progress_display.cpp:54:        this->label->invalidate(true);
+library/lib/progress_display.cpp:55:        this->label->setBoundaries(
+library/lib/progress_display.cpp:56:            this->x + this->width - this->label->getWidth() / 2,
+library/lib/progress_display.cpp:57:            this->y + this->height / 2 - this->label->getHeight() / 2,
+library/lib/progress_display.cpp:58:            this->label->getWidth(),
+library/lib/progress_display.cpp:59:            this->label->getHeight());
+library/lib/progress_display.cpp:62:    if (this->spinner)
+library/lib/progress_display.cpp:64:        this->spinner->setWidth(this->height);
+library/lib/progress_display.cpp:65:        this->spinner->setHeight(this->height);
+library/lib/progress_display.cpp:66:        this->spinner->setBoundaries(
+library/lib/progress_display.cpp:67:            this->x,
+library/lib/progress_display.cpp:68:            this->y,
+library/lib/progress_display.cpp:69:            this->spinner->getWidth(),
+library/lib/progress_display.cpp:70:            this->spinner->getHeight());
+library/lib/progress_display.cpp:79:    if (this->label)
+library/lib/progress_display.cpp:81:        progressBarWidth -= this->label->getWidth();
+library/lib/progress_display.cpp:82:        this->label->frame(ctx);
+library/lib/progress_display.cpp:85:    if (this->spinner)
+library/lib/progress_display.cpp:88:        progressBarWidth -= this->spinner->getWidth() * 1.25f;
+library/lib/progress_display.cpp:89:        progressBarX += this->spinner->getWidth() * 1.25f;
+library/lib/progress_display.cpp:90:        this->spinner->frame(ctx);
+library/lib/progress_display.cpp:101:    if (this->progressPercentage > 0.0f)
+library/lib/progress_display.cpp:105:        nvgLineTo(vg, progressBarX + ((float)progressBarWidth * this->progressPercentage) / 100, y + height / 2);
+library/lib/progress_display.cpp:115:    if (this->spinner)
+library/lib/progress_display.cpp:116:        this->spinner->willAppear(resetState);
+library/lib/progress_display.cpp:121:    if (this->spinner)
+library/lib/progress_display.cpp:122:        this->spinner->willDisappear(resetState);
+library/lib/progress_display.cpp:127:    if (this->spinner)
+library/lib/progress_display.cpp:128:        delete this->spinner;
+library/lib/progress_display.cpp:130:    if (this->label)
+library/lib/progress_display.cpp:131:        delete this->label;
+library/lib/hint.cpp:35:    this->setGravity(BoxLayoutGravity::RIGHT);
+library/lib/hint.cpp:36:    this->setHeight(style->AppletFrame.footerHeight);
+library/lib/hint.cpp:37:    this->setSpacing(style->AppletFrame.footerTextSpacing);
+library/lib/hint.cpp:40:    this->globalFocusEventSubscriptor = Application::getGlobalFocusChangeEvent()->subscribe([this](View* newFocus) {
+library/lib/hint.cpp:41:        this->rebuildHints();
+library/lib/hint.cpp:44:    this->globalHintsUpdateEventSubscriptor = Application::getGlobalHintsUpdateEvent()->subscribe([this]() {
+library/lib/hint.cpp:45:        this->rebuildHints();
+library/lib/hint.cpp:98:    this->clear(true);
+library/lib/hint.cpp:132:        this->addView(label);
+library/lib/hint.cpp:139:    Application::getGlobalFocusChangeEvent()->unsubscribe(this->globalFocusEventSubscriptor);
+library/lib/hint.cpp:140:    Application::getGlobalHintsUpdateEvent()->unsubscribe(this->globalHintsUpdateEventSubscriptor);
+library/lib/staged_applet_frame.cpp:59:    if (this->hasContentView())
+library/lib/staged_applet_frame.cpp:64:    this->setContentView(stageViews[currentStage]); // calls willAppear
+library/lib/staged_applet_frame.cpp:67:        Application::giveFocus(this->getDefaultFocus());
+library/lib/staged_applet_frame.cpp:113:    return this->stageViews.size();
+library/lib/staged_applet_frame.cpp:118:    return this->currentStage;
+library/lib/staged_applet_frame.cpp:123:    return this->currentStage == this->stageViews.size() - 1;
+library/lib/staged_applet_frame.cpp:128:    for (View* view : this->stageViews)
+library/lib/staged_applet_frame.cpp:131:    this->stageViews.clear();
+library/lib/staged_applet_frame.cpp:133:    this->setContentView(nullptr); // so that ~AppletFrame() doesn't free it twice
+library/lib/button.cpp:34:    this->registerAction("brls/hints/ok"_i18n, Key::A, [this] { return this->onClick(); });
+library/lib/button.cpp:39:    if (this->style == ButtonStyle::BORDERLESS)
+library/lib/button.cpp:41:    else if (this->style == ButtonStyle::DIALOG)
+library/lib/button.cpp:43:    else if (this->style == ButtonStyle::CRASH)
+library/lib/button.cpp:46:    if (this->state == ButtonState::DISABLED)
+library/lib/button.cpp:54:    if (this->label != nullptr)
+library/lib/button.cpp:55:        delete this->label;
+library/lib/button.cpp:56:    if (this->image != nullptr)
+library/lib/button.cpp:57:        delete this->image;
+library/lib/button.cpp:62:    unsigned imageWidth  = this->label ? this->getHeight() : this->getWidth();
+library/lib/button.cpp:63:    unsigned imageHeight = this->getHeight();
+library/lib/button.cpp:65:    if (!this->image)
+library/lib/button.cpp:68:    if (this->label != nullptr)
+library/lib/button.cpp:70:        this->label->setWidth(this->getWidth() - imageWidth);
+library/lib/button.cpp:71:        this->label->invalidate(true);
+library/lib/button.cpp:72:        this->label->setBoundaries(
+library/lib/button.cpp:73:            this->x + imageWidth,
+library/lib/button.cpp:74:            this->y + this->getHeight() / 2 - this->label->getHeight() / 2,
+library/lib/button.cpp:75:            this->label->getWidth(),
+library/lib/button.cpp:76:            this->label->getHeight());
+library/lib/button.cpp:77:        this->label->invalidate();
+library/lib/button.cpp:79:    if (this->image != nullptr)
+library/lib/button.cpp:81:        this->image->setHeight(imageHeight);
+library/lib/button.cpp:82:        this->image->setWidth(imageWidth);
+library/lib/button.cpp:83:        this->image->invalidate(true);
+library/lib/button.cpp:84:        this->image->setBoundaries(
+library/lib/button.cpp:85:            this->x,
+library/lib/button.cpp:86:            this->y + this->getHeight() / 2 - this->image->getHeight() / 2,
+library/lib/button.cpp:87:            this->image->getWidth(),
+library/lib/button.cpp:88:            this->image->getHeight());
+library/lib/button.cpp:94:    if (this->label != nullptr)
+library/lib/button.cpp:95:        delete this->label;
+library/lib/button.cpp:97:    this->label = new Label(this->getLabelStyle(), label, true);
+library/lib/button.cpp:98:    this->label->setHorizontalAlign(NVG_ALIGN_CENTER);
+library/lib/button.cpp:99:    this->label->setParent(this);
+library/lib/button.cpp:106:    this->image = new Image(path);
+library/lib/button.cpp:107:    this->image->setParent(this);
+library/lib/button.cpp:113:    this->image = new Image(buffer, bufferSize);
+library/lib/button.cpp:114:    this->image->setParent(this);
+library/lib/button.cpp:120:    this->state = state;
+library/lib/button.cpp:121:    if (this->label != nullptr)
+library/lib/button.cpp:122:        this->label->setStyle(this->getLabelStyle());
+library/lib/button.cpp:127:    return this->state;
+library/lib/button.cpp:132:    if (this->style == ButtonStyle::DIALOG)
+library/lib/button.cpp:148:    float cornerRadius = this->cornerRadiusOverride ? this->cornerRadiusOverride : (float)style->Button.cornerRadius;
+library/lib/button.cpp:151:    switch (this->style)
+library/lib/button.cpp:155:            nvgFillColor(vg, a(this->state == ButtonState::DISABLED ? ctx->theme->buttonPlainDisabledBackgroundColor : ctx->theme->buttonPlainEnabledBackgroundColor));
+library/lib/button.cpp:166:    if (this->state == ButtonState::ENABLED && this->style == ButtonStyle::PLAIN)
+library/lib/button.cpp:189:    if (this->label != nullptr)
+library/lib/button.cpp:190:        this->label->frame(ctx);
+library/lib/button.cpp:192:    if (this->image != nullptr)
+library/lib/button.cpp:193:        this->image->frame(ctx);
+library/lib/button.cpp:198:    if (this->state == ButtonState::DISABLED)
+library/lib/button.cpp:201:    return this->clickEvent.fire(this);
+library/lib/button.cpp:206:    return &this->clickEvent;
+library/lib/button.cpp:211:    this->cornerRadiusOverride = cornerRadius;
+library/lib/button.cpp:213:    if (this->image != nullptr)
+library/lib/button.cpp:214:        this->image->setCornerRadius(cornerRadius);
+library/lib/applet_frame.cpp:34:        this->leftPadding = style->AppletFrame.separatorSpacing;
+library/lib/applet_frame.cpp:37:        this->rightPadding = style->AppletFrame.separatorSpacing;
+library/lib/applet_frame.cpp:39:    this->hint = new Hint();
+library/lib/applet_frame.cpp:40:    this->hint->setParent(this);
+library/lib/applet_frame.cpp:42:    this->registerAction("brls/hints/back"_i18n, Key::B, [this] { return this->onCancel(); });
+library/lib/applet_frame.cpp:48:    if (this->headerStyle == HeaderStyle::REGULAR)
+library/lib/applet_frame.cpp:53:        if (this->contentView)
+library/lib/applet_frame.cpp:54:            titleColor.a *= this->contentView->getAlpha();
+library/lib/applet_frame.cpp:61:        nvgText(vg, x + style->AppletFrame.titleStart, y + style->AppletFrame.headerHeightRegular / 2 + style->AppletFrame.titleOffset, this->title.c_str(), nullptr);
+library/lib/applet_frame.cpp:69:    else if (this->headerStyle == HeaderStyle::POPUP)
+library/lib/applet_frame.cpp:79:            this->title.c_str(),
+library/lib/applet_frame.cpp:90:            this->subTitleLeft.c_str(),
+library/lib/applet_frame.cpp:94:        nvgTextBounds(vg, x, y, this->subTitleLeft.c_str(), nullptr, bounds);
+library/lib/applet_frame.cpp:113:            this->subTitleRight.c_str(),
+library/lib/applet_frame.cpp:125:    if (this->slideIn)
+library/lib/applet_frame.cpp:127:    else if (this->slideOut)
+library/lib/applet_frame.cpp:132:    std::string* text = &this->footerText;
+library/lib/applet_frame.cpp:143:    this->hint->frame(ctx);
+library/lib/applet_frame.cpp:146:    if (this->icon)
+library/lib/applet_frame.cpp:147:        this->icon->frame(ctx);
+library/lib/applet_frame.cpp:160:        float slideAlpha = 1.0f - this->contentView->alpha;
+library/lib/applet_frame.cpp:162:        if ((this->slideIn && this->animation == ViewAnimation::SLIDE_LEFT) || (this->slideOut && this->animation == ViewAnimation::SLIDE_RIGHT))
+library/lib/applet_frame.cpp:167:        if ((this->slideIn && this->animation == ViewAnimation::SLIDE_LEFT) || (this->slideOut && this->animation == ViewAnimation::SLIDE_RIGHT))
+library/lib/applet_frame.cpp:170:        if (this->slideOut || this->slideIn)
+library/lib/applet_frame.cpp:175:        if (this->slideOut || this->slideIn)
+library/lib/applet_frame.cpp:182:    if (this->contentView)
+library/lib/applet_frame.cpp:183:        return this->contentView->getDefaultFocus();
+library/lib/applet_frame.cpp:191:    if (this->icon)
+library/lib/applet_frame.cpp:193:        if (this->headerStyle == HeaderStyle::REGULAR)
+library/lib/applet_frame.cpp:195:            this->icon->setBoundaries(style->AppletFrame.imageLeftPadding, style->AppletFrame.imageTopPadding, style->AppletFrame.imageSize, style->AppletFrame.imageSize);
+library/lib/applet_frame.cpp:196:            this->icon->invalidate();
+library/lib/applet_frame.cpp:198:        else if (this->headerStyle == HeaderStyle::POPUP)
+library/lib/applet_frame.cpp:200:            this->icon->setBoundaries(style->PopupFrame.edgePadding + style->PopupFrame.imageLeftPadding, style->PopupFrame.imageTopPadding, style->PopupFrame.imageSize, style->PopupFrame.imageSize);
+library/lib/applet_frame.cpp:201:            this->icon->invalidate();
+library/lib/applet_frame.cpp:206:    if (this->contentView)
+library/lib/applet_frame.cpp:208:        if (this->headerStyle == HeaderStyle::REGULAR)
+library/lib/applet_frame.cpp:209:            this->contentView->setBoundaries(this->x + leftPadding, this->y + style->AppletFrame.headerHeightRegular, this->width - this->leftPadding - this->rightPadding, this->height - style->AppletFrame.footerHeight - style->AppletFrame.headerHeightRegular);
+library/lib/applet_frame.cpp:210:        else if (this->headerStyle == HeaderStyle::POPUP)
+library/lib/applet_frame.cpp:211:            this->contentView->setBoundaries(this->x + leftPadding, this->y + style->AppletFrame.headerHeightPopup, this->width - this->leftPadding - this->rightPadding, this->height - style->AppletFrame.footerHeight - style->AppletFrame.headerHeightPopup);
+library/lib/applet_frame.cpp:213:        this->contentView->invalidate();
+library/lib/applet_frame.cpp:218:    unsigned hintWidth = this->width - style->AppletFrame.separatorSpacing * 2 - style->AppletFrame.footerTextSpacing * 2;
+library/lib/applet_frame.cpp:220:    this->hint->setBoundaries(
+library/lib/applet_frame.cpp:221:        this->x + this->width - hintWidth - style->AppletFrame.separatorSpacing - style->AppletFrame.footerTextSpacing,
+library/lib/applet_frame.cpp:222:        this->y + this->height - style->AppletFrame.footerHeight,
+library/lib/applet_frame.cpp:225:    this->hint->invalidate();
+library/lib/applet_frame.cpp:230:    this->contentView = view;
+library/lib/applet_frame.cpp:232:    if (this->contentView)
+library/lib/applet_frame.cpp:234:        this->contentView->setParent(this);
+library/lib/applet_frame.cpp:235:        this->contentView->willAppear();
+library/lib/applet_frame.cpp:238:    this->invalidate();
+library/lib/applet_frame.cpp:243:    return this->contentView;
+library/lib/applet_frame.cpp:248:    this->title = title;
+library/lib/applet_frame.cpp:253:    this->footerText = footerText;
+library/lib/applet_frame.cpp:258:    this->subTitleLeft  = left;
+library/lib/applet_frame.cpp:259:    this->subTitleRight = right;
+library/lib/applet_frame.cpp:264:    if (!this->icon)
+library/lib/applet_frame.cpp:270:        this->icon = icon;
+library/lib/applet_frame.cpp:272:    else if (Image* icon = dynamic_cast<Image*>(this->icon))
+library/lib/applet_frame.cpp:277:    this->icon->invalidate();
+library/lib/applet_frame.cpp:282:    if (!this->icon)
+library/lib/applet_frame.cpp:288:        this->icon = icon;
+library/lib/applet_frame.cpp:290:    else if (Image* icon = dynamic_cast<Image*>(this->icon))
+library/lib/applet_frame.cpp:295:    this->icon->invalidate();
+library/lib/applet_frame.cpp:300:    if (this->icon)
+library/lib/applet_frame.cpp:301:        delete this->icon;
+library/lib/applet_frame.cpp:306:    this->icon = view;
+library/lib/applet_frame.cpp:311:    this->headerStyle = headerStyle;
+library/lib/applet_frame.cpp:313:    this->invalidate();
+library/lib/applet_frame.cpp:318:    if (this->contentView)
+library/lib/applet_frame.cpp:320:        this->contentView->willDisappear(true);
+library/lib/applet_frame.cpp:321:        delete this->contentView;
+library/lib/applet_frame.cpp:324:    if (this->icon)
+library/lib/applet_frame.cpp:325:        delete this->icon;
+library/lib/applet_frame.cpp:327:    delete this->hint;
+library/lib/applet_frame.cpp:332:    if (this->icon)
+library/lib/applet_frame.cpp:333:        this->icon->willAppear(resetState);
+library/lib/applet_frame.cpp:335:    if (this->contentView)
+library/lib/applet_frame.cpp:336:        this->contentView->willAppear(resetState);
+library/lib/applet_frame.cpp:338:    this->hint->willAppear(resetState);
+library/lib/applet_frame.cpp:343:    if (this->icon)
+library/lib/applet_frame.cpp:344:        this->icon->willDisappear(resetState);
+library/lib/applet_frame.cpp:346:    if (this->contentView)
+library/lib/applet_frame.cpp:347:        this->contentView->willDisappear(resetState);
+library/lib/applet_frame.cpp:349:    this->hint->willDisappear(resetState);
+library/lib/applet_frame.cpp:354:    this->animation = animation;
+library/lib/applet_frame.cpp:356:    if (animated && (animation == ViewAnimation::SLIDE_LEFT || animation == ViewAnimation::SLIDE_RIGHT) && this->contentView)
+library/lib/applet_frame.cpp:358:        this->slideIn = true;
+library/lib/applet_frame.cpp:360:        this->contentView->show([this]() {
+library/lib/applet_frame.cpp:361:            this->slideIn = false;
+library/lib/applet_frame.cpp:365:    else if (this->contentView && this->contentView->isHidden())
+library/lib/applet_frame.cpp:367:        this->contentView->show([]() {}, animated, animation);
+library/lib/applet_frame.cpp:375:    this->animation = animation;
+library/lib/applet_frame.cpp:377:    if (animated && (animation == ViewAnimation::SLIDE_LEFT || animation == ViewAnimation::SLIDE_RIGHT) && this->contentView)
+library/lib/applet_frame.cpp:379:        this->slideOut = true;
+library/lib/applet_frame.cpp:381:        this->contentView->hide([this, cb]() {
+library/lib/applet_frame.cpp:382:            this->slideOut = false;
+library/lib/applet_frame.cpp:386:    else if (this->contentView && !this->contentView->isHidden())
+library/lib/applet_frame.cpp:388:        this->contentView->hide([]() {}, animated, animation);
+library/lib/applet_frame.cpp:407:    if (this->contentView)
+library/lib/applet_frame.cpp:408:        this->contentView->onWindowSizeChanged();
+library/lib/applet_frame.cpp:410:    if (this->icon)
+library/lib/applet_frame.cpp:411:        this->icon->onWindowSizeChanged();
+library/lib/applet_frame.cpp:413:    if (this->hint)
+library/lib/applet_frame.cpp:414:        this->hint->onWindowSizeChanged();
+library/lib/scroll_view.cpp:29:    if (!this->contentView)
+library/lib/scroll_view.cpp:33:    if (this->updateScrollingOnNextFrame && this->updateScrolling(false))
+library/lib/scroll_view.cpp:34:        this->updateScrollingOnNextFrame = false;
+library/lib/scroll_view.cpp:38:    nvgScissor(vg, x, y, this->width, this->height);
+library/lib/scroll_view.cpp:41:    this->contentView->frame(ctx);
+library/lib/scroll_view.cpp:54:    this->prebakeScrolling();
+library/lib/scroll_view.cpp:57:    if (this->updateScrollingOnNextLayout)
+library/lib/scroll_view.cpp:59:        this->updateScrollingOnNextLayout = false;
+library/lib/scroll_view.cpp:60:        this->updateScrolling(false);
+library/lib/scroll_view.cpp:64:    if (this->contentView)
+library/lib/scroll_view.cpp:66:        unsigned contentHeight = this->contentView->getHeight();
+library/lib/scroll_view.cpp:67:        this->contentView->setBoundaries(
+library/lib/scroll_view.cpp:68:            this->getX(),
+library/lib/scroll_view.cpp:69:            this->getY() - roundf(this->scrollY * (float)contentHeight),
+library/lib/scroll_view.cpp:70:            this->getWidth(),
+library/lib/scroll_view.cpp:72:        this->contentView->invalidate();
+library/lib/scroll_view.cpp:75:    this->ready = true;
+library/lib/scroll_view.cpp:80:    this->prebakeScrolling();
+library/lib/scroll_view.cpp:87:        this->startScrolling(false, 0.0f);
+library/lib/scroll_view.cpp:88:        this->updateScrollingOnNextFrame = true; // focus may have changed since
+library/lib/scroll_view.cpp:91:    if (this->contentView)
+library/lib/scroll_view.cpp:92:        this->contentView->willAppear(resetState);
+library/lib/scroll_view.cpp:98:    if (this->contentView)
+library/lib/scroll_view.cpp:99:        this->contentView->willDisappear(resetState);
+library/lib/scroll_view.cpp:104:    return this->contentView;
+library/lib/scroll_view.cpp:109:    this->contentView = view;
+library/lib/scroll_view.cpp:111:    if (this->contentView)
+library/lib/scroll_view.cpp:113:        this->contentView->setParent(this);
+library/lib/scroll_view.cpp:114:        this->contentView->willAppear(true);
+library/lib/scroll_view.cpp:117:    this->invalidate();
+library/lib/scroll_view.cpp:122:    return this->contentView;
+library/lib/scroll_view.cpp:128:    this->middleY = this->y + this->height / 2;
+library/lib/scroll_view.cpp:129:    this->bottomY = this->y + this->height;
+library/lib/scroll_view.cpp:135:    if (!this->ready || !this->contentView)
+library/lib/scroll_view.cpp:138:    float contentHeight = (float)this->contentView->getHeight();
+library/lib/scroll_view.cpp:146:    float newScroll                    = -(this->scrollY * contentHeight) - ((float)currentSelectionMiddleOnScreen - (float)this->middleY);
+library/lib/scroll_view.cpp:149:    if ((float)this->y + newScroll + contentHeight < (float)this->bottomY)
+library/lib/scroll_view.cpp:150:        newScroll = (float)this->height - contentHeight;
+library/lib/scroll_view.cpp:160:    this->startScrolling(animated, newScroll);
+library/lib/scroll_view.cpp:167:    if (newScroll == this->scrollY)
+library/lib/scroll_view.cpp:170:    menu_animation_ctx_tag tag = (uintptr_t) & this->scrollY;
+library/lib/scroll_view.cpp:181:        entry.subject      = &this->scrollY;
+library/lib/scroll_view.cpp:184:        entry.tick         = [this](void* userdata) { this->scrollAnimationTick(); };
+library/lib/scroll_view.cpp:191:        this->scrollY = newScroll;
+library/lib/scroll_view.cpp:194:    this->invalidate(!animated); // layout immediately if not animated
+library/lib/scroll_view.cpp:199:    this->invalidate();
+library/lib/scroll_view.cpp:205:    if (!this->ready)
+library/lib/scroll_view.cpp:210:    if (child != this->contentView)
+library/lib/scroll_view.cpp:214:    this->updateScrolling(true);
+library/lib/scroll_view.cpp:221:    this->updateScrollingOnNextLayout = true;
+library/lib/scroll_view.cpp:223:    if (this->contentView)
+library/lib/scroll_view.cpp:224:        this->contentView->onWindowSizeChanged();
+library/lib/scroll_view.cpp:229:    if (this->contentView)
+library/lib/scroll_view.cpp:231:        this->contentView->willDisappear(true);
+library/lib/scroll_view.cpp:232:        delete this->contentView;

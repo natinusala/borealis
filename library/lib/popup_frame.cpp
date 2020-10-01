@@ -88,7 +88,7 @@ void PopupFrame::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned hei
     nvgFill(vg);
 
     // Background
-    nvgFillColor(vg, a(ctx->theme->backgroundColorRGB));
+    nvgFillColor(vg, a(ctx->theme->backgroundColor));
     nvgBeginPath(vg);
     nvgRect(vg, style->PopupFrame.edgePadding, y, width - style->PopupFrame.edgePadding * 2, height);
     nvgFill(vg);

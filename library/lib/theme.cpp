@@ -31,10 +31,7 @@ Theme Theme::horizon()
     Theme theme = Theme();
 
     // Light variant
-    LIGHT.backgroundColor[0] = 0.922f;
-    LIGHT.backgroundColor[1] = 0.922f;
-    LIGHT.backgroundColor[2] = 0.922f;
-    LIGHT.backgroundColorRGB = nvgRGB(235, 235, 235);
+    LIGHT.backgroundColor = nvgRGB(235, 235, 235);
 
     LIGHT.textColor        = nvgRGB(51, 51, 51);
     LIGHT.descriptionColor = nvgRGB(140, 140, 140);
@@ -78,10 +75,7 @@ Theme Theme::horizon()
     LIGHT.dialogButtonSeparatorColor = nvgRGB(210, 210, 210);
 
     // Dark variant
-    DARK.backgroundColor[0] = 0.176f;
-    DARK.backgroundColor[1] = 0.176f;
-    DARK.backgroundColor[2] = 0.176f;
-    DARK.backgroundColorRGB = nvgRGB(45, 45, 45);
+    DARK.backgroundColor = nvgRGB(45, 45, 45);
 
     DARK.textColor        = nvgRGB(255, 255, 255);
     DARK.descriptionColor = nvgRGB(163, 163, 163);

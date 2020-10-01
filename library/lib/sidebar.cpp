@@ -125,7 +125,7 @@ void SidebarItem::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned he
 
 bool SidebarItem::onClick()
 {
-    Application::onGamepadButtonPressed(GLFW_GAMEPAD_BUTTON_DPAD_RIGHT, false);
+    Application::onGamepadButtonPressed(KEY_DRIGHT, false);
     return true;
 }
 

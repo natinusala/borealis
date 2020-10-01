@@ -17,7 +17,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 #include <stdio.h>
 
 #include <borealis/logger.hpp>

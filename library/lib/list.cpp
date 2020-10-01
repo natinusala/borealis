@@ -371,7 +371,7 @@ void ListItem::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned heigh
         nvgFill(vg);
 
         // Check mark
-        nvgFillColor(vg, a(ctx->theme->backgroundColorRGB));
+        nvgFillColor(vg, a(ctx->theme->backgroundColor));
 
         // Long stroke
         nvgSave(vg);

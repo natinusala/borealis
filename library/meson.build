@@ -1,12 +1,9 @@
 dep_glfw3 = dependency('glfw3', version : '>=3.3')
 dep_glm   = dependency('glm', version : '>=0.9.8')
 
-borealis_files = files(
-    'lib/extern/glad/glad.c',
-    'lib/extern/nanovg/nanovg.c',
-    'lib/extern/fmt/src/format.cc',
-    'lib/extern/fmt/src/os.cc',
+subdir('nanovg')
 
+borealis_files = [ nanovg_files, files(
     'lib/extern/libretro-common/compat/compat_strl.c',
     'lib/extern/libretro-common/features/features_cpu.c',
     'lib/extern/libretro-common/encodings/encoding_utf.c',
@@ -50,12 +47,11 @@ borealis_files = files(
     'lib/swkbd.cpp',
 
     'lib/i18n.cpp',
-)
+) ]
 
-borealis_include = include_directories(
+borealis_include = [ nanovg_include, include_directories(
     'include',
-    'lib/extern/fmt/include',
     'include/borealis/extern',
-)
+) ]
 
-borealis_dependencies = [ dep_glfw3, dep_glm ]
+borealis_dependencies = [ dep_glfw3, dep_glm, nanovg_dependencies ]

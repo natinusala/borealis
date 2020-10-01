@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <nanovg/nanovg.h>
+#include <nanovg.h>
 
 #include <borealis/style.hpp>
 #include <borealis/theme.hpp>
@@ -41,7 +41,6 @@ class FrameContext
 {
   public:
     NVGcontext* vg       = nullptr;
-    float pixelRatio     = 0.0;
     FontStash* fontStash = nullptr;
     ThemeValues* theme   = nullptr;
 };

@@ -19,12 +19,9 @@
 
 #pragma once
 
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-#include <nanovg/nanovg.h>
+#include <wrapper.hpp>
 
 #include <borealis/animations.hpp>
-#include <borealis/background.hpp>
 #include <borealis/frame_context.hpp>
 #include <borealis/hint.hpp>
 #include <borealis/label.hpp>
@@ -64,8 +61,6 @@ class Application
 
     static bool mainLoop();
 
-    static void setBackground(Background* background);
-
     /**
       * Pushes a view on this applications's view stack
       *
@@ -103,7 +98,7 @@ class Application
 
     static void notify(std::string text);
 
-    static void onGamepadButtonPressed(char button, bool repeating);
+    static void onGamepadButtonPressed(uint64_t button, bool repeating);
 
     /**
       * "Crashes" the app (displays a fullscreen CrashFrame)
@@ -135,13 +130,6 @@ class Application
 
     static void setMaximumFPS(unsigned fps);
 
-    // public so that the glfw callback can access it
-    inline static unsigned contentWidth, contentHeight;
-    inline static float windowScale;
-
-    static void resizeFramerateCounter();
-    static void resizeNotificationManager();
-
     static GenericEvent* getGlobalFocusChangeEvent();
     static VoidEvent* getGlobalHintsUpdateEvent();
 
@@ -149,19 +137,8 @@ class Application
 
     static std::string getTitle();
 
-    /**
-     * Cleans up GL state after nanovg
-     * So that we can draw regular stuff over it
-     */
-    static void cleanupNvgGlState();
-
   private:
-    inline static GLFWwindow* window;
-    inline static NVGcontext* vg;
-
     inline static std::string title;
-
-    inline static Background* background = nullptr;
 
     inline static TaskManager* taskManager;
     inline static NotificationManager* notificationManager;
@@ -171,15 +148,10 @@ class Application
     inline static std::vector<View*> viewStack;
     inline static std::vector<View*> focusStack;
 
-    inline static unsigned windowWidth, windowHeight;
-
     inline static View* currentFocus;
 
     inline static Theme currentTheme;
     inline static ThemeVariant currentThemeVariant;
-
-    inline static GLFWgamepadstate oldGamepad;
-    inline static GLFWgamepadstate gamepad;
 
     inline static Style currentStyle;
 
@@ -198,8 +170,6 @@ class Application
 
     static void navigate(FocusDirection direction);
 
-    static void onWindowSizeChanged();
-
     static void frame();
     static void clear();
     static void exit();
@@ -209,7 +179,7 @@ class Application
      * the given button
      * Returns true if at least one action has been fired
      */
-    static bool handleAction(char button);
+    static bool handleAction(uint32_t button);
 };
 
 } // namespace brls

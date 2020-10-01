@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <nanovg/nanovg.h>
+#include <nanovg.h>
 
 namespace brls
 {
@@ -38,8 +38,7 @@ enum ThemeVariant
 
 typedef struct
 {
-    float backgroundColor[3]; // gl color
-    NVGcolor backgroundColorRGB;
+    NVGcolor backgroundColor;
 
     NVGcolor textColor;
     NVGcolor descriptionColor;
