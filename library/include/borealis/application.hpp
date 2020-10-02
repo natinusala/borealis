@@ -19,8 +19,6 @@
 
 #pragma once
 
-#include <wrapper.hpp>
-
 #include <borealis/animations.hpp>
 #include <borealis/frame_context.hpp>
 #include <borealis/hint.hpp>
@@ -31,7 +29,7 @@
 #include <borealis/task_manager.hpp>
 #include <borealis/theme.hpp>
 #include <borealis/view.hpp>
-#include <map>
+#include <nvgwrapper.hpp>
 #include <vector>
 
 namespace brls

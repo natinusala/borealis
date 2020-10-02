@@ -20,7 +20,7 @@
 
 #include <functional>
 #include <string>
-#include <wrapper.hpp>
+#include <nvgwrapper.hpp>
 #include <borealis/logger.hpp>
 
 namespace brls

@@ -10,7 +10,7 @@
 #include <array>
 #include <cassert>
 #include <cstdio>
-#include <wrapper.hpp>
+#include <nvgwrapper.hpp>
 
 namespace nvg {
 

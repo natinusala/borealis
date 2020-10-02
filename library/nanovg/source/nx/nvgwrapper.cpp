@@ -4,7 +4,7 @@
 #include <cstring>
 #include <deko3d.hpp>
 #include <optional>
-#include <wrapper.hpp>
+#include <nvgwrapper.hpp>
 
 #include "framework/CMemPool.h"
 #include "nanovg_dk.h"

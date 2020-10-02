@@ -4,7 +4,7 @@ dep_glm   = dependency('glm', version : '>=0.9.8')
 nanovg_files = files(
     'source/nanovg.c',
     'source/pc/glad.c',
-    'source/pc/wrapper.cpp',
+    'source/pc/nvgwrapper.cpp',
 )
 
 nanovg_include = include_directories(
