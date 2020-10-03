@@ -43,7 +43,7 @@ class FrameContext
     NVGcontext* vg       = nullptr;
     float pixelRatio     = 0.0;
     FontStash* fontStash = nullptr;
-    ThemeValues* theme   = nullptr;
+    Theme* theme         = nullptr;
 };
 
 } // namespace brls

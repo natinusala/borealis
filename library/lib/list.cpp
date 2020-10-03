@@ -526,7 +526,7 @@ bool IntegerInputListItem::onClick()
 ListItemGroupSpacing::ListItemGroupSpacing(bool separator)
     : Rectangle(nvgRGBA(0, 0, 0, 0))
 {
-    ThemeValues* theme = Application::getThemeValues();
+    Theme* theme = Application::getTheme();
 
     if (separator)
         this->setColor(theme->listItemSeparatorColor);

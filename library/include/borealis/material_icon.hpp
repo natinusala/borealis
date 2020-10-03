@@ -33,7 +33,7 @@ class MaterialIcon : public View
     bool useCustomColor = false;
     NVGcolor customColor;
 
-    NVGcolor getColor(ThemeValues* theme);
+    NVGcolor getColor(Theme* theme);
 
   public:
     MaterialIcon(std::string icon);

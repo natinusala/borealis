@@ -83,7 +83,7 @@ class View
     ViewBackground background = ViewBackground::NONE;
 
     void drawBackground(NVGcontext* vg, FrameContext* ctx, Style* style);
-    void drawHighlight(NVGcontext* vg, ThemeValues* theme, float alpha, Style* style, bool background);
+    void drawHighlight(NVGcontext* vg, Theme* theme, float alpha, Style* style, bool background);
 
     float highlightAlpha = 0.0f;
 
@@ -97,7 +97,7 @@ class View
     bool fadeIn           = false; // is the fade in animation running?
     bool forceTranslucent = false;
 
-    ThemeValues* themeOverride = nullptr;
+    Theme* themeOverride = nullptr;
 
     bool hidden = false;
 
@@ -398,7 +398,7 @@ class View
       * Forces this view and its children to use
       * the specified theme variant
       */
-    void overrideThemeVariant(ThemeValues* newTheme);
+    void overrideThemeVariant(Theme* newTheme);
 
     virtual ~View();
 };

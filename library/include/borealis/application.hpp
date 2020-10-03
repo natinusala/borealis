@@ -56,11 +56,8 @@ class FramerateCounter : public Label
 class Application
 {
   public:
-    //Init with default style and theme (as close to HOS as possible)
-    static bool init(std::string title);
-
-    // Init with given style and theme
-    static bool init(std::string title, Style style, Theme theme);
+    // Init with given style and theme, or use defaults if missing
+    static bool init(std::string title, Style* style = nullptr, LibraryViewsThemeVariantsWrapper* themeVariants = nullptr);
 
     static bool mainLoop();
 
@@ -90,9 +87,9 @@ class Application
     static void giveFocus(View* view);
 
     static Style* getStyle();
-    static void setTheme(Theme theme);
-    static ThemeValues* getThemeValues();
-    static ThemeValues* getThemeValuesForVariant(ThemeVariant variant);
+
+    static Theme* getTheme();
+    static LibraryViewsThemeVariantsWrapper* getThemeVariantsWrapper();
     static ThemeVariant getThemeVariant();
 
     static int loadFont(const char* fontName, const char* filePath);
@@ -175,13 +172,13 @@ class Application
 
     inline static View* currentFocus;
 
-    inline static Theme currentTheme;
+    inline static LibraryViewsThemeVariantsWrapper* currentThemeVariantsWrapper;
     inline static ThemeVariant currentThemeVariant;
 
     inline static GLFWgamepadstate oldGamepad;
     inline static GLFWgamepadstate gamepad;
 
-    inline static Style currentStyle;
+    inline static Style* currentStyle;
 
     inline static unsigned blockInputsTokens = 0; // any value > 0 means inputs are blocked
 

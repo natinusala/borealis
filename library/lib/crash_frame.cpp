@@ -41,7 +41,7 @@ CrashFrame::CrashFrame(std::string text)
     this->button->setParent(this);
     this->button->alpha = 0.0f;
     this->button->getClickEvent()->subscribe([](View* view) { Application::quit(); });
-    this->button->overrideThemeVariant(Application::getThemeValuesForVariant(ThemeVariant_DARK));
+    this->button->overrideThemeVariant(Application::getThemeVariantsWrapper()->getDarkTheme());
 
     // Hint
     this->hint = new Hint();

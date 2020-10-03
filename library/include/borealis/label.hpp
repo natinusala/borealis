@@ -89,7 +89,7 @@ class Label : public View
      * Returns the effective label color
      * = custom or the style default
      */
-    NVGcolor getColor(ThemeValues* theme);
+    NVGcolor getColor(Theme* theme);
 
     /**
      * Sets the font id

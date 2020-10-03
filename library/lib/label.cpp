@@ -182,7 +182,7 @@ void Label::unsetColor()
     this->useCustomColor = false;
 }
 
-NVGcolor Label::getColor(ThemeValues* theme)
+NVGcolor Label::getColor(Theme* theme)
 {
     // Use custom color if any
     if (this->useCustomColor)
