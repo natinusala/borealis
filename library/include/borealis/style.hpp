@@ -314,10 +314,13 @@ class Style
         float shadowOffset;
     } Dialog;
 
-    // As close to HOS as possible
-    static Style horizon();
-
     // TODO: Make a condensed style
+};
+
+class HorizonStyle : public Style
+{
+  public:
+    HorizonStyle();
 };
 
 } // namespace brls

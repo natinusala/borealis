@@ -134,12 +134,7 @@ static void windowKeyCallback(GLFWwindow* window, int key, int scancode, int act
     }
 }
 
-bool Application::init(std::string title)
-{
-    return Application::init(title, Style::horizon(), Theme::horizon());
-}
-
-bool Application::init(std::string title, Style style, Theme theme)
+bool Application::init(std::string title, Style* style, LibraryViewsThemeVariantsWrapper* themeVariantsWrapper)
 {
     // Init rng
     std::srand(std::time(nullptr));
@@ -149,14 +144,20 @@ bool Application::init(std::string title, Style style, Theme theme)
     Application::notificationManager = new NotificationManager();
 
     // Init static variables
-    Application::currentStyle = style;
     Application::currentFocus = nullptr;
     Application::oldGamepad   = {};
     Application::gamepad      = {};
     Application::title        = title;
 
-    // Init theme to defaults
-    Application::setTheme(theme);
+    // Init theme and style
+    if (!themeVariantsWrapper)
+        themeVariantsWrapper = new LibraryViewsThemeVariantsWrapper(new HorizonLightTheme(), new HorizonDarkTheme());
+
+    if (!style)
+        style = new HorizonStyle();
+
+    Application::currentThemeVariantsWrapper = themeVariantsWrapper;
+    Application::currentStyle                = style;
 
     // Init glfw
     glfwSetErrorCallback(errorCallback);
@@ -300,15 +301,15 @@ bool Application::init(std::string title, Style style, Theme theme)
     setsysGetColorSetId(&nxTheme);
 
     if (nxTheme == ColorSetId_Dark)
-        Application::currentThemeVariant = ThemeVariant_DARK;
+        Application::currentThemeVariant = ThemeVariant::DARK;
     else
-        Application::currentThemeVariant = ThemeVariant_LIGHT;
+        Application::currentThemeVariant = ThemeVariant::LIGHT;
 #else
     char* themeEnv = getenv("BOREALIS_THEME");
     if (themeEnv != nullptr && !strcasecmp(themeEnv, "DARK"))
-        Application::currentThemeVariant = ThemeVariant_DARK;
+        Application::currentThemeVariant = ThemeVariant::DARK;
     else
-        Application::currentThemeVariant = ThemeVariant_LIGHT;
+        Application::currentThemeVariant = ThemeVariant::LIGHT;
 #endif
 
     // Init window size
@@ -565,7 +566,7 @@ void Application::frame()
     frameContext.pixelRatio = (float)Application::windowWidth / (float)Application::windowHeight;
     frameContext.vg         = Application::vg;
     frameContext.fontStash  = &Application::fontStash;
-    frameContext.theme      = Application::getThemeValues();
+    frameContext.theme      = Application::getTheme();
 
     // GL Clear
     glClearColor(
@@ -635,6 +636,9 @@ void Application::exit()
 
     delete Application::taskManager;
     delete Application::notificationManager;
+
+    delete Application::currentThemeVariantsWrapper;
+    delete Application::currentStyle;
 }
 
 void Application::setDisplayFramerate(bool enabled)
@@ -880,22 +884,17 @@ void Application::clear()
 
 Style* Application::getStyle()
 {
-    return &Application::currentStyle;
+    return Application::currentStyle;
 }
 
-void Application::setTheme(Theme theme)
+Theme* Application::getTheme()
 {
-    Application::currentTheme = theme;
+    return Application::currentThemeVariantsWrapper->getTheme(Application::currentThemeVariant);
 }
 
-ThemeValues* Application::getThemeValues()
+LibraryViewsThemeVariantsWrapper* Application::getThemeVariantsWrapper()
 {
-    return &Application::currentTheme.colors[Application::currentThemeVariant];
-}
-
-ThemeValues* Application::getThemeValuesForVariant(ThemeVariant variant)
-{
-    return &Application::currentTheme.colors[variant];
+    return Application::currentThemeVariantsWrapper;
 }
 
 ThemeVariant Application::getThemeVariant()

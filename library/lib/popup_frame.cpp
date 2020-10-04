@@ -20,9 +20,9 @@
 
 #include <borealis/animations.hpp>
 #include <borealis/application.hpp>
+#include <borealis/i18n.hpp>
 #include <borealis/logger.hpp>
 #include <borealis/popup_frame.hpp>
-#include <borealis/i18n.hpp>
 
 using namespace brls::i18n::literals;
 

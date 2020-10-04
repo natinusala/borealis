@@ -23,11 +23,9 @@
 namespace brls
 {
 
-Style Style::horizon()
+HorizonStyle::HorizonStyle()
 {
-    Style style = Style();
-
-    style.AppletFrame = {
+    this->AppletFrame = {
         .headerHeightRegular = 88,
         .headerHeightPopup   = 129,
         .footerHeight        = 73,
@@ -47,7 +45,7 @@ Style Style::horizon()
         .slideAnimation = 20
     };
 
-    style.Highlight = {
+    this->Highlight = {
         .strokeWidth  = 5,
         .cornerRadius = 0.5f,
 
@@ -57,11 +55,11 @@ Style Style::horizon()
         .shadowOpacity = 128
     };
 
-    style.Background = {
+    this->Background = {
         .sidebarBorderHeight = 16
     };
 
-    style.Sidebar = {
+    this->Sidebar = {
         .width   = 410,
         .spacing = 0,
 
@@ -82,7 +80,7 @@ Style Style::horizon()
         .Separator = { .height = 28 }
     };
 
-    style.List = {
+    this->List = {
         .marginLeftRight = 60,
         .marginTopBottom = 42,
         .spacing         = 61,
@@ -102,7 +100,7 @@ Style Style::horizon()
             .selectRadius = 15 }
     };
 
-    style.Label = {
+    this->Label = {
         .regularFontSize      = 20,
         .mediumFontSize       = 18,
         .smallFontSize        = 16,
@@ -118,7 +116,7 @@ Style Style::horizon()
         .notificationLineHeight = 1.35f
     };
 
-    style.CrashFrame = {
+    this->CrashFrame = {
         .labelWidth     = 0.60f,
         .boxStrokeWidth = 5,
         .boxSize        = 64,
@@ -128,7 +126,7 @@ Style Style::horizon()
         .buttonSpacing  = 47
     };
 
-    style.Button = {
+    this->Button = {
         .cornerRadius = 5.0f,
 
         .highlightInset = 2,
@@ -139,7 +137,7 @@ Style Style::horizon()
         .shadowOffset  = 10.0f
     };
 
-    style.TableRow = {
+    this->TableRow = {
         .headerHeight   = 60,
         .headerTextSize = 22,
 
@@ -150,7 +148,7 @@ Style Style::horizon()
         .padding = 15
     };
 
-    style.Dropdown = {
+    this->Dropdown = {
         .listWidth   = 720,
         .listPadding = 40,
 
@@ -162,7 +160,7 @@ Style Style::horizon()
         .headerPadding  = 70
     };
 
-    style.PopupFrame = {
+    this->PopupFrame = {
         .edgePadding      = 120,
         .separatorSpacing = 30,
         .footerHeight     = 73,
@@ -187,23 +185,23 @@ Style Style::horizon()
         .subTitleFontSize = 16
     };
 
-    style.StagedAppletFrame = {
+    this->StagedAppletFrame = {
         .progressIndicatorSpacing          = 4,
         .progressIndicatorRadiusUnselected = 5 - 1, // minus half of border width
         .progressIndicatorRadiusSelected   = 8,
         .progressIndicatorBorderWidth      = 2
     };
 
-    style.ProgressSpinner = {
+    this->ProgressSpinner = {
         .centerGapMultiplier = 0.2f,
         .barWidthMultiplier  = 0.06f
     };
 
-    style.ProgressDisplay = {
+    this->ProgressDisplay = {
         .percentageLabelWidth = 70
     };
 
-    style.Header = {
+    this->Header = {
         .height  = 44,
         .padding = 11,
 
@@ -212,12 +210,12 @@ Style Style::horizon()
         .fontSize = 18
     };
 
-    style.FramerateCounter = {
+    this->FramerateCounter = {
         .width  = 125,
         .height = 26
     };
 
-    style.ThumbnailSidebar = {
+    this->ThumbnailSidebar = {
         .marginLeftRight = 109, // used for the image only = (410 - 192) / 2, image size is 192*192 with a 410px wide sidebar
         .marginTopBottom = 47,
 
@@ -225,7 +223,7 @@ Style Style::horizon()
         .buttonMargin = 60
     };
 
-    style.AnimationDuration = {
+    this->AnimationDuration = {
         .show      = 250,
         .showSlide = 125,
 
@@ -239,14 +237,14 @@ Style Style::horizon()
         .notificationTimeout = 4000
     };
 
-    style.Notification = {
+    this->Notification = {
         .width   = 280,
         .padding = 16,
 
         .slideAnimation = 40
     };
 
-    style.Dialog = {
+    this->Dialog = {
         .width  = 770,
         .height = 220,
 
@@ -263,8 +261,6 @@ Style Style::horizon()
         .shadowOpacity = 63.75f,
         .shadowOffset  = 10.0f
     };
-
-    return style;
 }
 
 } // namespace brls

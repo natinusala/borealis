@@ -24,20 +24,16 @@
 namespace brls
 {
 
-// Theme variants
-// (used in Application)
-//
-// Not an enum class because it's used
-// as an array index in Theme
-enum ThemeVariant
+enum class ThemeVariant
 {
-    ThemeVariant_LIGHT = 0,
-    ThemeVariant_DARK,
-    ThemeVariant_NUMBER_OF_VARIANTS
+    LIGHT,
+    DARK
 };
 
-typedef struct
+// A Theme instance contains colors for one variant (light or dark)
+class Theme
 {
+  public:
     float backgroundColor[3]; // gl color
     NVGcolor backgroundColorRGB;
 
@@ -81,16 +77,62 @@ typedef struct
     NVGcolor dialogBackdrop;
     NVGcolor dialogButtonColor;
     NVGcolor dialogButtonSeparatorColor;
-} ThemeValues;
+};
 
-// A theme contains colors for all variants
-class Theme
+// Helper class to store two Theme variants and get the right one
+// depending on current system theme
+template <class LightTheme, class DarkTheme>
+class GenericThemeVariantsWrapper
+{
+  private:
+    LightTheme* lightTheme;
+    DarkTheme* darkTheme;
+
+  public:
+    GenericThemeVariantsWrapper(LightTheme* lightTheme, DarkTheme* darkTheme)
+        : lightTheme(lightTheme)
+        , darkTheme(darkTheme)
+    {
+    }
+
+    Theme* getTheme(ThemeVariant currentThemeVariant)
+    {
+        if (currentThemeVariant == ThemeVariant::DARK)
+            return this->darkTheme;
+
+        return this->lightTheme;
+    }
+
+    Theme* getLightTheme()
+    {
+        return this->lightTheme;
+    }
+
+    Theme* getDarkTheme()
+    {
+        return this->darkTheme;
+    }
+
+    ~GenericThemeVariantsWrapper()
+    {
+        delete this->lightTheme;
+        delete this->darkTheme;
+    }
+};
+
+// Themes variants wrapper specification for built-in library views
+typedef GenericThemeVariantsWrapper<Theme, Theme> LibraryViewsThemeVariantsWrapper;
+
+class HorizonLightTheme : public Theme
 {
   public:
-    ThemeValues colors[ThemeVariant_NUMBER_OF_VARIANTS];
+    HorizonLightTheme();
+};
 
-    // As close to HOS as possible
-    static Theme horizon();
+class HorizonDarkTheme : public Theme
+{
+  public:
+    HorizonDarkTheme();
 };
 
 } // namespace brls
