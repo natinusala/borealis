@@ -24,8 +24,6 @@
 namespace brls
 {
 
-// TODO: Add a "can be cancelled with B" flag
-// TODO: Add buttons at creation time
 // TODO: Add the blurred dialog type once the blur is finished
 
 class DialogButton

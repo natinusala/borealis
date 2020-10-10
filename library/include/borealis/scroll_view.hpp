@@ -22,6 +22,7 @@ namespace brls
 {
 
 // TODO: horizontal scrolling, either in ScrollView or in a separate class (like Android has)
+// TODO: Scrollbar
 
 // A view that automatically scrolls vertically
 // when one of its children gains focus

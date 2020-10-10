@@ -31,8 +31,6 @@
 
 using namespace brls::i18n::literals;
 
-// TODO: Scrollbar
-
 namespace brls
 {
 
