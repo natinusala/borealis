@@ -313,8 +313,6 @@ class Style
         float shadowOpacity;
         float shadowOffset;
     } Dialog;
-
-    // TODO: Make a condensed style
 };
 
 class HorizonStyle : public Style

@@ -26,7 +26,6 @@
 namespace brls
 {
 
-// TODO: Add the "ProgressDisplayFlags_" prefix to the members
 enum ProgressDisplayFlags
 {
     SPINNER    = 1u << 0,
