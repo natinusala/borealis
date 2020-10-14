@@ -61,12 +61,12 @@ static void loadLocale(std::string locale, nlohmann::json* target)
         if (entry.is_directory())
             continue;
 
-        std::string name { entry.path().filename().u8string() };
+        std::string name = entry.path().filename().string();
 
         if (!endsWith(name, ".json"))
             continue;
 
-        std::string path { entry.path().u8string() };
+        std::string path = entry.path().string();
 
         nlohmann::json strings;
 
