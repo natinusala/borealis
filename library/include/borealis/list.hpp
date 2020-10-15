@@ -33,7 +33,7 @@ namespace brls
 // TODO: Use a Label with integrated ticker
 class ListItem : public View
 {
-  private:
+  protected:
     std::string label;
     std::string subLabel;
     std::string value;
@@ -127,7 +127,7 @@ class SelectListItem : public ListItem
 
     ValueSelectedEvent* getValueSelectedEvent();
 
-  private:
+  protected:
     std::vector<std::string> values;
     unsigned selectedValue = 0;
 
@@ -140,7 +140,7 @@ class SelectListItem : public ListItem
 // changes
 class ToggleListItem : public ListItem
 {
-  private:
+  protected:
     bool toggleState;
     std::string onValue, offValue;
 
