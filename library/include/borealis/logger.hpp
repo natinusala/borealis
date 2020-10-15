@@ -53,7 +53,8 @@ class Logger
         }
         catch (const std::exception& e)
         {
-            Logger::error("Invalid log format string: \"{}\": {}", format, e.what());
+            // will be printed after the first fmt::print (so after the log tag)
+            printf("! Invalid log format string: \"%s\": %s\n", format.c_str(), e.what());
         }
 
 #ifdef __MINGW32__
