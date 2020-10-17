@@ -346,7 +346,7 @@ class View
      * in that direction - getNextFocus will then be called on our
      * parent if any
      */
-    virtual View* getNextFocus(FocusDirection direction, void* parentUserdata)
+    virtual View* getNextFocus(FocusDirection direction, View* currentView)
     {
         return nullptr;
     }

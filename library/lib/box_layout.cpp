@@ -104,8 +104,10 @@ View* BoxLayout::getDefaultFocus()
     return nullptr;
 }
 
-View* BoxLayout::getNextFocus(FocusDirection direction, void* parentUserData)
+View* BoxLayout::getNextFocus(FocusDirection direction, View* currentView)
 {
+    void* parentUserData = currentView->getParentUserData();
+
     // Return nullptr immediately if focus direction mismatches the layout direction
     if ((this->orientation == BoxLayoutOrientation::HORIZONTAL && direction != FocusDirection::LEFT && direction != FocusDirection::RIGHT) || (this->orientation == BoxLayoutOrientation::VERTICAL && direction != FocusDirection::UP && direction != FocusDirection::DOWN))
     {
