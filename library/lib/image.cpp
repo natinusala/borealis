@@ -48,10 +48,10 @@ Image::Image(const Image& copy)
     : imagePath { copy.imagePath }
     , imageBuffer { copy.copyImgBuf() }
     , imageBufferSize { copy.imageBufferSize }
+    , texture { -1 } // We set as -1 so that reloadTexture() does not try to delete a texture.
     , imgPaint { copy.imgPaint }
     , imageScaleType { copy.imageScaleType }
     , cornerRadius { copy.cornerRadius }
-    , texture { -1 } // We set as -1 so that reloadTexture() does not try to delete a texture.
     , imageX { copy.imageX }
     , imageY { copy.imageY }
     , imageWidth { copy.imageWidth }
@@ -68,7 +68,8 @@ unsigned char* Image::copyImgBuf() const
     if (imageBuffer && imageBufferSize)
     {
         unsigned char* imageBuffer = new unsigned char[imageBufferSize];
-        memcpy(imageBuffer, imageBuffer, imageBufferSize);
+        memcpy(imageBuffer, this->imageBuffer, imageBufferSize);
+        return imageBuffer;
     }
     else
         return nullptr;

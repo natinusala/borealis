@@ -17,7 +17,10 @@
 */
 
 #include <borealis/application.hpp>
+#include <borealis/i18n.hpp>
 #include <borealis/thumbnail_frame.hpp>
+
+using namespace brls::i18n::literals;
 
 namespace brls
 {
@@ -80,7 +83,7 @@ ThumbnailSidebar::ThumbnailSidebar()
     this->setBackground(ViewBackground::SIDEBAR);
     this->setWidth(style->Sidebar.width);
 
-    this->button = (new Button(ButtonStyle::PLAIN))->setLabel("Save");
+    this->button = (new Button(ButtonStyle::PRIMARY))->setLabel("brls/thumbnail_sidebar/save"_i18n);
     this->button->setParent(this);
 }
 

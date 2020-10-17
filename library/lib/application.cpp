@@ -463,7 +463,7 @@ void Application::navigate(FocusDirection direction)
         return;
 
     // Get next view to focus by traversing the views tree upwards
-    View* nextFocus = currentFocus->getParent()->getNextFocus(direction, currentFocus->getParentUserData());
+    View* nextFocus = currentFocus->getParent()->getNextFocus(direction, currentFocus);
 
     while (!nextFocus) // stop when we find a view to focus
     {
@@ -471,7 +471,7 @@ void Application::navigate(FocusDirection direction)
             break;
 
         currentFocus = currentFocus->getParent();
-        nextFocus    = currentFocus->getParent()->getNextFocus(direction, currentFocus->getParentUserData());
+        nextFocus    = currentFocus->getParent()->getNextFocus(direction, currentFocus);
     }
 
     // No view to focus at the end of the traversal: wiggle and return

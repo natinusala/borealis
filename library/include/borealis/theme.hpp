@@ -68,10 +68,15 @@ class Theme
 
     NVGcolor headerRectangleColor;
 
-    NVGcolor buttonPlainEnabledBackgroundColor;
-    NVGcolor buttonPlainDisabledBackgroundColor;
-    NVGcolor buttonPlainEnabledTextColor;
-    NVGcolor buttonPlainDisabledTextColor;
+    NVGcolor buttonPrimaryEnabledBackgroundColor;
+    NVGcolor buttonPrimaryDisabledBackgroundColor;
+    NVGcolor buttonPrimaryEnabledTextColor;
+    NVGcolor buttonPrimaryDisabledTextColor;
+    NVGcolor buttonBorderedBorderColor;
+    NVGcolor buttonBorderedTextColor;
+    NVGcolor buttonRegularBackgroundColor;
+    NVGcolor buttonRegularTextColor;
+    NVGcolor buttonRegularBorderColor;
 
     NVGcolor dialogColor;
     NVGcolor dialogBackdrop;

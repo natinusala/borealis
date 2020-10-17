@@ -60,10 +60,15 @@ HorizonLightTheme::HorizonLightTheme()
 
     this->headerRectangleColor = nvgRGB(127, 127, 127);
 
-    this->buttonPlainEnabledBackgroundColor  = nvgRGB(50, 79, 241);
-    this->buttonPlainDisabledBackgroundColor = nvgRGB(201, 201, 209);
-    this->buttonPlainEnabledTextColor        = nvgRGB(255, 255, 255);
-    this->buttonPlainDisabledTextColor       = nvgRGB(220, 220, 228);
+    this->buttonPrimaryEnabledBackgroundColor  = nvgRGB(50, 79, 241);
+    this->buttonPrimaryDisabledBackgroundColor = nvgRGB(201, 201, 209);
+    this->buttonPrimaryEnabledTextColor        = nvgRGB(255, 255, 255);
+    this->buttonPrimaryDisabledTextColor       = nvgRGB(220, 220, 228);
+    this->buttonBorderedBorderColor            = nvgRGB(45, 45, 45);
+    this->buttonBorderedTextColor              = nvgRGB(45, 45, 45);
+    this->buttonRegularBackgroundColor         = nvgRGB(255, 255, 255);
+    this->buttonRegularTextColor               = nvgRGB(46, 46, 46);
+    this->buttonRegularBorderColor             = nvgRGB(223, 223, 223);
 
     this->dialogColor                = nvgRGB(240, 240, 240);
     this->dialogBackdrop             = nvgRGBA(0, 0, 0, 100);
@@ -109,10 +114,15 @@ HorizonDarkTheme::HorizonDarkTheme()
 
     this->headerRectangleColor = nvgRGB(160, 160, 160);
 
-    this->buttonPlainEnabledBackgroundColor  = nvgRGB(1, 255, 201);
-    this->buttonPlainDisabledBackgroundColor = nvgRGB(83, 87, 86);
-    this->buttonPlainEnabledTextColor        = nvgRGB(52, 41, 55);
-    this->buttonPlainDisabledTextColor       = nvgRGB(71, 75, 74);
+    this->buttonPrimaryEnabledBackgroundColor  = nvgRGB(1, 255, 201);
+    this->buttonPrimaryDisabledBackgroundColor = nvgRGB(83, 87, 86);
+    this->buttonPrimaryEnabledTextColor        = nvgRGB(52, 41, 55);
+    this->buttonPrimaryDisabledTextColor       = nvgRGB(71, 75, 74);
+    this->buttonBorderedBorderColor            = nvgRGB(255, 255, 255);
+    this->buttonBorderedTextColor              = nvgRGB(255, 255, 255);
+    this->buttonRegularBackgroundColor         = nvgRGB(80, 80, 80);
+    this->buttonRegularTextColor               = nvgRGB(255, 255, 255);
+    this->buttonRegularBorderColor             = nvgRGB(33, 33, 33);
 
     this->dialogColor                = nvgRGB(70, 70, 70);
     this->dialogBackdrop             = nvgRGBA(0, 0, 0, 100);

@@ -163,6 +163,9 @@ class Style
         float shadowFeather;
         float shadowOpacity;
         float shadowOffset;
+
+        unsigned borderedBorderThickness;
+        unsigned regularBorderThickness;
     } Button;
 
     // TableRow

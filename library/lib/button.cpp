@@ -28,6 +28,9 @@ using namespace brls::i18n::literals;
 namespace brls
 {
 
+// TODO: Disabled bordered button
+// TODO: Regular disabled button
+
 Button::Button(ButtonStyle style)
     : style(style)
 {
@@ -36,17 +39,25 @@ Button::Button(ButtonStyle style)
 
 LabelStyle Button::getLabelStyle()
 {
-    if (this->style == ButtonStyle::BORDERLESS)
-        return LabelStyle::BUTTON_BORDERLESS;
-    else if (this->style == ButtonStyle::DIALOG)
-        return LabelStyle::BUTTON_DIALOG;
-    else if (this->style == ButtonStyle::CRASH)
-        return LabelStyle::CRASH;
-
-    if (this->state == ButtonState::DISABLED)
-        return LabelStyle::BUTTON_PLAIN_DISABLED;
-    else
-        return LabelStyle::BUTTON_PLAIN;
+    switch (this->style)
+    {
+        case ButtonStyle::BORDERLESS:
+            return LabelStyle::BUTTON_BORDERLESS;
+        case ButtonStyle::DIALOG:
+            return LabelStyle::BUTTON_DIALOG;
+        case ButtonStyle::CRASH:
+            return LabelStyle::CRASH;
+        case ButtonStyle::BORDERED:
+            return LabelStyle::BUTTON_BORDERED;
+        case ButtonStyle::REGULAR:
+            return LabelStyle::BUTTON_REGULAR;
+        case ButtonStyle::PRIMARY:
+        default:
+            if (this->state == ButtonState::DISABLED)
+                return LabelStyle::BUTTON_PRIMARY_DISABLED;
+            else
+                return LabelStyle::BUTTON_PRIMARY;
+    }
 }
 
 Button::~Button()
@@ -95,6 +106,7 @@ Button* Button::setLabel(std::string label)
         delete this->label;
 
     this->label = new Label(this->getLabelStyle(), label, true);
+
     this->label->setHorizontalAlign(NVG_ALIGN_CENTER);
     this->label->setParent(this);
 
@@ -150,12 +162,35 @@ void Button::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height,
     // Background
     switch (this->style)
     {
-        case ButtonStyle::PLAIN:
+        case ButtonStyle::PRIMARY:
         {
-            nvgFillColor(vg, a(this->state == ButtonState::DISABLED ? ctx->theme->buttonPlainDisabledBackgroundColor : ctx->theme->buttonPlainEnabledBackgroundColor));
+            nvgFillColor(vg, a(this->state == ButtonState::DISABLED ? ctx->theme->buttonPrimaryDisabledBackgroundColor : ctx->theme->buttonPrimaryEnabledBackgroundColor));
             nvgBeginPath(vg);
             nvgRoundedRect(vg, x, y, width, height, cornerRadius);
             nvgFill(vg);
+            break;
+        }
+        case ButtonStyle::REGULAR:
+        {
+            nvgFillColor(vg, a(ctx->theme->buttonRegularBackgroundColor));
+            nvgBeginPath(vg);
+            nvgRoundedRect(vg, x, y, width, height, cornerRadius);
+            nvgFill(vg);
+
+            nvgStrokeColor(vg, a(ctx->theme->buttonRegularBorderColor));
+            nvgStrokeWidth(vg, style->Button.regularBorderThickness);
+            nvgBeginPath(vg);
+            nvgRoundedRect(vg, x, y, width, height, cornerRadius);
+            nvgStroke(vg);
+            break;
+        }
+        case ButtonStyle::BORDERED:
+        {
+            nvgStrokeColor(vg, a(ctx->theme->buttonBorderedBorderColor));
+            nvgStrokeWidth(vg, style->Button.borderedBorderThickness);
+            nvgBeginPath(vg);
+            nvgRoundedRect(vg, x, y, width, height, cornerRadius);
+            nvgStroke(vg);
             break;
         }
         default:
@@ -163,7 +198,7 @@ void Button::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height,
     }
 
     // Shadow
-    if (this->state == ButtonState::ENABLED && this->style == ButtonStyle::PLAIN)
+    if (this->state == ButtonState::ENABLED && (this->style == ButtonStyle::PRIMARY || this->style == ButtonStyle::REGULAR))
     {
         float shadowWidth   = style->Button.shadowWidth;
         float shadowFeather = style->Button.shadowFeather;

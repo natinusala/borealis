@@ -23,6 +23,7 @@
 #include <borealis.hpp>
 #include <string>
 
+#include "custom_layout_tab.hpp"
 #include "sample_installer_page.hpp"
 #include "sample_loading_page.hpp"
 
@@ -175,6 +176,8 @@ int main(int argc, char* argv[])
     rootFrame->addSeparator();
     rootFrame->addTab("main/tabs/third"_i18n, new brls::Rectangle(nvgRGB(255, 0, 0)));
     rootFrame->addTab("main/tabs/fourth"_i18n, new brls::Rectangle(nvgRGB(0, 255, 0)));
+    rootFrame->addSeparator();
+    rootFrame->addTab("main/tabs/custom_navigation_tab"_i18n, new CustomLayoutTab());
 
     // Add the root view to the stack
     brls::Application::pushView(rootFrame);
