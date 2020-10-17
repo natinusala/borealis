@@ -30,7 +30,7 @@ namespace brls
 // Override layout() and reposition your views here, then call the super method
 class AbsoluteLayout : public View
 {
-  // TODO: rewrite some of the base views (AppletFrame, CrashFrame, PopupView...) using AbsoluteLayout
+    // TODO: rewrite some of the base views (AppletFrame, CrashFrame, PopupView...) using AbsoluteLayout
 
   private:
     std::vector<View*> children;
