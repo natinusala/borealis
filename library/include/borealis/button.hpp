@@ -28,11 +28,12 @@ namespace brls
 
 enum class ButtonStyle
 {
-    PLAIN = 0, // regular, plain button
+    PRIMARY = 0, // primary action button (different color than regular, to catch the eye)
     BORDERED, // text and a border
     BORDERLESS, // only text
     CRASH, // same as borderless but with a different text color
-    DIALOG // same as borderless but with a different text color
+    DIALOG, // same as borderless but with a different text color
+    REGULAR // a regular, plain button
 };
 
 enum class ButtonState
@@ -58,7 +59,7 @@ class Button : public View
     float cornerRadiusOverride = 0;
 
   public:
-    Button(ButtonStyle style = ButtonStyle::PLAIN);
+    Button(ButtonStyle style = ButtonStyle::PRIMARY);
     ~Button();
 
     void draw(NVGcontext* vg, int x, int y, unsigned width, unsigned height, Style* style, FrameContext* ctx) override;

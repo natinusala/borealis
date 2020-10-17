@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include <map>
+
 #include "borealis/view.hpp"
 
 namespace brls
@@ -46,6 +48,30 @@ class AbsoluteLayout : public View
     void onWindowSizeChanged() override;
     void willAppear(bool resetState = false) override;
     void willDisappear(bool resetState = false) override;
+};
+
+// Allows users to define an entirely custom "navigation map"
+// to define where the focus should go when pressing a navigation
+// key from a view.
+// Can be used anywhere a custom navigation map is wanted, not only
+// in AbsoluteLayout.
+class NavigationMap
+{
+  public:
+    /**
+     * Call this method from any view's getNextFocus() to use the
+     * navigation map. Returns nullptr if there is no such known route.
+     */
+    View* getNextFocus(FocusDirection direction, View* currentView);
+
+    /**
+     * Add a route to the map from the two given views
+     * using the given direction
+     */
+    void add(View* from, FocusDirection direction, View* to);
+
+  private:
+    std::map<std::pair<View*, FocusDirection>, View*> map;
 };
 
 } // namespace brls

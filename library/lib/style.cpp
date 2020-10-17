@@ -134,7 +134,10 @@ HorizonStyle::HorizonStyle()
         .shadowWidth   = 2.0f,
         .shadowFeather = 10.0f,
         .shadowOpacity = 63.75f,
-        .shadowOffset  = 10.0f
+        .shadowOffset  = 10.0f,
+
+        .borderedBorderThickness = 2,
+        .regularBorderThickness  = 2
     };
 
     this->TableRow = {

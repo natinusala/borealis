@@ -65,4 +65,19 @@ AbsoluteLayout::~AbsoluteLayout()
         delete view;
 }
 
+void NavigationMap::add(View* from, FocusDirection direction, View* to)
+{
+    this->map[std::make_pair(from, direction)] = to;
+}
+
+View* NavigationMap::getNextFocus(FocusDirection direction, View* currentView)
+{
+    std::pair<View*, FocusDirection> key = std::make_pair(currentView, direction);
+
+    if (this->map.count(key) == 0)
+        return nullptr;
+
+    return this->map[key];
+}
+
 } // namespace brls

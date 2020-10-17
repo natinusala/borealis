@@ -48,10 +48,12 @@ Label::Label(LabelStyle labelStyle, std::string text, bool multiline)
         case LabelStyle::CRASH:
             this->fontSize = style->Label.crashFontSize;
             break;
-        case LabelStyle::BUTTON_PLAIN_DISABLED:
-        case LabelStyle::BUTTON_PLAIN:
+        case LabelStyle::BUTTON_PRIMARY_DISABLED:
+        case LabelStyle::BUTTON_PRIMARY:
         case LabelStyle::BUTTON_BORDERLESS:
         case LabelStyle::BUTTON_DIALOG:
+        case LabelStyle::BUTTON_BORDERED:
+        case LabelStyle::BUTTON_REGULAR:
             this->fontSize = style->Label.buttonFontSize;
             break;
         case LabelStyle::LIST_ITEM:
@@ -194,14 +196,18 @@ NVGcolor Label::getColor(Theme* theme)
             return a(theme->descriptionColor);
         case LabelStyle::CRASH:
             return RGB(255, 255, 255);
-        case LabelStyle::BUTTON_PLAIN:
-            return a(theme->buttonPlainEnabledTextColor);
-        case LabelStyle::BUTTON_PLAIN_DISABLED:
-            return a(theme->buttonPlainDisabledTextColor);
+        case LabelStyle::BUTTON_PRIMARY:
+            return a(theme->buttonPrimaryEnabledTextColor);
+        case LabelStyle::BUTTON_PRIMARY_DISABLED:
+            return a(theme->buttonPrimaryDisabledTextColor);
         case LabelStyle::NOTIFICATION:
             return a(theme->notificationTextColor);
         case LabelStyle::BUTTON_DIALOG:
             return a(theme->dialogButtonColor);
+        case LabelStyle::BUTTON_BORDERED:
+            return a(theme->buttonBorderedTextColor);
+        case LabelStyle::BUTTON_REGULAR:
+            return a(theme->buttonRegularTextColor);
         default:
             return a(theme->textColor);
     }
