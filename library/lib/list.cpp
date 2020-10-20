@@ -444,6 +444,11 @@ std::string ListItem::getLabel()
     return this->label;
 }
 
+void ListItem::setLabel(std::string label)
+{
+    this->label = label;
+}
+
 ListItem::~ListItem()
 {
     if (this->descriptionView)
