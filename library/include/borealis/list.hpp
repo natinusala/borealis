@@ -85,6 +85,7 @@ class ListItem : public View
 
     void setChecked(bool checked);
 
+    void setLabel(std::string label);
     std::string getLabel();
 
     /**
