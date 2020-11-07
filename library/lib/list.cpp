@@ -491,10 +491,11 @@ bool ToggleListItem::getToggleState()
     return this->toggleState;
 }
 
-InputListItem::InputListItem(std::string label, std::string initialValue, std::string helpText, std::string description, int maxInputLength)
+InputListItem::InputListItem(std::string label, std::string initialValue, std::string helpText, std::string description, int maxInputLength, int kbdDisableBitmask)
     : ListItem(label, description)
     , helpText(helpText)
     , maxInputLength(maxInputLength)
+    , kbdDisableBitmask(kbdDisableBitmask)
 {
     this->setValue(initialValue, false);
 }
@@ -504,14 +505,14 @@ bool InputListItem::onClick()
     Swkbd::openForText([&](std::string text) {
         this->setValue(text, false);
     },
-        this->helpText, "", this->maxInputLength, this->getValue());
+        this->helpText, "", this->maxInputLength, this->getValue(), this->kbdDisableBitmask);
 
     ListItem::onClick();
     return true;
 }
 
-IntegerInputListItem::IntegerInputListItem(std::string label, int initialValue, std::string helpText, std::string description, int maxInputLength)
-    : InputListItem(label, std::to_string(initialValue), helpText, description, maxInputLength)
+IntegerInputListItem::IntegerInputListItem(std::string label, int initialValue, std::string helpText, std::string description, int maxInputLength, int kbdDisableBitmask)
+    : InputListItem(label, std::to_string(initialValue), helpText, description, maxInputLength, kbdDisableBitmask)
 {
 }
 
@@ -520,7 +521,7 @@ bool IntegerInputListItem::onClick()
     Swkbd::openForNumber([&](int number) {
         this->setValue(std::to_string(number), false);
     },
-        this->helpText, "", this->maxInputLength, this->getValue());
+        this->helpText, "", this->maxInputLength, this->getValue(), "", "", this->kbdDisableBitmask);
 
     ListItem::onClick();
     return true;

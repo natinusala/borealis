@@ -24,6 +24,7 @@
 #include <borealis/label.hpp>
 #include <borealis/rectangle.hpp>
 #include <borealis/scroll_view.hpp>
+#include <borealis/swkbd.hpp>
 #include <string>
 
 namespace brls
@@ -162,9 +163,10 @@ class InputListItem : public ListItem
   protected:
     std::string helpText;
     int maxInputLength;
+    int kbdDisableBitmask;
 
   public:
-    InputListItem(std::string label, std::string initialValue, std::string helpText, std::string description = "", int maxInputLength = 32);
+    InputListItem(std::string label, std::string initialValue, std::string helpText, std::string description = "", int maxInputLength = 32, int kbdDisableBitmask = KeyboardKeyDisableBitmask::KEYBOARD_DISABLE_NONE);
 
     virtual bool onClick() override;
 };
@@ -174,7 +176,7 @@ class InputListItem : public ListItem
 class IntegerInputListItem : public InputListItem
 {
   public:
-    IntegerInputListItem(std::string label, int initialValue, std::string helpText, std::string description = "", int maxInputLength = 32);
+    IntegerInputListItem(std::string label, int initialValue, std::string helpText, std::string description = "", int maxInputLength = 32, int kbdDisableBitmask = KeyboardKeyDisableBitmask::KEYBOARD_DISABLE_NONE);
 
     virtual bool onClick() override;
 };
