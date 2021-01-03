@@ -60,6 +60,18 @@
         "item1": "Item 1",
         "item2": "Item 2",
         "item3": "Item 3"
+    },
+
+    "keyboard": {
+        "string": {
+            "title": "Open Keyboard",
+            "default": "Default text",
+            "help": "Help message"
+        },
+        "number": {
+            "title": "Open Num Keyboard",
+            "help": "Help message"
+        }
     }
 }
 
