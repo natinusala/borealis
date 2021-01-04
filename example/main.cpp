@@ -129,6 +129,10 @@ int main(int argc, char* argv[])
 
     brls::SelectListItem* layerSelectItem = new brls::SelectListItem("main/layers/title"_i18n, { "main/layers/layer1"_i18n, "main/layers/layer2"_i18n });
 
+    brls::InputListItem* keyboardItem = new brls::InputListItem("main/keyboard/string/title"_i18n, "main/keyboard/string/default"_i18n, "main/keyboard/string/help"_i18n, "", 16);
+
+    brls::IntegerInputListItem* keyboardNumberItem = new brls::IntegerInputListItem("main/keyboard/number/title"_i18n, 1337, "main/keyboard/number/help"_i18n, "", 10);
+
     testList->addView(dialogItem);
     testList->addView(notificationItem);
     testList->addView(themeItem);
@@ -137,6 +141,8 @@ int main(int argc, char* argv[])
     testList->addView(crashItem);
     testList->addView(installerItem);
     testList->addView(popupItem);
+    testList->addView(keyboardItem);
+    testList->addView(keyboardNumberItem);
 
     brls::Label* testLabel = new brls::Label(brls::LabelStyle::REGULAR, "main/more"_i18n, true);
     testList->addView(testLabel);

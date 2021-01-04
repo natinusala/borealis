@@ -30,6 +30,7 @@ namespace brls
 {
 
 #ifdef __SWITCH__
+
 static SwkbdConfig createSwkbdBaseConfig(std::string headerText, std::string subText, int maxStringLength, std::string initialText)
 {
     SwkbdConfig config;
@@ -46,6 +47,48 @@ static SwkbdConfig createSwkbdBaseConfig(std::string headerText, std::string sub
 
     return config;
 }
+
+int getSwkbdKeyDisableBitmask(int borealis_key)
+{
+    // translate brls to Switch libnx values
+    int ret = 0;
+    if (borealis_key == brls::KeyboardKeyDisableBitmask::KEYBOARD_DISABLE_NONE)
+        return 0;
+
+    if (borealis_key & brls::KeyboardKeyDisableBitmask::KEYBOARD_DISABLE_SPACE)
+        // Disable space-bar
+        ret |= SwkbdKeyDisableBitmask_Space;
+
+    if (borealis_key & brls::KeyboardKeyDisableBitmask::KEYBOARD_DISABLE_AT)
+        // Disable '@'.
+        ret |= SwkbdKeyDisableBitmask_At;
+
+    if (borealis_key & brls::KeyboardKeyDisableBitmask::KEYBOARD_DISABLE_PERCENT)
+        // Disable '%'.
+        ret |= SwkbdKeyDisableBitmask_Percent;
+
+    if (borealis_key & brls::KeyboardKeyDisableBitmask::KEYBOARD_DISABLE_FORWSLASH)
+        // Disable '/'.
+        ret |= SwkbdKeyDisableBitmask_ForwardSlash;
+
+    if (borealis_key & brls::KeyboardKeyDisableBitmask::KEYBOARD_DISABLE_BACKSLASH)
+        // Disable '\'.
+        ret |= SwkbdKeyDisableBitmask_Backslash;
+
+    if (borealis_key & brls::KeyboardKeyDisableBitmask::KEYBOARD_DISABLE_NUMBERS)
+        // Disable numbers.
+        ret |= SwkbdKeyDisableBitmask_Numbers;
+
+    if (borealis_key & brls::KeyboardKeyDisableBitmask::KEYBOARD_DISABLE_DOWNLOADCODE)
+        // Used for swkbdConfigMakePresetDownloadCode.
+        ret |= SwkbdKeyDisableBitmask_DownloadCode;
+
+    if (borealis_key & brls::KeyboardKeyDisableBitmask::KEYBOARD_DISABLE_USERNAME)
+        // Used for swkbdConfigMakePresetUserName. Disables '@', '%', and '\'.
+        ret |= SwkbdKeyDisableBitmask_UserName;
+
+    return ret;
+}
 #else
 static std::string terminalInput(std::string text)
 {
@@ -56,13 +99,13 @@ static std::string terminalInput(std::string text)
 }
 #endif
 
-bool Swkbd::openForText(std::function<void(std::string)> f, std::string headerText, std::string subText, int maxStringLength, std::string initialText)
+bool Swkbd::openForText(std::function<void(std::string)> f, std::string headerText, std::string subText, int maxStringLength, std::string initialText, int kbdDisableBitmask)
 {
 #ifdef __SWITCH__
     SwkbdConfig config = createSwkbdBaseConfig(headerText, subText, maxStringLength, initialText);
 
     swkbdConfigSetType(&config, SwkbdType_Normal);
-    swkbdConfigSetKeySetDisableBitmask(&config, SwkbdKeyDisableBitmask_At | SwkbdKeyDisableBitmask_Percent | SwkbdKeyDisableBitmask_ForwardSlash | SwkbdKeyDisableBitmask_Backslash);
+    swkbdConfigSetKeySetDisableBitmask(&config, getSwkbdKeyDisableBitmask(kbdDisableBitmask));
 
     char buffer[0x100];
 
@@ -84,7 +127,7 @@ bool Swkbd::openForText(std::function<void(std::string)> f, std::string headerTe
 #endif
 }
 
-bool Swkbd::openForNumber(std::function<void(int)> f, std::string headerText, std::string subText, int maxStringLength, std::string initialText, std::string leftButton, std::string rightButton)
+bool Swkbd::openForNumber(std::function<void(int)> f, std::string headerText, std::string subText, int maxStringLength, std::string initialText, std::string leftButton, std::string rightButton, int kbdDisableBitmask)
 {
 #ifdef __SWITCH__
     SwkbdConfig config = createSwkbdBaseConfig(headerText, subText, maxStringLength, initialText);
@@ -92,7 +135,7 @@ bool Swkbd::openForNumber(std::function<void(int)> f, std::string headerText, st
     swkbdConfigSetType(&config, SwkbdType_NumPad);
     swkbdConfigSetLeftOptionalSymbolKey(&config, leftButton.c_str());
     swkbdConfigSetRightOptionalSymbolKey(&config, rightButton.c_str());
-    swkbdConfigSetKeySetDisableBitmask(&config, SwkbdKeyDisableBitmask_At | SwkbdKeyDisableBitmask_Percent | SwkbdKeyDisableBitmask_ForwardSlash | SwkbdKeyDisableBitmask_Backslash);
+    swkbdConfigSetKeySetDisableBitmask(&config, getSwkbdKeyDisableBitmask(kbdDisableBitmask));
 
     char buffer[0x100];
 

@@ -60,6 +60,18 @@
         "item1": "Item 1",
         "item2": "Item 2",
         "item3": "Item 3"
+    },
+
+    "keyboard": {
+        "string": {
+            "title": "Ouvrir le clavier",
+            "default": "Texte par défaut",
+            "help": "Message d'aide"
+        },
+        "number": {
+            "title": "Ouvrir le clavier numérique",
+            "help": "Message d'aide"
+        }
     }
 }
 
