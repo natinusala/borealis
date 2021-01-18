@@ -20,7 +20,7 @@ function clang_format_run() {
         --color="$COLOR" \
         --exclude ./library/include/borealis/extern \
         --exclude ./library/lib/extern \
-        ./library ./example
+        ./library ./demo
 }
 
 if [[ -z "$FIX" ]]; then

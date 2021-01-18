@@ -1,0 +1,48 @@
+<brls:TabFrame
+    title="@i18n/demo/title"
+    icon="@res/icon/borealis.jpg">
+
+    <!-- Dynamic tab - required to get references to the views in the code -->
+    <brls:Tab label="@i18n/demo/tabs/components" >
+        <ComponentsTab />
+    </brls:Tab>
+
+    <!-- Static tab linking to another XML -->
+    <brls:Tab label="@i18n/demo/tabs/layout" >
+        <brls:View xml="@res/xml/tabs/layout.xml" />
+    </brls:Tab>
+
+    <brls:Separator />
+
+    <brls:Tab label="@i18n/demo/tabs/settings">
+        <brls:View xml="@res/xml/tabs/settings_list.xml" />
+    </brls:Tab>
+
+    <brls:Tab label="@i18n/demo/tabs/recycling">
+        <RecyclingListTab />
+    </brls:Tab>
+
+    <brls:Separator />
+
+    <brls:Tab label="@i18n/demo/tabs/popups" />
+    <brls:Tab label="@i18n/demo/tabs/hos_layout" />
+
+    <brls:Separator />
+
+    <brls:Tab label="@i18n/demo/tabs/misc_layouts" />
+    <brls:Tab label="@i18n/demo/tabs/misc_components" />
+    <brls:Tab label="@i18n/demo/tabs/misc_tools" />
+
+    <brls:Separator />
+
+    <!-- Static tab with inline XML -->
+    <brls:Tab label="@i18n/demo/tabs/about" >
+
+        <brls:Rectangle
+            width="auto"
+            height="auto"
+            color="#FF0000" />
+
+    </brls:Tab>
+
+</brls:TabFrame>
