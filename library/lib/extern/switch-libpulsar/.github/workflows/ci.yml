@@ -1,0 +1,44 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  dist:
+    runs-on: ubuntu-latest
+    container: devkitpro/devkita64
+    steps:
+      - name: env
+        run: |
+          cat /proc/cpuinfo
+          free -m
+      - name: checkout - project
+        uses: actions/checkout@v2
+      - name: build
+        # DKP docker images are not up to date yet with libnx
+        # so we skip building examples for now
+        run: |
+          make dist-bin dist-src dist-docs -j4
+      - name: store
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist-artifacts
+          path: |
+            *.tar.xz
+  deploy-docs:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+    needs: [dist]
+    steps:
+      - name: Download dist-artifacts
+        uses: actions/download-artifact@v2
+        with: {name: dist-artifacts}
+      - name: Extract docs
+        run: |
+          tar xvf libpulsar-docs.tar.xz
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./html
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'

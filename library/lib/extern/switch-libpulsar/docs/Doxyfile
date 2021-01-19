@@ -1,0 +1,51 @@
+DOXYFILE_ENCODING  = UTF-8
+PROJECT_NAME = $(PLSR_NAME)
+PROJECT_NUMBER = $(DOCS_VERSION)
+OUTPUT_DIRECTORY = $(DOCS_DIR)
+
+JAVADOC_AUTOBRIEF = YES
+QT_AUTOBRIEF = YES
+MACRO_EXPANSION = YES
+STRIP_CODE_COMMENTS = NO
+REFERENCES_LINK_SOURCE = NO
+OPTIMIZE_OUTPUT_FOR_C = YES
+
+ENABLE_PREPROCESSING = YES
+MACRO_EXPANSION = YES
+EXPAND_ONLY_PREDEF = YES
+PREDEFINED = $(DOCS_DEFINES)
+
+WARN_AS_ERROR = $(DOCS_STRICT)
+
+INPUT = $(DOCS_INPUT) $(DOCS_EXAMPLE)
+EXAMPLE_PATH = $(DOCS_EXAMPLE)
+FILE_PATTERNS = *.h *.c *.md LICENSE
+EXCLUDE_PATTERNS = *_internal.h
+RECURSIVE = YES
+USE_MDFILE_AS_MAINPAGE = $(DOCS_MAIN)
+
+HAVE_DOT = NO
+GENERATE_LATEX = NO
+GENERATE_HTML = YES
+
+HTML_TIMESTAMP = YES
+ENUM_VALUES_PER_LINE = 1
+
+# Theme
+HTML_HEADER = $(THEME_DIR)/header.html
+HTML_EXTRA_STYLESHEET = $(THEME_DIR)/that_style.css
+HTML_EXTRA_FILES = $(THEME_DIR)/img/nav_edge_left.svg \
+	$(THEME_DIR)/img/nav_edge_right.svg \
+	$(THEME_DIR)/img/nav_edge_inter.svg \
+	$(THEME_DIR)/img/sync_off.png \
+	$(THEME_DIR)/img/sync_on.png \
+	$(THEME_DIR)/img/splitbar_handle.svg \
+	$(THEME_DIR)/img/doc.svg \
+	$(THEME_DIR)/img/mag_glass.svg \
+	$(THEME_DIR)/img/folderclosed.svg \
+	$(THEME_DIR)/img/folderopen.svg \
+	$(THEME_DIR)/js/striped_bg.js
+
+# Aliases
+ALIASES += wraps{1}="@copydoc \1 \n @see \1"
+ALIASES += unimplemented="Unimplemented" 

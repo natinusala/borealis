@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/p-sam/switch-libpulsar
+	branch = develop
+	commit = f35d6f1b637adc1750d47fd497140a96629730fa
+	parent = ea4a085f9c3a9a6d1154afa7b4f78d9b1d6b2d4c
+	method = merge
+	cmdver = 0.4.0
