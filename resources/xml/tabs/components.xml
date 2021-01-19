@@ -46,6 +46,7 @@
                         text="@i18n/demo/components/button_primary" />
 
                     <brls:Button
+                        id="button_highlight"
                         width="auto"
                         height="auto"
                         style="highlight"

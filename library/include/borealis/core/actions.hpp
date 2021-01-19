@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include <borealis/core/audio.hpp>
+
 #include <functional>
 #include <string>
 
@@ -57,6 +59,7 @@ struct Action
     std::string hintText;
     bool available;
     bool hidden;
+    enum Sound sound;
     ActionListener actionListener;
 
     bool operator==(const Key other)

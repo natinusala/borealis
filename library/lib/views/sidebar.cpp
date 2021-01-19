@@ -67,6 +67,8 @@ SidebarItem::SidebarItem()
     this->registerStringXMLAttribute("label", [this](std::string value) {
         this->setLabel(value);
     });
+
+    this->setFocusSound(SOUND_FOCUS_SIDEBAR);
 }
 
 void SidebarItem::setActive(bool active)

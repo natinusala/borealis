@@ -41,7 +41,7 @@ class PulsarAudioPlayer : public AudioPlayer
 
     PLSR_BFSAR qlaunchBfsar;
 
-    PLSR_PlayerSoundId sounds[_BRLS_SOUND_MAX];
+    PLSR_PlayerSoundId sounds[_SOUND_MAX];
 };
 
 } //namespace brls

@@ -572,17 +572,17 @@ void View::drawBackground(NVGcontext* vg, FrameContext* ctx, Style style)
     }
 }
 
-void View::registerAction(std::string hintText, Key key, ActionListener actionListener, bool hidden)
+void View::registerAction(std::string hintText, Key key, ActionListener actionListener, bool hidden, enum Sound sound)
 {
     if (auto it = std::find(this->actions.begin(), this->actions.end(), key); it != this->actions.end())
-        *it = { key, hintText, true, hidden, actionListener };
+        *it = { key, hintText, true, hidden, sound, actionListener };
     else
-        this->actions.push_back({ key, hintText, true, hidden, actionListener });
+        this->actions.push_back({ key, hintText, true, hidden, sound, actionListener });
 }
 
 void View::registerClickAction(ActionListener actionListener)
 {
-    this->registerAction("brls/hints/ok"_i18n, Key::A, actionListener, false);
+    this->registerAction("brls/hints/ok"_i18n, Key::A, actionListener, false, SOUND_CLICK);
 }
 
 void View::updateActionHint(Key key, std::string hintText)
@@ -613,6 +613,11 @@ void* View::getParentUserData()
 bool View::isFocused()
 {
     return this->focused;
+}
+
+enum Sound View::getFocusSound()
+{
+    return this->focusSound;
 }
 
 Box* View::getParent()

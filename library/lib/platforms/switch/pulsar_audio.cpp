@@ -28,16 +28,20 @@ namespace brls
 #define QLAUNCH_MOUNT_POINT "qlaunch"
 #define QLAUNCH_BFSAR_PATH "qlaunch:/sound/qlaunch.bfsar"
 
-const std::string SOUNDS_MAP[_BRLS_SOUND_MAX] = {
-    "SeBtnFocus", // BRLS_SOUND_FOCUS_CHANGE
-    "SeKeyErrorCursor", // BRLS_SOUND_FOCUS_ERROR
-    "SeBtnDecide", // BRLS_SOUND_CLICK
+const std::string SOUNDS_MAP[_SOUND_MAX] = {
+    "", // SOUND_NONE
+    "SeBtnFocus", // SOUND_FOCUS_CHANGE
+    "SeKeyErrorCursor", // SOUND_FOCUS_ERROR
+    "SeBtnDecide", // SOUND_CLICK
+    "SeNaviFocus", // SOUND_FOCUS_SIDEBAR
+    "SeKeyError", // SOUND_CLICK_ERROR
+    "SeUnlockKeyZR", // SOUND_HONK
 };
 
 PulsarAudioPlayer::PulsarAudioPlayer()
 {
     // Init the sounds array
-    for (size_t sound = 0; sound < _BRLS_SOUND_MAX; sound++)
+    for (size_t sound = 0; sound < _SOUND_MAX; sound++)
         this->sounds[sound] = PLSR_PLAYER_INVALID_SOUND;
 
     // Init pulsar player
@@ -78,6 +82,9 @@ bool PulsarAudioPlayer::load(enum Sound sound)
     if (!this->init)
         return false;
 
+    if (sound == SOUND_NONE)
+        return true;
+
     if (this->sounds[sound] != PLSR_PLAYER_INVALID_SOUND)
         return true;
 
@@ -85,6 +92,8 @@ bool PulsarAudioPlayer::load(enum Sound sound)
 
     if (soundName == "")
         return false; // unimplemented sound
+
+    Logger::debug("Loading sound {}: {}", sound, soundName);
 
     PLSR_RC rc = plsrPlayerLoadSoundByName(&this->qlaunchBfsar, soundName.c_str(), &this->sounds[sound]);
     if(PLSR_RC_FAILED(rc))
@@ -102,6 +111,9 @@ bool PulsarAudioPlayer::play(enum Sound sound)
     if (!this->init)
         return false;
 
+    if (sound == SOUND_NONE)
+        return true;
+
     // Load the sound if needed
     if (this->sounds[sound] == PLSR_PLAYER_INVALID_SOUND)
     {
@@ -109,10 +121,15 @@ bool PulsarAudioPlayer::play(enum Sound sound)
             return false;
     }
 
+    Logger::debug("Playing sound {}", sound);
+
     // Play the sound
     PLSR_RC rc = plsrPlayerPlay(this->sounds[sound]);
     if (PLSR_RC_FAILED(rc))
+    {
+        Logger::error("Unable to play sound {}: {#x}", sound, rc);
         return false;
+    }
 
     return true;
 }
@@ -123,7 +140,7 @@ PulsarAudioPlayer::~PulsarAudioPlayer()
         return;
 
     // Unload all sounds
-    for (size_t sound = 0; sound < _BRLS_SOUND_MAX; sound++)
+    for (size_t sound = 0; sound < _SOUND_MAX; sound++)
     {
         if (this->sounds[sound] != PLSR_PLAYER_INVALID_SOUND)
             plsrPlayerFree(this->sounds[sound]);

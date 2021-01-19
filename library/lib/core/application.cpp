@@ -157,9 +157,9 @@ bool Application::init(std::string title)
     // Load most commonly used sounds
     AudioPlayer* audioPlayer = Application::getAudioPlayer();
     for (enum Sound sound : {
-        BRLS_SOUND_FOCUS_CHANGE,
-        BRLS_SOUND_FOCUS_ERROR,
-        BRLS_SOUND_CLICK,
+        SOUND_FOCUS_CHANGE,
+        SOUND_FOCUS_ERROR,
+        SOUND_CLICK,
     })
         audioPlayer->load(sound);
 
@@ -549,11 +549,14 @@ void Application::navigate(FocusDirection direction)
     // No view to focus at the end of the traversal: wiggle and return
     if (!nextFocus)
     {
+        Application::getAudioPlayer()->play(SOUND_FOCUS_ERROR);
         Application::currentFocus->shakeHighlight(direction);
         return;
     }
 
     // Otherwise give it focus
+    enum Sound focusSound = nextFocus->getFocusSound();
+    Application::getAudioPlayer()->play(focusSound);
     Application::giveFocus(nextFocus);
 }
 
@@ -620,12 +623,21 @@ bool Application::handleAction(char button)
                 continue;
 
             if (action.available)
+            {
                 if (action.actionListener(hintParent))
+                {
+                    Application::getAudioPlayer()->play(action.sound);
                     consumedKeys.insert(action.key);
+                }
+            }
         }
 
         hintParent = hintParent->getParent();
     }
+
+    // Only play the error sound if action is a click
+    if (consumedKeys.empty() && button == GLFW_GAMEPAD_BUTTON_A)
+        Application::getAudioPlayer()->play(SOUND_CLICK_ERROR);
 
     return !consumedKeys.empty();
 }
@@ -712,6 +724,7 @@ void Application::exit()
 
     delete Application::taskManager;
     // delete Application::notificationManager; TODO: restore
+    delete Application::platform;
 }
 
 void Application::setDisplayFramerate(bool enabled)

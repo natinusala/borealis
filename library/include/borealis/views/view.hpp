@@ -184,6 +184,8 @@ class View
     bool hidden    = false;
     bool focusable = false;
 
+    enum Sound focusSound = SOUND_FOCUS_CHANGE;
+
     bool hideHighlightBackground = false;
 
     bool detached         = false;
@@ -929,6 +931,16 @@ class View
     bool isFocusable();
 
     /**
+     * Sets the sound to play when this view gets focused.
+     */
+    inline void setFocusSound(enum Sound sound)
+    {
+        this->focusSound = sound;
+    }
+
+    enum Sound getFocusSound();
+
+    /**
      * Sets the detached flag to true.
      * This action is irreversible.
      *
@@ -958,10 +970,11 @@ class View
      * the key when the view is focused.
      *
      * The listener should return true if the action was consumed, false otherwise.
+     * The sound will only be played if the listener returned true.
      *
      * A hidden action will not show up in the bottom-right hints.
      */
-    void registerAction(std::string hintText, Key key, ActionListener actionListener, bool hidden = false);
+    void registerAction(std::string hintText, Key key, ActionListener actionListener, bool hidden = false, enum Sound sound = SOUND_NONE);
 
     /**
      * Shortcut to register a generic "A OK" click action.

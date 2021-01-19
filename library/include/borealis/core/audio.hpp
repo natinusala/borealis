@@ -26,11 +26,16 @@ namespace brls
 
 enum Sound
 {
-    BRLS_SOUND_FOCUS_CHANGE = 0, // played when the focus changes
-    BRLS_SOUND_FOCUS_ERROR, // played when the user wants to go somewhere impossible (while the highlight wiggles)
-    BRLS_SOUND_CLICK, // played when the click action runs
+    SOUND_NONE = 0, // no sound
 
-    _BRLS_SOUND_MAX, // not an actual sound, just used to count of many sounds there are
+    SOUND_FOCUS_CHANGE, // played when the focus changes
+    SOUND_FOCUS_ERROR, // played when the user wants to go somewhere impossible (while the highlight wiggles)
+    SOUND_CLICK, // played when the click action runs
+    SOUND_FOCUS_SIDEBAR, // played when the focus changes to a sidebar item
+    SOUND_CLICK_ERROR, // played when the user clicks a disabled button / a view focused with no click action
+    SOUND_HONK, // honk
+
+    _SOUND_MAX, // not an actual sound, just used to count of many sounds there are
 };
 
 // Platform agnostic Audio player

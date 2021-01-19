@@ -53,4 +53,9 @@ AudioPlayer* Platform::createAudioPlayer()
     return new NullAudioPlayer();
 }
 
+Platform::~Platform()
+{
+    delete this->audioPlayer;
+}
+
 } // namespace brls

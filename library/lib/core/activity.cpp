@@ -114,10 +114,10 @@ bool Activity::isHidden()
     return this->contentView->isHidden();
 }
 
-void Activity::registerAction(std::string hintText, Key key, ActionListener actionListener, bool hidden)
+void Activity::registerAction(std::string hintText, Key key, ActionListener actionListener, bool hidden, enum Sound sound)
 {
     if (this->contentView)
-        this->contentView->registerAction(hintText, key, actionListener, hidden);
+        this->contentView->registerAction(hintText, key, actionListener, hidden, sound);
 }
 
 View* Activity::getDefaultFocus()

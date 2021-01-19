@@ -29,7 +29,7 @@ namespace brls
 class Platform
 {
   public:
-    virtual ~Platform() {};
+    virtual ~Platform();
 
     /**
      * Returns the human-readable name of the platform.
