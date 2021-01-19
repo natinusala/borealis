@@ -64,6 +64,14 @@ void loadTranslations();
  */
 std::string getCurrentLocale();
 
+#ifdef __SWITCH__
+/**
+ * Returns the current system locale id
+ * NOT the one that's currently used in the app!
+ */
+int swGetCurrentLocaleID();
+#endif
+
 inline namespace literals
 {
     /**

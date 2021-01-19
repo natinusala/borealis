@@ -229,23 +229,126 @@ bool Application::init(std::string title, Style* style, LibraryViewsThemeVariant
 #ifdef __SWITCH__
     {
         PlFontData font;
+        int locale = i18n::swGetCurrentLocaleID();
 
         // Standard font
         Result rc = plGetSharedFontByType(&font, PlSharedFontType_Standard);
         if (R_SUCCEEDED(rc))
         {
-            Logger::info("Using Switch shared font");
-            Application::fontStash.regular = Application::loadFontFromMemory("regular", font.address, font.size, false);
+            Logger::info("Adding Switch shared standard font");
+            Application::fontStash.standard = Application::loadFontFromMemory("regular", font.address, font.size, false);
         }
 
-        // Korean font
-        rc = plGetSharedFontByType(&font, PlSharedFontType_KO);
-        if (R_SUCCEEDED(rc))
+        // Load other fonts on demand
+        bool isFullFallback = false;
+        AppletType at = appletGetAppletType();
+        if (at == AppletType_Application || at == AppletType_SystemApplication) // title takeover
         {
-            Logger::info("Adding Switch shared Korean font");
-            Application::fontStash.korean = Application::loadFontFromMemory("korean", font.address, font.size, false);
-            nvgAddFallbackFontId(Application::vg, Application::fontStash.regular, Application::fontStash.korean);
+            isFullFallback = true;
+            Logger::warning("Non applet mode, font full fallback is enabled!");
         }
+        
+        if (locale == 6 || locale == 15 || isFullFallback)
+        {
+            // S.Chinese font
+            rc = plGetSharedFontByType(&font, PlSharedFontType_ChineseSimplified);
+            if (R_SUCCEEDED(rc))
+            {
+                Logger::info("Adding Switch shared S.Chinese font");
+                Application::fontStash.schinese = Application::loadFontFromMemory("schinese", font.address, font.size, false);
+            }
+            // Ext S.Chinese font
+            rc = plGetSharedFontByType(&font, PlSharedFontType_ExtChineseSimplified);
+            if (R_SUCCEEDED(rc))
+            {
+                Logger::info("Adding Switch shared S.Chinese extended font");
+                Application::fontStash.extSchinese = Application::loadFontFromMemory("extSchinese", font.address, font.size, false);
+            }
+        }
+        if (locale == 11 || locale == 16 || isFullFallback)
+        {
+            // T.Chinese font
+            rc = plGetSharedFontByType(&font, PlSharedFontType_ChineseTraditional);
+            if (R_SUCCEEDED(rc))
+            {
+                Logger::info("Adding Switch shared T.Chinese font");
+                Application::fontStash.tchinese = Application::loadFontFromMemory("tchinese", font.address, font.size, false);
+            }
+        }
+        if (locale == 7 || isFullFallback)
+        {
+            // Korean font
+            rc = plGetSharedFontByType(&font, PlSharedFontType_KO);
+            if (R_SUCCEEDED(rc))
+            {
+                Logger::info("Adding Switch shared Korean font");
+                Application::fontStash.korean = Application::loadFontFromMemory("korean", font.address, font.size, false);
+            }
+        }
+
+        // Sequentially fallback to other fonts and decide regular font, also on demand
+        switch (locale)
+            {
+                case 6 :
+                case 15 :
+                    if (isFullFallback)
+                    {
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.schinese, Application::fontStash.korean);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.schinese, Application::fontStash.standard);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.schinese, Application::fontStash.tchinese);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.schinese, Application::fontStash.extSchinese);
+                    }
+                    else
+                    {
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.schinese, Application::fontStash.standard);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.schinese, Application::fontStash.extSchinese);
+                    }
+                    Logger::info("Using Switch shared S.Chinese font as regular");
+                    Application::fontStash.regular = Application::fontStash.schinese;
+                    break;
+                case 11 :
+                case 16 :
+                    if (isFullFallback)
+                    {
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.tchinese, Application::fontStash.korean);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.tchinese, Application::fontStash.standard);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.tchinese, Application::fontStash.extSchinese);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.tchinese, Application::fontStash.schinese);
+                    }
+                    else
+                    {
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.tchinese, Application::fontStash.standard);
+                    }
+                    Logger::info("Using Switch shared T.Chinese font as regular");
+                    Application::fontStash.regular = Application::fontStash.tchinese;
+                    break;
+                case 7 :
+                    if (isFullFallback)
+                    {
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.korean, Application::fontStash.standard);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.korean, Application::fontStash.tchinese);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.korean, Application::fontStash.extSchinese);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.korean, Application::fontStash.schinese);
+                    }
+                    else
+                    {
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.korean, Application::fontStash.standard);
+                    }
+                    Logger::info("Using Switch shared Korean font as regular");
+                    Application::fontStash.regular = Application::fontStash.korean;
+                    break;
+                default:
+                    if (isFullFallback)
+                    {
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.standard, Application::fontStash.korean);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.standard, Application::fontStash.tchinese);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.standard, Application::fontStash.extSchinese);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.standard, Application::fontStash.schinese);
+                    }
+                    Logger::info("Using Switch shared standard font as regular");
+                    Application::fontStash.regular = Application::fontStash.standard;
+                    break;
+            }
 
         // Extented font
         rc = plGetSharedFontByType(&font, PlSharedFontType_NintendoExt);

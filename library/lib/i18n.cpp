@@ -108,6 +108,34 @@ std::string getCurrentLocale()
     return DEFAULT_LOCALE;
 }
 
+#ifdef __SWITCH__
+int swGetCurrentLocaleID()
+{
+    u64 languageCode = 0;
+    SetLanguage setlanguage = SetLanguage_ENUS;
+
+    Result res = setGetSystemLanguage(&languageCode);
+
+    if (R_SUCCEEDED(res))
+    {
+        if (R_SUCCEEDED(res))
+        {
+            res = setMakeLanguage(languageCode, &setlanguage);
+            return (int)setlanguage;
+        }
+        else
+        {
+            brls::Logger::error("Unable to convert system language ID (error 0x{0:x}), using the default one: {1}", res, DEFAULT_LOCALE);
+        }
+    }
+    else
+    {
+        brls::Logger::error("Unable to get system language (error 0x{0:x}), using the default one: {1}", res, DEFAULT_LOCALE);
+    }
+    return 1; // SetLanguage_ENUS
+}
+#endif
+
 void loadTranslations()
 {
     loadLocale(DEFAULT_LOCALE, &defaultLocale);
