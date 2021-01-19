@@ -154,6 +154,15 @@ bool Application::init(std::string title)
 
     Logger::info("Using platform {}", platform->getName());
 
+    // Load most commonly used sounds
+    AudioPlayer* audioPlayer = Application::getAudioPlayer();
+    for (enum Sound sound : {
+        BRLS_SOUND_FOCUS_CHANGE,
+        BRLS_SOUND_FOCUS_ERROR,
+        BRLS_SOUND_CLICK,
+    })
+        audioPlayer->load(sound);
+
     // Init rng
     std::srand(std::time(nullptr));
 
@@ -475,6 +484,16 @@ bool Application::mainLoop()
 #endif
 
     return true;
+}
+
+Platform* Application::getPlatform()
+{
+    return Application::platform;
+}
+
+AudioPlayer* Application::getAudioPlayer()
+{
+    return Application::platform->getAudioPlayer();
 }
 
 void Application::quit()

@@ -28,6 +28,7 @@ class GLFWPlatform : public Platform
   public:
     std::string getName() override;
 
+  protected:
     AudioPlayer* createAudioPlayer() override;
 };
 

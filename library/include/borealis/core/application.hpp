@@ -29,6 +29,7 @@
 #include <borealis/core/frame_context.hpp>
 #include <borealis/core/logger.hpp>
 #include <borealis/core/platform.hpp>
+#include <borealis/core/audio.hpp>
 #include <borealis/core/style.hpp>
 #include <borealis/core/task_manager.hpp>
 #include <borealis/core/theme.hpp>
@@ -67,6 +68,9 @@ class Application
     static bool init(std::string title);
 
     static bool mainLoop();
+
+    static Platform* getPlatform();
+    static AudioPlayer* getAudioPlayer();
 
     // static void setBackground(Background* background);
 
@@ -178,7 +182,7 @@ class Application
     static XMLViewCreator getXMLViewCreator(std::string name);
 
   private:
-    inline static Platform* platform;
+    inline static Platform* platform = nullptr;
 
     inline static GLFWwindow* window;
     inline static NVGcontext* vg;

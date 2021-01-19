@@ -20,6 +20,8 @@
 
 #include <borealis/core/audio.hpp>
 
+#include <pulsar.h>
+
 namespace brls
 {
 
@@ -33,6 +35,13 @@ class PulsarAudioPlayer : public AudioPlayer
 
     bool load(enum Sound sound) override;
     bool play(enum Sound sound) override;
+
+  private:
+    bool init = false;
+
+    PLSR_BFSAR qlaunchBfsar;
+
+    PLSR_PlayerSoundId sounds[_BRLS_SOUND_MAX];
 };
 
 } //namespace brls

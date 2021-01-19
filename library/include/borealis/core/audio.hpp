@@ -21,11 +21,16 @@
 namespace brls
 {
 
+// TODO: expose internal stuff to allow using pulsar directly
+// TODO: add sounds to actions
+
 enum Sound
 {
-    FOCUS_CHANGE = 0, // played when the focus changes
-    FOCUS_ERROR, // played when the user wants to go somewhere impossible (while the highlight wiggles)
-    CLICK, // played when the click action runs
+    BRLS_SOUND_FOCUS_CHANGE = 0, // played when the focus changes
+    BRLS_SOUND_FOCUS_ERROR, // played when the user wants to go somewhere impossible (while the highlight wiggles)
+    BRLS_SOUND_CLICK, // played when the click action runs
+
+    _BRLS_SOUND_MAX, // not an actual sound, just used to count of many sounds there are
 };
 
 // Platform agnostic Audio player

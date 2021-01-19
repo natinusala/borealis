@@ -37,15 +37,24 @@ class Platform
     virtual std::string getName() = 0;
 
     /**
-     * Returns an AudioPlayer instance for the platform.
-     * The instance is automatically freed by the Application when it exits.
+     * Creates the audio player if needed and returns it.
      */
-    virtual AudioPlayer* createAudioPlayer();
+    AudioPlayer* getAudioPlayer();
 
     /**
      * Selects and returns the best platform.
      */
     static Platform* createPlatform();
+
+  protected:
+    /**
+     * Returns an AudioPlayer instance for the platform.
+     * The instance is automatically freed by the Application when it exits.
+     */
+    virtual AudioPlayer* createAudioPlayer();
+
+  private:
+    AudioPlayer* audioPlayer = nullptr;
 };
 
 } // namespace brls

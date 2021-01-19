@@ -40,6 +40,14 @@ Platform* Platform::createPlatform()
     return nullptr;
 }
 
+AudioPlayer* Platform::getAudioPlayer()
+{
+    if (!this->audioPlayer)
+        this->audioPlayer = this->createAudioPlayer();
+
+    return this->audioPlayer;
+}
+
 AudioPlayer* Platform::createAudioPlayer()
 {
     return new NullAudioPlayer();

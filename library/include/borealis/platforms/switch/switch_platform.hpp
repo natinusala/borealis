@@ -25,7 +25,10 @@ namespace brls
 
 class SwitchPlatform : public GLFWPlatform // TODO: don't inherit from GLFWPlatform anymore
 {
+  public:
     std::string getName() override;
+
+  protected:
     AudioPlayer* createAudioPlayer() override;
 };
 

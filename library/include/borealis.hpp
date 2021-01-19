@@ -34,6 +34,8 @@
 #include <borealis/core/repeating_task.hpp>
 #include <borealis/core/style.hpp>
 #include <borealis/core/theme.hpp>
+#include <borealis/core/platform.hpp>
+#include <borealis/core/audio.hpp>
 
 //Views
 #include <borealis/views/applet_frame.hpp>
