@@ -3,6 +3,8 @@ current_dir	:=	$(BOREALIS_PATH)/$(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
 
 LIBS		:=	-lglfw3 -lEGL -lglapi -ldrm_nouveau -lm $(LIBS)
 
+include $(TOPDIR)/$(current_dir)/lib/extern/switch-libpulsar/deps.mk
+
 # TODO: remove /lib/platforms/glfw from Switch makefile as it's PC only
 SOURCES		:=	$(SOURCES) \
 				$(current_dir)/lib/core \
@@ -18,13 +20,7 @@ SOURCES		:=	$(SOURCES) \
 				$(current_dir)/lib/extern/yoga/src/yoga/event \
 				$(current_dir)/lib/extern/yoga/src/yoga \
 				$(current_dir)/lib/extern/tinyxml2/ \
-				$(current_dir)/lib/extern/switch-libpulsar/src/archive \
-				$(current_dir)/lib/extern/switch-libpulsar/src/bfgrp \
-				$(current_dir)/lib/extern/switch-libpulsar/src/bfsar \
-				$(current_dir)/lib/extern/switch-libpulsar/src/bfwar \
-				$(current_dir)/lib/extern/switch-libpulsar/src/bfwav \
-				$(current_dir)/lib/extern/switch-libpulsar/src/bfwsd \
-				$(current_dir)/lib/extern/switch-libpulsar/src/player
+				$(addprefix $(current_dir)/lib/extern/switch-libpulsar/, $(PLSR_SOURCES))
 
 INCLUDES	:=	$(INCLUDES) \
 				$(current_dir)/include \
@@ -32,6 +28,6 @@ INCLUDES	:=	$(INCLUDES) \
 				$(current_dir)/lib/extern/yoga/src \
 				$(current_dir)/include/borealis/extern \
 				$(current_dir)/include/borealis/extern/tinyxml2 \
-				$(current_dir)/lib/extern/switch-libpulsar/include
+				$(addprefix $(current_dir)/lib/extern/switch-libpulsar/, $(PLSR_INCLUDES))
 
 CXXFLAGS := $(CXXFLAGS) -DYG_ENABLE_EVENTS
