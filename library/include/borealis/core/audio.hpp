@@ -34,6 +34,7 @@ enum Sound
     SOUND_FOCUS_SIDEBAR, // played when the focus changes to a sidebar item
     SOUND_CLICK_ERROR, // played when the user clicks a disabled button / a view focused with no click action
     SOUND_HONK, // honk
+    SOUND_CLICK_SIDEBAR, // played when a sidebar item is clicked
 
     _SOUND_MAX, // not an actual sound, just used to count of many sounds there are
 };

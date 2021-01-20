@@ -36,6 +36,7 @@ const std::string SOUNDS_MAP[_SOUND_MAX] = {
     "SeNaviFocus", // SOUND_FOCUS_SIDEBAR
     "SeKeyError", // SOUND_CLICK_ERROR
     "SeUnlockKeyZR", // SOUND_HONK
+    "SeNaviDecide", // SOUND_CLICK_SIDEBAR
 };
 
 PulsarAudioPlayer::PulsarAudioPlayer()
