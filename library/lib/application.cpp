@@ -229,14 +229,14 @@ bool Application::init(std::string title, Style* style, LibraryViewsThemeVariant
 #ifdef __SWITCH__
     {
         PlFontData font;
-        int locale = i18n::swGetCurrentLocaleID();
+        SetLanguage localeID = (SetLanguage)i18n::nxGetCurrentLocaleID();
 
         // Standard font
         Result rc = plGetSharedFontByType(&font, PlSharedFontType_Standard);
         if (R_SUCCEEDED(rc))
         {
             Logger::info("Adding Switch shared standard font");
-            Application::fontStash.standard = Application::loadFontFromMemory("regular", font.address, font.size, false);
+            Application::fontStash.standard = Application::loadFontFromMemory("standard", font.address, font.size, false);
         }
 
         // Load other fonts on demand
@@ -245,10 +245,10 @@ bool Application::init(std::string title, Style* style, LibraryViewsThemeVariant
         if (at == AppletType_Application || at == AppletType_SystemApplication) // title takeover
         {
             isFullFallback = true;
-            Logger::warning("Non applet mode, font full fallback is enabled!");
+            Logger::info("Non applet mode, font full fallback is enabled!");
         }
         
-        if (locale == 6 || locale == 15 || isFullFallback)
+        if (localeID == SetLanguage_ZHCN || localeID == SetLanguage_ZHHANS || isFullFallback)
         {
             // S.Chinese font
             rc = plGetSharedFontByType(&font, PlSharedFontType_ChineseSimplified);
@@ -265,7 +265,7 @@ bool Application::init(std::string title, Style* style, LibraryViewsThemeVariant
                 Application::fontStash.extSchinese = Application::loadFontFromMemory("extSchinese", font.address, font.size, false);
             }
         }
-        if (locale == 11 || locale == 16 || isFullFallback)
+        if (localeID == SetLanguage_ZHTW || localeID == SetLanguage_ZHHANT || isFullFallback)
         {
             // T.Chinese font
             rc = plGetSharedFontByType(&font, PlSharedFontType_ChineseTraditional);
@@ -275,7 +275,7 @@ bool Application::init(std::string title, Style* style, LibraryViewsThemeVariant
                 Application::fontStash.tchinese = Application::loadFontFromMemory("tchinese", font.address, font.size, false);
             }
         }
-        if (locale == 7 || isFullFallback)
+        if (localeID == SetLanguage_KO || isFullFallback)
         {
             // Korean font
             rc = plGetSharedFontByType(&font, PlSharedFontType_KO);
@@ -287,33 +287,33 @@ bool Application::init(std::string title, Style* style, LibraryViewsThemeVariant
         }
 
         // Sequentially fallback to other fonts and decide regular font, also on demand
-        switch (locale)
+        switch (localeID)
             {
-                case 6 :
-                case 15 :
+                case SetLanguage_ZHCN :
+                case SetLanguage_ZHHANS :
                     if (isFullFallback)
                     {
-                        nvgAddFallbackFontId(Application::vg, Application::fontStash.schinese, Application::fontStash.korean);
-                        nvgAddFallbackFontId(Application::vg, Application::fontStash.schinese, Application::fontStash.standard);
-                        nvgAddFallbackFontId(Application::vg, Application::fontStash.schinese, Application::fontStash.tchinese);
                         nvgAddFallbackFontId(Application::vg, Application::fontStash.schinese, Application::fontStash.extSchinese);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.schinese, Application::fontStash.tchinese);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.schinese, Application::fontStash.standard);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.schinese, Application::fontStash.korean);
                     }
                     else
                     {
-                        nvgAddFallbackFontId(Application::vg, Application::fontStash.schinese, Application::fontStash.standard);
                         nvgAddFallbackFontId(Application::vg, Application::fontStash.schinese, Application::fontStash.extSchinese);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.schinese, Application::fontStash.standard);
                     }
                     Logger::info("Using Switch shared S.Chinese font as regular");
                     Application::fontStash.regular = Application::fontStash.schinese;
                     break;
-                case 11 :
-                case 16 :
+                case SetLanguage_ZHTW :
+                case SetLanguage_ZHHANT :
                     if (isFullFallback)
                     {
-                        nvgAddFallbackFontId(Application::vg, Application::fontStash.tchinese, Application::fontStash.korean);
-                        nvgAddFallbackFontId(Application::vg, Application::fontStash.tchinese, Application::fontStash.standard);
-                        nvgAddFallbackFontId(Application::vg, Application::fontStash.tchinese, Application::fontStash.extSchinese);
                         nvgAddFallbackFontId(Application::vg, Application::fontStash.tchinese, Application::fontStash.schinese);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.tchinese, Application::fontStash.extSchinese);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.tchinese, Application::fontStash.standard);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.tchinese, Application::fontStash.korean);
                     }
                     else
                     {
@@ -322,13 +322,13 @@ bool Application::init(std::string title, Style* style, LibraryViewsThemeVariant
                     Logger::info("Using Switch shared T.Chinese font as regular");
                     Application::fontStash.regular = Application::fontStash.tchinese;
                     break;
-                case 7 :
+                case SetLanguage_KO :
                     if (isFullFallback)
                     {
                         nvgAddFallbackFontId(Application::vg, Application::fontStash.korean, Application::fontStash.standard);
-                        nvgAddFallbackFontId(Application::vg, Application::fontStash.korean, Application::fontStash.tchinese);
-                        nvgAddFallbackFontId(Application::vg, Application::fontStash.korean, Application::fontStash.extSchinese);
                         nvgAddFallbackFontId(Application::vg, Application::fontStash.korean, Application::fontStash.schinese);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.korean, Application::fontStash.extSchinese);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.korean, Application::fontStash.tchinese);
                     }
                     else
                     {
@@ -340,10 +340,10 @@ bool Application::init(std::string title, Style* style, LibraryViewsThemeVariant
                 default:
                     if (isFullFallback)
                     {
-                        nvgAddFallbackFontId(Application::vg, Application::fontStash.standard, Application::fontStash.korean);
-                        nvgAddFallbackFontId(Application::vg, Application::fontStash.standard, Application::fontStash.tchinese);
-                        nvgAddFallbackFontId(Application::vg, Application::fontStash.standard, Application::fontStash.extSchinese);
                         nvgAddFallbackFontId(Application::vg, Application::fontStash.standard, Application::fontStash.schinese);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.standard, Application::fontStash.extSchinese);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.standard, Application::fontStash.tchinese);
+                        nvgAddFallbackFontId(Application::vg, Application::fontStash.standard, Application::fontStash.korean);
                     }
                     Logger::info("Using Switch shared standard font as regular");
                     Application::fontStash.regular = Application::fontStash.standard;

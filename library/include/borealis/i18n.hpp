@@ -64,13 +64,12 @@ void loadTranslations();
  */
 std::string getCurrentLocale();
 
-#ifdef __SWITCH__
 /**
  * Returns the current system locale id
+ * this id only make sense for libnx
  * NOT the one that's currently used in the app!
  */
-int swGetCurrentLocaleID();
-#endif
+int nxGetCurrentLocaleID();
 
 inline namespace literals
 {
