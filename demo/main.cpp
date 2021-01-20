@@ -17,6 +17,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+// Switch include only necessary for demo videos recording
+#ifdef __SWITCH__
+#include <switch.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -33,6 +38,11 @@ using namespace i18n::literals; // for _i18n
 
 int main(int argc, char* argv[])
 {
+    // Enable recording for Twitter memes
+#ifdef __SWITCH__
+    appletInitializeGamePlayRecording();
+#endif
+
     // Register custom views (including tabs, which are views)
     brls::Application::registerXMLView("CaptionedImage", CaptionedImage::create);
     brls::Application::registerXMLView("RecyclingListTab", RecyclingListTab::create);
