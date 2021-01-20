@@ -100,6 +100,7 @@ PLSR_RC plsrPlayerPlay(PLSR_PlayerSoundId id) {
 
 	PLSR_PlayerSound* sound = (PLSR_PlayerSound*)id;
 	for(unsigned int i = 0; i < sound->channelCount; i++) {
+		audrvVoiceStop(&g_instance->driver, sound->channels[i].voiceId);
 		audrvVoiceAddWaveBuf(&g_instance->driver, sound->channels[i].voiceId, &sound->channels[i].wavebuf);
 		audrvVoiceStart(&g_instance->driver, sound->channels[i].voiceId);
 	}

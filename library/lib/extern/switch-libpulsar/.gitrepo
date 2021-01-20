@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/p-sam/switch-libpulsar
 	branch = develop
-	commit = f35d6f1b637adc1750d47fd497140a96629730fa
-	parent = ea4a085f9c3a9a6d1154afa7b4f78d9b1d6b2d4c
+	commit = 956511c716a575ce4e0be547bee5d94ed75f0d0a
+	parent = 24a3afd6c49bf10290dfa8ef8246c4f2fc59337e
 	method = merge
 	cmdver = 0.4.0
