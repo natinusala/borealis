@@ -74,6 +74,7 @@ SidebarItem::SidebarItem()
     this->setFocusSound(SOUND_FOCUS_SIDEBAR);
 
     this->registerAction("brls/hints/ok"_i18n, Key::A, [this](View* view){
+        // TODO: find a way to not play the focus sound when calling that
         Application::onGamepadButtonPressed(GLFW_GAMEPAD_BUTTON_DPAD_RIGHT, false);
         return true;
     }, false, SOUND_CLICK_SIDEBAR);
