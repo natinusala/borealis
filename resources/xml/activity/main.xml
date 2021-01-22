@@ -12,12 +12,6 @@
         <brls:View xml="@res/xml/tabs/layout.xml" />
     </brls:Tab>
 
-    <brls:Separator />
-
-    <brls:Tab label="@i18n/demo/tabs/settings">
-        <brls:View xml="@res/xml/tabs/settings_list.xml" />
-    </brls:Tab>
-
     <brls:Tab label="@i18n/demo/tabs/recycling">
         <RecyclingListTab />
     </brls:Tab>
