@@ -26,9 +26,4 @@ std::string GLFWPlatform::getName()
     return "GLFW";
 }
 
-AudioPlayer* GLFWPlatform::createAudioPlayer()
-{
-    return nullptr; // unimplemented
-}
-
 } // namespace brls

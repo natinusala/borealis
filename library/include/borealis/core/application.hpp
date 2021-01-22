@@ -26,10 +26,10 @@
 
 #include <borealis/core/activity.hpp>
 #include <borealis/core/animations.hpp>
+#include <borealis/core/audio.hpp>
 #include <borealis/core/frame_context.hpp>
 #include <borealis/core/logger.hpp>
 #include <borealis/core/platform.hpp>
-#include <borealis/core/audio.hpp>
 #include <borealis/core/style.hpp>
 #include <borealis/core/task_manager.hpp>
 #include <borealis/core/theme.hpp>

@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include <borealis/core/audio.hpp>
-
 #include <pulsar.h>
+
+#include <borealis/core/audio.hpp>
 
 namespace brls
 {

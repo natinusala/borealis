@@ -19,7 +19,6 @@
 #pragma once
 
 #include <borealis/core/audio.hpp>
-
 #include <functional>
 #include <string>
 

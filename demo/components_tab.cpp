@@ -27,8 +27,9 @@ ComponentsTab::ComponentsTab()
     BRLS_REGISTER_CLICK_BY_ID("button_primary", this->onPrimaryButtonClicked);
 
     // Get a handle to the button and register the action directly
-    brls::Button* highlightButton = (brls::Button*) this->getView("button_highlight");
-    highlightButton->registerAction("Honk", brls::Key::A, [](brls::View* view){return true;}, false, brls::SOUND_HONK);
+    brls::Button* highlightButton = (brls::Button*)this->getView("button_highlight");
+    highlightButton->registerAction(
+        "Honk", brls::Key::A, [](brls::View* view) { return true; }, false, brls::SOUND_HONK);
 }
 
 bool ComponentsTab::onPrimaryButtonClicked(brls::View* view)

@@ -132,6 +132,10 @@ void View::frame(FrameContext* ctx)
         if (this->highlightAlpha > 0.0f && !this->hideHighlightBackground)
             this->drawHighlight(ctx->vg, ctx->theme, this->highlightAlpha, style, true);
 
+        // Draw click animation
+        if (this->clickAlpha > 0.0f)
+            this->drawClickAnimation(ctx->vg, ctx, x, y, width, height);
+
         // Collapse clipping
         if (this->collapseState < 1.0f)
         {
@@ -161,6 +165,58 @@ void View::frame(FrameContext* ctx)
         ctx->theme = oldTheme;
 
     nvgRestore(ctx->vg);
+}
+
+void View::resetClickAnimation()
+{
+    menu_animation_ctx_tag tag = (menu_animation_ctx_tag) & this->clickAlpha;
+    menu_animation_kill_by_tag(&tag);
+}
+
+void View::playClickAnimation(bool reverse)
+{
+    this->resetClickAnimation();
+
+    this->clickAlpha = reverse ? 1.0f : 0.0f;
+
+    Style style = Application::getStyle();
+
+    menu_animation_ctx_entry_t entry;
+
+    entry.cb = [this, reverse](void* userdata) {
+        if (reverse)
+            return;
+
+        this->playClickAnimation(true);
+    };
+
+    entry.duration     = style["brls/animations/highlight"];
+    entry.easing_enum  = reverse ? EASING_OUT_QUAD : EASING_IN_QUAD;
+    entry.subject      = &this->clickAlpha;
+    entry.tag          = (menu_animation_ctx_tag) & this->clickAlpha;
+    entry.target_value = reverse ? 0.0f : 1.0f;
+    entry.tick         = [](void* userdata) {};
+    entry.userdata     = nullptr;
+
+    menu_animation_push(&entry);
+}
+
+void View::drawClickAnimation(NVGcontext* vg, FrameContext* ctx, float x, float y, float width, float height)
+{
+    Theme theme    = ctx->theme;
+    NVGcolor color = theme["brls/click_pulse"];
+
+    color.a *= this->clickAlpha;
+
+    nvgFillColor(vg, a(color));
+    nvgBeginPath(vg);
+
+    if (this->cornerRadius > 0.0f)
+        nvgRoundedRect(vg, x, y, width, height, this->cornerRadius);
+    else
+        nvgRect(vg, x, y, width, height);
+
+    nvgFill(vg);
 }
 
 void View::drawLine(FrameContext* ctx, float x, float y, float width, float height)
@@ -1216,6 +1272,8 @@ View::~View()
 
     menu_animation_ctx_tag collapseTag = (menu_animation_ctx_tag) & this->collapseState;
     menu_animation_kill_by_tag(&collapseTag);
+
+    this->resetClickAnimation();
 
     // Parent userdata
     if (this->parentUserdata)

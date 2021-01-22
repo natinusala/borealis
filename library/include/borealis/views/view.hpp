@@ -164,12 +164,15 @@ class View
     void drawShadow(NVGcontext* vg, FrameContext* ctx, Style style, float x, float y, float width, float height);
     void drawBorder(NVGcontext* vg, FrameContext* ctx, Style style, float x, float y, float width, float height);
     void drawHighlight(NVGcontext* vg, Theme theme, float alpha, Style style, bool background);
+    void drawClickAnimation(NVGcontext* vg, FrameContext* ctx, float x, float y, float width, float height);
     void drawWireframe(FrameContext* ctx, float x, float y, float width, float height);
     void drawLine(FrameContext* ctx, float x, float y, float width, float height);
 
     float highlightAlpha        = 0.0f;
     float highlightPadding      = 0.0f;
     float highlightCornerRadius = 0.0f;
+
+    float clickAlpha = 0.0f; // animated between 0 and 1
 
     bool highlightShaking = false;
     retro_time_t highlightShakeStart;
@@ -983,6 +986,9 @@ class View
 
     void updateActionHint(Key key, std::string hintText);
     void setActionAvailable(Key key, bool available);
+
+    void resetClickAnimation();
+    void playClickAnimation(bool reverse = false);
 
     std::string getClassString() const
     {

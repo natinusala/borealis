@@ -19,8 +19,8 @@
 */
 
 #include <borealis/core/application.hpp>
-#include <borealis/views/sidebar.hpp>
 #include <borealis/core/i18n.hpp>
+#include <borealis/views/sidebar.hpp>
 
 using namespace brls::i18n::literals;
 
@@ -73,11 +73,13 @@ SidebarItem::SidebarItem()
 
     this->setFocusSound(SOUND_FOCUS_SIDEBAR);
 
-    this->registerAction("brls/hints/ok"_i18n, Key::A, [this](View* view){
-        // TODO: find a way to not play the focus sound when calling that
-        Application::onGamepadButtonPressed(GLFW_GAMEPAD_BUTTON_DPAD_RIGHT, false);
-        return true;
-    }, false, SOUND_CLICK_SIDEBAR);
+    this->registerAction(
+        "brls/hints/ok"_i18n, Key::A, [this](View* view) {
+            // TODO: find a way to not play the focus sound when calling that
+            Application::onGamepadButtonPressed(GLFW_GAMEPAD_BUTTON_DPAD_RIGHT, false);
+            return true;
+        },
+        false, SOUND_CLICK_SIDEBAR);
 }
 
 void SidebarItem::setActive(bool active)

@@ -48,7 +48,7 @@ PulsarAudioPlayer::PulsarAudioPlayer()
     // Init pulsar player
     // TODO: give a custom config with more than 24 voices if needed
     PLSR_RC rc = plsrPlayerInit();
-    if(PLSR_RC_FAILED(rc))
+    if (PLSR_RC_FAILED(rc))
     {
         Logger::error("Unable to init Pulsar player: {#x}", rc);
         return;
@@ -66,7 +66,7 @@ PulsarAudioPlayer::PulsarAudioPlayer()
 
     // Open qlaunch BFSAR
     rc = plsrBFSAROpen(QLAUNCH_BFSAR_PATH, &this->qlaunchBfsar);
-    if(PLSR_RC_FAILED(rc))
+    if (PLSR_RC_FAILED(rc))
     {
         Logger::error("Unable to open qlaunch BFSAR: {#x}", rc);
 
@@ -97,7 +97,7 @@ bool PulsarAudioPlayer::load(enum Sound sound)
     Logger::debug("Loading sound {}: {}", sound, soundName);
 
     PLSR_RC rc = plsrPlayerLoadSoundByName(&this->qlaunchBfsar, soundName.c_str(), &this->sounds[sound]);
-    if(PLSR_RC_FAILED(rc))
+    if (PLSR_RC_FAILED(rc))
     {
         Logger::warning("Unable to load sound {}: {#x}", soundName, rc);
         this->sounds[sound] = PLSR_PLAYER_INVALID_SOUND;
@@ -153,5 +153,3 @@ PulsarAudioPlayer::~PulsarAudioPlayer()
 }
 
 } // namespace brls
-
-

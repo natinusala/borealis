@@ -28,14 +28,14 @@
 #include <borealis/core/activity.hpp>
 #include <borealis/core/animations.hpp>
 #include <borealis/core/application.hpp>
+#include <borealis/core/audio.hpp>
 #include <borealis/core/event.hpp>
 #include <borealis/core/i18n.hpp>
 #include <borealis/core/logger.hpp>
+#include <borealis/core/platform.hpp>
 #include <borealis/core/repeating_task.hpp>
 #include <borealis/core/style.hpp>
 #include <borealis/core/theme.hpp>
-#include <borealis/core/platform.hpp>
-#include <borealis/core/audio.hpp>
 
 //Views
 #include <borealis/views/applet_frame.hpp>

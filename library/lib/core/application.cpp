@@ -157,10 +157,10 @@ bool Application::init(std::string title)
     // Load most commonly used sounds
     AudioPlayer* audioPlayer = Application::getAudioPlayer();
     for (enum Sound sound : {
-        SOUND_FOCUS_CHANGE,
-        SOUND_FOCUS_ERROR,
-        SOUND_CLICK,
-    })
+             SOUND_FOCUS_CHANGE,
+             SOUND_FOCUS_ERROR,
+             SOUND_CLICK,
+         })
         audioPlayer->load(sound);
 
     // Init rng
@@ -554,7 +554,7 @@ void Application::navigate(FocusDirection direction)
         return;
     }
 
-    // Otherwise give it focus
+    // Otherwise play sound give it focus
     enum Sound focusSound = nextFocus->getFocusSound();
     Application::getAudioPlayer()->play(focusSound);
     Application::giveFocus(nextFocus);
@@ -626,7 +626,11 @@ bool Application::handleAction(char button)
             {
                 if (action.actionListener(hintParent))
                 {
+                    if (button == GLFW_GAMEPAD_BUTTON_A)
+                        hintParent->playClickAnimation();
+
                     Application::getAudioPlayer()->play(action.sound);
+
                     consumedKeys.insert(action.key);
                 }
             }
@@ -636,7 +640,7 @@ bool Application::handleAction(char button)
     }
 
     // Only play the error sound if action is a click
-    if (consumedKeys.empty() && button == GLFW_GAMEPAD_BUTTON_A)
+    if (button == GLFW_GAMEPAD_BUTTON_A && consumedKeys.empty())
         Application::getAudioPlayer()->play(SOUND_CLICK_ERROR);
 
     return !consumedKeys.empty();
