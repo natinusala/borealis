@@ -35,22 +35,6 @@
 #include <switch.h>
 #endif
 
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-#include <glad/glad.h>
-
-#define GLM_FORCE_PURE
-#define GLM_ENABLE_EXPERIMENTAL
-#include <nanovg/nanovg.h>
-
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/rotate_vector.hpp>
-#include <glm/mat4x4.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
-#define NANOVG_GL3_IMPLEMENTATION
-#include <nanovg/nanovg_gl.h>
 #include <yoga/event/event.h>
 
 #ifndef YG_ENABLE_EVENTS
@@ -63,91 +47,22 @@
 
 // Constants used for scaling as well as
 // creating a window of the right size on PC
-constexpr uint32_t WINDOW_WIDTH  = 1280;
-constexpr uint32_t WINDOW_HEIGHT = 720;
+constexpr uint32_t ORIGINAL_WINDOW_WIDTH  = 1280;
+constexpr uint32_t ORIGINAL_WINDOW_HEIGHT = 720;
 
 #define DEFAULT_FPS 60
 #define BUTTON_REPEAT_DELAY 15
 #define BUTTON_REPEAT_CADENCY 5
-
-// glfw code from the glfw hybrid app by fincs
-// https://github.com/fincs/hybrid_app
 
 using namespace brls::i18n::literals;
 
 namespace brls
 {
 
-// TODO: Use this instead of a glViewport each frame
-static void windowFramebufferSizeCallback(GLFWwindow* window, int width, int height)
-{
-    if (!width || !height)
-        return;
-
-    glViewport(0, 0, width, height);
-    Application::windowScale = (float)width / (float)WINDOW_WIDTH;
-
-    float contentHeight = ((float)height / (Application::windowScale * (float)WINDOW_HEIGHT)) * (float)WINDOW_HEIGHT;
-
-    Application::contentWidth  = WINDOW_WIDTH;
-    Application::contentHeight = (unsigned)roundf(contentHeight);
-
-    Application::resizeNotificationManager();
-
-    Logger::info("Window size changed to {}x{}", width, height);
-    Logger::info("New scale factor is {}", Application::windowScale);
-}
-
-static void joystickCallback(int jid, int event)
-{
-    if (event == GLFW_CONNECTED)
-    {
-        Logger::info("Joystick {} connected", jid);
-        if (glfwJoystickIsGamepad(jid))
-            Logger::info("Joystick {} is gamepad: \"{}\"", jid, glfwGetGamepadName(jid));
-    }
-    else if (event == GLFW_DISCONNECTED)
-        Logger::info("Joystick {} disconnected", jid);
-}
-
-static void errorCallback(int errorCode, const char* description)
-{
-    Logger::error("[GLFW:{}] {}", errorCode, description);
-}
-
-static void windowKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    if (action == GLFW_PRESS)
-    {
-        // Check for toggle-fullscreen combo
-        if (key == GLFW_KEY_ENTER && mods == GLFW_MOD_ALT)
-        {
-            static int saved_x, saved_y, saved_width, saved_height;
-
-            if (!glfwGetWindowMonitor(window))
-            {
-                // Back up window position/size
-                glfwGetWindowPos(window, &saved_x, &saved_y);
-                glfwGetWindowSize(window, &saved_width, &saved_height);
-
-                // Switch to fullscreen mode
-                GLFWmonitor* monitor    = glfwGetPrimaryMonitor();
-                const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-                glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
-            }
-            else
-            {
-                // Switch back to windowed mode
-                glfwSetWindowMonitor(window, nullptr, saved_x, saved_y, saved_width, saved_height, GLFW_DONT_CARE);
-            }
-        }
-    }
-}
-
 bool Application::init(std::string title)
 {
     // Init platform
-    Application::platform = Platform::createPlatform();
+    Application::platform = Platform::createPlatform(title, ORIGINAL_WINDOW_WIDTH, ORIGINAL_WINDOW_HEIGHT);
 
     if (!Application::platform)
         throw std::logic_error("Did not find a valid platform");
@@ -172,9 +87,9 @@ bool Application::init(std::string title)
 
     // Init static variables
     Application::currentFocus = nullptr;
-    Application::oldGamepad   = {};
-    Application::gamepad      = {};
-    Application::title        = title;
+    /*Application::oldGamepad   = {};
+    Application::gamepad      = {};*/
+    Application::title = title;
 
     // Init yoga
     YGConfig* defaultConfig       = YGConfigGetDefault();
@@ -190,73 +105,8 @@ bool Application::init(std::string title)
             view->onLayout();
     });
 
-    // Init glfw
-    glfwSetErrorCallback(errorCallback);
-    glfwInitHint(GLFW_JOYSTICK_HAT_BUTTONS, GLFW_FALSE);
-    if (!glfwInit())
-    {
-        Logger::error("Failed to initialize glfw");
-        return false;
-    }
-
-    // Create window
-#ifdef __APPLE__
-    // Explicitly ask for a 3.2 context on OS X
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    // Force scaling off to keep desired framebuffer size
-    glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
-#else
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#endif
-
-    Application::window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, title.c_str(), nullptr, nullptr);
-    if (!window)
-    {
-        Logger::error("glfw: failed to create window");
-        glfwTerminate();
-        return false;
-    }
-
-    // Configure window
-    glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE);
-    glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, windowFramebufferSizeCallback);
-    glfwSetKeyCallback(window, windowKeyCallback);
-    glfwSetJoystickCallback(joystickCallback);
-
-    // Load OpenGL routines using glad
-    gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-    glfwSwapInterval(1);
-
-    Logger::info("GL Vendor: {}", glGetString(GL_VENDOR));
-    Logger::info("GL Renderer: {}", glGetString(GL_RENDERER));
-    Logger::info("GL Version: {}", glGetString(GL_VERSION));
-
-    if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
-    {
-        GLFWgamepadstate state;
-        Logger::info("Gamepad detected: {}", glfwGetGamepadName(GLFW_JOYSTICK_1));
-        glfwGetGamepadState(GLFW_JOYSTICK_1, &state);
-    }
-
-    // Initialize the scene
-    Application::vg = nvgCreateGL3(NVG_STENCIL_STROKES | NVG_ANTIALIAS);
-    if (!vg)
-    {
-        Logger::error("Unable to init nanovg");
-        glfwTerminate();
-        return false;
-    }
-
-    windowFramebufferSizeCallback(window, WINDOW_WIDTH, WINDOW_HEIGHT);
-    glfwSetTime(0.0);
-
     // Load fonts
+    // TODO: move that to Switch platform
 #ifdef __SWITCH__
     {
         PlFontData font;
@@ -275,7 +125,7 @@ bool Application::init(std::string title)
         {
             Logger::info("Adding Switch shared Korean font");
             Application::fontStash.korean = Application::loadFontFromMemory("korean", font.address, font.size, false);
-            nvgAddFallbackFontId(Application::vg, Application::fontStash.regular, Application::fontStash.korean);
+            nvgAddFallbackFontId(Application::getNVGContext(), Application::fontStash.regular, Application::fontStash.korean);
         }
 
         // Extented font
@@ -308,7 +158,7 @@ bool Application::init(std::string title)
     if (Application::fontStash.sharedSymbols)
     {
         Logger::info("Using shared symbols font");
-        nvgAddFallbackFontId(Application::vg, Application::fontStash.regular, Application::fontStash.sharedSymbols);
+        nvgAddFallbackFontId(Application::getNVGContext(), Application::fontStash.regular, Application::fontStash.sharedSymbols);
     }
     else
     {
@@ -319,7 +169,7 @@ bool Application::init(std::string title)
     if (Application::fontStash.material)
     {
         Logger::info("Using Material font");
-        nvgAddFallbackFontId(Application::vg, Application::fontStash.regular, Application::fontStash.material);
+        nvgAddFallbackFontId(Application::getNVGContext(), Application::fontStash.regular, Application::fontStash.material);
     }
     else
     {
@@ -343,13 +193,6 @@ bool Application::init(std::string title)
         Application::currentThemeVariant = ThemeVariant::LIGHT;
 #endif
 
-    // Init window size
-    GLint viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
-
-    Application::windowWidth  = viewport[2];
-    Application::windowHeight = viewport[3];
-
     // Init animations engine
     menu_animation_init();
 
@@ -371,47 +214,17 @@ bool Application::mainLoop()
         frameStart = cpu_features_get_time_usec();
 #endif
 
-    // glfw events
-    bool isActive;
-    do
-    {
-        isActive = !glfwGetWindowAttrib(Application::window, GLFW_ICONIFIED);
-        if (isActive)
-            glfwPollEvents();
-        else
-            glfwWaitEvents();
-
-        if (glfwWindowShouldClose(Application::window))
-        {
-            Application::exit();
-            return false;
-        }
-    } while (!isActive);
-
-    // libnx applet main loop
-#ifdef __SWITCH__
-    if (!appletMainLoop())
+    // Main loop callback
+    if (!Application::platform->mainLoopIteration() || Application::quitRequested)
     {
         Application::exit();
         return false;
     }
-#endif
 
-    // Gamepad
-    if (!glfwGetGamepadState(GLFW_JOYSTICK_1, &Application::gamepad))
-    {
-        // Keyboard -> DPAD Mapping
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT]    = glfwGetKey(window, GLFW_KEY_LEFT);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT]   = glfwGetKey(window, GLFW_KEY_RIGHT);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP]      = glfwGetKey(window, GLFW_KEY_UP);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN]    = glfwGetKey(window, GLFW_KEY_DOWN);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_START]        = glfwGetKey(window, GLFW_KEY_ESCAPE);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_BACK]         = glfwGetKey(window, GLFW_KEY_F1);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_A]            = glfwGetKey(window, GLFW_KEY_ENTER);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_B]            = glfwGetKey(window, GLFW_KEY_BACKSPACE);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER]  = glfwGetKey(window, GLFW_KEY_L);
-        Application::gamepad.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER] = glfwGetKey(window, GLFW_KEY_R);
-    }
+    // Input
+    InputManager* inputManager = Application::platform->getInputManager();
+    inputManager->updateInputs();
+    inputManager->getControllerState(&Application::controllerState);
 
     // Trigger gamepad events
     // TODO: Translate axis events to dpad events here
@@ -421,18 +234,18 @@ bool Application::mainLoop()
     static retro_time_t buttonPressTime = 0;
     static int repeatingButtonTimer     = 0;
 
-    for (int i = GLFW_GAMEPAD_BUTTON_A; i <= GLFW_GAMEPAD_BUTTON_LAST; i++)
+    for (int i = 0; i < _BUTTON_MAX; i++)
     {
-        if (Application::gamepad.buttons[i] == GLFW_PRESS)
+        if (Application::controllerState.buttons[i])
         {
             anyButtonPressed = true;
             repeating        = (repeatingButtonTimer > BUTTON_REPEAT_DELAY && repeatingButtonTimer % BUTTON_REPEAT_CADENCY == 0);
 
-            if (Application::oldGamepad.buttons[i] != GLFW_PRESS || repeating)
-                Application::onGamepadButtonPressed(i, repeating);
+            if (!Application::oldControllerState.buttons[i] || repeating)
+                Application::onGamepadButtonPressed((enum ControllerButton)i, repeating);
         }
 
-        if (Application::gamepad.buttons[i] != Application::oldGamepad.buttons[i])
+        if (Application::controllerState.buttons[i] != Application::oldControllerState.buttons[i])
             buttonPressTime = repeatingButtonTimer = 0;
     }
 
@@ -442,21 +255,7 @@ bool Application::mainLoop()
         repeatingButtonTimer++; // Increased once every ~1ms
     }
 
-    Application::oldGamepad = Application::gamepad;
-
-    // Handle window size changes
-    GLint viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
-
-    unsigned newWidth  = viewport[2];
-    unsigned newHeight = viewport[3];
-
-    if (Application::windowWidth != newWidth || Application::windowHeight != newHeight)
-    {
-        Application::windowWidth  = newWidth;
-        Application::windowHeight = newHeight;
-        Application::onWindowSizeChanged();
-    }
+    Application::oldControllerState = Application::controllerState;
 
     // Animations
     menu_animation_update();
@@ -466,7 +265,7 @@ bool Application::mainLoop()
 
     // Render
     Application::frame();
-    glfwSwapBuffers(window);
+    Application::platform->getVideoContext()->swapBuffers();
 
     // Sleep if necessary
 #ifdef __SWITCH__
@@ -498,7 +297,7 @@ AudioPlayer* Application::getAudioPlayer()
 
 void Application::quit()
 {
-    glfwSetWindowShouldClose(window, GLFW_TRUE);
+    Application::quitRequested = true;
 }
 
 void Application::navigate(FocusDirection direction)
@@ -560,7 +359,7 @@ void Application::navigate(FocusDirection direction)
     Application::giveFocus(nextFocus);
 }
 
-void Application::onGamepadButtonPressed(char button, bool repeating)
+void Application::onGamepadButtonPressed(enum ControllerButton button, bool repeating)
 {
     if (Application::blockInputsTokens != 0)
         return;
@@ -579,16 +378,16 @@ void Application::onGamepadButtonPressed(char button, bool repeating)
     // (allows overriding DPAD buttons using actions)
     switch (button)
     {
-        case GLFW_GAMEPAD_BUTTON_DPAD_DOWN:
+        case BUTTON_DOWN:
             Application::navigate(FocusDirection::DOWN);
             break;
-        case GLFW_GAMEPAD_BUTTON_DPAD_UP:
+        case BUTTON_UP:
             Application::navigate(FocusDirection::UP);
             break;
-        case GLFW_GAMEPAD_BUTTON_DPAD_LEFT:
+        case BUTTON_LEFT:
             Application::navigate(FocusDirection::LEFT);
             break;
-        case GLFW_GAMEPAD_BUTTON_DPAD_RIGHT:
+        case BUTTON_RIGHT:
             Application::navigate(FocusDirection::RIGHT);
             break;
         default:
@@ -607,7 +406,7 @@ bool Application::handleAction(char button)
         return false;
 
     View* hintParent = Application::currentFocus;
-    std::set<Key> consumedKeys;
+    std::set<enum ControllerButton> consumedButtons;
 
     if (!hintParent)
         hintParent = Application::activitiesStack[Application::activitiesStack.size() - 1]->getContentView();
@@ -616,22 +415,22 @@ bool Application::handleAction(char button)
     {
         for (auto& action : hintParent->getActions())
         {
-            if (action.key != static_cast<Key>(button))
+            if (action.button != static_cast<enum ControllerButton>(button))
                 continue;
 
-            if (consumedKeys.find(action.key) != consumedKeys.end())
+            if (consumedButtons.find(action.button) != consumedButtons.end())
                 continue;
 
             if (action.available)
             {
                 if (action.actionListener(hintParent))
                 {
-                    if (button == GLFW_GAMEPAD_BUTTON_A)
+                    if (button == BUTTON_A)
                         hintParent->playClickAnimation();
 
                     Application::getAudioPlayer()->play(action.sound);
 
-                    consumedKeys.insert(action.key);
+                    consumedButtons.insert(action.button);
                 }
             }
         }
@@ -640,10 +439,10 @@ bool Application::handleAction(char button)
     }
 
     // Only play the error sound if action is a click
-    if (button == GLFW_GAMEPAD_BUTTON_A && consumedKeys.empty())
+    if (button == BUTTON_A && consumedButtons.empty())
         Application::getAudioPlayer()->play(SOUND_CLICK_ERROR);
 
-    return !consumedKeys.empty();
+    return !consumedButtons.empty();
 }
 
 void Application::frame()
@@ -652,25 +451,19 @@ void Application::frame()
     FrameContext frameContext = FrameContext();
 
     frameContext.pixelRatio = (float)Application::windowWidth / (float)Application::windowHeight;
-    frameContext.vg         = Application::vg;
+    frameContext.vg         = Application::getNVGContext();
     frameContext.fontStash  = &Application::fontStash;
     frameContext.theme      = Application::getTheme();
 
-    // GL Clear
+    // Clear
     NVGcolor backgroundColor = frameContext.theme["brls/background"];
-    glClearColor(
-        backgroundColor.r,
-        backgroundColor.g,
-        backgroundColor.b,
-        1.0f);
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    Application::platform->getVideoContext()->clear(backgroundColor);
 
     if (Application::background)
         Application::background->preFrame();
 
-    nvgBeginFrame(Application::vg, Application::windowWidth, Application::windowHeight, frameContext.pixelRatio);
-    nvgScale(Application::vg, Application::windowScale, Application::windowScale);
+    nvgBeginFrame(Application::getNVGContext(), Application::windowWidth, Application::windowHeight, frameContext.pixelRatio);
+    nvgScale(Application::getNVGContext(), Application::windowScale, Application::windowScale);
 
     std::vector<View*> viewsToDraw;
 
@@ -705,8 +498,8 @@ void Application::frame()
     // Application::notificationManager->frame(&frameContext); TODO: restore
 
     // End frame
-    nvgResetTransform(Application::vg); // scale
-    nvgEndFrame(Application::vg);
+    nvgResetTransform(Application::getNVGContext()); // scale
+    nvgEndFrame(Application::getNVGContext());
 
     if (Application::background)
         Application::background->postFrame();
@@ -714,12 +507,9 @@ void Application::frame()
 
 void Application::exit()
 {
+    Logger::info("Exiting...");
+
     Application::clear();
-
-    if (Application::vg)
-        nvgDeleteGL3(Application::vg);
-
-    glfwTerminate();
 
     menu_animation_free();
 
@@ -885,9 +675,9 @@ void Application::pushActivity(Activity* activity, TransitionAnimation animation
     bool fadeOut = last && !last->isTranslucent() && !activity->isTranslucent(); // play the fade out animation?
     bool wait    = animation == TransitionAnimation::FADE; // wait for the old activity animation to be done before showing the new one?
 
-    activity->registerAction("brls/hints/exit"_i18n, Key::PLUS, [](View* view) { Application::quit(); return true; });
+    activity->registerAction("brls/hints/exit"_i18n, BUTTON_START, [](View* view) { Application::quit(); return true; });
     activity->registerAction(
-        "FPS", Key::MINUS, [](View* view) { Application::toggleFramerateDisplay(); return true; }, true);
+        "FPS", BUTTON_BACK, [](View* view) { Application::toggleFramerateDisplay(); return true; }, true);
 
     // Fade out animation
     if (fadeOut)
@@ -937,29 +727,6 @@ void Application::pushActivity(Activity* activity, TransitionAnimation animation
     Application::activitiesStack.push_back(activity);
 }
 
-void Application::onWindowSizeChanged()
-{
-    Logger::debug("Layout triggered");
-
-    for (Activity* activity : Application::activitiesStack)
-        activity->onWindowSizeChanged();
-
-    // if (Application::background)
-    // {
-    //     Application::background->setBoundaries(
-    //         0,
-    //         0,
-    //         Application::contentWidth,
-    //         Application::contentHeight);
-
-    //     Application::background->invalidate();
-    //     Application::background->onWindowSizeChanged();
-    // }
-
-    Application::resizeNotificationManager();
-    Application::resizeFramerateCounter();
-}
-
 void Application::clear()
 {
     for (Activity* activity : Application::activitiesStack)
@@ -986,17 +753,17 @@ ThemeVariant Application::getThemeVariant()
 
 int Application::loadFont(const char* fontName, const char* filePath)
 {
-    return nvgCreateFont(Application::vg, fontName, filePath);
+    return nvgCreateFont(Application::getNVGContext(), fontName, filePath);
 }
 
 int Application::loadFontFromMemory(const char* fontName, void* address, size_t size, bool freeData)
 {
-    return nvgCreateFontMem(Application::vg, fontName, (unsigned char*)address, size, freeData);
+    return nvgCreateFontMem(Application::getNVGContext(), fontName, (unsigned char*)address, size, freeData);
 }
 
 int Application::findFont(const char* fontName)
 {
-    return nvgFindFont(Application::vg, fontName);
+    return nvgFindFont(Application::getNVGContext(), fontName);
 }
 
 void Application::crash(std::string text)
@@ -1018,7 +785,7 @@ void Application::unblockInputs()
 
 NVGcontext* Application::getNVGContext()
 {
-    return Application::vg;
+    return Application::platform->getVideoContext()->getNVGContext();
 }
 
 TaskManager* Application::getTaskManager()
@@ -1034,6 +801,44 @@ void Application::setCommonFooter(std::string footer)
 std::string* Application::getCommonFooter()
 {
     return &Application::commonFooter;
+}
+
+void Application::onWindowResized(int width, int height)
+{
+    Application::windowWidth  = width;
+    Application::windowHeight = height;
+
+    // Rescale UI
+    Application::windowScale = (float)width / (float)ORIGINAL_WINDOW_WIDTH;
+
+    float contentHeight = ((float)height / (Application::windowScale * (float)ORIGINAL_WINDOW_HEIGHT)) * (float)ORIGINAL_WINDOW_HEIGHT;
+
+    Application::contentWidth  = ORIGINAL_WINDOW_WIDTH;
+    Application::contentHeight = (unsigned)roundf(contentHeight);
+
+    Logger::info("Window size changed to {}x{}", width, height);
+    Logger::info("New scale factor is {}", Application::windowScale);
+
+    // Trigger a layout
+    Logger::debug("Layout triggered");
+
+    for (Activity* activity : Application::activitiesStack)
+        activity->onWindowSizeChanged();
+
+    // if (Application::background)
+    // {
+    //     Application::background->setBoundaries(
+    //         0,
+    //         0,
+    //         Application::contentWidth,
+    //         Application::contentHeight);
+
+    //     Application::background->invalidate();
+    //     Application::background->onWindowSizeChanged();
+    // }
+
+    Application::resizeNotificationManager();
+    Application::resizeFramerateCounter();
 }
 
 /*FramerateCounter::FramerateCounter()
@@ -1115,15 +920,6 @@ FontStash* Application::getFontStash()
 //     background->invalidate();
 //     background->willAppear(true);
 // }
-
-void Application::cleanupNvgGlState()
-{
-    glDisable(GL_CULL_FACE);
-    glDisable(GL_BLEND);
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_SCISSOR_TEST);
-    glDisable(GL_STENCIL_TEST);
-}
 
 bool Application::XMLViewsRegisterContains(std::string name)
 {

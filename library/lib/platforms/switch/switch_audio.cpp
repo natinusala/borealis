@@ -17,9 +17,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "pulsar_audio.hpp"
-
 #include <borealis/core/logger.hpp>
+#include <borealis/platforms/switch/switch_audio.hpp>
 
 namespace brls
 {
@@ -39,7 +38,7 @@ const std::string SOUNDS_MAP[_SOUND_MAX] = {
     "SeNaviDecide", // SOUND_CLICK_SIDEBAR
 };
 
-PulsarAudioPlayer::PulsarAudioPlayer()
+SwitchAudioPlayer::SwitchAudioPlayer()
 {
     // Init the sounds array
     for (size_t sound = 0; sound < _SOUND_MAX; sound++)
@@ -78,7 +77,7 @@ PulsarAudioPlayer::PulsarAudioPlayer()
     this->init = true;
 }
 
-bool PulsarAudioPlayer::load(enum Sound sound)
+bool SwitchAudioPlayer::load(enum Sound sound)
 {
     if (!this->init)
         return false;
@@ -107,7 +106,7 @@ bool PulsarAudioPlayer::load(enum Sound sound)
     return true;
 }
 
-bool PulsarAudioPlayer::play(enum Sound sound)
+bool SwitchAudioPlayer::play(enum Sound sound)
 {
     if (!this->init)
         return false;
@@ -135,7 +134,7 @@ bool PulsarAudioPlayer::play(enum Sound sound)
     return true;
 }
 
-PulsarAudioPlayer::~PulsarAudioPlayer()
+SwitchAudioPlayer::~SwitchAudioPlayer()
 {
     if (!this->init)
         return;

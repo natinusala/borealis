@@ -14,6 +14,8 @@ borealis_files = files(
     'lib/core/platform.cpp',
 
     'lib/platforms/glfw/glfw_platform.cpp',
+    'lib/platforms/glfw/glfw_video.cpp',
+    'lib/platforms/glfw/glfw_input.cpp',
 
     'lib/platforms/switch/swkbd.cpp',  # TODO: remove it from build.meson, it's switch only
 

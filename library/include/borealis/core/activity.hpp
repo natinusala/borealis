@@ -114,7 +114,7 @@ class Activity
 
     bool isHidden();
 
-    void registerAction(std::string hintText, Key key, ActionListener actionListener, bool hidden = false, enum Sound sound = SOUND_NONE);
+    void registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden = false, enum Sound sound = SOUND_NONE);
 
     void onWindowSizeChanged();
 

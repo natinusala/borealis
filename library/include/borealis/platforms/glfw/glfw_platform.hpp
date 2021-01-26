@@ -19,6 +19,8 @@
 #pragma once
 
 #include <borealis/core/platform.hpp>
+#include <borealis/platforms/glfw/glfw_input.hpp>
+#include <borealis/platforms/glfw/glfw_video.hpp>
 
 namespace brls
 {
@@ -26,7 +28,21 @@ namespace brls
 class GLFWPlatform : public Platform
 {
   public:
+    GLFWPlatform(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight);
+    ~GLFWPlatform();
+
     std::string getName() override;
+
+    bool mainLoopIteration() override;
+
+    AudioPlayer* getAudioPlayer() override;
+    VideoContext* getVideoContext() override;
+    InputManager* getInputManager() override;
+
+  private:
+    NullAudioPlayer* audioPlayer   = nullptr;
+    GLFWVideoContext* videoContext = nullptr;
+    GLFWInputManager* inputManager = nullptr;
 };
 
 } // namespace brls

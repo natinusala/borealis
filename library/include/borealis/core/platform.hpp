@@ -19,6 +19,8 @@
 #pragma once
 
 #include <borealis/core/audio.hpp>
+#include <borealis/core/input.hpp>
+#include <borealis/core/video.hpp>
 #include <string>
 
 namespace brls
@@ -29,7 +31,10 @@ namespace brls
 class Platform
 {
   public:
-    virtual ~Platform();
+    /**
+     * Creates the Platform instance with the given window size.
+     */
+    virtual ~Platform() {};
 
     /**
      * Returns the human-readable name of the platform.
@@ -37,24 +42,34 @@ class Platform
     virtual std::string getName() = 0;
 
     /**
-     * Creates the audio player if needed and returns it.
+     * Called at every iteration of the main loop.
+     * Must return if the app should continue running
+     * (for example, return false if the X button was pressed on the window).
      */
-    AudioPlayer* getAudioPlayer();
+    virtual bool mainLoopIteration() = 0;
+
+    /**
+     * Returns the AudioPlayer for the platform.
+     * Cannot return nullptr.
+     */
+    virtual AudioPlayer* getAudioPlayer() = 0;
+
+    /**
+     * Returns the VideoContext for the platform.
+     * Cannot return nullptr.
+     */
+    virtual VideoContext* getVideoContext() = 0;
+
+    /**
+     * Returns the InputManager for the platform.
+     * Cannot return nullptr.
+     */
+    virtual InputManager* getInputManager() = 0;
 
     /**
      * Selects and returns the best platform.
      */
-    static Platform* createPlatform();
-
-  protected:
-    /**
-     * Returns an AudioPlayer instance for the platform.
-     * The instance is automatically freed by the Application when it exits.
-     */
-    virtual AudioPlayer* createAudioPlayer();
-
-  private:
-    AudioPlayer* audioPlayer = nullptr;
+    static Platform* createPlatform(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight);
 };
 
 } // namespace brls

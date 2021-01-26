@@ -23,6 +23,7 @@
 #include <borealis/core/animations.hpp>
 #include <borealis/core/application.hpp>
 #include <borealis/core/i18n.hpp>
+#include <borealis/core/input.hpp>
 #include <borealis/views/box.hpp>
 #include <borealis/views/view.hpp>
 
@@ -628,30 +629,30 @@ void View::drawBackground(NVGcontext* vg, FrameContext* ctx, Style style)
     }
 }
 
-void View::registerAction(std::string hintText, Key key, ActionListener actionListener, bool hidden, enum Sound sound)
+void View::registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden, enum Sound sound)
 {
-    if (auto it = std::find(this->actions.begin(), this->actions.end(), key); it != this->actions.end())
-        *it = { key, hintText, true, hidden, sound, actionListener };
+    if (auto it = std::find(this->actions.begin(), this->actions.end(), button); it != this->actions.end())
+        *it = { button, hintText, true, hidden, sound, actionListener };
     else
-        this->actions.push_back({ key, hintText, true, hidden, sound, actionListener });
+        this->actions.push_back({ button, hintText, true, hidden, sound, actionListener });
 }
 
 void View::registerClickAction(ActionListener actionListener)
 {
-    this->registerAction("brls/hints/ok"_i18n, Key::A, actionListener, false, SOUND_CLICK);
+    this->registerAction("brls/hints/ok"_i18n, BUTTON_A, actionListener, false, SOUND_CLICK);
 }
 
-void View::updateActionHint(Key key, std::string hintText)
+void View::updateActionHint(enum ControllerButton button, std::string hintText)
 {
-    if (auto it = std::find(this->actions.begin(), this->actions.end(), key); it != this->actions.end())
+    if (auto it = std::find(this->actions.begin(), this->actions.end(), button); it != this->actions.end())
         it->hintText = hintText;
 
     Application::getGlobalHintsUpdateEvent()->fire();
 }
 
-void View::setActionAvailable(Key key, bool available)
+void View::setActionAvailable(enum ControllerButton button, bool available)
 {
-    if (auto it = std::find(this->actions.begin(), this->actions.end(), key); it != this->actions.end())
+    if (auto it = std::find(this->actions.begin(), this->actions.end(), button); it != this->actions.end())
         it->available = available;
 }
 

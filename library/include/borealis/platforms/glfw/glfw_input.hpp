@@ -16,38 +16,26 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <switch.h>
+#pragma once
 
-#include <borealis/platforms/switch/switch_audio.hpp>
-#include <borealis/platforms/switch/switch_platform.hpp>
+#include <borealis/core/input.hpp>
+
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 
 namespace brls
 {
 
-SwitchPlatform::SwitchPlatform(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight)
-    : GLFWPlatform(windowTitle, windowWidth, windowHeight)
+class GLFWInputManager : public InputManager
 {
-    this->audioPlayer = new SwitchAudioPlayer();
-}
+  public:
+    GLFWInputManager(GLFWwindow* window);
 
-std::string SwitchPlatform::getName()
-{
-    return "Switch";
-}
+    void updateInputs() override;
+    void getControllerState(ControllerState* state) override;
 
-bool SwitchPlatform::mainLoopIteration()
-{
-    return GLFWPlatform::mainLoopIteration() && appletMainLoop();
-}
+  private:
+    GLFWwindow* window;
+};
 
-AudioPlayer* SwitchPlatform::getAudioPlayer()
-{
-    return this->audioPlayer;
-}
-
-SwitchPlatform::~SwitchPlatform()
-{
-    delete this->audioPlayer;
-}
-
-} // namespace brls
+};

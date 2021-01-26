@@ -19,8 +19,6 @@
 
 #pragma once
 
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
 #include <nanovg/nanovg.h>
 #include <tinyxml2.h>
 
@@ -72,6 +70,15 @@ class Application
     static Platform* getPlatform();
     static AudioPlayer* getAudioPlayer();
 
+    static NVGcontext* getNVGContext();
+    inline static float contentWidth, contentHeight;
+
+    /**
+     * Called by the video context when the content window is resized
+     * and when the context is ready (to setup the initial content scaling).
+     */
+    static void onWindowResized(int width, int height);
+
     // static void setBackground(Background* background);
 
     /**
@@ -115,7 +122,7 @@ class Application
 
     static void notify(std::string text);
 
-    static void onGamepadButtonPressed(char button, bool repeating);
+    static void onGamepadButtonPressed(enum ControllerButton button, bool repeating);
 
     /**
       * "Crashes" the app (displays a fullscreen CrashFrame)
@@ -135,7 +142,6 @@ class Application
       */
     static void unblockInputs();
 
-    static NVGcontext* getNVGContext();
     static TaskManager* getTaskManager();
     // static NotificationManager* getNotificationManager(); TODO: restore that
 
@@ -147,8 +153,6 @@ class Application
 
     static void setMaximumFPS(unsigned fps);
 
-    // public so that the glfw callback can access it
-    inline static float contentWidth, contentHeight;
     inline static float windowScale;
 
     static void resizeFramerateCounter();
@@ -160,12 +164,6 @@ class Application
     static View* getCurrentFocus();
 
     static std::string getTitle();
-
-    /**
-     * Cleans up GL state after nanovg
-     * So that we can draw regular stuff over it
-     */
-    static void cleanupNvgGlState();
 
     /**
      * Registers a view to be created from XML. You must give the name of the XML node as well
@@ -182,10 +180,9 @@ class Application
     static XMLViewCreator getXMLViewCreator(std::string name);
 
   private:
-    inline static Platform* platform = nullptr;
+    inline static bool quitRequested = false;
 
-    inline static GLFWwindow* window;
-    inline static NVGcontext* vg;
+    inline static Platform* platform = nullptr;
 
     inline static std::string title;
 
@@ -205,8 +202,8 @@ class Application
 
     inline static ThemeVariant currentThemeVariant;
 
-    inline static GLFWgamepadstate oldGamepad;
-    inline static GLFWgamepadstate gamepad;
+    inline static ControllerState oldControllerState = {};
+    inline static ControllerState controllerState    = {};
 
     inline static unsigned blockInputsTokens = 0; // any value > 0 means inputs are blocked
 

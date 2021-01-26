@@ -21,6 +21,7 @@
 
 #include <cxxabi.h>
 #include <libretro-common/features/features_cpu.h>
+#include <nanovg/nanovg.h>
 #include <stdio.h>
 #include <tinyxml2.h>
 #include <yoga/YGNode.h>
@@ -977,15 +978,15 @@ class View
      *
      * A hidden action will not show up in the bottom-right hints.
      */
-    void registerAction(std::string hintText, Key key, ActionListener actionListener, bool hidden = false, enum Sound sound = SOUND_NONE);
+    void registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden = false, enum Sound sound = SOUND_NONE);
 
     /**
      * Shortcut to register a generic "A OK" click action.
      */
     void registerClickAction(ActionListener actionListener);
 
-    void updateActionHint(Key key, std::string hintText);
-    void setActionAvailable(Key key, bool available);
+    void updateActionHint(enum ControllerButton button, std::string hintText);
+    void setActionAvailable(enum ControllerButton button, bool available);
 
     void resetClickAnimation();
     void playClickAnimation(bool reverse = false);

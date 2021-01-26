@@ -16,38 +16,34 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <switch.h>
+#pragma once
 
-#include <borealis/platforms/switch/switch_audio.hpp>
-#include <borealis/platforms/switch/switch_platform.hpp>
+#include <borealis/core/video.hpp>
+
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 
 namespace brls
 {
 
-SwitchPlatform::SwitchPlatform(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight)
-    : GLFWPlatform(windowTitle, windowWidth, windowHeight)
+// GLFW Video Context
+class GLFWVideoContext : public VideoContext
 {
-    this->audioPlayer = new SwitchAudioPlayer();
-}
+  public:
+    GLFWVideoContext(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight);
+    ~GLFWVideoContext();
 
-std::string SwitchPlatform::getName()
-{
-    return "Switch";
-}
+    NVGcontext* getNVGContext() override;
 
-bool SwitchPlatform::mainLoopIteration()
-{
-    return GLFWPlatform::mainLoopIteration() && appletMainLoop();
-}
+    void clear(NVGcolor color) override;
+    void swapBuffers() override;
+    void resetState() override;
 
-AudioPlayer* SwitchPlatform::getAudioPlayer()
-{
-    return this->audioPlayer;
-}
+    GLFWwindow* getGLFWWindow();
 
-SwitchPlatform::~SwitchPlatform()
-{
-    delete this->audioPlayer;
-}
+  private:
+    GLFWwindow* window     = nullptr;
+    NVGcontext* nvgContext = nullptr;
+};
 
 } // namespace brls

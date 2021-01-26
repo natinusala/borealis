@@ -27,11 +27,11 @@ namespace brls
 
 // AudioPlayer implementation that uses libpulsar to load and play
 // qlaunch sounds loaded at runtime
-class PulsarAudioPlayer : public AudioPlayer
+class SwitchAudioPlayer : public AudioPlayer
 {
   public:
-    PulsarAudioPlayer();
-    ~PulsarAudioPlayer();
+    SwitchAudioPlayer();
+    ~SwitchAudioPlayer();
 
     bool load(enum Sound sound) override;
     bool play(enum Sound sound) override;

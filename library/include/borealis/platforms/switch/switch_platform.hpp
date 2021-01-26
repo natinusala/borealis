@@ -19,6 +19,7 @@
 #pragma once
 
 #include <borealis/platforms/glfw/glfw_platform.hpp>
+#include <borealis/platforms/switch/switch_audio.hpp>
 
 namespace brls
 {
@@ -26,10 +27,17 @@ namespace brls
 class SwitchPlatform : public GLFWPlatform // TODO: don't inherit from GLFWPlatform anymore
 {
   public:
+    SwitchPlatform(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight);
+    ~SwitchPlatform();
+
     std::string getName() override;
 
-  protected:
-    AudioPlayer* createAudioPlayer() override;
+    bool mainLoopIteration() override;
+
+    AudioPlayer* getAudioPlayer() override;
+
+  private:
+    SwitchAudioPlayer* audioPlayer;
 };
 
 } // namespace brls

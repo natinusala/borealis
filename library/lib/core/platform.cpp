@@ -29,33 +29,15 @@
 namespace brls
 {
 
-Platform* Platform::createPlatform()
+Platform* Platform::createPlatform(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight)
 {
 #if defined(__SWITCH__)
-    return new SwitchPlatform();
+    return new SwitchPlatform(windowTitle, windowWidth, windowHeight);
 #elif defined(__GLFW__)
-    return new GLFWPlatform();
+    return new GLFWPlatform(windowTitle, windowWidth, windowHeight);
 #endif
 
     return nullptr;
-}
-
-AudioPlayer* Platform::getAudioPlayer()
-{
-    if (!this->audioPlayer)
-        this->audioPlayer = this->createAudioPlayer();
-
-    return this->audioPlayer;
-}
-
-AudioPlayer* Platform::createAudioPlayer()
-{
-    return new NullAudioPlayer();
-}
-
-Platform::~Platform()
-{
-    delete this->audioPlayer;
 }
 
 } // namespace brls
