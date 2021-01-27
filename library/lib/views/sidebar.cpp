@@ -76,7 +76,7 @@ SidebarItem::SidebarItem()
     this->registerAction(
         "brls/hints/ok"_i18n, BUTTON_A, [this](View* view) {
             // TODO: find a way to not play the focus sound when calling that
-            Application::onGamepadButtonPressed(BUTTON_RIGHT, false);
+            Application::onControllerButtonPressed(BUTTON_RIGHT, false);
             return true;
         },
         false, SOUND_CLICK_SIDEBAR);

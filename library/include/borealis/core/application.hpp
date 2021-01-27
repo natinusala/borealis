@@ -122,7 +122,7 @@ class Application
 
     static void notify(std::string text);
 
-    static void onGamepadButtonPressed(enum ControllerButton button, bool repeating);
+    static void onControllerButtonPressed(enum ControllerButton button, bool repeating);
 
     /**
       * "Crashes" the app (displays a fullscreen CrashFrame)

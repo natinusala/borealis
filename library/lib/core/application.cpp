@@ -242,7 +242,7 @@ bool Application::mainLoop()
             repeating        = (repeatingButtonTimer > BUTTON_REPEAT_DELAY && repeatingButtonTimer % BUTTON_REPEAT_CADENCY == 0);
 
             if (!Application::oldControllerState.buttons[i] || repeating)
-                Application::onGamepadButtonPressed((enum ControllerButton)i, repeating);
+                Application::onControllerButtonPressed((enum ControllerButton)i, repeating);
         }
 
         if (Application::controllerState.buttons[i] != Application::oldControllerState.buttons[i])
@@ -359,7 +359,7 @@ void Application::navigate(FocusDirection direction)
     Application::giveFocus(nextFocus);
 }
 
-void Application::onGamepadButtonPressed(enum ControllerButton button, bool repeating)
+void Application::onControllerButtonPressed(enum ControllerButton button, bool repeating)
 {
     if (Application::blockInputsTokens != 0)
         return;
