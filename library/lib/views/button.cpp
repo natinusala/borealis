@@ -25,7 +25,6 @@
 namespace brls
 {
 
-// TODO: platform driver, fincs copyright in glfw driver
 // TODO: soundboard in demo (powered by pulsar)
 
 // TODO: split platform driver entirely: nvg context, inputs, fonts, swkbd (move swkbd in switch platform driver folder (hpp too, it doesn't need to be in the regular includes))
