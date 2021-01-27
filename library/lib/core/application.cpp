@@ -87,8 +87,6 @@ bool Application::init(std::string title)
 
     // Init static variables
     Application::currentFocus = nullptr;
-    /*Application::oldGamepad   = {};
-    Application::gamepad      = {};*/
     Application::title = title;
 
     // Init yoga
@@ -226,7 +224,7 @@ bool Application::mainLoop()
     inputManager->updateInputs();
     inputManager->getControllerState(&Application::controllerState);
 
-    // Trigger gamepad events
+    // Trigger controller events
     // TODO: Translate axis events to dpad events here
 
     bool anyButtonPressed               = false;
