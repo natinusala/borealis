@@ -28,30 +28,23 @@ namespace brls
 #define GLFW_GAMEPAD_BUTTON_NONE SIZE_MAX
 #define GLFW_GAMEPAD_BUTTON_MAX 15
 
-static const size_t GLFW_BUTTONS_MAPPING[_BUTTON_MAX] = {
-    GLFW_GAMEPAD_BUTTON_NONE, // BUTTON_LT
-    GLFW_GAMEPAD_BUTTON_LEFT_BUMPER, // BUTTON_LB
-
-    GLFW_GAMEPAD_BUTTON_LEFT_THUMB, // BUTTON_LSB
-
-    GLFW_GAMEPAD_BUTTON_DPAD_UP, // BUTTON_DPAD_UP
-    GLFW_GAMEPAD_BUTTON_DPAD_RIGHT, // BUTTON_DPAD_RIGHT
-    GLFW_GAMEPAD_BUTTON_DPAD_DOWN, // BUTTON_DPAD_DOWN
-    GLFW_GAMEPAD_BUTTON_DPAD_LEFT, // BUTTON_DPAD_LEFT
-
-    GLFW_GAMEPAD_BUTTON_BACK, // BUTTON_BACK
-    GLFW_GAMEPAD_BUTTON_GUIDE, // BUTTON_GUIDE
-    GLFW_GAMEPAD_BUTTON_START, // BUTTON_START
-
-    GLFW_GAMEPAD_BUTTON_RIGHT_THUMB, // BUTTON_RSB
-
-    GLFW_GAMEPAD_BUTTON_Y, // BUTTON_Y
-    GLFW_GAMEPAD_BUTTON_B, // BUTTON_B
-    GLFW_GAMEPAD_BUTTON_A, // BUTTON_A
-    GLFW_GAMEPAD_BUTTON_X, // BUTTON_X
-
-    GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER, // BUTTON_RB
-    GLFW_GAMEPAD_BUTTON_NONE, // BUTTON_RT
+// LT and RT do not exist here because they are axes
+static const size_t GLFW_BUTTONS_MAPPING[GLFW_GAMEPAD_BUTTON_MAX] = {
+    BUTTON_A, // GLFW_GAMEPAD_BUTTON_A
+    BUTTON_B, // GLFW_GAMEPAD_BUTTON_B
+    BUTTON_X, // GLFW_GAMEPAD_BUTTON_X
+    BUTTON_Y, // GLFW_GAMEPAD_BUTTON_Y
+    BUTTON_LB, // GLFW_GAMEPAD_BUTTON_LEFT_BUMPER
+    BUTTON_RB, // GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER
+    BUTTON_BACK, // GLFW_GAMEPAD_BUTTON_BACK
+    BUTTON_START, // GLFW_GAMEPAD_BUTTON_START
+    BUTTON_GUIDE, // GLFW_GAMEPAD_BUTTON_GUIDE
+    BUTTON_LSB, // GLFW_GAMEPAD_BUTTON_LEFT_THUMB
+    BUTTON_RSB, // GLFW_GAMEPAD_BUTTON_RIGHT_THUMB
+    BUTTON_UP, // GLFW_GAMEPAD_BUTTON_DPAD_UP
+    BUTTON_RIGHT, // GLFW_GAMEPAD_BUTTON_DPAD_RIGHT
+    BUTTON_DOWN, // GLFW_GAMEPAD_BUTTON_DPAD_DOWN
+    BUTTON_LEFT, // GLFW_GAMEPAD_BUTTON_DPAD_LEFT
 };
 
 static const size_t GLFW_GAMEPAD_TO_KEYBOARD[GLFW_GAMEPAD_BUTTON_MAX] = {
@@ -105,26 +98,17 @@ void GLFWInputManager::getControllerState(ControllerState* state)
     GLFWgamepadstate glfwState = {};
     glfwGetGamepadState(GLFW_JOYSTICK_1, &glfwState);
 
-    // Add keyboard keys on top of gamepad buttons
     for (size_t i = 0; i < GLFW_GAMEPAD_BUTTON_MAX; i++)
     {
+        // Add keyboard keys on top of gamepad buttons
         size_t key = GLFW_GAMEPAD_TO_KEYBOARD[i];
 
-        if (key == GLFW_GAMEPAD_BUTTON_NONE)
-            continue;
+        if (key != GLFW_GAMEPAD_BUTTON_NONE)
+            glfwState.buttons[i] |= glfwGetKey(this->window, key);
 
-        glfwState.buttons[i] |= glfwGetKey(this->window, key);
-    }
-
-    // Translate GLFW gamepad to borealis controller
-    for (size_t i = 0; i < _BUTTON_MAX; i++)
-    {
-        size_t glfwButton = GLFW_BUTTONS_MAPPING[i];
-
-        if (glfwButton == GLFW_GAMEPAD_BUTTON_NONE)
-            continue;
-
-        state->buttons[i] = (bool)glfwState.buttons[glfwButton];
+        // Translate GLFW gamepad to borealis controller
+        size_t brlsButton          = GLFW_BUTTONS_MAPPING[i];
+        state->buttons[brlsButton] = (bool)glfwState.buttons[i];
     }
 }
 

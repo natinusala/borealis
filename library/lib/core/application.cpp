@@ -87,7 +87,7 @@ bool Application::init(std::string title)
 
     // Init static variables
     Application::currentFocus = nullptr;
-    Application::title = title;
+    Application::title        = title;
 
     // Init yoga
     YGConfig* defaultConfig       = YGConfigGetDefault();
