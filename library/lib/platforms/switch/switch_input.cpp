@@ -68,4 +68,4 @@ void SwitchInputManager::updateControllerState(ControllerState* state)
     }
 }
 
-};
+} // namespace brls

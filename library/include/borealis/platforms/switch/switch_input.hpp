@@ -37,4 +37,4 @@ class SwitchInputManager : public InputManager
     PadState padState;
 };
 
-};
+} // namespace brls

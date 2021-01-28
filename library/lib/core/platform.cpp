@@ -32,7 +32,7 @@ namespace brls
 Platform* Platform::createPlatform(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight)
 {
 #if defined(__SWITCH__)
-    return new SwitchPlatform(windowTitle, windowWidth, windowHeight);
+    return new SwitchPlatform();
 #elif defined(__GLFW__)
     return new GLFWPlatform(windowTitle, windowWidth, windowHeight);
 #endif
