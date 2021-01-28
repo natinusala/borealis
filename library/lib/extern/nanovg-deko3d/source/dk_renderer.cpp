@@ -1,4 +1,4 @@
-#include "dk_renderer.hpp"
+#include <nanovg/dk_renderer.hpp>
 
 #include <stdarg.h>
 #include <stdlib.h>

@@ -2,7 +2,7 @@
 ** Sample Framework for deko3d Applications
 **   CMemPool.cpp: Pooled dynamic memory allocation manager class
 */
-#include "CMemPool.h"
+#include <nanovg/framework/CMemPool.h>
 
 inline auto CMemPool::_newSlice() -> Slice*
 {

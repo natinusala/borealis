@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <nanovg/nanovg.h>
+#include <nanovg.h>
 
 // A VideoContext is responsible for providing a nanovg context for the app
 // (so by extension it manages all the graphics state as well as the window / context).

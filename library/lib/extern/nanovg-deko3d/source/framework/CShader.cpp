@@ -2,7 +2,7 @@
 ** Sample Framework for deko3d Applications
 **   CShader.cpp: Utility class for loading shaders from the filesystem
 */
-#include "CShader.h"
+#include <nanovg/framework/CShader.h>
 
 struct DkshHeader
 {

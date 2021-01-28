@@ -2,8 +2,8 @@
 ** Sample Framework for deko3d Applications
 **   CExternalImage.cpp: Utility class for loading images from the filesystem
 */
-#include "CExternalImage.h"
-#include "FileLoader.h"
+#include <nanovg/framework/CExternalImage.h>
+#include <nanovg/framework/FileLoader.h>
 
 bool CExternalImage::load(CMemPool& imagePool, CMemPool& scratchPool, dk::Device device, dk::Queue transferQueue, const char* path, uint32_t width, uint32_t height, DkImageFormat format, uint32_t flags)
 {

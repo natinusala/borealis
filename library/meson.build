@@ -32,7 +32,7 @@ borealis_files = files(
     'lib/views/header.cpp',
 
     'lib/extern/glad/glad.c',
-    'lib/extern/nanovg/nanovg.c',
+    'lib/extern/nanovg-gl/nanovg.c',
     'lib/extern/tinyxml2/tinyxml2.cpp',
 
     'lib/extern/fmt/src/format.cc',
@@ -59,6 +59,7 @@ borealis_include = include_directories(
     'lib/extern/fmt/include',
     'include/borealis/extern',
     'include/borealis/extern/tinyxml2',
+    'include/borealis/extern/nanovg-gl',
     'lib/extern/yoga/src',
 )
 

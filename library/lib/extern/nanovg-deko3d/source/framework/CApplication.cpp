@@ -2,7 +2,7 @@
 ** Sample Framework for deko3d Applications
 **   CApplication.cpp: Wrapper class containing common application boilerplate
 */
-#include "CApplication.h"
+#include <nanovg/framework/CApplication.h>
 
 CApplication::CApplication()
 {

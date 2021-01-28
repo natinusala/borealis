@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <nanovg/nanovg.h>
+#include <nanovg.h>
 
 #include <borealis/core/style.hpp>
 #include <borealis/core/theme.hpp>

@@ -2,7 +2,7 @@
 ** Sample Framework for deko3d Applications
 **   CIntrusiveTree.cpp: Intrusive red-black tree helper class
 */
-#include "CIntrusiveTree.h"
+#include <nanovg/framework/CIntrusiveTree.h>
 
 // This red-black tree implementation is mostly based on mtheall's work,
 // which can be found here:

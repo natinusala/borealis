@@ -20,10 +20,11 @@
 
 #pragma once
 
-#include <borealis/platforms/switch/deko_framework/CMemPool.h>
+#include <nanovg/framework/CMemPool.h>
 
 #include <borealis/core/video.hpp>
 #include <deko3d.hpp>
+#include <nanovg/dk_renderer.hpp>
 #include <optional>
 
 namespace brls

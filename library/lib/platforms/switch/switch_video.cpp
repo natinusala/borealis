@@ -23,6 +23,9 @@
 #include <borealis/core/application.hpp>
 #include <borealis/platforms/switch/switch_video.hpp>
 
+// nanovg implementation
+#include <nanovg_dk.h>
+
 #define HANDHELD_WIDTH 1280.0f
 #define HANDHELD_HEIGHT 720.0f
 
@@ -108,7 +111,8 @@ void SwitchVideoContext::createFramebufferResources()
     this->recordStaticCommands();
 
     // Create renderer and nvg context
-    this->renderer.emplace(framebuffer_width, framebuffer_height, this->device, this->queue, *this->pool_images, *this->pool_code, *this->pool_data);
+    this->renderer.emplace(this->framebufferWidth, this->framebufferHeight, this->device, this->queue, *this->imagesPool, *this->codePool, *this->dataPool);
+    this->nvgContext = nvgCreateDk(&*this->renderer, NVG_ANTIALIAS | NVG_STENCIL_STROKES);
 }
 
 void SwitchVideoContext::recordStaticCommands()

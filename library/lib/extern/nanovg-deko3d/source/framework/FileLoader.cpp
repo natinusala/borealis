@@ -2,7 +2,7 @@
 ** Sample Framework for deko3d Applications
 **   FileLoader.cpp: Helpers for loading data from the filesystem directly into GPU memory
 */
-#include "FileLoader.h"
+#include <nanovg/framework/FileLoader.h>
 
 CMemPool::Handle LoadFile(CMemPool& pool, const char* path, uint32_t alignment)
 {
