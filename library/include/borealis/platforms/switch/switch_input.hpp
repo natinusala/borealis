@@ -31,8 +31,7 @@ class SwitchInputManager : public InputManager
   public:
     SwitchInputManager();
 
-    void updateInputs();
-    void getControllerState(ControllerState* state);
+    void updateControllerState(ControllerState* state);
 
   private:
     PadState padState;

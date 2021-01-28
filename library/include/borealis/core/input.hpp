@@ -82,15 +82,9 @@ class InputManager
     virtual ~InputManager() { }
 
     /**
-     * Called every frame so that the manager can poll the hardware if needed.
+     * Called once every frame to fill the given ControllerState struct with the controller state.
      */
-    virtual void updateInputs() = 0;
-
-    /**
-     * Called to fill the given ControllerState struct with the controller state
-     * at the current frame.
-     */
-    virtual void getControllerState(ControllerState* state) = 0;
+    virtual void updateControllerState(ControllerState* state) = 0;
 };
 
 }; // namespace brls

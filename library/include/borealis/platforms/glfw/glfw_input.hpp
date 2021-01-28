@@ -32,8 +32,7 @@ class GLFWInputManager : public InputManager
   public:
     GLFWInputManager(GLFWwindow* window);
 
-    void updateInputs() override;
-    void getControllerState(ControllerState* state) override;
+    void updateControllerState(ControllerState* state) override;
 
   private:
     GLFWwindow* window;

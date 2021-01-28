@@ -221,8 +221,7 @@ bool Application::mainLoop()
 
     // Input
     InputManager* inputManager = Application::platform->getInputManager();
-    inputManager->updateInputs();
-    inputManager->getControllerState(&Application::controllerState);
+    inputManager->updateControllerState(&Application::controllerState);
 
     // Trigger controller events
     // TODO: Translate axis events to dpad events here

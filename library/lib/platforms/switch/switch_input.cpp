@@ -56,13 +56,9 @@ SwitchInputManager::SwitchInputManager()
     padInitializeDefault(&this->padState);
 }
 
-void SwitchInputManager::updateInputs()
+void SwitchInputManager::updateControllerState(ControllerState* state)
 {
     padUpdate(&this->padState);
-}
-
-void SwitchInputManager::getControllerState(ControllerState* state)
-{
     uint64_t keysDown = padGetButtons(&this->padState);
 
     for (size_t i = 0; i < _BUTTON_MAX; i++)

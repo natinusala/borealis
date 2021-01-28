@@ -92,7 +92,7 @@ GLFWInputManager::GLFWInputManager(GLFWwindow* window)
     }
 }
 
-void GLFWInputManager::getControllerState(ControllerState* state)
+void GLFWInputManager::updateControllerState(ControllerState* state)
 {
     // Get gamepad state
     GLFWgamepadstate glfwState = {};
@@ -110,10 +110,6 @@ void GLFWInputManager::getControllerState(ControllerState* state)
         size_t brlsButton          = GLFW_BUTTONS_MAPPING[i];
         state->buttons[brlsButton] = (bool)glfwState.buttons[i];
     }
-}
-
-void GLFWInputManager::updateInputs()
-{
 }
 
 };
