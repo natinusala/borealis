@@ -18,7 +18,6 @@
 
 #include <switch.h>
 
-#include <borealis/platforms/switch/switch_audio.hpp>
 #include <borealis/platforms/switch/switch_platform.hpp>
 
 namespace brls
@@ -27,7 +26,8 @@ namespace brls
 SwitchPlatform::SwitchPlatform(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight)
     : GLFWPlatform(windowTitle, windowWidth, windowHeight)
 {
-    this->audioPlayer = new SwitchAudioPlayer();
+    this->audioPlayer  = new SwitchAudioPlayer();
+    this->inputManager = new SwitchInputManager();
 }
 
 std::string SwitchPlatform::getName()
@@ -45,9 +45,15 @@ AudioPlayer* SwitchPlatform::getAudioPlayer()
     return this->audioPlayer;
 }
 
+InputManager* SwitchPlatform::getInputManager()
+{
+    return this->inputManager;
+}
+
 SwitchPlatform::~SwitchPlatform()
 {
     delete this->audioPlayer;
+    delete this->inputManager;
 }
 
 } // namespace brls

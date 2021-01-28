@@ -20,6 +20,7 @@
 
 #include <borealis/platforms/glfw/glfw_platform.hpp>
 #include <borealis/platforms/switch/switch_audio.hpp>
+#include <borealis/platforms/switch/switch_input.hpp>
 
 namespace brls
 {
@@ -35,9 +36,11 @@ class SwitchPlatform : public GLFWPlatform // TODO: don't inherit from GLFWPlatf
     bool mainLoopIteration() override;
 
     AudioPlayer* getAudioPlayer() override;
+    InputManager* getInputManager() override;
 
   private:
     SwitchAudioPlayer* audioPlayer;
+    InputManager* inputManager;
 };
 
 } // namespace brls

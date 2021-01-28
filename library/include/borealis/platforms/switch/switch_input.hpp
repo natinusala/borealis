@@ -18,25 +18,24 @@
 
 #pragma once
 
-#include <borealis/core/input.hpp>
+#include <switch.h>
 
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#include <borealis/core/input.hpp>
 
 namespace brls
 {
 
-// Input manager for GLFW gamepad and keyboard
-class GLFWInputManager : public InputManager
+// InputManager that uses the hid sysmodule to get inputs
+class SwitchInputManager : public InputManager
 {
   public:
-    GLFWInputManager(GLFWwindow* window);
+    SwitchInputManager();
 
-    void updateInputs() override;
-    void getControllerState(ControllerState* state) override;
+    void updateInputs();
+    void getControllerState(ControllerState* state);
 
   private:
-    GLFWwindow* window;
+    PadState padState;
 };
 
 };

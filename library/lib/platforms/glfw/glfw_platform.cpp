@@ -94,6 +94,7 @@ GLFWPlatform::~GLFWPlatform()
 {
     delete this->audioPlayer;
     delete this->videoContext;
+    delete this->inputManager;
 }
 
 } // namespace brls
