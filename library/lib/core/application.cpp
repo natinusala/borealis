@@ -63,6 +63,7 @@ bool Application::init(std::string title)
 {
     // Init platform
     Application::platform = Platform::createPlatform(title, ORIGINAL_WINDOW_WIDTH, ORIGINAL_WINDOW_HEIGHT);
+    Application::platform->init();
 
     if (!Application::platform)
         throw std::logic_error("Did not find a valid platform");
@@ -176,13 +177,7 @@ bool Application::init(std::string title)
 
     // Load theme
 #ifdef __SWITCH__
-    ColorSetId nxTheme;
-    setsysGetColorSetId(&nxTheme);
 
-    if (nxTheme == ColorSetId_Dark)
-        Application::currentThemeVariant = ThemeVariant::DARK;
-    else
-        Application::currentThemeVariant = ThemeVariant::LIGHT;
 #else
     char* themeEnv = getenv("BOREALIS_THEME");
     if (themeEnv != nullptr && !strcasecmp(themeEnv, "DARK"))
@@ -262,7 +257,6 @@ bool Application::mainLoop()
 
     // Render
     Application::frame();
-    Application::platform->getVideoContext()->swapBuffers();
 
     // Sleep if necessary
 #ifdef __SWITCH__
@@ -444,6 +438,8 @@ bool Application::handleAction(char button)
 
 void Application::frame()
 {
+    VideoContext* videoContext = Application::platform->getVideoContext();
+
     // Frame context
     FrameContext frameContext = FrameContext();
 
@@ -452,9 +448,10 @@ void Application::frame()
     frameContext.fontStash  = &Application::fontStash;
     frameContext.theme      = Application::getTheme();
 
-    // Clear
+    // Begin frame and clear
     NVGcolor backgroundColor = frameContext.theme["brls/background"];
-    Application::platform->getVideoContext()->clear(backgroundColor);
+    videoContext->beginFrame();
+    videoContext->clear(backgroundColor);
 
     if (Application::background)
         Application::background->preFrame();
@@ -500,6 +497,8 @@ void Application::frame()
 
     if (Application::background)
         Application::background->postFrame();
+
+    Application::platform->getVideoContext()->endFrame();
 }
 
 void Application::exit()
@@ -737,7 +736,7 @@ void Application::clear()
 
 Theme Application::getTheme()
 {
-    if (Application::currentThemeVariant == ThemeVariant::LIGHT)
+    if (Application::getThemeVariant() == ThemeVariant::LIGHT)
         return getLightTheme();
     else
         return getDarkTheme();
@@ -745,7 +744,7 @@ Theme Application::getTheme()
 
 ThemeVariant Application::getThemeVariant()
 {
-    return Application::currentThemeVariant;
+    return Application::platform->getThemeVariant();
 }
 
 int Application::loadFont(const char* fontName, const char* filePath)

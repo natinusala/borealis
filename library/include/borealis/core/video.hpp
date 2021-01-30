@@ -36,9 +36,14 @@ class VideoContext
     virtual void clear(NVGcolor color) = 0;
 
     /**
-     * Called at the end of every frame to swap buffers.
+     * Called at the beginning of every frame to begin it.
      */
-    virtual void swapBuffers() = 0;
+    virtual void beginFrame() = 0;
+
+    /**
+     * Called at the end of every frame to end it (swap buffers...).
+     */
+    virtual void endFrame() = 0;
 
     /**
      * Can be called by the application to reset the graphics

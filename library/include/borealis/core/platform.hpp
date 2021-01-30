@@ -20,6 +20,7 @@
 
 #include <borealis/core/audio.hpp>
 #include <borealis/core/input.hpp>
+#include <borealis/core/theme.hpp>
 #include <borealis/core/video.hpp>
 #include <string>
 
@@ -31,10 +32,13 @@ namespace brls
 class Platform
 {
   public:
-    /**
-     * Creates the Platform instance with the given window size.
-     */
     virtual ~Platform() {};
+
+    /**
+     * Called on startup, right after instanciation, to init everything.
+     * For now, deinit should be done in destructor.
+     */
+    virtual void init() = 0;
 
     /**
      * Returns the human-readable name of the platform.
@@ -47,6 +51,14 @@ class Platform
      * (for example, return false if the X button was pressed on the window).
      */
     virtual bool mainLoopIteration() = 0;
+
+    /**
+     * Can be called a anytime to get the current system theme variant.
+     * For now, the variant is assumed to stay the same during the whole time
+     * the app is running (no variant hot swap).
+     * As such, the result should be cached by the platform code.
+     */
+    virtual ThemeVariant getThemeVariant() = 0;
 
     /**
      * Returns the AudioPlayer for the platform.

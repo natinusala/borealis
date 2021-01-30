@@ -32,15 +32,20 @@ class SwitchPlatform : public Platform
     SwitchPlatform();
     ~SwitchPlatform();
 
+    void init() override;
+
     std::string getName() override;
 
     bool mainLoopIteration() override;
+    ThemeVariant getThemeVariant() override;
 
     VideoContext* getVideoContext() override;
     AudioPlayer* getAudioPlayer() override;
     InputManager* getInputManager() override;
 
   private:
+    ThemeVariant themeVariant;
+
     SwitchAudioPlayer* audioPlayer;
     SwitchInputManager* inputManager;
     SwitchVideoContext* videoContext;

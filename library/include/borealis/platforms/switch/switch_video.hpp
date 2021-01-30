@@ -32,6 +32,7 @@ namespace brls
 
 static constexpr const unsigned FRAMEBUFFERS_COUNT = 2;
 
+// deko3d video context
 class SwitchVideoContext : public VideoContext
 {
   public:
@@ -39,8 +40,9 @@ class SwitchVideoContext : public VideoContext
     ~SwitchVideoContext();
 
     void clear(NVGcolor color) override;
-    void swapBuffers() override;
     void resetState() override;
+    void beginFrame() override;
+    void endFrame() override;
     virtual NVGcontext* getNVGContext() override;
 
   private:
@@ -48,7 +50,10 @@ class SwitchVideoContext : public VideoContext
     void createFramebufferResources();
     void recordStaticCommands();
 
+    void destroyFramebufferResources();
+
     float framebufferWidth, framebufferHeight;
+    int imageSlot;
 
     dk::UniqueDevice device;
     dk::UniqueQueue queue;

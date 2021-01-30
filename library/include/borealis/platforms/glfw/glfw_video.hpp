@@ -36,7 +36,8 @@ class GLFWVideoContext : public VideoContext
     NVGcontext* getNVGContext() override;
 
     void clear(NVGcolor color) override;
-    void swapBuffers() override;
+    void beginFrame() override;
+    void endFrame() override;
     void resetState() override;
 
     GLFWwindow* getGLFWWindow();

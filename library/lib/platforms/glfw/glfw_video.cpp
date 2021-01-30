@@ -100,7 +100,11 @@ GLFWVideoContext::GLFWVideoContext(std::string windowTitle, uint32_t windowWidth
     glfwWindowFramebufferSizeCallback(window, windowWidth, windowHeight);
 }
 
-void GLFWVideoContext::swapBuffers()
+void GLFWVideoContext::beginFrame()
+{
+}
+
+void GLFWVideoContext::endFrame()
 {
     glfwSwapBuffers(this->window);
 }
