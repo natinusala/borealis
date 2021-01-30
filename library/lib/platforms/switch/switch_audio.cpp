@@ -121,8 +121,6 @@ bool SwitchAudioPlayer::play(enum Sound sound)
             return false;
     }
 
-    Logger::debug("Playing sound {}", sound);
-
     // Play the sound
     PLSR_RC rc = plsrPlayerPlay(this->sounds[sound]);
     if (PLSR_RC_FAILED(rc))

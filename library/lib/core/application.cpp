@@ -353,7 +353,10 @@ void Application::navigate(FocusDirection direction)
 void Application::onControllerButtonPressed(enum ControllerButton button, bool repeating)
 {
     if (Application::blockInputsTokens != 0)
+    {
+        Logger::debug("{} button press blocked (tokens={})", button, Application::blockInputsTokens);
         return;
+    }
 
     if (repeating && Application::repetitionOldFocus == Application::currentFocus)
         return;
@@ -771,12 +774,15 @@ void Application::crash(std::string text)
 void Application::blockInputs()
 {
     Application::blockInputsTokens += 1;
+    Logger::debug("Adding an inputs block token (tokens={})", Application::blockInputsTokens);
 }
 
 void Application::unblockInputs()
 {
     if (Application::blockInputsTokens > 0)
         Application::blockInputsTokens -= 1;
+
+    Logger::debug("Removing an inputs block token (tokens={})", Application::blockInputsTokens);
 }
 
 NVGcontext* Application::getNVGContext()
