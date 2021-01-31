@@ -18,8 +18,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <switch.h>
-
 #include <borealis/core/application.hpp>
 #include <borealis/platforms/switch/switch_video.hpp>
 
@@ -36,15 +34,26 @@
 #define CODE_POOL_SIZE 128 * 1024
 #define DATA_POOL_SIZE 1 * 1024 * 1024
 
-// TODO: dock resolution change using appletGetDefaultDisplayResolutionChangeEvent and operation mode as fallback
-
 namespace brls
 {
 
 static constexpr const unsigned STATIC_CMD_SIZE = 0x1000;
 
+// TODO: fix glfw :shrek:
+
 SwitchVideoContext::SwitchVideoContext()
 {
+    // Get display resolution change event
+    Result rc = appletGetDefaultDisplayResolutionChangeEvent(&this->defaultDisplayResolutionChangeEvent);
+
+    if (R_FAILED(rc))
+    {
+        Logger::warning("switch: failed to get default display resolution change event ({:#x}), falling back to operation mode change event");
+        this->displayResolutionChangeEventReady = false; // default is true
+
+        // TODO: use operation mode change event here instead
+    }
+
     // Setup scaling
     this->updateWindowSize();
 
@@ -62,6 +71,10 @@ SwitchVideoContext::SwitchVideoContext()
 
     // Create framebuffer resources
     this->createFramebufferResources();
+
+    // Create renderer and nvg context
+    this->renderer.emplace(this->framebufferWidth, this->framebufferHeight, this->device, this->queue, *this->imagesPool, *this->codePool, *this->dataPool);
+    this->nvgContext = nvgCreateDk(&*this->renderer, NVG_ANTIALIAS | NVG_STENCIL_STROKES);
 }
 
 void SwitchVideoContext::createFramebufferResources()
@@ -111,10 +124,6 @@ void SwitchVideoContext::createFramebufferResources()
 
     // Generate the main rendering cmdlist
     this->recordStaticCommands();
-
-    // Create renderer and nvg context
-    this->renderer.emplace(this->framebufferWidth, this->framebufferHeight, this->device, this->queue, *this->imagesPool, *this->codePool, *this->dataPool);
-    this->nvgContext = nvgCreateDk(&*this->renderer, NVG_ANTIALIAS | NVG_STENCIL_STROKES);
 }
 
 void SwitchVideoContext::recordStaticCommands()
@@ -160,7 +169,7 @@ void SwitchVideoContext::updateWindowSize()
     // If it failed, use hardcoded resolutions as fallback
     else
     {
-        Logger::warning("Failed to detect display resolution ({#x}), falling back to hardcoded resolution");
+        Logger::warning("switch: failed to detect display resolution ({:#x}), falling back to hardcoded resolution");
 
         switch (appletGetOperationMode())
         {
@@ -178,11 +187,13 @@ void SwitchVideoContext::updateWindowSize()
     }
 
     Application::onWindowResized(roundf(this->framebufferWidth), roundf(this->framebufferHeight));
+
+    this->renderer->UpdateViewBounds(this->framebufferWidth, this->framebufferHeight);
 }
 
 void SwitchVideoContext::clear(NVGcolor color)
 {
-    // TODO: do it
+    // Unimplemented here (clear is made using a static command ran every frame)
 }
 
 void SwitchVideoContext::resetState()
@@ -190,8 +201,19 @@ void SwitchVideoContext::resetState()
     // Unimplemented
 }
 
+void SwitchVideoContext::resetFramebuffer()
+{
+    this->destroyFramebufferResources();
+    this->updateWindowSize();
+    this->createFramebufferResources();
+}
+
 void SwitchVideoContext::beginFrame()
 {
+    // Poll the display resolution change event
+    if (this->displayResolutionChangeEventReady && R_SUCCEEDED(eventWait(&this->defaultDisplayResolutionChangeEvent, 0)))
+        this->resetFramebuffer();
+
     this->imageSlot = this->queue.acquireImage(this->swapchain);
 
     // Run the command list that attaches said framebuffer to the queue

@@ -21,11 +21,14 @@
 #pragma once
 
 #include <nanovg/framework/CMemPool.h>
+#include <switch.h>
 
 #include <borealis/core/video.hpp>
 #include <deko3d.hpp>
 #include <nanovg/dk_renderer.hpp>
 #include <optional>
+
+typedef Event _LibNXEvent; // "Event" alone clashes with brls::Event
 
 namespace brls
 {
@@ -46,6 +49,10 @@ class SwitchVideoContext : public VideoContext
     virtual NVGcontext* getNVGContext() override;
 
   private:
+    _LibNXEvent defaultDisplayResolutionChangeEvent;
+    bool displayResolutionChangeEventReady = true;
+
+    void resetFramebuffer(); // triggered by either display resolution change event or operation mode change event
     void updateWindowSize();
     void createFramebufferResources();
     void recordStaticCommands();
