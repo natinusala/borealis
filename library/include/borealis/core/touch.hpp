@@ -31,7 +31,7 @@ enum TouchClickState {
 
 typedef struct TouchState
 {
-    TouchClickState state;
+    TouchClickState state = NONE;
     double x, y;
 } TouchState;
 

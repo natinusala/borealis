@@ -28,6 +28,7 @@ SwitchPlatform::SwitchPlatform(std::string windowTitle, uint32_t windowWidth, ui
 {
     this->audioPlayer  = new SwitchAudioPlayer();
     this->inputManager = new SwitchInputManager();
+    this->touchManager = new SwitchTouchManager();
 }
 
 std::string SwitchPlatform::getName()
@@ -48,6 +49,11 @@ AudioPlayer* SwitchPlatform::getAudioPlayer()
 InputManager* SwitchPlatform::getInputManager()
 {
     return this->inputManager;
+}
+
+TouchManager* SwitchPlatform::getTouchManager()
+{
+    return this->touchManager;
 }
 
 SwitchPlatform::~SwitchPlatform()
