@@ -204,6 +204,7 @@ class Application
 
     inline static ControllerState oldControllerState = {};
     inline static ControllerState controllerState    = {};
+    inline static TouchState touchState              = {};
 
     inline static unsigned blockInputsTokens = 0; // any value > 0 means inputs are blocked
 

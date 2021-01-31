@@ -49,6 +49,7 @@ GLFWPlatform::GLFWPlatform(std::string windowTitle, uint32_t windowWidth, uint32
     this->audioPlayer  = new NullAudioPlayer();
     this->videoContext = new GLFWVideoContext(windowTitle, windowWidth, windowHeight);
     this->inputManager = new GLFWInputManager(this->videoContext->getGLFWWindow());
+    this->touchManager = new GLFWTouchManager(this->videoContext->getGLFWWindow());
 
     // Misc
     glfwSetTime(0.0);
@@ -88,6 +89,11 @@ VideoContext* GLFWPlatform::getVideoContext()
 InputManager* GLFWPlatform::getInputManager()
 {
     return this->inputManager;
+}
+
+TouchManager* GLFWPlatform::getTouchManager()
+{
+    return this->touchManager;
 }
 
 GLFWPlatform::~GLFWPlatform()

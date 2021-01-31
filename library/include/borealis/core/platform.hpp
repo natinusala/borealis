@@ -21,6 +21,7 @@
 #include <borealis/core/audio.hpp>
 #include <borealis/core/input.hpp>
 #include <borealis/core/video.hpp>
+#include <borealis/core/touch.hpp>
 #include <string>
 
 namespace brls
@@ -65,6 +66,12 @@ class Platform
      * Cannot return nullptr.
      */
     virtual InputManager* getInputManager() = 0;
+
+    /**
+     * Returns the InputManager for the platform.
+     * Cannot return nullptr.
+     */
+    virtual TouchManager* getTouchManager() = 0;
 
     /**
      * Selects and returns the best platform.

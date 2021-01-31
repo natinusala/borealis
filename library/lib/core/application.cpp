@@ -219,6 +219,25 @@ bool Application::mainLoop()
         return false;
     }
 
+    // Touch
+    TouchManager* touchManager = Application::platform->getTouchManager();
+    touchManager->updateTouchState(&Application::touchState);
+
+    if (Application::touchState.state == END) 
+    {
+        Logger::info("Touched at X: " + std::to_string(Application::touchState.x) + ", Y: " + std::to_string(Application::touchState.y));
+
+        Activity* last = Application::activitiesStack[Application::activitiesStack.size() - 1];
+        View* nextFocus = last->getContentView()->getFocus(Application::touchState.x, Application::touchState.y);
+
+        if (nextFocus) {
+            enum Sound focusSound = nextFocus->getFocusSound();
+            Application::getAudioPlayer()->play(focusSound);
+            Application::giveFocus(nextFocus);
+        }
+    }
+
+
     // Input
     InputManager* inputManager = Application::platform->getInputManager();
     inputManager->updateControllerState(&Application::controllerState);

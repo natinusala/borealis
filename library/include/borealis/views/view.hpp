@@ -1141,6 +1141,15 @@ class View
     virtual View* getDefaultFocus();
 
     /**
+     * Returns the view to focus with the corresponding screen coordinates in the view or its children,
+     * or nullptr if it hasn't been found.
+     *
+     * Research is done recursively by traversing the tree starting from this view.
+     * This view's parents are not traversed.
+     */
+    virtual View* getFocus(double x, double y);
+
+    /**
      * Returns the next view to focus given the requested direction
      * and the currently focused view (as parent user data)
      *

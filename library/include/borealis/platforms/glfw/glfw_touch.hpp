@@ -1,6 +1,7 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2021  natinusala
+    Copyright (C) 2021  XITRIX
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,34 +19,25 @@
 
 #pragma once
 
-#include <borealis/core/platform.hpp>
-#include <borealis/platforms/glfw/glfw_input.hpp>
-#include <borealis/platforms/glfw/glfw_video.hpp>
-#include <borealis/platforms/glfw/glfw_touch.hpp>
+#include <borealis/core/touch.hpp>
+
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 
 namespace brls
 {
 
-class GLFWPlatform : public Platform
+// Input manager for GLFW coursor
+class GLFWTouchManager : public TouchManager
 {
   public:
-    GLFWPlatform(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight);
-    ~GLFWPlatform();
+    GLFWTouchManager(GLFWwindow* window);
 
-    std::string getName() override;
-
-    bool mainLoopIteration() override;
-
-    AudioPlayer* getAudioPlayer() override;
-    VideoContext* getVideoContext() override;
-    InputManager* getInputManager() override;
-    TouchManager* getTouchManager() override;
+    void updateTouchState(TouchState* state) override;
 
   private:
-    NullAudioPlayer* audioPlayer   = nullptr;
-    GLFWVideoContext* videoContext = nullptr;
-    GLFWInputManager* inputManager = nullptr;
-    GLFWTouchManager* touchManager = nullptr;
+    GLFWwindow* window;
+    TouchState oldTouch;
 };
 
-} // namespace brls
+};

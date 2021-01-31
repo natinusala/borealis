@@ -2039,6 +2039,26 @@ View* View::getDefaultFocus()
     return nullptr;
 }
 
+View* View::getFocus(double x, double y)
+{
+    // Check if can focus ourself first
+    if (!this->isFocusable())
+        return nullptr;
+        
+    Logger::debug(describe() + ": --- X: " + std::to_string((int)getX()) + ", Y: " + std::to_string((int)getY()) + ", W: " + std::to_string((int)getWidth()) + ", H: " + std::to_string((int)getHeight()));
+        
+    if (getX() <= x && 
+        getWidth() + getX() >= x && 
+        getY() <= y && 
+        getHeight() + getY() >= y)
+    {
+        Logger::debug(describe() + ": OK");
+        return getDefaultFocus();
+    }
+
+    return nullptr;
+}
+
 void View::bindXMLDocument(tinyxml2::XMLDocument* document)
 {
     this->boundDocuments.push_back(document);
