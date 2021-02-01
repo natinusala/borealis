@@ -223,20 +223,22 @@ bool Application::mainLoop()
     TouchManager* touchManager = Application::platform->getTouchManager();
     touchManager->updateTouchState(&Application::touchState);
 
-    if (Application::touchState.state == END) 
+    switch (Application::touchState.state)
     {
+    case START:
         Logger::info("Touched at X: " + std::to_string(Application::touchState.x) + ", Y: " + std::to_string(Application::touchState.y));
-
-        Activity* last = Application::activitiesStack[Application::activitiesStack.size() - 1];
-        View* nextFocus = last->getContentView()->getFocus(Application::touchState.x, Application::touchState.y);
-
-        if (nextFocus) {
-            enum Sound focusSound = nextFocus->getFocusSound();
-            Application::getAudioPlayer()->play(focusSound);
-            Application::giveFocus(nextFocus);
-        }
+        Application::firstResponder = Application::activitiesStack[Application::activitiesStack.size() - 1]
+            ->getContentView()->hitTest(Application::touchState.x, Application::touchState.y);
+        break;
+    case NONE:
+        Application::firstResponder = nullptr;
+        break;
     }
 
+    if (Application::firstResponder) 
+    {
+        Application::firstResponder->gestureRecognizerRequest(Application::touchState);
+    }
 
     // Input
     InputManager* inputManager = Application::platform->getInputManager();

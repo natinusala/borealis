@@ -206,6 +206,8 @@ class Application
     inline static ControllerState controllerState    = {};
     inline static TouchState touchState              = {};
 
+    inline static View* firstResponder; // View that was recognized as target for touch events
+
     inline static unsigned blockInputsTokens = 0; // any value > 0 means inputs are blocked
 
     inline static std::string commonFooter = "";

@@ -21,6 +21,7 @@
 
 #include <borealis/core/application.hpp>
 #include <borealis/views/button.hpp>
+#include <borealis/touch/tap_gesture_recognizer.hpp>
 
 namespace brls
 {
@@ -91,6 +92,12 @@ Button::Button()
         });
 
     this->applyStyle();
+
+    this->addGestureRecognizer(new TapGestureRecognizer([this]()
+    {
+        Logger::debug(describe() + ": Clicked!");
+        Application::giveFocus(this);
+    }));
 }
 
 void Button::applyStyle()

@@ -97,6 +97,28 @@ NVGpaint View::a(NVGpaint paint)
     return newPaint;
 }
 
+void View::addGestureRecognizer(GestureRecognizer* recognizer)
+{
+    this->gestureRecognizers.push_back(recognizer);
+}
+
+void View::gestureRecognizerRequest(TouchState touch, bool locked) 
+{
+    bool lock = false;
+
+    for (GestureRecognizer* recognizer : getGestureRecognizers()) 
+    {
+        lock |= recognizer->recognitionLoop(touch, locked);
+    }
+
+    if (getGestureRecognizers().size() == 0) 
+    {
+        if (parent)
+            parent->gestureRecognizerRequest(touch, lock);
+        return;
+    }
+}
+
 void View::frame(FrameContext* ctx)
 {
     if (this->visibility != Visibility::VISIBLE)
@@ -1289,6 +1311,9 @@ View::~View()
 
     for (tinyxml2::XMLDocument* document : this->boundDocuments)
         delete document;
+    
+    for (GestureRecognizer* recognizer : this->gestureRecognizers)
+        delete recognizer;
 }
 
 std::string View::getStringXMLAttributeValue(std::string value)
@@ -2039,7 +2064,16 @@ View* View::getDefaultFocus()
     return nullptr;
 }
 
-View* View::getFocus(double x, double y)
+bool View::pointInside(double x, double y)
+{
+    return 
+        getX() <= x && 
+        getWidth() + getX() >= x && 
+        getY() <= y && 
+        getHeight() + getY() >= y;
+}
+
+View* View::hitTest(double x, double y)
 {
     // Check if can focus ourself first
     if (!this->isFocusable())
@@ -2047,13 +2081,10 @@ View* View::getFocus(double x, double y)
         
     Logger::debug(describe() + ": --- X: " + std::to_string((int)getX()) + ", Y: " + std::to_string((int)getY()) + ", W: " + std::to_string((int)getWidth()) + ", H: " + std::to_string((int)getHeight()));
         
-    if (getX() <= x && 
-        getWidth() + getX() >= x && 
-        getY() <= y && 
-        getHeight() + getY() >= y)
+    if (pointInside(x, y))
     {
         Logger::debug(describe() + ": OK");
-        return getDefaultFocus();
+        return this;
     }
 
     return nullptr;

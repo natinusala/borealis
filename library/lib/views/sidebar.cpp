@@ -21,6 +21,7 @@
 #include <borealis/core/application.hpp>
 #include <borealis/core/i18n.hpp>
 #include <borealis/views/sidebar.hpp>
+#include <borealis/touch/tap_gesture_recognizer.hpp>
 
 using namespace brls::i18n::literals;
 
@@ -80,6 +81,10 @@ SidebarItem::SidebarItem()
             return true;
         },
         false, SOUND_CLICK_SIDEBAR);
+
+    this->addGestureRecognizer(new TapGestureRecognizer([this](){
+        Application::giveFocus(this);
+    }));
 }
 
 void SidebarItem::setActive(bool active)

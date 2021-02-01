@@ -13,6 +13,8 @@ borealis_files = files(
     'lib/core/repeating_task.cpp',
     'lib/core/platform.cpp',
 
+    'lib/touch/tap_gesture_recognizer.cpp',
+
     'lib/platforms/glfw/glfw_platform.cpp',
     'lib/platforms/glfw/glfw_video.cpp',
     'lib/platforms/glfw/glfw_input.cpp',

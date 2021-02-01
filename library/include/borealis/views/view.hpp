@@ -29,6 +29,7 @@
 #include <borealis/core/actions.hpp>
 #include <borealis/core/event.hpp>
 #include <borealis/core/frame_context.hpp>
+#include <borealis/touch/gesture_recognizer.hpp>
 #include <functional>
 #include <memory>
 #include <set>
@@ -202,6 +203,7 @@ class View
     bool wireframeEnabled = false;
 
     std::vector<Action> actions;
+    std::vector<GestureRecognizer*> gestureRecognizers;
 
     /**
      * Parent user data, typically the index of the view
@@ -1025,6 +1027,15 @@ class View
         return this->actions;
     }
 
+    const std::vector<GestureRecognizer*>& getGestureRecognizers()
+    {
+        return this->gestureRecognizers;
+    }
+
+    void addGestureRecognizer(GestureRecognizer* recognizer);
+
+    virtual void gestureRecognizerRequest(TouchState touch, bool locked = false);
+
     /**
       * Called each frame
       * Do not override it to draw your view,
@@ -1141,13 +1152,18 @@ class View
     virtual View* getDefaultFocus();
 
     /**
+     * Returns true if point hits inside this view
+     */
+    virtual bool pointInside(double x, double y);
+
+    /**
      * Returns the view to focus with the corresponding screen coordinates in the view or its children,
      * or nullptr if it hasn't been found.
      *
      * Research is done recursively by traversing the tree starting from this view.
      * This view's parents are not traversed.
      */
-    virtual View* getFocus(double x, double y);
+    virtual View* hitTest(double x, double y);
 
     /**
      * Returns the next view to focus given the requested direction

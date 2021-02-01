@@ -319,18 +319,15 @@ View* Box::getDefaultFocus()
     return nullptr;
 }
 
-View* Box::getFocus(double x, double y)
+View* Box::hitTest(double x, double y)
 {
     // Check if touch fits in view frame
-    if (getX() <= x && 
-        getWidth() + getX() >= x && 
-        getY() <= y && 
-        getHeight() + getY() >= y) 
+    if (pointInside(x, y)) 
     {
         Logger::debug(describe() + ": --- X: " + std::to_string((int)getX()) + ", Y: " + std::to_string((int)getY()) + ", W: " + std::to_string((int)getWidth()) + ", H: " + std::to_string((int)getHeight()));
         for (View* child : this->children)
         {
-            View* result = child->getFocus(x, y);
+            View* result = child->hitTest(x, y);
 
             if (result)
                 return result;
