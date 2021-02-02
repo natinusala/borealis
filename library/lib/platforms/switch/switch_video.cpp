@@ -48,10 +48,9 @@ SwitchVideoContext::SwitchVideoContext()
 
     if (R_FAILED(rc))
     {
-        Logger::warning("switch: failed to get default display resolution change event ({:#x}), falling back to operation mode change event");
+        Logger::warning("switch: failed to get default display resolution change event ({:#x}), falling back to operation mode change event", rc);
+        Logger::warning("switch: resolution might not change properly when docking while the app is running using 3rd party docks!");
         this->displayResolutionChangeEventReady = false; // default is true
-
-        // TODO: use operation mode change event here instead
     }
 
     // Setup scaling
@@ -250,6 +249,13 @@ void SwitchVideoContext::destroyFramebufferResources()
 
     // Destroy the depth buffer
     depthBufferHandle.destroy();
+}
+
+void SwitchVideoContext::appletCallback(AppletHookType hookType)
+{
+    // Only reset framebuffer if the display resolution change event isn't ready
+    if (hookType == AppletHookType_OnOperationMode && !this->displayResolutionChangeEventReady)
+        resetFramebuffer();
 }
 
 NVGcontext* SwitchVideoContext::getNVGContext()

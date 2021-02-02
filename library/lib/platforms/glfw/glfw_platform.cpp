@@ -54,6 +54,10 @@ GLFWPlatform::GLFWPlatform(std::string windowTitle, uint32_t windowWidth, uint32
     glfwSetTime(0.0);
 }
 
+void GLFWPlatform::init()
+{
+}
+
 std::string GLFWPlatform::getName()
 {
     return "GLFW";
@@ -88,6 +92,15 @@ VideoContext* GLFWPlatform::getVideoContext()
 InputManager* GLFWPlatform::getInputManager()
 {
     return this->inputManager;
+}
+
+ThemeVariant GLFWPlatform::getThemeVariant()
+{
+    char* themeEnv = getenv("BOREALIS_THEME");
+    if (themeEnv != nullptr && !strcasecmp(themeEnv, "DARK"))
+        return ThemeVariant::DARK;
+    else
+        return ThemeVariant::LIGHT;
 }
 
 GLFWPlatform::~GLFWPlatform()

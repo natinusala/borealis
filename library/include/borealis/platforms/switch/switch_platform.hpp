@@ -43,7 +43,11 @@ class SwitchPlatform : public Platform
     AudioPlayer* getAudioPlayer() override;
     InputManager* getInputManager() override;
 
+    void appletCallback(AppletHookType hookType);
+
   private:
+    AppletHookCookie appletCookie;
+
     ThemeVariant themeVariant;
 
     SwitchAudioPlayer* audioPlayer;

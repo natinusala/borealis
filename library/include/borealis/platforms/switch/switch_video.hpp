@@ -48,6 +48,8 @@ class SwitchVideoContext : public VideoContext
     void endFrame() override;
     virtual NVGcontext* getNVGContext() override;
 
+    void appletCallback(AppletHookType hookType);
+
   private:
     _LibNXEvent defaultDisplayResolutionChangeEvent;
     bool displayResolutionChangeEventReady = true;

@@ -32,8 +32,10 @@ class GLFWPlatform : public Platform
     ~GLFWPlatform();
 
     std::string getName() override;
+    void init() override;
 
     bool mainLoopIteration() override;
+    ThemeVariant getThemeVariant() override;
 
     AudioPlayer* getAudioPlayer() override;
     VideoContext* getVideoContext() override;

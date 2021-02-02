@@ -175,17 +175,6 @@ bool Application::init(std::string title)
         Logger::warning("Material font not found");
     }
 
-    // Load theme
-#ifdef __SWITCH__
-
-#else
-    char* themeEnv = getenv("BOREALIS_THEME");
-    if (themeEnv != nullptr && !strcasecmp(themeEnv, "DARK"))
-        Application::currentThemeVariant = ThemeVariant::DARK;
-    else
-        Application::currentThemeVariant = ThemeVariant::LIGHT;
-#endif
-
     // Init animations engine
     menu_animation_init();
 

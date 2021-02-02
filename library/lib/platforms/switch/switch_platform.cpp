@@ -24,8 +24,16 @@
 namespace brls
 {
 
+static void switchAppletCallback(AppletHookType hookType, void* param)
+{
+    SwitchPlatform* platform = (SwitchPlatform*)param;
+    platform->appletCallback(hookType);
+}
+
 SwitchPlatform::SwitchPlatform()
 {
+    appletHook(&this->appletCookie, switchAppletCallback, this);
+
     // Cache theme variant before video context init
     // The background color is created once in the "static" command list
     // executed every frame, so we need to know the background color
@@ -46,6 +54,11 @@ void SwitchPlatform::init()
     this->videoContext = new SwitchVideoContext();
     this->audioPlayer  = new SwitchAudioPlayer();
     this->inputManager = new SwitchInputManager();
+}
+
+void SwitchPlatform::appletCallback(AppletHookType hookType)
+{
+    this->videoContext->appletCallback(hookType);
 }
 
 std::string SwitchPlatform::getName()
@@ -80,6 +93,8 @@ ThemeVariant SwitchPlatform::getThemeVariant()
 
 SwitchPlatform::~SwitchPlatform()
 {
+    appletUnhook(&this->appletCookie);
+
     delete this->audioPlayer;
     delete this->inputManager;
     delete this->videoContext;
