@@ -9,6 +9,7 @@ include $(TOPDIR)/$(current_dir)/lib/extern/switch-libpulsar/deps.mk
 SOURCES		:=	$(SOURCES) \
 				$(current_dir)/lib/core \
 				$(current_dir)/lib/views \
+				$(current_dir)/lib/touch \
 				$(current_dir)/lib/platforms/glfw \
 				$(current_dir)/lib/platforms/switch \
 				$(current_dir)/lib/extern/glad \

@@ -44,6 +44,10 @@ CaptionedImage::CaptionedImage()
     this->forwardXMLAttribute("imageHeight", this->image, "height");
 
     this->forwardXMLAttribute("caption", this->label, "text");
+
+    this->addGestureRecognizer(new brls::TapGestureRecognizer([this](){
+        brls::Application::giveFocus(this);
+    }));
 }
 
 void CaptionedImage::onChildFocusGained(brls::View* directChild, brls::View* focusedView)

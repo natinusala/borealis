@@ -17,14 +17,12 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <borealis/touch/tap_gesture_recognizer.hpp>
-
 #include <borealis.hpp>
 
 namespace brls
 {
 
-TapGestureRecognizer::TapGestureRecognizer(GestureRespond respond, int target)
+TapGestureRecognizer::TapGestureRecognizer(TapGestureRespond respond, int target)
     : target(target), respond(respond)
 {
     this->counter = 0;
@@ -42,19 +40,22 @@ bool TapGestureRecognizer::recognitionLoop(TouchState touch, bool locked)
         this->y = touch.y;
         break;
     case STAY:
-        if (touch.x != this->x || touch.y != this->y) {
+        if (fabs(touch.x - this->x) > MAX_DELTA_MOVEMENT || 
+            fabs(touch.y - this->y) > MAX_DELTA_MOVEMENT) {
             this->success = false;
             counter = 0;
         }
         break;
     case END:
-        if (touch.x == this->x && touch.y == this->y) 
+        if (this->success &&
+            fabs(touch.x - this->x) <= MAX_DELTA_MOVEMENT && 
+            fabs(touch.y - this->y) <= MAX_DELTA_MOVEMENT) 
             this->counter++;
 
         if (counter >= target) 
         {
             if (respond && !locked) 
-                respond();
+                this->respond();
             counter = 0;
         }
         break;

@@ -226,7 +226,7 @@ bool Application::mainLoop()
     switch (Application::touchState.state)
     {
     case START:
-        Logger::info("Touched at X: " + std::to_string(Application::touchState.x) + ", Y: " + std::to_string(Application::touchState.y));
+        Logger::debug("Touched at X: " + std::to_string(Application::touchState.x) + ", Y: " + std::to_string(Application::touchState.y));
         Application::firstResponder = Application::activitiesStack[Application::activitiesStack.size() - 1]
             ->getContentView()->hitTest(Application::touchState.x, Application::touchState.y);
         break;

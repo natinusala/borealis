@@ -95,7 +95,6 @@ Button::Button()
 
     this->addGestureRecognizer(new TapGestureRecognizer([this]()
     {
-        Logger::debug(describe() + ": Clicked!");
         Application::giveFocus(this);
     }));
 }

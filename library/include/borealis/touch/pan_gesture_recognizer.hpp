@@ -21,24 +21,50 @@
 
 #include "gesture_recognizer.hpp"
 
-#define MAX_DELTA_MOVEMENT 10
-
 namespace brls
 {
 
-typedef std::function<void()> TapGestureRespond;
+struct PanGestureCtx;
+typedef std::function<void(PanGestureCtx)> PanGestureRespond;
 
-class TapGestureRecognizer: public GestureRecognizer
+enum class PanAxis
+{
+    HORIZONTAL,
+    VERTICAL,
+	NONE,
+};
+
+struct PanGestureCtx
+{
+	TouchClickState state;
+	double startX;
+	double startY;
+	double currentX;
+	double currentY;
+	double deltaX;
+	double deltaY;
+};
+
+class PanGestureRecognizer: public GestureRecognizer
 {
 public:
-	TapGestureRecognizer(TapGestureRespond respond, int target = 1);
+	PanGestureRecognizer(PanGestureRespond respond, PanAxis axis);
 	bool recognitionLoop(TouchState touch, bool locked) override;
+	
+	PanAxis getAxis() const
+	{
+		return this->axis;
+	}
 private:
-	TapGestureRespond respond;
+	PanGestureRespond respond;
+	PanAxis axis;
 	double x;
 	double y;
-	int counter;
-	int target;
+	double startX;
+	double startY;
+	double deltaX;
+	double deltaY;
+	bool recognized;
 };
 
 };

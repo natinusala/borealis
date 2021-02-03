@@ -26,8 +26,6 @@
 namespace brls
 {
 
-typedef std::function<void()> GestureRespond;
-
 class GestureRecognizer
 {
 public:

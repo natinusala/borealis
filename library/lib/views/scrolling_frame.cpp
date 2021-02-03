@@ -19,6 +19,7 @@
 #include <borealis/core/animations.hpp>
 #include <borealis/core/application.hpp>
 #include <borealis/views/scrolling_frame.hpp>
+#include <borealis/touch/pan_gesture_recognizer.hpp>
 
 namespace brls
 {
@@ -67,6 +68,30 @@ ScrollingFrame::ScrollingFrame()
             { "natural", ScrollingBehavior::NATURAL },
             { "centered", ScrollingBehavior::CENTERED },
         });
+
+    addGestureRecognizer(new PanGestureRecognizer([this](PanGestureCtx pan)
+    {
+        float contentHeight = this->getContentHeight();
+
+        static float startY;
+        if (pan.state == START) 
+            startY = this->scrollY * contentHeight;
+
+        float newScroll = (startY - (pan.currentY - pan.startY)) / contentHeight;
+
+        // Top boundary
+        if (newScroll < 0.0f)
+            newScroll = 0.0f;
+
+        float bottomLimit = (contentHeight - this->getScrollingAreaHeight()) / contentHeight;
+        
+        // // Bottom boundary
+        if (newScroll > bottomLimit)
+            newScroll = bottomLimit;
+
+        //Start animation
+        this->startScrolling(true, newScroll);
+    }, PanAxis::NONE));
 }
 
 void ScrollingFrame::draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx)

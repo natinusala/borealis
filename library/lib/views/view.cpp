@@ -104,19 +104,15 @@ void View::addGestureRecognizer(GestureRecognizer* recognizer)
 
 void View::gestureRecognizerRequest(TouchState touch, bool locked) 
 {
-    bool lock = false;
+    bool lock = locked;
 
     for (GestureRecognizer* recognizer : getGestureRecognizers()) 
     {
         lock |= recognizer->recognitionLoop(touch, locked);
     }
 
-    if (getGestureRecognizers().size() == 0) 
-    {
-        if (parent)
-            parent->gestureRecognizerRequest(touch, lock);
-        return;
-    }
+    if (parent)
+        parent->gestureRecognizerRequest(touch, lock);
 }
 
 void View::frame(FrameContext* ctx)

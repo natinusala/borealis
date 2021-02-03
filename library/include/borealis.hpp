@@ -52,3 +52,7 @@
 #include <borealis/views/sidebar.hpp>
 #include <borealis/views/tab_frame.hpp>
 #include <borealis/views/view.hpp>
+
+//Gestures
+#include <borealis/touch/tap_gesture_recognizer.hpp>
+#include <borealis/touch/pan_gesture_recognizer.hpp>
