@@ -31,8 +31,9 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
+// nanovg implementation
 #define NANOVG_GL3_IMPLEMENTATION
-#include <nanovg/nanovg_gl.h>
+#include <nanovg-gl/nanovg_gl.h>
 
 namespace brls
 {

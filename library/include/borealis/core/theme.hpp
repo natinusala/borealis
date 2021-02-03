@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <nanovg/nanovg.h>
+#include <nanovg.h>
 
 #include <initializer_list>
 #include <string>

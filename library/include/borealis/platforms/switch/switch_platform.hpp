@@ -21,28 +21,31 @@
 #include <borealis/platforms/glfw/glfw_platform.hpp>
 #include <borealis/platforms/switch/switch_audio.hpp>
 #include <borealis/platforms/switch/switch_input.hpp>
+#include <borealis/platforms/switch/switch_video.hpp>
 #include <borealis/platforms/switch/switch_touch.hpp>
 
 namespace brls
 {
 
-class SwitchPlatform : public GLFWPlatform // TODO: don't inherit from GLFWPlatform anymore
+class SwitchPlatform : public Platform
 {
   public:
-    SwitchPlatform(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight);
+    SwitchPlatform();
     ~SwitchPlatform();
 
     std::string getName() override;
 
     bool mainLoopIteration() override;
 
+    VideoContext* getVideoContext() override;
     AudioPlayer* getAudioPlayer() override;
     InputManager* getInputManager() override;
     TouchManager* getTouchManager() override;
 
   private:
     SwitchAudioPlayer* audioPlayer;
-    InputManager* inputManager;
+    SwitchInputManager* inputManager;
+    SwitchVideoContext* videoContext;
     SwitchTouchManager* touchManager;
 };
 

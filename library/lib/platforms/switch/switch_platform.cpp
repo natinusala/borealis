@@ -23,9 +23,9 @@
 namespace brls
 {
 
-SwitchPlatform::SwitchPlatform(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight)
-    : GLFWPlatform(windowTitle, windowWidth, windowHeight)
+SwitchPlatform::SwitchPlatform()
 {
+    this->videoContext = new SwitchVideoContext();
     this->audioPlayer  = new SwitchAudioPlayer();
     this->inputManager = new SwitchInputManager();
     this->touchManager = new SwitchTouchManager();
@@ -38,7 +38,12 @@ std::string SwitchPlatform::getName()
 
 bool SwitchPlatform::mainLoopIteration()
 {
-    return GLFWPlatform::mainLoopIteration() && appletMainLoop();
+    return appletMainLoop();
+}
+
+VideoContext* SwitchPlatform::getVideoContext()
+{
+    return this->videoContext;
 }
 
 AudioPlayer* SwitchPlatform::getAudioPlayer()

@@ -21,7 +21,7 @@
 
 #include <cxxabi.h>
 #include <libretro-common/features/features_cpu.h>
-#include <nanovg/nanovg.h>
+#include <nanovg.h>
 #include <stdio.h>
 #include <tinyxml2.h>
 #include <yoga/YGNode.h>
