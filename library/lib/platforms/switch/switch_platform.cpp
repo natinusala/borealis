@@ -18,17 +18,48 @@
 
 #include <switch.h>
 
+#include <borealis/core/logger.hpp>
 #include <borealis/platforms/switch/switch_platform.hpp>
 
 namespace brls
 {
 
+static void switchAppletCallback(AppletHookType hookType, void* param)
+{
+    SwitchPlatform* platform = (SwitchPlatform*)param;
+    platform->appletCallback(hookType);
+}
+
 SwitchPlatform::SwitchPlatform()
+{
+    appletHook(&this->appletCookie, switchAppletCallback, this);
+
+    // Cache theme variant before video context init
+    // The background color is created once in the "static" command list
+    // executed every frame, so we need to know the background color
+    // to add the clear command to that list.
+    ColorSetId colorSetId;
+    setsysGetColorSetId(&colorSetId);
+
+    if (colorSetId == ColorSetId_Dark)
+        this->themeVariant = ThemeVariant::DARK;
+    else
+        this->themeVariant = ThemeVariant::LIGHT;
+
+    Logger::info("switch: system has color set {}, using borealis theme {}", colorSetId, this->themeVariant);
+}
+
+void SwitchPlatform::init()
 {
     this->videoContext = new SwitchVideoContext();
     this->audioPlayer  = new SwitchAudioPlayer();
     this->inputManager = new SwitchInputManager();
     this->touchManager = new SwitchTouchManager();
+}
+
+void SwitchPlatform::appletCallback(AppletHookType hookType)
+{
+    this->videoContext->appletCallback(hookType);
 }
 
 std::string SwitchPlatform::getName()
@@ -60,11 +91,19 @@ TouchManager* SwitchPlatform::getTouchManager()
 {
     return this->touchManager;
 }
+  
+ThemeVariant SwitchPlatform::getThemeVariant()
+{
+    return this->themeVariant;
+}
 
 SwitchPlatform::~SwitchPlatform()
 {
+    appletUnhook(&this->appletCookie);
+
     delete this->audioPlayer;
     delete this->inputManager;
+    delete this->videoContext;
 }
 
 } // namespace brls

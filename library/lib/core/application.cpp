@@ -63,6 +63,7 @@ bool Application::init(std::string title)
 {
     // Init platform
     Application::platform = Platform::createPlatform(title, ORIGINAL_WINDOW_WIDTH, ORIGINAL_WINDOW_HEIGHT);
+    Application::platform->init();
 
     if (!Application::platform)
         throw std::logic_error("Did not find a valid platform");
@@ -174,23 +175,6 @@ bool Application::init(std::string title)
         Logger::warning("Material font not found");
     }
 
-    // Load theme
-#ifdef __SWITCH__
-    ColorSetId nxTheme;
-    setsysGetColorSetId(&nxTheme);
-
-    if (nxTheme == ColorSetId_Dark)
-        Application::currentThemeVariant = ThemeVariant::DARK;
-    else
-        Application::currentThemeVariant = ThemeVariant::LIGHT;
-#else
-    char* themeEnv = getenv("BOREALIS_THEME");
-    if (themeEnv != nullptr && !strcasecmp(themeEnv, "DARK"))
-        Application::currentThemeVariant = ThemeVariant::DARK;
-    else
-        Application::currentThemeVariant = ThemeVariant::LIGHT;
-#endif
-
     // Init animations engine
     menu_animation_init();
 
@@ -283,7 +267,6 @@ bool Application::mainLoop()
 
     // Render
     Application::frame();
-    Application::platform->getVideoContext()->swapBuffers();
 
     // Sleep if necessary
 #ifdef __SWITCH__
@@ -380,7 +363,10 @@ void Application::navigate(FocusDirection direction)
 void Application::onControllerButtonPressed(enum ControllerButton button, bool repeating)
 {
     if (Application::blockInputsTokens != 0)
+    {
+        Logger::debug("{} button press blocked (tokens={})", button, Application::blockInputsTokens);
         return;
+    }
 
     if (repeating && Application::repetitionOldFocus == Application::currentFocus)
         return;
@@ -465,6 +451,8 @@ bool Application::handleAction(char button)
 
 void Application::frame()
 {
+    VideoContext* videoContext = Application::platform->getVideoContext();
+
     // Frame context
     FrameContext frameContext = FrameContext();
 
@@ -473,9 +461,10 @@ void Application::frame()
     frameContext.fontStash  = &Application::fontStash;
     frameContext.theme      = Application::getTheme();
 
-    // Clear
+    // Begin frame and clear
     NVGcolor backgroundColor = frameContext.theme["brls/background"];
-    Application::platform->getVideoContext()->clear(backgroundColor);
+    videoContext->beginFrame();
+    videoContext->clear(backgroundColor);
 
     if (Application::background)
         Application::background->preFrame();
@@ -521,6 +510,8 @@ void Application::frame()
 
     if (Application::background)
         Application::background->postFrame();
+
+    Application::platform->getVideoContext()->endFrame();
 }
 
 void Application::exit()
@@ -758,7 +749,7 @@ void Application::clear()
 
 Theme Application::getTheme()
 {
-    if (Application::currentThemeVariant == ThemeVariant::LIGHT)
+    if (Application::getThemeVariant() == ThemeVariant::LIGHT)
         return getLightTheme();
     else
         return getDarkTheme();
@@ -766,7 +757,7 @@ Theme Application::getTheme()
 
 ThemeVariant Application::getThemeVariant()
 {
-    return Application::currentThemeVariant;
+    return Application::platform->getThemeVariant();
 }
 
 int Application::loadFont(const char* fontName, const char* filePath)
@@ -793,12 +784,15 @@ void Application::crash(std::string text)
 void Application::blockInputs()
 {
     Application::blockInputsTokens += 1;
+    Logger::debug("Adding an inputs block token (tokens={})", Application::blockInputsTokens);
 }
 
 void Application::unblockInputs()
 {
     if (Application::blockInputsTokens > 0)
         Application::blockInputsTokens -= 1;
+
+    Logger::debug("Removing an inputs block token (tokens={})", Application::blockInputsTokens);
 }
 
 NVGcontext* Application::getNVGContext()

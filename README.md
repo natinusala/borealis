@@ -58,8 +58,8 @@ ninja -C build
     3. use the `borealis_files`, `borealis_dependencies`, `borealis_include` and `borealis_cpp_args` variables for respectively objects to build, dependencies (glfw...), includes directory and cpp args
     4. add a `BOREALIS_RESOURCES` define pointing to the resources folder at runtime (so `resources`)
 4. For Switch:
-    1. take a standard homebrew makefile
+    1. take a standard deko3d homebrew makefile (from the switch-examples repo)
     2. add a `BOREALIS_PATH` variable containing the subfolder you put the library in
-    3. use `include` to load `borealis.mk` (after `LIBDIRS` and `BOREALIS_PATH`)
-    4. set `ROMFS` to the resources folder
-    5. add a `BOREALIS_RESOURCES` define pointing to the resources folder at runtime (so `romfs:/`)
+    3. set `ROMFS` to the resources folder - borealis resources path is set to `romfs:/` in borealis.mk
+    4. use `include` to load `borealis.mk` (after `LIBDIRS` and `BOREALIS_PATH`)
+    5. it's important for `OUT_SHADERS` to be set to `shaders` since nanovg will look for the shaders there

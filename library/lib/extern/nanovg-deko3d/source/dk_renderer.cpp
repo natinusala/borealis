@@ -492,6 +492,14 @@ namespace nvg {
         return nullptr;
     }
 
+    // borealis addition: required to change resolution while running
+    void DkRenderer::UpdateViewBounds(unsigned int view_width, unsigned int view_height)
+    {
+        this->m_view_width = view_width;
+        this->m_view_height = view_height;
+    }
+    // end borealis addition
+
     void DkRenderer::Flush(DKNVGcontext &ctx) {
         if (ctx.ncalls > 0) {
             /* Prepare dynamic command buffer. */

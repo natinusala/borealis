@@ -18,8 +18,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <switch.h>
-
 #include <borealis/core/application.hpp>
 #include <borealis/platforms/switch/switch_video.hpp>
 
@@ -41,8 +39,20 @@ namespace brls
 
 static constexpr const unsigned STATIC_CMD_SIZE = 0x1000;
 
+// TODO: fix glfw :shrek:
+
 SwitchVideoContext::SwitchVideoContext()
 {
+    // Get display resolution change event
+    Result rc = appletGetDefaultDisplayResolutionChangeEvent(&this->defaultDisplayResolutionChangeEvent);
+
+    if (R_FAILED(rc))
+    {
+        Logger::warning("switch: failed to get default display resolution change event ({:#x}), falling back to operation mode change event", rc);
+        Logger::warning("switch: resolution might not change properly when docking while the app is running using 3rd party docks!");
+        this->displayResolutionChangeEventReady = false; // default is true
+    }
+
     // Setup scaling
     this->updateWindowSize();
 
@@ -60,6 +70,10 @@ SwitchVideoContext::SwitchVideoContext()
 
     // Create framebuffer resources
     this->createFramebufferResources();
+
+    // Create renderer and nvg context
+    this->renderer.emplace(this->framebufferWidth, this->framebufferHeight, this->device, this->queue, *this->imagesPool, *this->codePool, *this->dataPool);
+    this->nvgContext = nvgCreateDk(&*this->renderer, NVG_ANTIALIAS | NVG_STENCIL_STROKES);
 }
 
 void SwitchVideoContext::createFramebufferResources()
@@ -109,14 +123,13 @@ void SwitchVideoContext::createFramebufferResources()
 
     // Generate the main rendering cmdlist
     this->recordStaticCommands();
-
-    // Create renderer and nvg context
-    this->renderer.emplace(this->framebufferWidth, this->framebufferHeight, this->device, this->queue, *this->imagesPool, *this->codePool, *this->dataPool);
-    this->nvgContext = nvgCreateDk(&*this->renderer, NVG_ANTIALIAS | NVG_STENCIL_STROKES);
 }
 
 void SwitchVideoContext::recordStaticCommands()
 {
+    // This method should always be called AFTER initializing the theme variant
+    // since the static clear command uses the theme background color
+
     // Initialize state structs with deko3d defaults
     dk::RasterizerState rasterizerState;
     dk::ColorState colorState;
@@ -128,7 +141,10 @@ void SwitchVideoContext::recordStaticCommands()
     this->cmdbuf.setScissors(0, { { 0, 0, static_cast<uint32_t>(this->framebufferWidth), static_cast<uint32_t>(this->framebufferHeight) } });
 
     // Clear the color and depth buffers
-    this->cmdbuf.clearColor(0, DkColorMask_RGBA, 0.0f, 0.0f, 0.0f, 1.0f);
+    Theme theme              = Application::getTheme();
+    NVGcolor backgroundColor = theme["brls/background"];
+    this->cmdbuf.clearColor(0, DkColorMask_RGBA, backgroundColor.r, backgroundColor.g, backgroundColor.b, 1.0f);
+
     this->cmdbuf.clearDepthStencil(true, 1.0f, 0xFF, 0);
 
     // Bind required state
@@ -139,25 +155,124 @@ void SwitchVideoContext::recordStaticCommands()
     this->renderCmdlist = cmdbuf.finishList();
 }
 
-// TODO: trigger that when the console is docked
 void SwitchVideoContext::updateWindowSize()
 {
-    // TODO: change that switch/case to something more future proof (maybe use GetDefaultDisplayResolution? don't forget it can fail on early fw)
-    switch (appletGetOperationMode())
+    // First try to get actual resolution with GetDefaultDisplayResolution
+    int32_t width, height;
+    Result rc = appletGetDefaultDisplayResolution(&width, &height);
+    if (R_SUCCEEDED(rc))
     {
-        case AppletOperationMode_Handheld:
-            this->framebufferWidth  = HANDHELD_WIDTH;
-            this->framebufferHeight = HANDHELD_HEIGHT;
-            break;
-        case AppletOperationMode_Console:
-            this->framebufferWidth  = DOCKED_WIDTH;
-            this->framebufferHeight = DOCKED_HEIGHT;
-            break;
-        default:
-            return;
+        this->framebufferWidth  = (float)width;
+        this->framebufferHeight = (float)height;
+    }
+    // If it failed, use hardcoded resolutions as fallback
+    else
+    {
+        Logger::warning("switch: failed to detect display resolution ({:#x}), falling back to hardcoded resolution");
+
+        switch (appletGetOperationMode())
+        {
+            case AppletOperationMode_Handheld:
+                this->framebufferWidth  = HANDHELD_WIDTH;
+                this->framebufferHeight = HANDHELD_HEIGHT;
+                break;
+            case AppletOperationMode_Console:
+                this->framebufferWidth  = DOCKED_WIDTH;
+                this->framebufferHeight = DOCKED_HEIGHT;
+                break;
+            default:
+                return;
+        }
     }
 
     Application::onWindowResized(roundf(this->framebufferWidth), roundf(this->framebufferHeight));
+
+    this->renderer->UpdateViewBounds(this->framebufferWidth, this->framebufferHeight);
+}
+
+void SwitchVideoContext::clear(NVGcolor color)
+{
+    // Unimplemented here (clear is made using a static command ran every frame)
+}
+
+void SwitchVideoContext::resetState()
+{
+    // Unimplemented
+}
+
+void SwitchVideoContext::resetFramebuffer()
+{
+    this->destroyFramebufferResources();
+    this->updateWindowSize();
+    this->createFramebufferResources();
+}
+
+void SwitchVideoContext::beginFrame()
+{
+    // Poll the display resolution change event
+    if (this->displayResolutionChangeEventReady && R_SUCCEEDED(eventWait(&this->defaultDisplayResolutionChangeEvent, 0)))
+        this->resetFramebuffer();
+
+    this->imageSlot = this->queue.acquireImage(this->swapchain);
+
+    // Run the command list that attaches said framebuffer to the queue
+    this->queue.submitCommands(this->framebuffersCmdLists[this->imageSlot]);
+
+    // Run the main rendering command list
+    queue.submitCommands(this->renderCmdlist);
+}
+
+void SwitchVideoContext::endFrame()
+{
+    // Now that we are done rendering, present it to the screen
+    queue.presentImage(this->swapchain, this->imageSlot);
+}
+
+void SwitchVideoContext::destroyFramebufferResources()
+{
+    // Return early if we have nothing to destroy
+    if (!this->swapchain)
+        return;
+
+    // Make sure the queue is idle before destroying anything
+    this->queue.waitIdle();
+
+    // Clear the static cmdbuf, destroying the static cmdlists in the process
+    this->cmdbuf.clear();
+
+    // Destroy the swapchain
+    this->swapchain.destroy();
+
+    // Destroy the framebuffers
+    for (unsigned i = 0; i < FRAMEBUFFERS_COUNT; i++)
+        framebuffersHandles[i].destroy();
+
+    // Destroy the depth buffer
+    depthBufferHandle.destroy();
+}
+
+void SwitchVideoContext::appletCallback(AppletHookType hookType)
+{
+    // Only reset framebuffer if the display resolution change event isn't ready
+    if (hookType == AppletHookType_OnOperationMode && !this->displayResolutionChangeEventReady)
+        resetFramebuffer();
+}
+
+NVGcontext* SwitchVideoContext::getNVGContext()
+{
+    return this->nvgContext;
+}
+
+SwitchVideoContext::~SwitchVideoContext()
+{
+    // Destroy the framebuffer resources. This should be done first.
+    this->destroyFramebufferResources();
+
+    // Cleanup vg. This needs to be done first as it relies on the renderer.
+    nvgDeleteDk(this->nvgContext);
+
+    // Destroy the renderer
+    this->renderer.reset();
 }
 
 } // namespace brls

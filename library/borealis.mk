@@ -14,6 +14,7 @@ SOURCES		:=	$(SOURCES) \
 				$(current_dir)/lib/extern/glad \
 				$(current_dir)/lib/extern/nanovg-deko3d/source \
 				$(current_dir)/lib/extern/nanovg-deko3d/source/framework \
+				$(current_dir)/lib/extern/nanovg-deko3d/shaders \
 				$(current_dir)/lib/extern/libretro-common/compat \
 				$(current_dir)/lib/extern/libretro-common/encodings \
 				$(current_dir)/lib/extern/libretro-common/features \
@@ -32,4 +33,4 @@ INCLUDES	:=	$(INCLUDES) \
 				$(current_dir)/include/borealis/extern/tinyxml2 \
 				$(addprefix $(current_dir)/lib/extern/switch-libpulsar/, $(PLSR_INCLUDES))
 
-CXXFLAGS := $(CXXFLAGS) -DYG_ENABLE_EVENTS
+CXXFLAGS := $(CXXFLAGS) -DYG_ENABLE_EVENTS -fdata-sections -DBOREALIS_RESOURCES="\"romfs:/\""

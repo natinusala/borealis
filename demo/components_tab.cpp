@@ -34,7 +34,8 @@ ComponentsTab::ComponentsTab()
 
 bool ComponentsTab::onPrimaryButtonClicked(brls::View* view)
 {
-    brls::Logger::debug("Clicked");
+    // TODO: actually do something here
+    brls::Logger::info("Clicked");
     return true;
 }
 

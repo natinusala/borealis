@@ -33,16 +33,25 @@ class SwitchPlatform : public Platform
     SwitchPlatform();
     ~SwitchPlatform();
 
+    void init() override;
+
     std::string getName() override;
 
     bool mainLoopIteration() override;
+    ThemeVariant getThemeVariant() override;
 
     VideoContext* getVideoContext() override;
     AudioPlayer* getAudioPlayer() override;
     InputManager* getInputManager() override;
     TouchManager* getTouchManager() override;
 
+    void appletCallback(AppletHookType hookType);
+
   private:
+    AppletHookCookie appletCookie;
+
+    ThemeVariant themeVariant;
+
     SwitchAudioPlayer* audioPlayer;
     SwitchInputManager* inputManager;
     SwitchVideoContext* videoContext;

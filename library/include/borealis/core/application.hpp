@@ -200,8 +200,6 @@ class Application
 
     inline static View* currentFocus;
 
-    inline static ThemeVariant currentThemeVariant;
-
     inline static ControllerState oldControllerState = {};
     inline static ControllerState controllerState    = {};
     inline static TouchState touchState              = {};

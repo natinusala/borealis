@@ -1141,6 +1141,13 @@ void View::show(std::function<void(void)> cb)
 
 void View::show(std::function<void(void)> cb, bool animate, float animationDuration)
 {
+    if (!this->hidden)
+    {
+        this->onShowAnimationEnd();
+        cb();
+        return;
+    }
+
     brls::Logger::debug("Showing {}", this->describe());
 
     this->hidden = false;
@@ -1186,6 +1193,12 @@ void View::hide(std::function<void(void)> cb)
 
 void View::hide(std::function<void(void)> cb, bool animated, float animationDuration)
 {
+    if (this->hidden)
+    {
+        cb();
+        return;
+    }
+
     brls::Logger::debug("Hiding {}", this->describe());
 
     this->hidden = true;

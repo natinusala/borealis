@@ -21,17 +21,21 @@
 #pragma once
 
 #include <nanovg/framework/CMemPool.h>
+#include <switch.h>
 
 #include <borealis/core/video.hpp>
 #include <deko3d.hpp>
 #include <nanovg/dk_renderer.hpp>
 #include <optional>
 
+typedef Event _LibNXEvent; // "Event" alone clashes with brls::Event
+
 namespace brls
 {
 
 static constexpr const unsigned FRAMEBUFFERS_COUNT = 2;
 
+// deko3d video context
 class SwitchVideoContext : public VideoContext
 {
   public:
@@ -39,16 +43,26 @@ class SwitchVideoContext : public VideoContext
     ~SwitchVideoContext();
 
     void clear(NVGcolor color) override;
-    void swapBuffers() override;
     void resetState() override;
+    void beginFrame() override;
+    void endFrame() override;
     virtual NVGcontext* getNVGContext() override;
 
+    void appletCallback(AppletHookType hookType);
+
   private:
+    _LibNXEvent defaultDisplayResolutionChangeEvent;
+    bool displayResolutionChangeEventReady = true;
+
+    void resetFramebuffer(); // triggered by either display resolution change event or operation mode change event
     void updateWindowSize();
     void createFramebufferResources();
     void recordStaticCommands();
 
+    void destroyFramebufferResources();
+
     float framebufferWidth, framebufferHeight;
+    int imageSlot;
 
     dk::UniqueDevice device;
     dk::UniqueQueue queue;
