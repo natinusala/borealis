@@ -74,7 +74,7 @@ ScrollingFrame::ScrollingFrame()
         float contentHeight = this->getContentHeight();
 
         static float startY;
-        if (pan.state == START) 
+        if (pan.state == TouchEvent::START) 
             startY = this->scrollY * contentHeight;
 
         float newScroll = (startY - (pan.currentY - pan.startY)) / contentHeight;

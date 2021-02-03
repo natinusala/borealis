@@ -68,7 +68,7 @@ class Platform
     virtual InputManager* getInputManager() = 0;
 
     /**
-     * Returns the InputManager for the platform.
+     * Returns the TouchManager for the platform.
      * Cannot return nullptr.
      */
     virtual TouchManager* getTouchManager() = 0;

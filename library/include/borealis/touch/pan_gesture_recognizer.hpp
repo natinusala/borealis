@@ -36,7 +36,7 @@ enum class PanAxis
 
 struct PanGestureCtx
 {
-	TouchClickState state;
+	TouchEvent state;
 	double startX;
 	double startY;
 	double currentX;

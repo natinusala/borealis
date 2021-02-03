@@ -34,19 +34,19 @@ bool TapGestureRecognizer::recognitionLoop(TouchState touch, bool locked)
 
     switch (touch.state)
     {
-    case START:
+    case TouchEvent::START:
         this->success = true;
         this->x = touch.x;
         this->y = touch.y;
         break;
-    case STAY:
+    case TouchEvent::STAY:
         if (fabs(touch.x - this->x) > MAX_DELTA_MOVEMENT || 
             fabs(touch.y - this->y) > MAX_DELTA_MOVEMENT) {
             this->success = false;
             counter = 0;
         }
         break;
-    case END:
+    case TouchEvent::END:
         if (this->success &&
             fabs(touch.x - this->x) <= MAX_DELTA_MOVEMENT && 
             fabs(touch.y - this->y) <= MAX_DELTA_MOVEMENT) 
@@ -59,7 +59,7 @@ bool TapGestureRecognizer::recognitionLoop(TouchState touch, bool locked)
             counter = 0;
         }
         break;
-    case NONE:
+    case TouchEvent::NONE:
         this->success = false;
         break;
     }

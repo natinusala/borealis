@@ -44,16 +44,16 @@ void GLFWTouchManager::updateTouchState(TouchState* state)
 
     int clickState = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
     if (clickState == GLFW_PRESS) {
-        if (oldTouch.state == START || oldTouch.state == STAY) {
-            state->state = STAY;
+        if (oldTouch.state == TouchEvent::START || oldTouch.state == TouchEvent::STAY) {
+            state->state = TouchEvent::STAY;
         } else {
-            state->state = START;
+            state->state = TouchEvent::START;
         }
     } else {
-        if (oldTouch.state == END || oldTouch.state == NONE) {
-            state->state = NONE;
+        if (oldTouch.state == TouchEvent::END || oldTouch.state == TouchEvent::NONE) {
+            state->state = TouchEvent::NONE;
         } else {
-            state->state = END;
+            state->state = TouchEvent::END;
         }
     }
     oldTouch = *state;

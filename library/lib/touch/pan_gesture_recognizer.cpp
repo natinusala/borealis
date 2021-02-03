@@ -31,10 +31,10 @@ bool PanGestureRecognizer::recognitionLoop(TouchState touch, bool locked)
 {
     if (!enabled) return false;
 
-    TouchClickState state;
+    TouchEvent state;
     switch (touch.state)
     {
-    case START:
+    case TouchEvent::START:
         this->recognized = false;
         this->success = true;
         this->startX = touch.x;
@@ -42,8 +42,8 @@ bool PanGestureRecognizer::recognitionLoop(TouchState touch, bool locked)
         this->x = touch.x;
         this->y = touch.y;
         break;
-    case STAY:
-    case END:
+    case TouchEvent::STAY:
+    case TouchEvent::END:
         deltaX = touch.x - this->x;
         deltaY = touch.y - this->y;
 
@@ -67,7 +67,7 @@ bool PanGestureRecognizer::recognitionLoop(TouchState touch, bool locked)
                 break;
             }
             this->recognized = true;
-            state = START;
+            state = TouchEvent::START;
         }
 
         if (respond && recognized && success && !locked) 
@@ -85,7 +85,7 @@ bool PanGestureRecognizer::recognitionLoop(TouchState touch, bool locked)
             this->respond(result);
         }
         break;
-    case NONE:
+    case TouchEvent::NONE:
         this->success = false;
         break;
     }

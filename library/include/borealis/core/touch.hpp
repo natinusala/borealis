@@ -22,7 +22,7 @@
 namespace brls
 {
 
-enum TouchClickState {
+enum class TouchEvent {
     START,
     STAY,
     END,
@@ -31,7 +31,7 @@ enum TouchClickState {
 
 typedef struct TouchState
 {
-    TouchClickState state = NONE;
+    TouchEvent state = TouchEvent::NONE;
     double x, y;
 } TouchState;
 
