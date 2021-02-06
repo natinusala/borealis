@@ -20,6 +20,7 @@
 
 #include <borealis/platforms/glfw/glfw_platform.hpp>
 #include <borealis/platforms/switch/switch_audio.hpp>
+#include <borealis/platforms/switch/switch_font.hpp>
 #include <borealis/platforms/switch/switch_input.hpp>
 #include <borealis/platforms/switch/switch_video.hpp>
 
@@ -42,6 +43,7 @@ class SwitchPlatform : public Platform
     VideoContext* getVideoContext() override;
     AudioPlayer* getAudioPlayer() override;
     InputManager* getInputManager() override;
+    FontLoader* getFontLoader() override;
 
     void appletCallback(AppletHookType hookType);
 
@@ -53,6 +55,7 @@ class SwitchPlatform : public Platform
     SwitchAudioPlayer* audioPlayer;
     SwitchInputManager* inputManager;
     SwitchVideoContext* videoContext;
+    SwitchFontLoader* fontLoader;
 };
 
 } // namespace brls

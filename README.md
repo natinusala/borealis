@@ -56,7 +56,7 @@ ninja -C build
     1. take a standard meson file
     2. use `subdir` to import the library folder
     3. use the `borealis_files`, `borealis_dependencies`, `borealis_include` and `borealis_cpp_args` variables for respectively objects to build, dependencies (glfw...), includes directory and cpp args
-    4. add a `BOREALIS_RESOURCES` define pointing to the resources folder at runtime (so `resources`)
+    4. add a `BRLS_RESOURCES` define pointing to the resources folder at runtime (so `resources`)
 4. For Switch:
     1. take a standard deko3d homebrew makefile (from the switch-examples repo)
     2. add a `BOREALIS_PATH` variable containing the subfolder you put the library in

@@ -234,7 +234,7 @@ void Image::invalidateImageBounds()
 
 void Image::setImageFromRes(std::string name)
 {
-    this->setImageFromFile(std::string(BOREALIS_RESOURCES) + name);
+    this->setImageFromFile(std::string(BRLS_RESOURCES) + name);
 }
 
 void Image::setImageFromFile(std::string path)

@@ -19,6 +19,7 @@
 #pragma once
 
 #include <borealis/core/platform.hpp>
+#include <borealis/platforms/glfw/glfw_font.hpp>
 #include <borealis/platforms/glfw/glfw_input.hpp>
 #include <borealis/platforms/glfw/glfw_video.hpp>
 
@@ -40,11 +41,13 @@ class GLFWPlatform : public Platform
     AudioPlayer* getAudioPlayer() override;
     VideoContext* getVideoContext() override;
     InputManager* getInputManager() override;
+    FontLoader* getFontLoader() override;
 
   private:
     NullAudioPlayer* audioPlayer   = nullptr;
     GLFWVideoContext* videoContext = nullptr;
     GLFWInputManager* inputManager = nullptr;
+    GLFWFontLoader* fontLoader     = nullptr;
 };
 
 } // namespace brls

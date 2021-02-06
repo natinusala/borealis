@@ -39,7 +39,6 @@ namespace brls
 // TODO: use fmt to format the ugly XML logic_errors
 // TODO: find a way to reduce the number of invalidations on boot
 // TODO: use HasNewLayout and MarkAsSeen around onLayout() (so in the event ? does it work ? or does the event only trigger on new layouts already ? or on all layouts ?)
-// TODO: rename BOREALIS_ASSET to BRLS_ASSET
 
 // TODO: rework the highlight pulsation animation, it's not good enough
 

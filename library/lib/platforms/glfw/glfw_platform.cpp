@@ -49,6 +49,7 @@ GLFWPlatform::GLFWPlatform(std::string windowTitle, uint32_t windowWidth, uint32
     this->audioPlayer  = new NullAudioPlayer();
     this->videoContext = new GLFWVideoContext(windowTitle, windowWidth, windowHeight);
     this->inputManager = new GLFWInputManager(this->videoContext->getGLFWWindow());
+    this->fontLoader   = new GLFWFontLoader();
 
     // Misc
     glfwSetTime(0.0);
@@ -92,6 +93,11 @@ VideoContext* GLFWPlatform::getVideoContext()
 InputManager* GLFWPlatform::getInputManager()
 {
     return this->inputManager;
+}
+
+FontLoader* GLFWPlatform::getFontLoader()
+{
+    return this->fontLoader;
 }
 
 ThemeVariant GLFWPlatform::getThemeVariant()

@@ -1320,7 +1320,7 @@ std::string View::getFilePathXMLAttributeValue(std::string value)
     if (startsWith(value, "@res/"))
     {
         std::string resPath = value.substr(5);
-        return std::string(BOREALIS_RESOURCES) + resPath;
+        return std::string(BRLS_RESOURCES) + resPath;
     }
 
     return value;
@@ -1569,7 +1569,7 @@ bool View::isXMLAttributeValid(std::string attributeName)
 
 View* View::createFromXMLResource(std::string name)
 {
-    return View::createFromXMLFile(std::string(BOREALIS_RESOURCES) + "xml/" + name); // TODO: platform agnostic separator here if anyone cares about Windows
+    return View::createFromXMLFile(std::string(BRLS_RESOURCES) + "xml/" + name); // TODO: platform agnostic separator here if anyone cares about Windows
 }
 
 View* View::createFromXMLString(std::string xml)

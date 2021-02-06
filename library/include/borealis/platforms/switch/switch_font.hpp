@@ -1,7 +1,6 @@
 /*
     Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2019  natinusala
-    Copyright (C) 2019  p-sam
+    Copyright (C) 2021  natinusala
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,22 +18,16 @@
 
 #pragma once
 
-#include <nanovg.h>
-
 #include <borealis/core/font.hpp>
-#include <borealis/core/style.hpp>
-#include <borealis/core/theme.hpp>
 
 namespace brls
 {
 
-class FrameContext
+// Font loader using the pl system service
+class SwitchFontLoader : public FontLoader
 {
   public:
-    NVGcontext* vg       = nullptr;
-    float pixelRatio     = 0.0;
-    FontStash* fontStash = nullptr;
-    Theme theme          = nullptr;
+    void loadFonts() override;
 };
 
 } // namespace brls

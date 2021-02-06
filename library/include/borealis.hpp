@@ -19,23 +19,23 @@
 
 #pragma once
 
-#ifndef BOREALIS_RESOURCES
-#error BOREALIS_RESOURCES define missing
-#endif
-#define BOREALIS_ASSET(_str) BOREALIS_RESOURCES _str
-
 // Core
+#include <borealis/core/actions.hpp>
 #include <borealis/core/activity.hpp>
 #include <borealis/core/animations.hpp>
 #include <borealis/core/application.hpp>
+#include <borealis/core/assets.hpp>
 #include <borealis/core/audio.hpp>
 #include <borealis/core/event.hpp>
+#include <borealis/core/font.hpp>
+#include <borealis/core/frame_context.hpp>
 #include <borealis/core/i18n.hpp>
 #include <borealis/core/input.hpp>
 #include <borealis/core/logger.hpp>
 #include <borealis/core/platform.hpp>
 #include <borealis/core/repeating_task.hpp>
 #include <borealis/core/style.hpp>
+#include <borealis/core/task_manager.hpp>
 #include <borealis/core/theme.hpp>
 #include <borealis/core/video.hpp>
 

@@ -393,7 +393,7 @@ void Box::inflateFromXMLString(std::string xml)
 
 void Box::inflateFromXMLRes(std::string name)
 {
-    return Box::inflateFromXMLFile(std::string(BOREALIS_RESOURCES) + name);
+    return Box::inflateFromXMLFile(std::string(BRLS_RESOURCES) + name);
 }
 
 void Box::inflateFromXMLFile(std::string path)

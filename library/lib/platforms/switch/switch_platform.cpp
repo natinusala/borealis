@@ -54,6 +54,7 @@ void SwitchPlatform::init()
     this->videoContext = new SwitchVideoContext();
     this->audioPlayer  = new SwitchAudioPlayer();
     this->inputManager = new SwitchInputManager();
+    this->fontLoader   = new SwitchFontLoader();
 }
 
 void SwitchPlatform::appletCallback(AppletHookType hookType)
@@ -84,6 +85,11 @@ AudioPlayer* SwitchPlatform::getAudioPlayer()
 InputManager* SwitchPlatform::getInputManager()
 {
     return this->inputManager;
+}
+
+FontLoader* SwitchPlatform::getFontLoader()
+{
+    return this->fontLoader;
 }
 
 ThemeVariant SwitchPlatform::getThemeVariant()

@@ -25,6 +25,7 @@
 #include <borealis/core/activity.hpp>
 #include <borealis/core/animations.hpp>
 #include <borealis/core/audio.hpp>
+#include <borealis/core/font.hpp>
 #include <borealis/core/frame_context.hpp>
 #include <borealis/core/logger.hpp>
 #include <borealis/core/platform.hpp>
@@ -114,11 +115,23 @@ class Application
     static Theme getTheme();
     static ThemeVariant getThemeVariant();
 
-    static int loadFont(const char* fontName, const char* filePath);
-    static int loadFontFromMemory(const char* fontName, void* data, size_t size, bool freeData);
-    static int findFont(const char* fontName);
+    /**
+     * Loads a font from a given file and stores it in the font stash.
+     * Returns true if the operation succeeded.
+     */
+    static bool loadFontFromFile(std::string fontName, std::string filePath);
 
-    static FontStash* getFontStash();
+    /**
+     * Loads a font from a given memory buffer and stores it in the font stash.
+     * Returns true if the operation succeeded.
+     */
+    static bool loadFontFromMemory(std::string fontName, void* data, size_t size, bool freeData);
+
+    /**
+     * Returns the nanovg handle to the given font name, or FONT_INVALID if
+     * no such font is currently loaded.
+     */
+    static int getFont(std::string fontName);
 
     static void notify(std::string text);
 

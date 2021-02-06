@@ -16,7 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <borealis.hpp> // for BOREALIS_ASSET
+#include <borealis/core/assets.hpp>
+#include <borealis/core/logger.hpp>
 #include <filesystem>
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -42,7 +43,7 @@ static bool endsWith(const std::string& str, const std::string& suffix)
 
 static void loadLocale(std::string locale, nlohmann::json* target)
 {
-    std::string localePath = BOREALIS_ASSET("i18n/" + locale); // TODO: use a platform agnostic separator if someone cares about Windows
+    std::string localePath = BRLS_ASSET("i18n/" + locale); // TODO: use a platform agnostic separator if someone cares about Windows
 
     if (!std::filesystem::exists(localePath))
     {

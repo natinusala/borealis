@@ -20,10 +20,17 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 
 #include <algorithm>
-#include <borealis.hpp>
+#include <borealis/core/application.hpp>
+#include <borealis/core/font.hpp>
+#include <borealis/core/i18n.hpp>
+#include <borealis/views/button.hpp>
+#include <borealis/views/header.hpp>
+#include <borealis/views/image.hpp>
+#include <borealis/views/rectangle.hpp>
+#include <borealis/views/sidebar.hpp>
+#include <borealis/views/tab_frame.hpp>
 #include <stdexcept>
 #include <string>
 
@@ -31,6 +38,7 @@
 // because libnx uses an "Event" struct that also exists in Yoga (name clash)
 // and for some reason the compiler doesn't understand that Event in libnx
 // does NOT mean facebook::yoga::Event (the namespace seems to be ignored)
+// TODO: remove it
 #ifdef __SWITCH__
 #include <switch.h>
 #endif
@@ -104,75 +112,31 @@ bool Application::init(std::string title)
             view->onLayout();
     });
 
-    // Load fonts
-    // TODO: move that to Switch platform
-#ifdef __SWITCH__
+    // Load fonts and setup fallbacks
+    Application::platform->getFontLoader()->loadFonts();
+
+    int regular = Application::getFont(FONT_REGULAR);
+    if (regular != FONT_INVALID)
     {
-        PlFontData font;
+        NVGcontext* vg = Application::getNVGContext();
 
-        // Standard font
-        Result rc = plGetSharedFontByType(&font, PlSharedFontType_Standard);
-        if (R_SUCCEEDED(rc))
-        {
-            Logger::info("Using Switch shared font");
-            Application::fontStash.regular = Application::loadFontFromMemory("regular", font.address, font.size, false);
-        }
+        // Switch icons
+        int switchIcons = Application::getFont(FONT_SWITCH_ICONS);
+        if (switchIcons != FONT_INVALID)
+            nvgAddFallbackFontId(vg, regular, switchIcons);
+        else
+            Logger::warning("Switch icons font was not loaded, icons will not be displayed");
 
-        // Korean font
-        rc = plGetSharedFontByType(&font, PlSharedFontType_KO);
-        if (R_SUCCEEDED(rc))
-        {
-            Logger::info("Adding Switch shared Korean font");
-            Application::fontStash.korean = Application::loadFontFromMemory("korean", font.address, font.size, false);
-            nvgAddFallbackFontId(Application::getNVGContext(), Application::fontStash.regular, Application::fontStash.korean);
-        }
-
-        // Extented font
-        rc = plGetSharedFontByType(&font, PlSharedFontType_NintendoExt);
-        if (R_SUCCEEDED(rc))
-        {
-            Logger::info("Using Switch shared symbols font");
-            Application::fontStash.sharedSymbols = Application::loadFontFromMemory("symbols", font.address, font.size, false);
-        }
-    }
-#else
-    // Use illegal font if available
-    if (access(BOREALIS_ASSET("Illegal-Font.ttf"), F_OK) != -1)
-        Application::fontStash.regular = Application::loadFont("regular", BOREALIS_ASSET("Illegal-Font.ttf"));
-    else
-        Application::fontStash.regular = Application::loadFont("regular", BOREALIS_ASSET("inter/Inter-Switch.ttf"));
-
-    if (Application::fontStash.regular == -1)
-        brls::Logger::warning("Couldn't load regular font, no text will be displayed!");
-
-    if (access(BOREALIS_ASSET("Wingdings.ttf"), F_OK) != -1)
-        Application::fontStash.sharedSymbols = Application::loadFont("sharedSymbols", BOREALIS_ASSET("Wingdings.ttf"));
-#endif
-
-    // Material font
-    if (access(BOREALIS_ASSET("material/MaterialIcons-Regular.ttf"), F_OK) != -1)
-        Application::fontStash.material = Application::loadFont("material", BOREALIS_ASSET("material/MaterialIcons-Regular.ttf"));
-
-    // Set symbols font as fallback
-    if (Application::fontStash.sharedSymbols)
-    {
-        Logger::info("Using shared symbols font");
-        nvgAddFallbackFontId(Application::getNVGContext(), Application::fontStash.regular, Application::fontStash.sharedSymbols);
+        // Material icons
+        int materialIcons = Application::getFont(FONT_MATERIAL_ICONS);
+        if (materialIcons != FONT_INVALID)
+            nvgAddFallbackFontId(vg, regular, materialIcons);
+        else
+            Logger::warning("Material icons font was not loaded, icons will not be displayed");
     }
     else
     {
-        Logger::warning("Shared symbols font not found");
-    }
-
-    // Set Material as fallback
-    if (Application::fontStash.material)
-    {
-        Logger::info("Using Material font");
-        nvgAddFallbackFontId(Application::getNVGContext(), Application::fontStash.regular, Application::fontStash.material);
-    }
-    else
-    {
-        Logger::warning("Material font not found");
+        Logger::warning("Regular font was not loaded, there will be no text displayed in the app");
     }
 
     // Init animations engine
@@ -739,19 +703,32 @@ ThemeVariant Application::getThemeVariant()
     return Application::platform->getThemeVariant();
 }
 
-int Application::loadFont(const char* fontName, const char* filePath)
+bool Application::loadFontFromFile(std::string fontName, std::string filePath)
 {
-    return nvgCreateFont(Application::getNVGContext(), fontName, filePath);
+    int handle = nvgCreateFont(Application::getNVGContext(), fontName.c_str(), filePath.c_str());
+
+    if (handle == FONT_INVALID)
+    {
+        Logger::warning("Could not load the font \"{}\"", fontName);
+        return false;
+    }
+
+    Application::fontStash[fontName] = handle;
+    return true;
 }
 
-int Application::loadFontFromMemory(const char* fontName, void* address, size_t size, bool freeData)
+bool Application::loadFontFromMemory(std::string fontName, void* address, size_t size, bool freeData)
 {
-    return nvgCreateFontMem(Application::getNVGContext(), fontName, (unsigned char*)address, size, freeData);
-}
+    int handle = nvgCreateFontMem(Application::getNVGContext(), fontName.c_str(), (unsigned char*)address, size, freeData);
 
-int Application::findFont(const char* fontName)
-{
-    return nvgFindFont(Application::getNVGContext(), fontName);
+    if (handle == FONT_INVALID)
+    {
+        Logger::warning("Could not load the font \"{}\"", fontName);
+        return false;
+    }
+
+    Application::fontStash[fontName] = handle;
+    return true;
 }
 
 void Application::crash(std::string text)
@@ -892,9 +869,12 @@ VoidEvent* Application::getGlobalHintsUpdateEvent()
     return &Application::globalHintsUpdateEvent;
 }
 
-FontStash* Application::getFontStash()
+int Application::getFont(std::string fontName)
 {
-    return &Application::fontStash;
+    if (Application::fontStash.count(fontName) == 0)
+        return FONT_INVALID;
+
+    return Application::fontStash[fontName];
 }
 
 // void Application::setBackground(Background* background)

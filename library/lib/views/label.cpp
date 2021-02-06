@@ -18,6 +18,7 @@
 */
 
 #include <borealis/core/application.hpp>
+#include <borealis/core/font.hpp>
 #include <borealis/views/label.hpp>
 
 namespace brls
@@ -170,7 +171,7 @@ Label::Label()
     Theme theme = Application::getTheme();
 
     // Default attributes
-    this->font       = Application::getFontStash()->regular;
+    this->font       = Application::getFont(FONT_REGULAR);
     this->fontSize   = style["brls/label/default_font_size"];
     this->lineHeight = style["brls/label/default_line_height"];
     this->textColor  = theme["brls/text"];

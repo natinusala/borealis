@@ -19,6 +19,7 @@
 #pragma once
 
 #include <borealis/core/audio.hpp>
+#include <borealis/core/font.hpp>
 #include <borealis/core/input.hpp>
 #include <borealis/core/theme.hpp>
 #include <borealis/core/video.hpp>
@@ -77,6 +78,12 @@ class Platform
      * Cannot return nullptr.
      */
     virtual InputManager* getInputManager() = 0;
+
+    /**
+     * Returns the FontLoader for the platform.
+     * Cannot return nullptr.
+     */
+    virtual FontLoader* getFontLoader() = 0;
 
     /**
      * Selects and returns the best platform.
