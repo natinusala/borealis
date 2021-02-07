@@ -102,7 +102,7 @@ void ScrollingFrame::setContentView(View* view)
 {
     if (this->contentView)
     {
-        this->removeView(this->contentView); // will delete and call willDisappear
+        Box::removeView(this->contentView); // will delete and call willDisappear
         this->contentView = nullptr;
     }
 
