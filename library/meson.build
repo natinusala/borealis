@@ -13,6 +13,7 @@ borealis_files = files(
     'lib/core/repeating_task.cpp',
     'lib/core/platform.cpp',
     'lib/core/font.cpp',
+    'lib/core/util.cpp',
 
     'lib/platforms/glfw/glfw_platform.cpp',
     'lib/platforms/glfw/glfw_video.cpp',

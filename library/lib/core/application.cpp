@@ -25,6 +25,7 @@
 #include <borealis/core/application.hpp>
 #include <borealis/core/font.hpp>
 #include <borealis/core/i18n.hpp>
+#include <borealis/core/util.hpp>
 #include <borealis/views/button.hpp>
 #include <borealis/views/header.hpp>
 #include <borealis/views/image.hpp>
@@ -74,7 +75,7 @@ bool Application::init(std::string title)
     Application::platform->init();
 
     if (!Application::platform)
-        throw std::logic_error("Did not find a valid platform");
+        fatal("Did not find a valid platform");
 
     Logger::info("Using platform {}", platform->getName());
 

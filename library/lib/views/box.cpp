@@ -19,6 +19,7 @@
 #include <tinyxml2.h>
 
 #include <borealis/core/application.hpp>
+#include <borealis/core/util.hpp>
 #include <borealis/views/box.hpp>
 #include <cmath>
 
@@ -381,12 +382,12 @@ void Box::inflateFromXMLString(std::string xml)
     this->bindXMLDocument(document);
 
     if (error != tinyxml2::XMLError::XML_SUCCESS)
-        throw std::logic_error("Invalid XML when inflating " + this->describe() + ": error " + std::to_string(error));
+        fatal("Invalid XML when inflating " + this->describe() + ": error " + std::to_string(error));
 
     tinyxml2::XMLElement* element = document->RootElement();
 
     if (!element)
-        throw std::logic_error("Invalid XML: no element found");
+        fatal("Invalid XML: no element found");
 
     return Box::inflateFromXMLElement(element);
 }
@@ -405,12 +406,12 @@ void Box::inflateFromXMLFile(std::string path)
     this->bindXMLDocument(document);
 
     if (error != tinyxml2::XMLError::XML_SUCCESS)
-        throw std::logic_error("Invalid XML when inflating " + this->describe() + ": error " + std::to_string(error));
+        fatal("Invalid XML when inflating " + this->describe() + ": error " + std::to_string(error));
 
     tinyxml2::XMLElement* element = document->RootElement();
 
     if (!element)
-        throw std::logic_error("Invalid XML: no element found");
+        fatal("Invalid XML: no element found");
 
     return Box::inflateFromXMLElement(element);
 }
@@ -419,7 +420,7 @@ void Box::inflateFromXMLElement(tinyxml2::XMLElement* element)
 {
     // Ensure element is a Box
     if (std::string(element->Name()) != "brls:Box")
-        throw std::logic_error("First XML element is " + std::string(element->Name()) + ", expected brls:Box");
+        fatal("First XML element is " + std::string(element->Name()) + ", expected brls:Box");
 
     // Apply attributes
     this->applyXMLAttributes(element);
@@ -556,10 +557,10 @@ void Box::forwardXMLAttribute(std::string attributeName, View* target)
 void Box::forwardXMLAttribute(std::string attributeName, View* target, std::string targetAttributeName)
 {
     if (!target->isXMLAttributeValid(targetAttributeName))
-        throw std::logic_error("Error when forwarding \"" + attributeName + "\" of \"" + this->describe() + "\": attribute \"" + targetAttributeName + "\" is not a XML valid attribute for view \"" + target->describe() + "\"");
+        fatal("Error when forwarding \"" + attributeName + "\" of \"" + this->describe() + "\": attribute \"" + targetAttributeName + "\" is not a XML valid attribute for view \"" + target->describe() + "\"");
 
     if (this->forwardedAttributes.count(attributeName) > 0)
-        throw std::logic_error("Error when forwarding \"" + attributeName + "\" of \"" + this->describe() + "\": the same attribute cannot be forwarded twice");
+        fatal("Error when forwarding \"" + attributeName + "\" of \"" + this->describe() + "\": the same attribute cannot be forwarded twice");
 
     this->forwardedAttributes[attributeName] = std::make_pair(targetAttributeName, target);
 }

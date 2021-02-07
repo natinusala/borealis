@@ -18,6 +18,7 @@
 */
 
 #include <borealis/core/logger.hpp>
+#include <borealis/core/util.hpp>
 #include <borealis/views/applet_frame.hpp>
 
 namespace brls
@@ -153,7 +154,7 @@ void AppletFrame::setContentView(View* view)
 void AppletFrame::handleXMLElement(tinyxml2::XMLElement* element)
 {
     if (this->contentView)
-        throw std::logic_error("brls:AppletFrame can only have one child XML element");
+        fatal("brls:AppletFrame can only have one child XML element");
 
     View* view = View::createFromXMLElement(element);
     this->setContentView(view);

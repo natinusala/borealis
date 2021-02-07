@@ -19,6 +19,7 @@
 
 #include <borealis/core/application.hpp>
 #include <borealis/core/font.hpp>
+#include <borealis/core/util.hpp>
 #include <borealis/views/label.hpp>
 
 namespace brls
@@ -45,7 +46,7 @@ static void computeLabelHeight(Label* label, float width, YGMeasureMode widthMod
     }
     else
     {
-        throw std::logic_error("Unsupported Label height measure mode: " + std::to_string(heightMode));
+        fatal("Unsupported Label height measure mode: " + std::to_string(heightMode));
     }
 }
 
@@ -105,7 +106,7 @@ static YGSize labelMeasureFunc(YGNodeRef node, float width, YGMeasureMode widthM
     }
     else
     {
-        throw std::logic_error("Unsupported Label width measure mode: " + std::to_string(widthMode));
+        fatal("Unsupported Label width measure mode: " + std::to_string(widthMode));
     }
 
     // Height
@@ -153,7 +154,7 @@ static YGSize labelMeasureFunc(YGNodeRef node, float width, YGMeasureMode widthM
         }
         else
         {
-            throw std::logic_error("Unsupported Label height measure mode: " + std::to_string(heightMode));
+            fatal("Unsupported Label height measure mode: " + std::to_string(heightMode));
         }
     }
     // No wrapping necessary or allowed, return the normal height

@@ -18,6 +18,7 @@
 
 #include <borealis/core/animations.hpp>
 #include <borealis/core/application.hpp>
+#include <borealis/core/util.hpp>
 #include <borealis/views/scrolling_frame.hpp>
 
 namespace brls
@@ -252,7 +253,7 @@ bool ScrollingFrame::updateScrolling(bool animated)
     return true;
 }
 
-#define NO_PADDING throw std::logic_error("Padding is not supported by brls:ScrollingFrame, please set padding on the content view instead");
+#define NO_PADDING fatal("Padding is not supported by brls:ScrollingFrame, please set padding on the content view instead");
 
 void ScrollingFrame::setPadding(float top, float right, float bottom, float left)
 {

@@ -24,6 +24,7 @@
 #include <borealis/core/application.hpp>
 #include <borealis/core/i18n.hpp>
 #include <borealis/core/input.hpp>
+#include <borealis/core/util.hpp>
 #include <borealis/views/box.hpp>
 #include <borealis/views/view.hpp>
 
@@ -1217,7 +1218,7 @@ float View::getShowAnimationDuration(TransitionAnimation animation)
     Style style = Application::getStyle();
 
     if (animation == TransitionAnimation::SLIDE_LEFT || animation == TransitionAnimation::SLIDE_RIGHT)
-        throw std::logic_error("Slide animation is not supported on views");
+        fatal("Slide animation is not supported on views");
 
     return style["brls/animations/show"];
 }
@@ -1243,7 +1244,7 @@ void View::onParentFocusLost(View* focusedView)
 void View::setCustomNavigationRoute(FocusDirection direction, View* target)
 {
     if (!this->focusable)
-        throw std::logic_error("Only focusable views can have a custom navigation route");
+        fatal("Only focusable views can have a custom navigation route");
 
     this->customFocusByPtr[direction] = target;
 }
@@ -1251,7 +1252,7 @@ void View::setCustomNavigationRoute(FocusDirection direction, View* target)
 void View::setCustomNavigationRoute(FocusDirection direction, std::string targetId)
 {
     if (!this->focusable)
-        throw std::logic_error("Only focusable views can have a custom navigation route");
+        fatal("Only focusable views can have a custom navigation route");
 
     this->customFocusById[direction] = targetId;
 }
@@ -1578,12 +1579,12 @@ View* View::createFromXMLString(std::string xml)
     tinyxml2::XMLError error        = document->Parse(xml.c_str());
 
     if (error != tinyxml2::XMLError::XML_SUCCESS)
-        throw std::logic_error("Invalid XML when creating View from XML: error " + std::to_string(error));
+        fatal("Invalid XML when creating View from XML: error " + std::to_string(error));
 
     tinyxml2::XMLElement* root = document->RootElement();
 
     if (!root)
-        throw std::logic_error("Invalid XML: no element found");
+        fatal("Invalid XML: no element found");
 
     View* view = View::createFromXMLElement(root);
     view->bindXMLDocument(document);
@@ -1596,12 +1597,12 @@ View* View::createFromXMLFile(std::string path)
     tinyxml2::XMLError error        = document->LoadFile(path.c_str());
 
     if (error != tinyxml2::XMLError::XML_SUCCESS)
-        throw std::logic_error("Unable to load XML file \"" + path + "\": error " + std::to_string(error));
+        fatal("Unable to load XML file \"" + path + "\": error " + std::to_string(error));
 
     tinyxml2::XMLElement* element = document->RootElement();
 
     if (!element)
-        throw std::logic_error("Unable to load XML file \"" + path + "\": no root element found, is the file empty?");
+        fatal("Unable to load XML file \"" + path + "\": no root element found, is the file empty?");
 
     View* view = View::createFromXMLElement(element);
     view->bindXMLDocument(document);
@@ -1629,13 +1630,13 @@ View* View::createFromXMLElement(tinyxml2::XMLElement* element)
         if (xmlAttribute)
             view = View::createFromXMLFile(View::getFilePathXMLAttributeValue(xmlAttribute->Value()));
         else
-            throw std::logic_error("brls:View XML tag must have an \"xml\" attribute");
+            fatal("brls:View XML tag must have an \"xml\" attribute");
     }
     // Otherwise look in the register
     else
     {
         if (!Application::XMLViewsRegisterContains(viewName))
-            throw std::logic_error("Unknown XML tag \"" + viewName + "\"");
+            fatal("Unknown XML tag \"" + viewName + "\"");
 
         view = Application::getXMLViewCreator(viewName)();
 
@@ -1650,7 +1651,7 @@ View* View::createFromXMLElement(tinyxml2::XMLElement* element)
 
 void View::handleXMLElement(tinyxml2::XMLElement* element)
 {
-    throw std::logic_error("Raw views cannot have child XML tags");
+    fatal("Raw views cannot have child XML tags");
 }
 
 void View::registerCommonAttributes()
@@ -1956,9 +1957,9 @@ void View::setVisibility(Visibility visibility)
 void View::printXMLAttributeErrorMessage(tinyxml2::XMLElement* element, std::string name, std::string value)
 {
     if (this->knownAttributes.find(name) != this->knownAttributes.end())
-        throw std::logic_error("Illegal value \"" + value + "\" for \"" + std::string(element->Name()) + "\" XML attribute \"" + name + "\"");
+        fatal("Illegal value \"" + value + "\" for \"" + std::string(element->Name()) + "\" XML attribute \"" + name + "\"");
     else
-        throw std::logic_error("Unknown XML attribute \"" + name + "\" for tag \"" + std::string(element->Name()) + "\" (with value \"" + value + "\")");
+        fatal("Unknown XML attribute \"" + name + "\" for tag \"" + std::string(element->Name()) + "\" (with value \"" + value + "\")");
 }
 
 void View::registerFloatXMLAttribute(std::string name, FloatAttributeHandler handler)
@@ -2034,7 +2035,7 @@ View* View::getNearestView(std::string id)
 void View::setId(std::string id)
 {
     if (id == "")
-        throw std::logic_error("ID cannot be empty");
+        fatal("ID cannot be empty");
 
     this->id = id;
 }
