@@ -63,3 +63,4 @@ ninja -C build
     3. set `ROMFS` to the resources folder - borealis resources path is set to `romfs:/` in borealis.mk
     4. use `include` to load `borealis.mk` (after `LIBDIRS` and `BOREALIS_PATH`)
     5. it's important for `OUT_SHADERS` to be set to `shaders` since nanovg will look for the shaders there
+    6. if you have issues with the `BRLS_RESOURCES` define (missing quote terminator), change the `@$(MAKE)` line to `@MSYS2_ARG_CONV_EXCL="-D;$(MSYS2_ARG_CONV_EXCL)" $(MAKE)` in the Makefile (as in the demo Makefile)
