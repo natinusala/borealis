@@ -118,23 +118,70 @@ void Application::createWindow(std::string windowTitle)
     // Load fonts and setup fallbacks
     Application::platform->getFontLoader()->loadFonts();
 
+    std::string locale = Application::getLocale();
     int regular = Application::getFont(FONT_REGULAR);
+
+    // when defined font stash exists, determine regular font and try to build fallback chain, all fallback failures won't be logged
+    if (regular == FONT_INVALID)
+    {
+        Logger::info("No regular font loaded, checking the rest of font stash");
+        std::string regularRedir = "";
+        int standard = Application::getFont(FONT_STANDARD_REGULAR);
+        int schinese = Application::getFont(FONT_SCHINESE_REGULAR);
+        int tchinese = Application::getFont(FONT_TCHINESE_REGULAR);
+        int korean = Application::getFont(FONT_KOREAN_REGULAR);
+
+        if (standard != FONT_INVALID)
+        {
+            Application::addFontFallback(FONT_STANDARD_REGULAR, FONT_SCHINESE_REGULAR);
+            Application::addFontFallback(FONT_STANDARD_REGULAR, FONT_SCHINESE_EXTEND);
+            Application::addFontFallback(FONT_STANDARD_REGULAR, FONT_TCHINESE_REGULAR);
+            Application::addFontFallback(FONT_STANDARD_REGULAR, FONT_KOREAN_REGULAR);
+            regularRedir = FONT_STANDARD_REGULAR;
+        }
+        // also check against locale to avoid another bunch of `if`
+        if ( schinese != FONT_INVALID && (locale == LOCALE_ZH_CN || locale == LOCALE_ZH_HANS) )
+        {
+            Application::addFontFallback(FONT_SCHINESE_REGULAR, FONT_SCHINESE_EXTEND);
+            Application::addFontFallback(FONT_SCHINESE_REGULAR, FONT_TCHINESE_REGULAR);
+            Application::addFontFallback(FONT_SCHINESE_REGULAR, FONT_STANDARD_REGULAR);
+            Application::addFontFallback(FONT_SCHINESE_REGULAR, FONT_KOREAN_REGULAR);
+            regularRedir = FONT_SCHINESE_REGULAR;
+        }
+        if ( tchinese != FONT_INVALID && (locale == LOCALE_ZH_TW || locale == LOCALE_ZH_HANT) )
+        {
+            Application::addFontFallback(FONT_TCHINESE_REGULAR, FONT_SCHINESE_REGULAR);
+            Application::addFontFallback(FONT_TCHINESE_REGULAR, FONT_SCHINESE_EXTEND);
+            Application::addFontFallback(FONT_TCHINESE_REGULAR, FONT_STANDARD_REGULAR);
+            Application::addFontFallback(FONT_TCHINESE_REGULAR, FONT_KOREAN_REGULAR);
+            regularRedir = FONT_TCHINESE_REGULAR;
+        }
+        if ( korean != FONT_INVALID && locale == LOCALE_KO )
+        {
+            Application::addFontFallback(FONT_KOREAN_REGULAR, FONT_STANDARD_REGULAR);
+            Application::addFontFallback(FONT_KOREAN_REGULAR, FONT_SCHINESE_REGULAR);
+            Application::addFontFallback(FONT_KOREAN_REGULAR, FONT_SCHINESE_EXTEND);
+            Application::addFontFallback(FONT_KOREAN_REGULAR, FONT_TCHINESE_REGULAR);
+            regularRedir = FONT_KOREAN_REGULAR;
+        }
+        if (regularRedir != "")
+        {
+            Logger::info("Using {:s} as regular font", regularRedir);
+            Application::fontStash[FONT_REGULAR] = Application::getFont(regularRedir);
+            regular = Application::getFont(FONT_REGULAR);   // refresh for next check
+        }
+    }
+
     if (regular != FONT_INVALID)
     {
-        NVGcontext* vg = Application::getNVGContext();
-
         // Switch icons
-        int switchIcons = Application::getFont(FONT_SWITCH_ICONS);
-        if (switchIcons != FONT_INVALID)
-            nvgAddFallbackFontId(vg, regular, switchIcons);
-        else
+        bool switchIcons = Application::addFontFallback(FONT_REGULAR, FONT_SWITCH_ICONS);
+        if (!switchIcons)
             Logger::warning("Switch icons font was not loaded, icons will not be displayed");
 
         // Material icons
-        int materialIcons = Application::getFont(FONT_MATERIAL_ICONS);
-        if (materialIcons != FONT_INVALID)
-            nvgAddFallbackFontId(vg, regular, materialIcons);
-        else
+        bool materialIcons = Application::addFontFallback(FONT_REGULAR, FONT_MATERIAL_ICONS);
+        if (!materialIcons)
             Logger::warning("Material icons font was not loaded, icons will not be displayed");
     }
     else
@@ -676,6 +723,22 @@ bool Application::loadFontFromMemory(std::string fontName, void* address, size_t
 
     Application::fontStash[fontName] = handle;
     return true;
+}
+
+bool Application::addFontFallback(std::string baseFontName, std::string fallbackFontName)
+{
+    NVGcontext* vg = Application::getNVGContext();
+    int baseFont = Application::getFont(baseFontName);
+    if (baseFont != FONT_INVALID)
+    {
+        int fallbackFont = Application::getFont(fallbackFontName);
+        if (fallbackFont != FONT_INVALID)
+        {
+            nvgAddFallbackFontId(vg, baseFont, fallbackFont);
+            return true;
+        }
+    }
+    return false;
 }
 
 void Application::crash(std::string text)

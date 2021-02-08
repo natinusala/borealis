@@ -19,6 +19,7 @@
 
 #include <borealis/core/application.hpp>
 #include <borealis/core/logger.hpp>
+#include <borealis/core/i18n.hpp>
 #include <borealis/platforms/switch/switch_font.hpp>
 
 namespace brls
@@ -32,16 +33,60 @@ void SwitchFontLoader::loadFonts()
     // Standard
     rc = plGetSharedFontByType(&font, PlSharedFontType_Standard);
     if (R_SUCCEEDED(rc))
-        Application::loadFontFromMemory(FONT_REGULAR, font.address, font.size, false);
+        Application::loadFontFromMemory(FONT_STANDARD_REGULAR, font.address, font.size, false);
     else
         Logger::error("switch: could not load Standard shared font: {:#x}", rc);
 
-    // Korean
-    rc = plGetSharedFontByType(&font, PlSharedFontType_KO);
-    if (R_SUCCEEDED(rc))
-        Application::loadFontFromMemory(FONT_KOREAN_REGULAR, font.address, font.size, false);
-    else
-        Logger::error("switch: could not load Korean shared font: {:#x}", rc);
+    {
+        // Detect if non applet
+        bool isFullFallback = false;
+        AppletType at = appletGetAppletType();
+        if (at == AppletType_Application || at == AppletType_SystemApplication) // title takeover
+        {
+            isFullFallback = true;
+            Logger::info("switch: non applet mode, all shared font will be loaded!");
+        } else {
+            Logger::info("switch: applet mode, only shared font for current locale will be loaded!");
+        }
+        std::string locale = Application::getLocale();
+
+        if (locale == LOCALE_ZH_CN || locale == LOCALE_ZH_HANS || isFullFallback)
+        {
+            // S.Chinese
+            rc = plGetSharedFontByType(&font, PlSharedFontType_ChineseSimplified);
+            if (R_SUCCEEDED(rc))
+                Application::loadFontFromMemory(FONT_SCHINESE_REGULAR, font.address, font.size, false);
+            else
+                Logger::error("switch: could not load S.Chinese shared font: {:#x}", rc);
+
+            // Ext S.Chinese
+            rc = plGetSharedFontByType(&font, PlSharedFontType_ExtChineseSimplified);
+            if (R_SUCCEEDED(rc))
+                Application::loadFontFromMemory(FONT_SCHINESE_EXTEND, font.address, font.size, false);
+            else
+                Logger::error("switch: could not load Ext. S.Chinese shared font: {:#x}", rc);
+        }
+
+        if (locale == LOCALE_ZH_TW || locale == LOCALE_ZH_HANT || isFullFallback)
+        {
+            // T.Chinese
+            rc = plGetSharedFontByType(&font, PlSharedFontType_ChineseTraditional);
+            if (R_SUCCEEDED(rc))
+                Application::loadFontFromMemory(FONT_TCHINESE_REGULAR, font.address, font.size, false);
+            else
+                Logger::error("switch: could not load T.Chinese shared font: {:#x}", rc);
+        }
+
+        if (locale == LOCALE_KO || isFullFallback)
+        {
+            // Korean
+            rc = plGetSharedFontByType(&font, PlSharedFontType_KO);
+            if (R_SUCCEEDED(rc))
+                Application::loadFontFromMemory(FONT_KOREAN_REGULAR, font.address, font.size, false);
+            else
+                Logger::error("switch: could not load Korean shared font: {:#x}", rc);
+        }
+    }
 
     // Extented (symbols)
     rc = plGetSharedFontByType(&font, PlSharedFontType_NintendoExt);
