@@ -67,6 +67,8 @@ ScrollingFrame::ScrollingFrame()
             { "natural", ScrollingBehavior::NATURAL },
             { "centered", ScrollingBehavior::CENTERED },
         });
+
+    this->setMaximumAllowedXMLElements(1);
 }
 
 void ScrollingFrame::draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx)

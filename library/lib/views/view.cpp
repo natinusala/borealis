@@ -1643,8 +1643,17 @@ View* View::createFromXMLElement(tinyxml2::XMLElement* element)
         view->applyXMLAttributes(element);
     }
 
+    unsigned count = 0;
+    unsigned max   = view->getMaximumAllowedXMLElements();
     for (tinyxml2::XMLElement* child = element->FirstChildElement(); child != nullptr; child = child->NextSiblingElement())
-        view->handleXMLElement(child);
+    {
+        if (count >= max)
+            fatal("View \"" + view->describe() + "\" is only allowed to have " + std::to_string(max) + " children XML elements");
+        else
+            view->handleXMLElement(child);
+
+        count++;
+    }
 
     return view;
 }
@@ -1652,6 +1661,16 @@ View* View::createFromXMLElement(tinyxml2::XMLElement* element)
 void View::handleXMLElement(tinyxml2::XMLElement* element)
 {
     fatal("Raw views cannot have child XML tags");
+}
+
+void View::setMaximumAllowedXMLElements(unsigned max)
+{
+    this->maximumAllowedXMLElements = max;
+}
+
+unsigned View::getMaximumAllowedXMLElements()
+{
+    return this->maximumAllowedXMLElements;
 }
 
 void View::registerCommonAttributes()

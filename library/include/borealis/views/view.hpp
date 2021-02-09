@@ -227,6 +227,8 @@ class View
     void registerCommonAttributes();
     void printXMLAttributeErrorMessage(tinyxml2::XMLElement* element, std::string name, std::string value);
 
+    unsigned maximumAllowedXMLElements = UINT_MAX;
+
     NVGcolor lineColor = TRANSPARENT;
     float lineTop      = 0;
     float lineRight    = 0;
@@ -916,6 +918,14 @@ class View
      * Returns if the given XML attribute name is valid for that view.
      */
     bool isXMLAttributeValid(std::string attributeName);
+
+    /**
+     * Sets the maximum number of allowed children XML elements
+     * when using a view of that class in an XML file.
+     */
+    void setMaximumAllowedXMLElements(unsigned max);
+
+    unsigned getMaximumAllowedXMLElements();
 
     /**
      * If set to true, will force the view to be translucent.

@@ -39,7 +39,7 @@ static float measureWidth(YGNodeRef node, float width, YGMeasureMode widthMode, 
     else
         fatal("Unsupported Image width measure mode: " + std::to_string(widthMode));
 
-    return 0.0f;
+    return width;
 }
 
 static float measureHeight(YGNodeRef node, float width, YGMeasureMode widthMode, float height, YGMeasureMode heightMode, float originalHeight, ImageScalingType type)
@@ -55,6 +55,8 @@ static float measureHeight(YGNodeRef node, float width, YGMeasureMode widthMode,
         return height;
     else
         fatal("Unsupported Image height measure mode: " + std::to_string(heightMode));
+
+    return height;
 }
 
 static YGSize imageMeasureFunc(YGNodeRef node, float width, YGMeasureMode widthMode, float height, YGMeasureMode heightMode)
