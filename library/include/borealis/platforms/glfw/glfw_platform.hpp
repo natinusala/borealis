@@ -29,14 +29,15 @@ namespace brls
 class GLFWPlatform : public Platform
 {
   public:
-    GLFWPlatform(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight);
+    GLFWPlatform();
     ~GLFWPlatform();
 
     std::string getName() override;
-    void init() override;
+    void createWindow(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight) override;
 
     bool mainLoopIteration() override;
     ThemeVariant getThemeVariant() override;
+    std::string getLocale() override;
 
     AudioPlayer* getAudioPlayer() override;
     VideoContext* getVideoContext() override;

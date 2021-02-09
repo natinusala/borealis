@@ -1,6 +1,6 @@
 /*
     Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2020  natinusala
+    Copyright (C) 2020-2021  natinusala
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,10 +20,32 @@
 
 #include <fmt/core.h>
 
+#include <borealis/core/logger.hpp>
 #include <string>
 
-namespace brls::i18n
+namespace brls
 {
+
+const std::string LOCALE_JA      = "ja";
+const std::string LOCALE_EN_US   = "en-US";
+const std::string LOCALE_EN_GB   = "en-GB";
+const std::string LOCALE_FR      = "fr";
+const std::string LOCALE_FR_CA   = "fr-CA";
+const std::string LOCALE_DE      = "de";
+const std::string LOCALE_IT      = "it";
+const std::string LOCALE_ES      = "es";
+const std::string LOCALE_ZH_CN   = "zh-CN";
+const std::string LOCALE_ZH_HANS = "zh-Hans";
+const std::string LOCALE_ZH_HANT = "zh-Hant";
+const std::string LOCALE_ZH_TW   = "zh-TW";
+const std::string LOCALE_Ko      = "ko";
+const std::string LOCALE_NL      = "nl";
+const std::string LOCALE_PT      = "pt";
+const std::string LOCALE_PT_BR   = "pt-BR";
+const std::string LOCALE_RU      = "ru";
+const std::string LOCALE_ES_419  = "es-419";
+
+const std::string LOCALE_DEFAULT = LOCALE_EN_US;
 
 // TODO: add support for string arrays
 
@@ -39,7 +61,7 @@ namespace internal
 template <typename... Args>
 std::string getStr(std::string stringName, Args&&... args)
 {
-    std::string rawStr = brls::i18n::internal::getRawStr(stringName);
+    std::string rawStr = internal::getRawStr(stringName);
 
     try
     {
@@ -58,20 +80,13 @@ std::string getStr(std::string stringName, Args&&... args)
  */
 void loadTranslations();
 
-/**
- * Returns the current system locale
- * NOT the one that's currently used in the app!
- */
-std::string getCurrentLocale();
-
 inline namespace literals
 {
     /**
      * Returns the translation for the given string, without
      * injecting any parameters
-     * Shortcut to i18n::getStr(stringName)
+     * Shortcut to brls::getStr(stringName)
      */
     std::string operator"" _i18n(const char* str, size_t len);
 } // namespace literals
-
-} // namespace brls::i18n
+} // namespace brls

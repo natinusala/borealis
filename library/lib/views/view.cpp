@@ -28,8 +28,7 @@
 #include <borealis/views/box.hpp>
 #include <borealis/views/view.hpp>
 
-namespace i18n = brls::i18n;
-using namespace i18n::literals;
+using namespace brls::literals;
 
 namespace brls
 {
@@ -337,10 +336,10 @@ void View::drawBorder(NVGcontext* vg, FrameContext* ctx, Style style, float x, f
 
 void View::drawShadow(NVGcontext* vg, FrameContext* ctx, Style style, float x, float y, float width, float height)
 {
-    float shadowWidth;
-    float shadowFeather;
-    float shadowOpacity;
-    float shadowOffset;
+    float shadowWidth   = 0.0f;
+    float shadowFeather = 0.0f;
+    float shadowOpacity = 0.0f;
+    float shadowOffset  = 0.0f;
 
     switch (this->shadowType)
     {
@@ -352,6 +351,8 @@ void View::drawShadow(NVGcontext* vg, FrameContext* ctx, Style style, float x, f
             break;
         case ShadowType::CUSTOM:
             // TODO: use custom values
+            break;
+        case ShadowType::NONE:
             break;
     }
 
@@ -1310,7 +1311,7 @@ std::string View::getStringXMLAttributeValue(std::string value)
     if (startsWith(value, "@i18n/"))
     {
         std::string stringName = value.substr(6);
-        return i18n::getStr(stringName);
+        return getStr(stringName);
     }
 
     return value;
@@ -1617,7 +1618,7 @@ View* View::createFromXMLElement(tinyxml2::XMLElement* element)
     std::string viewName = element->Name();
 
     // Instantiate the view
-    View* view;
+    View* view = nullptr;
 
     // Special case where element name is brls:View: create from given XML file.
     // XML attributes are explicitely not passed down to the created view.

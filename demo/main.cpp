@@ -33,8 +33,7 @@
 #include "main_activity.hpp"
 #include "recycling_list_tab.hpp"
 
-namespace i18n = brls::i18n; // for loadTranslations() and getStr()
-using namespace i18n::literals; // for _i18n
+using namespace brls::literals; // for _i18n
 
 int main(int argc, char* argv[])
 {
@@ -42,6 +41,19 @@ int main(int argc, char* argv[])
 #ifdef __SWITCH__
     appletInitializeGamePlayRecording();
 #endif
+
+    // Set log level
+    // We recommend to use INFO for real apps
+    brls::Logger::setLogLevel(brls::LogLevel::DEBUG);
+
+    // Init the app and i18n
+    if (!brls::Application::init())
+    {
+        brls::Logger::error("Unable to init Borealis application");
+        return EXIT_FAILURE;
+    }
+
+    brls::Application::createWindow("demo/title"_i18n);
 
     // Register custom views (including tabs, which are views)
     brls::Application::registerXMLView("CaptionedImage", CaptionedImage::create);
@@ -51,17 +63,6 @@ int main(int argc, char* argv[])
     // Add custom values to the theme
     brls::getLightTheme().addColor("captioned_image/caption", nvgRGB(2, 176, 183));
     brls::getDarkTheme().addColor("captioned_image/caption", nvgRGB(51, 186, 227));
-
-    // Init the app and i18n
-    // We recommend to use the INFO log level for real apps
-    brls::Logger::setLogLevel(brls::LogLevel::DEBUG);
-
-    i18n::loadTranslations();
-    if (!brls::Application::init("demo/title"_i18n))
-    {
-        brls::Logger::error("Unable to init Borealis application");
-        return EXIT_FAILURE;
-    }
 
     // Create and push the main activity to the stack
     brls::Application::pushActivity(new MainActivity());

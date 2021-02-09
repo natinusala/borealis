@@ -63,21 +63,41 @@ constexpr uint32_t ORIGINAL_WINDOW_HEIGHT = 720;
 #define BUTTON_REPEAT_DELAY 15
 #define BUTTON_REPEAT_CADENCY 5
 
-using namespace brls::i18n::literals;
+using namespace brls::literals;
 
 namespace brls
 {
 
-bool Application::init(std::string title)
+bool Application::init()
 {
     // Init platform
-    Application::platform = Platform::createPlatform(title, ORIGINAL_WINDOW_WIDTH, ORIGINAL_WINDOW_HEIGHT);
-    Application::platform->init();
+    Application::platform = Platform::createPlatform();
 
     if (!Application::platform)
+    {
         fatal("Did not find a valid platform");
+        return false;
+    }
 
     Logger::info("Using platform {}", platform->getName());
+
+    // Init i18n
+    loadTranslations();
+
+    Application::inited = true;
+    return true;
+}
+
+void Application::createWindow(std::string windowTitle)
+{
+    if (!Application::inited)
+    {
+        fatal("Please call brls::Application::init() before calling brls::Application::createWindow().");
+        return;
+    }
+
+    // Create the actual window
+    Application::getPlatform()->createWindow(windowTitle, ORIGINAL_WINDOW_WIDTH, ORIGINAL_WINDOW_HEIGHT);
 
     // Load most commonly used sounds
     AudioPlayer* audioPlayer = Application::getAudioPlayer();
@@ -148,8 +168,6 @@ bool Application::init(std::string title)
 
     // Register built-in XML views
     Application::registerBuiltInXMLViews();
-
-    return true;
 }
 
 bool Application::mainLoop()
@@ -702,6 +720,11 @@ Theme Application::getTheme()
 ThemeVariant Application::getThemeVariant()
 {
     return Application::platform->getThemeVariant();
+}
+
+std::string Application::getLocale()
+{
+    return Application::getPlatform()->getLocale();
 }
 
 bool Application::loadFontFromFile(std::string fontName, std::string filePath)

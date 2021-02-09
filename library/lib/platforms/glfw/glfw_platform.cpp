@@ -16,6 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <borealis/core/i18n.hpp>
 #include <borealis/core/logger.hpp>
 #include <borealis/platforms/glfw/glfw_platform.hpp>
 
@@ -33,7 +34,7 @@ static void glfwErrorCallback(int errorCode, const char* description)
     Logger::error("glfw: error {}: {}", errorCode, description);
 }
 
-GLFWPlatform::GLFWPlatform(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight)
+GLFWPlatform::GLFWPlatform()
 {
     // Init glfw
     glfwSetErrorCallback(glfwErrorCallback);
@@ -45,18 +46,18 @@ GLFWPlatform::GLFWPlatform(std::string windowTitle, uint32_t windowWidth, uint32
         return;
     }
 
-    // Init the rest of platform interfaces impls
-    this->audioPlayer  = new NullAudioPlayer();
-    this->videoContext = new GLFWVideoContext(windowTitle, windowWidth, windowHeight);
-    this->inputManager = new GLFWInputManager(this->videoContext->getGLFWWindow());
-    this->fontLoader   = new GLFWFontLoader();
-
     // Misc
     glfwSetTime(0.0);
+
+    // Platform impls
+    this->fontLoader  = new GLFWFontLoader();
+    this->audioPlayer = new NullAudioPlayer();
 }
 
-void GLFWPlatform::init()
+void GLFWPlatform::createWindow(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight)
 {
+    this->videoContext = new GLFWVideoContext(windowTitle, windowWidth, windowHeight);
+    this->inputManager = new GLFWInputManager(this->videoContext->getGLFWWindow());
 }
 
 std::string GLFWPlatform::getName()
@@ -107,6 +108,11 @@ ThemeVariant GLFWPlatform::getThemeVariant()
         return ThemeVariant::DARK;
     else
         return ThemeVariant::LIGHT;
+}
+
+std::string GLFWPlatform::getLocale()
+{
+    return LOCALE_DEFAULT;
 }
 
 GLFWPlatform::~GLFWPlatform()

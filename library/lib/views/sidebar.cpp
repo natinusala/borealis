@@ -22,7 +22,7 @@
 #include <borealis/core/i18n.hpp>
 #include <borealis/views/sidebar.hpp>
 
-using namespace brls::i18n::literals;
+using namespace brls::literals;
 
 namespace brls
 {

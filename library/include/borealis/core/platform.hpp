@@ -36,10 +36,10 @@ class Platform
     virtual ~Platform() {};
 
     /**
-     * Called on startup, right after instanciation, to init everything.
-     * For now, deinit should be done in destructor.
+     * Called on startup, right after instanciation, to create and open a window
+     * with the given title and size.
      */
-    virtual void init() = 0;
+    virtual void createWindow(std::string title, uint32_t width, uint32_t height) = 0;
 
     /**
      * Returns the human-readable name of the platform.
@@ -54,12 +54,26 @@ class Platform
     virtual bool mainLoopIteration() = 0;
 
     /**
-     * Can be called a anytime to get the current system theme variant.
+     * Can be called at anytime to get the current system theme variant.
+     *
      * For now, the variant is assumed to stay the same during the whole time
      * the app is running (no variant hot swap).
+     *
      * As such, the result should be cached by the platform code.
      */
     virtual ThemeVariant getThemeVariant() = 0;
+
+    /**
+     * Can be called at anytime to get the current locale
+     *
+     * For now, the locale is assumed to stay the same during the whole time
+     * the app is running (no locale hot swap)
+     *
+     * As such, the result should be cached by the platform code.
+     * The method should return one of the locale constants
+     * defined in the i18n header file.
+     */
+    virtual std::string getLocale() = 0;
 
     /**
      * Returns the AudioPlayer for the platform.
@@ -88,7 +102,7 @@ class Platform
     /**
      * Selects and returns the best platform.
      */
-    static Platform* createPlatform(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight);
+    static Platform* createPlatform();
 };
 
 } // namespace brls

@@ -18,6 +18,7 @@
 
 #include <switch.h>
 
+#include <borealis/core/i18n.hpp>
 #include <borealis/core/logger.hpp>
 #include <borealis/platforms/switch/switch_platform.hpp>
 
@@ -47,14 +48,32 @@ SwitchPlatform::SwitchPlatform()
         this->themeVariant = ThemeVariant::LIGHT;
 
     Logger::info("switch: system has color set {}, using borealis theme {}", colorSetId, this->themeVariant);
-}
 
-void SwitchPlatform::init()
-{
-    this->videoContext = new SwitchVideoContext();
+    // Init platform impls
     this->audioPlayer  = new SwitchAudioPlayer();
     this->inputManager = new SwitchInputManager();
     this->fontLoader   = new SwitchFontLoader();
+
+    // Get locale
+    uint64_t languageCode = 0;
+
+    Result rc = setGetSystemLanguage(&languageCode);
+
+    if (R_SUCCEEDED(rc))
+    {
+        char* languageName = (char*)&languageCode;
+        this->locale       = std::string(languageName);
+    }
+    else
+    {
+        Logger::error("switch: unable to get system language (error {:#x}), using the default one: {1}", rc, LOCALE_DEFAULT);
+        this->locale = LOCALE_DEFAULT;
+    }
+}
+
+void SwitchPlatform::createWindow(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight)
+{
+    this->videoContext = new SwitchVideoContext();
 }
 
 void SwitchPlatform::appletCallback(AppletHookType hookType)
@@ -75,6 +94,11 @@ bool SwitchPlatform::mainLoopIteration()
 VideoContext* SwitchPlatform::getVideoContext()
 {
     return this->videoContext;
+}
+
+std::string SwitchPlatform::getLocale()
+{
+    return this->locale;
 }
 
 AudioPlayer* SwitchPlatform::getAudioPlayer()

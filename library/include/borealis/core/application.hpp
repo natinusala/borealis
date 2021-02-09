@@ -63,9 +63,22 @@ typedef std::function<View*(void)> XMLViewCreator;
 class Application
 {
   public:
-    // Init with given style and theme, or use defaults if missing
-    static bool init(std::string title);
+    /**
+     * Inits the borealis application.
+     * Returns true if it succeeded, false otherwise.
+     */
+    static bool init();
 
+    /**
+     * Creates the application window with the given title.
+     * Must be called after calling init().
+     */
+    static void createWindow(std::string title);
+
+    /**
+     * Application main loop iteration.
+     * Must be called in an infinite loop until it returns false.
+     */
     static bool mainLoop();
 
     static Platform* getPlatform();
@@ -192,7 +205,13 @@ class Application
     static bool XMLViewsRegisterContains(std::string name);
     static XMLViewCreator getXMLViewCreator(std::string name);
 
+    /**
+     * Returns the current system locale.
+     */
+    static std::string getLocale();
+
   private:
+    inline static bool inited        = false;
     inline static bool quitRequested = false;
 
     inline static Platform* platform = nullptr;
