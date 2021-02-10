@@ -18,6 +18,7 @@
 
 #include <borealis/core/animations.hpp>
 #include <borealis/core/application.hpp>
+#include <borealis/core/util.hpp>
 #include <borealis/views/scrolling_frame.hpp>
 #include <borealis/touch/pan_gesture_recognizer.hpp>
 
@@ -40,7 +41,6 @@ namespace brls
 // TODO: use fmt to format the ugly XML logic_errors
 // TODO: find a way to reduce the number of invalidations on boot
 // TODO: use HasNewLayout and MarkAsSeen around onLayout() (so in the event ? does it work ? or does the event only trigger on new layouts already ? or on all layouts ?)
-// TODO: rename BOREALIS_ASSET to BRLS_ASSET
 
 // TODO: rework the highlight pulsation animation, it's not good enough
 
@@ -68,6 +68,8 @@ ScrollingFrame::ScrollingFrame()
             { "natural", ScrollingBehavior::NATURAL },
             { "centered", ScrollingBehavior::CENTERED },
         });
+
+    this->setMaximumAllowedXMLElements(1);
 
     addGestureRecognizer(new PanGestureRecognizer([this](PanGestureCtx pan)
     {
@@ -127,7 +129,7 @@ void ScrollingFrame::setContentView(View* view)
 {
     if (this->contentView)
     {
-        this->removeView(this->contentView); // will delete and call willDisappear
+        Box::removeView(this->contentView); // will delete and call willDisappear
         this->contentView = nullptr;
     }
 
@@ -278,7 +280,7 @@ bool ScrollingFrame::updateScrolling(bool animated)
     return true;
 }
 
-#define NO_PADDING throw std::logic_error("Padding is not supported by brls:ScrollingFrame, please set padding on the content view instead");
+#define NO_PADDING fatal("Padding is not supported by brls:ScrollingFrame, please set padding on the content view instead");
 
 void ScrollingFrame::setPadding(float top, float right, float bottom, float left)
 {

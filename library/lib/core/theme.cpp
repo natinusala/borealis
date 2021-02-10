@@ -18,6 +18,7 @@
 */
 
 #include <borealis/core/theme.hpp>
+#include <borealis/core/util.hpp>
 #include <stdexcept>
 
 namespace brls
@@ -126,7 +127,7 @@ void ThemeValues::addColor(std::string name, NVGcolor color)
 NVGcolor ThemeValues::getColor(std::string name)
 {
     if (this->values.count(name) == 0)
-        throw std::logic_error("Unknown theme value \"" + name + "\"");
+        fatal("Unknown theme value \"" + name + "\"");
 
     return this->values[name];
 }

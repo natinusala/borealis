@@ -30,6 +30,7 @@
 #include <borealis/core/event.hpp>
 #include <borealis/core/frame_context.hpp>
 #include <borealis/touch/gesture_recognizer.hpp>
+#include <borealis/core/util.hpp>
 #include <functional>
 #include <memory>
 #include <set>
@@ -40,13 +41,13 @@
 // Registers an "enum" XML attribute, which is just a string attribute with a map string -> enum inside
 // When using this macro please use the same (wonky) formatting as what you see in Box.cpp or View.cpp
 // otherwise clang-format will screw it up
-#define BRLS_REGISTER_ENUM_XML_ATTRIBUTE(name, enumType, method, ...)                                     \
-    this->registerStringXMLAttribute(name, [this](std::string value) {                                    \
-        std::unordered_map<std::string, enumType> enumMap = __VA_ARGS__;                                  \
-        if (enumMap.count(value) > 0)                                                                     \
-            method(enumMap[value]);                                                                       \
-        else                                                                                              \
-            throw std::logic_error("Illegal value \"" + value + "\" for XML attribute \"" + name + "\""); \
+#define BRLS_REGISTER_ENUM_XML_ATTRIBUTE(name, enumType, method, ...)                    \
+    this->registerStringXMLAttribute(name, [this](std::string value) {                   \
+        std::unordered_map<std::string, enumType> enumMap = __VA_ARGS__;                 \
+        if (enumMap.count(value) > 0)                                                    \
+            method(enumMap[value]);                                                      \
+        else                                                                             \
+            fatal("Illegal value \"" + value + "\" for XML attribute \"" + name + "\""); \
     })
 
 // Shortcut to register an A key action (generic click) on a view given its id, that calls any function or method
@@ -227,6 +228,8 @@ class View
 
     void registerCommonAttributes();
     void printXMLAttributeErrorMessage(tinyxml2::XMLElement* element, std::string name, std::string value);
+
+    unsigned maximumAllowedXMLElements = UINT_MAX;
 
     NVGcolor lineColor = TRANSPARENT;
     float lineTop      = 0;
@@ -917,6 +920,14 @@ class View
      * Returns if the given XML attribute name is valid for that view.
      */
     bool isXMLAttributeValid(std::string attributeName);
+
+    /**
+     * Sets the maximum number of allowed children XML elements
+     * when using a view of that class in an XML file.
+     */
+    void setMaximumAllowedXMLElements(unsigned max);
+
+    unsigned getMaximumAllowedXMLElements();
 
     /**
      * If set to true, will force the view to be translucent.

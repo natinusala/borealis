@@ -33,4 +33,4 @@ INCLUDES	:=	$(INCLUDES) \
 				$(current_dir)/include/borealis/extern/tinyxml2 \
 				$(addprefix $(current_dir)/lib/extern/switch-libpulsar/, $(PLSR_INCLUDES))
 
-CXXFLAGS := $(CXXFLAGS) -DYG_ENABLE_EVENTS -fdata-sections -DBOREALIS_RESOURCES="\"romfs:/\""
+CXXFLAGS := $(CXXFLAGS) -DYG_ENABLE_EVENTS -fdata-sections -DBRLS_RESOURCES="\"romfs:/\""

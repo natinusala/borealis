@@ -19,6 +19,7 @@
 */
 
 #include <borealis/core/style.hpp>
+#include <borealis/core/util.hpp>
 #include <stdexcept>
 
 namespace brls
@@ -125,7 +126,7 @@ void StyleValues::addMetric(std::string name, float metric)
 float StyleValues::getMetric(std::string name)
 {
     if (this->values.count(name) == 0)
-        throw std::logic_error("Unknown style metric \"" + name + "\"");
+        fatal("Unknown style metric \"" + name + "\"");
 
     return this->values[name];
 }

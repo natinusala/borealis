@@ -19,6 +19,7 @@
 #pragma once
 
 #include <borealis/core/platform.hpp>
+#include <borealis/platforms/glfw/glfw_font.hpp>
 #include <borealis/platforms/glfw/glfw_input.hpp>
 #include <borealis/platforms/glfw/glfw_video.hpp>
 #include <borealis/platforms/glfw/glfw_touch.hpp>
@@ -29,25 +30,28 @@ namespace brls
 class GLFWPlatform : public Platform
 {
   public:
-    GLFWPlatform(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight);
+    GLFWPlatform();
     ~GLFWPlatform();
 
     std::string getName() override;
-    void init() override;
+    void createWindow(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight) override;
 
     bool mainLoopIteration() override;
     ThemeVariant getThemeVariant() override;
+    std::string getLocale() override;
 
     AudioPlayer* getAudioPlayer() override;
     VideoContext* getVideoContext() override;
     InputManager* getInputManager() override;
     TouchManager* getTouchManager() override;
+    FontLoader* getFontLoader() override;
 
   private:
     NullAudioPlayer* audioPlayer   = nullptr;
     GLFWVideoContext* videoContext = nullptr;
     GLFWInputManager* inputManager = nullptr;
     GLFWTouchManager* touchManager = nullptr;
+    GLFWFontLoader* fontLoader     = nullptr;
 };
 
 } // namespace brls

@@ -19,6 +19,7 @@
 */
 
 #include <borealis/core/application.hpp>
+#include <borealis/core/util.hpp>
 #include <borealis/views/image.hpp>
 
 namespace brls
@@ -36,7 +37,9 @@ static float measureWidth(YGNodeRef node, float width, YGMeasureMode widthMode, 
     else if (widthMode == YGMeasureModeExactly)
         return width;
     else
-        throw std::logic_error("Unsupported Image width measure mode: " + std::to_string(widthMode));
+        fatal("Unsupported Image width measure mode: " + std::to_string(widthMode));
+
+    return width;
 }
 
 static float measureHeight(YGNodeRef node, float width, YGMeasureMode widthMode, float height, YGMeasureMode heightMode, float originalHeight, ImageScalingType type)
@@ -51,7 +54,9 @@ static float measureHeight(YGNodeRef node, float width, YGMeasureMode widthMode,
     else if (heightMode == YGMeasureModeExactly)
         return height;
     else
-        throw std::logic_error("Unsupported Image height measure mode: " + std::to_string(heightMode));
+        fatal("Unsupported Image height measure mode: " + std::to_string(heightMode));
+
+    return height;
 }
 
 static YGSize imageMeasureFunc(YGNodeRef node, float width, YGMeasureMode widthMode, float height, YGMeasureMode heightMode)
@@ -224,7 +229,7 @@ void Image::invalidateImageBounds()
             }
             break;
         default:
-            throw std::logic_error("Unimplemented Image scaling type");
+            fatal("Unimplemented Image scaling type");
     }
 
     // Create the paint - actual X and Y positions are updated every frame in draw() to apply translation (scrolling...)
@@ -234,7 +239,7 @@ void Image::invalidateImageBounds()
 
 void Image::setImageFromRes(std::string name)
 {
-    this->setImageFromFile(std::string(BOREALIS_RESOURCES) + name);
+    this->setImageFromFile(std::string(BRLS_RESOURCES) + name);
 }
 
 void Image::setImageFromFile(std::string path)
@@ -249,7 +254,7 @@ void Image::setImageFromFile(std::string path)
     this->texture = nvgCreateImage(vg, path.c_str(), 0);
 
     if (this->texture == 0)
-        throw std::logic_error("Cannot load image from file \"" + path + "\"");
+        fatal("Cannot load image from file \"" + path + "\"");
 
     int width, height;
     nvgImageSize(vg, this->texture, &width, &height);

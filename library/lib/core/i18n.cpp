@@ -1,6 +1,6 @@
 /*
     Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2020  natinusala
+    Copyright (C) 2020-2021  natinusala
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,19 +16,15 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <borealis.hpp> // for BOREALIS_ASSET
+#include <borealis/core/application.hpp>
+#include <borealis/core/assets.hpp>
+#include <borealis/core/i18n.hpp>
 #include <filesystem>
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include <string>
 
-#ifdef __SWITCH__
-#include <switch.h>
-#endif
-
-#define DEFAULT_LOCALE "en-US"
-
-namespace brls::i18n
+namespace brls
 {
 
 static nlohmann::json defaultLocale = {};
@@ -42,16 +38,16 @@ static bool endsWith(const std::string& str, const std::string& suffix)
 
 static void loadLocale(std::string locale, nlohmann::json* target)
 {
-    std::string localePath = BOREALIS_ASSET("i18n/" + locale); // TODO: use a platform agnostic separator if someone cares about Windows
+    std::string localePath = BRLS_ASSET("i18n/" + locale); // TODO: use a platform agnostic separator if someone cares about Windows
 
     if (!std::filesystem::exists(localePath))
     {
-        brls::Logger::error("Cannot load locale {}: directory {} doesn't exist", locale, localePath);
+        Logger::error("Cannot load locale {}: directory {} doesn't exist", locale, localePath);
         return;
     }
     else if (!std::filesystem::is_directory(localePath))
     {
-        brls::Logger::error("Cannot load locale {}: {} isn't a directory", locale, localePath);
+        Logger::error("Cannot load locale {}: {} isn't a directory", locale, localePath);
         return;
     }
 
@@ -79,7 +75,7 @@ static void loadLocale(std::string locale, nlohmann::json* target)
         }
         catch (const std::exception& e)
         {
-            brls::Logger::error("Error while loading \"{}\": {}", path, e.what());
+            Logger::error("Error while loading \"{}\": {}", path, e.what());
         }
 
         jsonStream.close();
@@ -88,32 +84,12 @@ static void loadLocale(std::string locale, nlohmann::json* target)
     }
 }
 
-std::string getCurrentLocale()
-{
-#ifdef __SWITCH__
-    u64 languageCode = 0;
-
-    Result res = setGetSystemLanguage(&languageCode);
-
-    if (R_SUCCEEDED(res))
-    {
-        char* languageName = (char*)&languageCode;
-        return std::string(languageName);
-    }
-    else
-    {
-        brls::Logger::error("Unable to get system language (error 0x{0:x}), using the default one: {1}", res, DEFAULT_LOCALE);
-    }
-#endif
-    return DEFAULT_LOCALE;
-}
-
 void loadTranslations()
 {
-    loadLocale(DEFAULT_LOCALE, &defaultLocale);
+    loadLocale(LOCALE_DEFAULT, &defaultLocale);
 
-    std::string currentLocaleName = getCurrentLocale();
-    if (currentLocaleName != DEFAULT_LOCALE)
+    std::string currentLocaleName = Application::getLocale();
+    if (currentLocaleName != LOCALE_DEFAULT)
         loadLocale(currentLocaleName, &currentLocale);
 }
 
@@ -129,7 +105,7 @@ namespace internal
         }
         catch (const std::exception& e)
         {
-            brls::Logger::error("Error while getting string \"{}\": {}", stringName, e.what());
+            Logger::error("Error while getting string \"{}\": {}", stringName, e.what());
             return stringName;
         }
 
@@ -160,9 +136,9 @@ inline namespace literals
 {
     std::string operator"" _i18n(const char* str, size_t len)
     {
-        return brls::i18n::internal::getRawStr(std::string(str, len));
+        return internal::getRawStr(std::string(str, len));
     }
 
 } // namespace literals
 
-} // namespace brls::i18n
+} // namespace brls

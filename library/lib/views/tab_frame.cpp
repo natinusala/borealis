@@ -19,6 +19,7 @@
 */
 
 #include <borealis/core/logger.hpp>
+#include <borealis/core/util.hpp>
 #include <borealis/views/tab_frame.hpp>
 
 const std::string tabFrameContentXML = R"xml(
@@ -96,7 +97,7 @@ void TabFrame::handleXMLElement(tinyxml2::XMLElement* element)
         const tinyxml2::XMLAttribute* labelAttribute = element->FindAttribute("label");
 
         if (!labelAttribute)
-            throw std::logic_error("\"label\" attribute missing from \"" + name + "\" tab");
+            fatal("\"label\" attribute missing from \"" + name + "\" tab");
 
         std::string label = View::getStringXMLAttributeValue(labelAttribute->Value());
 
@@ -109,7 +110,7 @@ void TabFrame::handleXMLElement(tinyxml2::XMLElement* element)
             });
 
             if (viewElement->NextSiblingElement())
-                throw std::logic_error("\"brls:Tab\" can only contain one child element");
+                fatal("\"brls:Tab\" can only contain one child element");
         }
         else
         {
@@ -122,7 +123,7 @@ void TabFrame::handleXMLElement(tinyxml2::XMLElement* element)
     }
     else
     {
-        throw std::logic_error("Unknown child element \"" + name + "\" for \"brls:Tab\"");
+        fatal("Unknown child element \"" + name + "\" for \"brls:Tab\"");
     }
 }
 

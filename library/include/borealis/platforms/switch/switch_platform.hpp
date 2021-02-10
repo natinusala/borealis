@@ -20,6 +20,7 @@
 
 #include <borealis/platforms/glfw/glfw_platform.hpp>
 #include <borealis/platforms/switch/switch_audio.hpp>
+#include <borealis/platforms/switch/switch_font.hpp>
 #include <borealis/platforms/switch/switch_input.hpp>
 #include <borealis/platforms/switch/switch_video.hpp>
 #include <borealis/platforms/switch/switch_touch.hpp>
@@ -33,17 +34,19 @@ class SwitchPlatform : public Platform
     SwitchPlatform();
     ~SwitchPlatform();
 
-    void init() override;
+    void createWindow(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight) override;
 
     std::string getName() override;
 
     bool mainLoopIteration() override;
     ThemeVariant getThemeVariant() override;
+    std::string getLocale() override;
 
     VideoContext* getVideoContext() override;
     AudioPlayer* getAudioPlayer() override;
     InputManager* getInputManager() override;
     TouchManager* getTouchManager() override;
+    FontLoader* getFontLoader() override;
 
     void appletCallback(AppletHookType hookType);
 
@@ -51,11 +54,13 @@ class SwitchPlatform : public Platform
     AppletHookCookie appletCookie;
 
     ThemeVariant themeVariant;
+    std::string locale;
 
     SwitchAudioPlayer* audioPlayer;
     SwitchInputManager* inputManager;
     SwitchVideoContext* videoContext;
     SwitchTouchManager* touchManager;
+    SwitchFontLoader* fontLoader;
 };
 
 } // namespace brls

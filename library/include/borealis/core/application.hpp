@@ -25,6 +25,7 @@
 #include <borealis/core/activity.hpp>
 #include <borealis/core/animations.hpp>
 #include <borealis/core/audio.hpp>
+#include <borealis/core/font.hpp>
 #include <borealis/core/frame_context.hpp>
 #include <borealis/core/logger.hpp>
 #include <borealis/core/platform.hpp>
@@ -62,9 +63,22 @@ typedef std::function<View*(void)> XMLViewCreator;
 class Application
 {
   public:
-    // Init with given style and theme, or use defaults if missing
-    static bool init(std::string title);
+    /**
+     * Inits the borealis application.
+     * Returns true if it succeeded, false otherwise.
+     */
+    static bool init();
 
+    /**
+     * Creates the application window with the given title.
+     * Must be called after calling init().
+     */
+    static void createWindow(std::string title);
+
+    /**
+     * Application main loop iteration.
+     * Must be called in an infinite loop until it returns false.
+     */
     static bool mainLoop();
 
     static Platform* getPlatform();
@@ -114,11 +128,23 @@ class Application
     static Theme getTheme();
     static ThemeVariant getThemeVariant();
 
-    static int loadFont(const char* fontName, const char* filePath);
-    static int loadFontFromMemory(const char* fontName, void* data, size_t size, bool freeData);
-    static int findFont(const char* fontName);
+    /**
+     * Loads a font from a given file and stores it in the font stash.
+     * Returns true if the operation succeeded.
+     */
+    static bool loadFontFromFile(std::string fontName, std::string filePath);
 
-    static FontStash* getFontStash();
+    /**
+     * Loads a font from a given memory buffer and stores it in the font stash.
+     * Returns true if the operation succeeded.
+     */
+    static bool loadFontFromMemory(std::string fontName, void* data, size_t size, bool freeData);
+
+    /**
+     * Returns the nanovg handle to the given font name, or FONT_INVALID if
+     * no such font is currently loaded.
+     */
+    static int getFont(std::string fontName);
 
     static void notify(std::string text);
 
@@ -179,7 +205,13 @@ class Application
     static bool XMLViewsRegisterContains(std::string name);
     static XMLViewCreator getXMLViewCreator(std::string name);
 
+    /**
+     * Returns the current system locale.
+     */
+    static std::string getLocale();
+
   private:
+    inline static bool inited        = false;
     inline static bool quitRequested = false;
 
     inline static Platform* platform = nullptr;

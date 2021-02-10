@@ -24,11 +24,11 @@
 #include <borealis/core/application.hpp>
 #include <borealis/core/i18n.hpp>
 #include <borealis/core/input.hpp>
+#include <borealis/core/util.hpp>
 #include <borealis/views/box.hpp>
 #include <borealis/views/view.hpp>
 
-namespace i18n = brls::i18n;
-using namespace i18n::literals;
+using namespace brls::literals;
 
 namespace brls
 {
@@ -354,10 +354,10 @@ void View::drawBorder(NVGcontext* vg, FrameContext* ctx, Style style, float x, f
 
 void View::drawShadow(NVGcontext* vg, FrameContext* ctx, Style style, float x, float y, float width, float height)
 {
-    float shadowWidth;
-    float shadowFeather;
-    float shadowOpacity;
-    float shadowOffset;
+    float shadowWidth   = 0.0f;
+    float shadowFeather = 0.0f;
+    float shadowOpacity = 0.0f;
+    float shadowOffset  = 0.0f;
 
     switch (this->shadowType)
     {
@@ -369,6 +369,8 @@ void View::drawShadow(NVGcontext* vg, FrameContext* ctx, Style style, float x, f
             break;
         case ShadowType::CUSTOM:
             // TODO: use custom values
+            break;
+        case ShadowType::NONE:
             break;
     }
 
@@ -1235,7 +1237,7 @@ float View::getShowAnimationDuration(TransitionAnimation animation)
     Style style = Application::getStyle();
 
     if (animation == TransitionAnimation::SLIDE_LEFT || animation == TransitionAnimation::SLIDE_RIGHT)
-        throw std::logic_error("Slide animation is not supported on views");
+        fatal("Slide animation is not supported on views");
 
     return style["brls/animations/show"];
 }
@@ -1261,7 +1263,7 @@ void View::onParentFocusLost(View* focusedView)
 void View::setCustomNavigationRoute(FocusDirection direction, View* target)
 {
     if (!this->focusable)
-        throw std::logic_error("Only focusable views can have a custom navigation route");
+        fatal("Only focusable views can have a custom navigation route");
 
     this->customFocusByPtr[direction] = target;
 }
@@ -1269,7 +1271,7 @@ void View::setCustomNavigationRoute(FocusDirection direction, View* target)
 void View::setCustomNavigationRoute(FocusDirection direction, std::string targetId)
 {
     if (!this->focusable)
-        throw std::logic_error("Only focusable views can have a custom navigation route");
+        fatal("Only focusable views can have a custom navigation route");
 
     this->customFocusById[direction] = targetId;
 }
@@ -1330,7 +1332,7 @@ std::string View::getStringXMLAttributeValue(std::string value)
     if (startsWith(value, "@i18n/"))
     {
         std::string stringName = value.substr(6);
-        return i18n::getStr(stringName);
+        return getStr(stringName);
     }
 
     return value;
@@ -1341,7 +1343,7 @@ std::string View::getFilePathXMLAttributeValue(std::string value)
     if (startsWith(value, "@res/"))
     {
         std::string resPath = value.substr(5);
-        return std::string(BOREALIS_RESOURCES) + resPath;
+        return std::string(BRLS_RESOURCES) + resPath;
     }
 
     return value;
@@ -1590,7 +1592,7 @@ bool View::isXMLAttributeValid(std::string attributeName)
 
 View* View::createFromXMLResource(std::string name)
 {
-    return View::createFromXMLFile(std::string(BOREALIS_RESOURCES) + "xml/" + name); // TODO: platform agnostic separator here if anyone cares about Windows
+    return View::createFromXMLFile(std::string(BRLS_RESOURCES) + "xml/" + name); // TODO: platform agnostic separator here if anyone cares about Windows
 }
 
 View* View::createFromXMLString(std::string xml)
@@ -1599,12 +1601,12 @@ View* View::createFromXMLString(std::string xml)
     tinyxml2::XMLError error        = document->Parse(xml.c_str());
 
     if (error != tinyxml2::XMLError::XML_SUCCESS)
-        throw std::logic_error("Invalid XML when creating View from XML: error " + std::to_string(error));
+        fatal("Invalid XML when creating View from XML: error " + std::to_string(error));
 
     tinyxml2::XMLElement* root = document->RootElement();
 
     if (!root)
-        throw std::logic_error("Invalid XML: no element found");
+        fatal("Invalid XML: no element found");
 
     View* view = View::createFromXMLElement(root);
     view->bindXMLDocument(document);
@@ -1617,12 +1619,12 @@ View* View::createFromXMLFile(std::string path)
     tinyxml2::XMLError error        = document->LoadFile(path.c_str());
 
     if (error != tinyxml2::XMLError::XML_SUCCESS)
-        throw std::logic_error("Unable to load XML file \"" + path + "\": error " + std::to_string(error));
+        fatal("Unable to load XML file \"" + path + "\": error " + std::to_string(error));
 
     tinyxml2::XMLElement* element = document->RootElement();
 
     if (!element)
-        throw std::logic_error("Unable to load XML file \"" + path + "\": no root element found, is the file empty?");
+        fatal("Unable to load XML file \"" + path + "\": no root element found, is the file empty?");
 
     View* view = View::createFromXMLElement(element);
     view->bindXMLDocument(document);
@@ -1637,7 +1639,7 @@ View* View::createFromXMLElement(tinyxml2::XMLElement* element)
     std::string viewName = element->Name();
 
     // Instantiate the view
-    View* view;
+    View* view = nullptr;
 
     // Special case where element name is brls:View: create from given XML file.
     // XML attributes are explicitely not passed down to the created view.
@@ -1650,28 +1652,47 @@ View* View::createFromXMLElement(tinyxml2::XMLElement* element)
         if (xmlAttribute)
             view = View::createFromXMLFile(View::getFilePathXMLAttributeValue(xmlAttribute->Value()));
         else
-            throw std::logic_error("brls:View XML tag must have an \"xml\" attribute");
+            fatal("brls:View XML tag must have an \"xml\" attribute");
     }
     // Otherwise look in the register
     else
     {
         if (!Application::XMLViewsRegisterContains(viewName))
-            throw std::logic_error("Unknown XML tag \"" + viewName + "\"");
+            fatal("Unknown XML tag \"" + viewName + "\"");
 
         view = Application::getXMLViewCreator(viewName)();
 
         view->applyXMLAttributes(element);
     }
 
+    unsigned count = 0;
+    unsigned max   = view->getMaximumAllowedXMLElements();
     for (tinyxml2::XMLElement* child = element->FirstChildElement(); child != nullptr; child = child->NextSiblingElement())
-        view->handleXMLElement(child);
+    {
+        if (count >= max)
+            fatal("View \"" + view->describe() + "\" is only allowed to have " + std::to_string(max) + " children XML elements");
+        else
+            view->handleXMLElement(child);
+
+        count++;
+    }
 
     return view;
 }
 
 void View::handleXMLElement(tinyxml2::XMLElement* element)
 {
-    throw std::logic_error("Raw views cannot have child XML tags");
+    fatal("Raw views cannot have child XML tags");
+}
+
+void View::setMaximumAllowedXMLElements(unsigned max)
+{
+    this->maximumAllowedXMLElements = max;
+}
+
+unsigned View::getMaximumAllowedXMLElements()
+{
+    return this->maximumAllowedXMLElements;
 }
 
 void View::registerCommonAttributes()
@@ -1977,9 +1998,9 @@ void View::setVisibility(Visibility visibility)
 void View::printXMLAttributeErrorMessage(tinyxml2::XMLElement* element, std::string name, std::string value)
 {
     if (this->knownAttributes.find(name) != this->knownAttributes.end())
-        throw std::logic_error("Illegal value \"" + value + "\" for \"" + std::string(element->Name()) + "\" XML attribute \"" + name + "\"");
+        fatal("Illegal value \"" + value + "\" for \"" + std::string(element->Name()) + "\" XML attribute \"" + name + "\"");
     else
-        throw std::logic_error("Unknown XML attribute \"" + name + "\" for tag \"" + std::string(element->Name()) + "\" (with value \"" + value + "\")");
+        fatal("Unknown XML attribute \"" + name + "\" for tag \"" + std::string(element->Name()) + "\" (with value \"" + value + "\")");
 }
 
 void View::registerFloatXMLAttribute(std::string name, FloatAttributeHandler handler)
@@ -2055,7 +2076,7 @@ View* View::getNearestView(std::string id)
 void View::setId(std::string id)
 {
     if (id == "")
-        throw std::logic_error("ID cannot be empty");
+        fatal("ID cannot be empty");
 
     this->id = id;
 }
