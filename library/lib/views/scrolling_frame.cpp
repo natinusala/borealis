@@ -29,15 +29,10 @@ namespace brls
 // TODO: RestoreFocus flag in Box to remember focus (sidebar...)
 // TODO: image (showcase + put in appletframe/tabframe header)
 // TODO: use a menu timer in tabframe to defer the tab loading on input like HOS does
-// TODO: button (border -> line) (showcase)
 // TODO: fancy pants scrolling
-// TODO: label alignment (showcase)
 // TODO: clarify addView / removeView -> setContentView, add it for everything or remove it
-// TODO: use the generic clickable stuff for everything clickable - add click pulse animation
-// TODO: do the window thing to avoid doing glGetSize every frame or whatever
 // TODO: streamline TransitionAnimation, it should be generic to activities
 // TODO: does the fade in animation work?
-// TODO: cleanup background, make it an XML attribute
 // TODO: use fmt to format the ugly XML logic_errors
 // TODO: find a way to reduce the number of invalidations on boot
 // TODO: use HasNewLayout and MarkAsSeen around onLayout() (so in the event ? does it work ? or does the event only trigger on new layouts already ? or on all layouts ?)
@@ -47,7 +42,7 @@ namespace brls
 // TODO: it's time to do proper documentation using doxygen or whatever
 
 // TODO: fix shitty frame pacer - try cpp high precision clock - see if it works fine on Switch, in which case only enable it there
-// TODO: deko, recycling, audio, asynctask
+// TODO: recycling, asynctask
 
 // TODO: translate everything in fr
 // TODO: make sure all useless invalidate calls are removed
@@ -55,10 +50,11 @@ namespace brls
 // TODO: clean the other TODOs
 
 // TODO: ASAN time
-// TODO: incomment everything in borealis.hpp
+// TODO: decomment everything in borealis.hpp
 // TODO: cleanup the old example files
 // TODO: copyright on all changed files
 // TODO: clean the project board and rewrite documentation once this is out
+// TODO: change the brls description once this is out: it's a cross-platform controller / gaming console oriented UI library with a Switch look and feel
 
 ScrollingFrame::ScrollingFrame()
 {

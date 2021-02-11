@@ -244,8 +244,6 @@ class Application
 
     // inline static FramerateCounter* framerateCounter = nullptr; TODO: restore that
 
-    inline static float frameTime = 0.0f;
-
     inline static View* repetitionOldFocus = nullptr;
 
     inline static GenericEvent globalFocusChangeEvent;
