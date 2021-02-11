@@ -35,15 +35,6 @@
 #include <stdexcept>
 #include <string>
 
-// The Switch include must always be BEFORE the Yoga Event include
-// because libnx uses an "Event" struct that also exists in Yoga (name clash)
-// and for some reason the compiler doesn't understand that Event in libnx
-// does NOT mean facebook::yoga::Event (the namespace seems to be ignored)
-// TODO: remove it
-#ifdef __SWITCH__
-#include <switch.h>
-#endif
-
 #include <yoga/event/event.h>
 
 #ifndef YG_ENABLE_EVENTS
@@ -59,7 +50,6 @@
 constexpr uint32_t ORIGINAL_WINDOW_WIDTH  = 1280;
 constexpr uint32_t ORIGINAL_WINDOW_HEIGHT = 720;
 
-#define DEFAULT_FPS 60
 #define BUTTON_REPEAT_DELAY 15
 #define BUTTON_REPEAT_CADENCY 5
 
@@ -163,22 +153,12 @@ void Application::createWindow(std::string windowTitle)
     // Init animations engine
     menu_animation_init();
 
-    // Default FPS cap
-    Application::setMaximumFPS(DEFAULT_FPS);
-
     // Register built-in XML views
     Application::registerBuiltInXMLViews();
 }
 
 bool Application::mainLoop()
 {
-    // Frame start
-#ifdef __SWITCH__
-    retro_time_t frameStart = 0;
-    if (Application::frameTime > 0.0f)
-        frameStart = cpu_features_get_time_usec();
-#endif
-
     // Main loop callback
     if (!Application::platform->mainLoopIteration() || Application::quitRequested)
     {
@@ -229,21 +209,6 @@ bool Application::mainLoop()
 
     // Render
     Application::frame();
-
-    // Sleep if necessary
-#ifdef __SWITCH__
-    if (Application::frameTime > 0.0f)
-    {
-        retro_time_t currentFrameTime = cpu_features_get_time_usec() - frameStart;
-        retro_time_t frameTime        = (retro_time_t)(Application::frameTime * 1000);
-
-        if (frameTime > currentFrameTime)
-        {
-            retro_time_t toSleep = frameTime - currentFrameTime;
-            std::this_thread::sleep_for(std::chrono::microseconds(toSleep));
-        }
-    }
-#endif
 
     return true;
 }
@@ -865,18 +830,6 @@ void Application::onWindowResized(int width, int height)
     // Regular frame
     Label::frame(ctx); TODO: restore that
 }*/
-
-void Application::setMaximumFPS(unsigned fps)
-{
-    if (fps == 0)
-        Application::frameTime = 0.0f;
-    else
-    {
-        Application::frameTime = 1000 / (float)fps;
-    }
-
-    Logger::info("Maximum FPS set to {} - using a frame time of {:.2f} ms", fps, Application::frameTime);
-}
 
 std::string Application::getTitle()
 {
