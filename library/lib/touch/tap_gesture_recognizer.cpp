@@ -28,43 +28,48 @@ TapGestureRecognizer::TapGestureRecognizer(TapGestureRespond respond, int target
     this->counter = 0;
 }
 
-bool TapGestureRecognizer::recognitionLoop(TouchState touch, bool locked) 
+GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view) 
 {
-    if (!enabled) return false;
+    if (!enabled) return GestureState::FAILED;
+    
+    if (touch.state != TouchEvent::START) 
+    {
+        if (this->state == GestureState::INTERRUPTED ||
+            this->state == GestureState::FAILED) 
+            return this->state;
+    }
 
     switch (touch.state)
     {
     case TouchEvent::START:
-        this->success = true;
+        this->state = GestureState::UNSURE;
         this->x = touch.x;
         this->y = touch.y;
         break;
     case TouchEvent::STAY:
-        if (fabs(touch.x - this->x) > MAX_DELTA_MOVEMENT || 
-            fabs(touch.y - this->y) > MAX_DELTA_MOVEMENT) {
-            this->success = false;
+        if (touch.x < view->getX() || touch.x > view->getX() + view->getWidth() ||
+            touch.y < view->getY() || touch.y > view->getY() + view->getHeight())
+        {
+            this->state = GestureState::FAILED;
             counter = 0;
         }
         break;
     case TouchEvent::END:
-        if (this->success &&
-            fabs(touch.x - this->x) <= MAX_DELTA_MOVEMENT && 
-            fabs(touch.y - this->y) <= MAX_DELTA_MOVEMENT) 
-            this->counter++;
+        this->counter++;
 
         if (counter >= target) 
         {
-            if (respond && !locked) 
+            if (respond) 
                 this->respond();
             counter = 0;
         }
         break;
     case TouchEvent::NONE:
-        this->success = false;
+        this->state = GestureState::FAILED;
         break;
     }
 
-    return this->success;
+    return this->state;
 }
 
 };

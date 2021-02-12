@@ -21,11 +21,13 @@
 
 #include "gesture_recognizer.hpp"
 
+#define MAX_DELTA_MOVEMENT 10
+
 namespace brls
 {
 
-struct PanGestureCtx;
-typedef std::function<void(PanGestureCtx)> PanGestureRespond;
+class PanGestureRecognizer;
+typedef std::function<void(PanGestureRecognizer*)> PanGestureRespond;
 
 enum class PanAxis
 {
@@ -34,37 +36,28 @@ enum class PanAxis
 	NONE,
 };
 
-struct PanGestureCtx
-{
-	TouchEvent state;
-	double startX;
-	double startY;
-	double currentX;
-	double currentY;
-	double deltaX;
-	double deltaY;
-};
-
 class PanGestureRecognizer: public GestureRecognizer
 {
 public:
 	PanGestureRecognizer(PanGestureRespond respond, PanAxis axis);
-	bool recognitionLoop(TouchState touch, bool locked) override;
+	GestureState recognitionLoop(TouchState touch, View* view) override;
 	
-	PanAxis getAxis() const
-	{
-		return this->axis;
-	}
+	double getX() const { return x; }
+	double getY() const { return y; }
+	double getStartX() const { return startX; }
+	double getStartY() const { return startY; }
+	double getDeltaX() const { return deltaX; }
+	double getDeltaY() const { return deltaY; }
+	PanAxis getAxis() const { return this->axis; }
 private:
 	PanGestureRespond respond;
-	PanAxis axis;
 	double x;
 	double y;
 	double startX;
 	double startY;
 	double deltaX;
 	double deltaY;
-	bool recognized;
+	PanAxis axis;
 };
 
 };

@@ -1043,9 +1043,11 @@ class View
         return this->gestureRecognizers;
     }
 
+    void interruptGestures(bool onlyIfUnsureState);
+
     void addGestureRecognizer(GestureRecognizer* recognizer);
 
-    virtual void gestureRecognizerRequest(TouchState touch, bool locked = false);
+    virtual void gestureRecognizerRequest(TouchState touch);
 
     /**
       * Called each frame

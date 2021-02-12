@@ -210,6 +210,11 @@ class Application
      */
     static std::string getLocale();
 
+    /**
+     * View that was recognized as target for touch events.
+     */
+    inline static View* firstResponder; 
+
   private:
     inline static bool inited        = false;
     inline static bool quitRequested = false;
@@ -235,8 +240,6 @@ class Application
     inline static ControllerState oldControllerState = {};
     inline static ControllerState controllerState    = {};
     inline static TouchState touchState              = {};
-
-    inline static View* firstResponder; // View that was recognized as target for touch events
 
     inline static unsigned blockInputsTokens = 0; // any value > 0 means inputs are blocked
 

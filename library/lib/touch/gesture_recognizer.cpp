@@ -17,37 +17,17 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#pragma once
-
-#include <functional>
-
-#include <borealis/core/touch.hpp>
+#include <borealis/touch/gesture_recognizer.hpp>
 
 namespace brls
 {
 
-class View;
-
-enum class GestureState
+void GestureRecognizer::interrupt(bool onlyIfUnsureState)
 {
-    INTERRUPTED,
-    UNSURE,
-    START,
-    STAY,
-    END,
-    FAILED,
-};
+    if (onlyIfUnsureState && this->state != GestureState::UNSURE) 
+        return;
 
-class GestureRecognizer
-{
-public:
-    virtual ~GestureRecognizer() { }
-    virtual GestureState recognitionLoop(TouchState touch, View* view) { }
-    void interrupt(bool onlyIfUnsureState);
-    bool enabled = true;
-	GestureState getState() const { return state; }
-protected:
-	GestureState state;
-};
+    this->state = GestureState::INTERRUPTED;
+}
 
-};
+}

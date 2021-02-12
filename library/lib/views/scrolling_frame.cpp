@@ -67,15 +67,15 @@ ScrollingFrame::ScrollingFrame()
 
     this->setMaximumAllowedXMLElements(1);
 
-    addGestureRecognizer(new PanGestureRecognizer([this](PanGestureCtx pan)
+    addGestureRecognizer(new PanGestureRecognizer([this](PanGestureRecognizer* pan)
     {
         float contentHeight = this->getContentHeight();
 
         static float startY;
-        if (pan.state == TouchEvent::START) 
+        if (pan->getState() == GestureState::START) 
             startY = this->scrollY * contentHeight;
 
-        float newScroll = (startY - (pan.currentY - pan.startY)) / contentHeight;
+        float newScroll = (startY - (pan->getY() - pan->getStartY())) / contentHeight;
 
         // Top boundary
         if (newScroll < 0.0f)
@@ -89,7 +89,7 @@ ScrollingFrame::ScrollingFrame()
 
         //Start animation
         this->startScrolling(true, newScroll);
-    }, PanAxis::NONE));
+    }, PanAxis::VERTICAL));
 }
 
 void ScrollingFrame::draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx)

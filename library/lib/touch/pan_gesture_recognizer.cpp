@@ -27,16 +27,21 @@ PanGestureRecognizer::PanGestureRecognizer(PanGestureRespond respond, PanAxis ax
 {
 }
 
-bool PanGestureRecognizer::recognitionLoop(TouchState touch, bool locked) 
+GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view) 
 {
-    if (!enabled) return false;
+    if (!enabled) return GestureState::FAILED;
+    
+    if (touch.state != TouchEvent::START) 
+    {
+        if (this->state == GestureState::INTERRUPTED ||
+            this->state == GestureState::FAILED) 
+            return this->state;
+    }
 
-    TouchEvent state;
     switch (touch.state)
     {
     case TouchEvent::START:
-        this->recognized = false;
-        this->success = true;
+        this->state = GestureState::UNSURE;
         this->startX = touch.x;
         this->startY = touch.y;
         this->x = touch.x;
@@ -44,53 +49,54 @@ bool PanGestureRecognizer::recognitionLoop(TouchState touch, bool locked)
         break;
     case TouchEvent::STAY:
     case TouchEvent::END:
-        deltaX = touch.x - this->x;
-        deltaY = touch.y - this->y;
+
+        this->deltaX = touch.x - this->x;
+        this->deltaY = touch.y - this->y;
 
         this->x = touch.x;
         this->y = touch.y;
 
-        state = touch.state;
-
-        if (!this->recognized && !locked && (deltaX != 0 || deltaY != 0)) 
+        if (this->state == GestureState::UNSURE) 
         {
-            switch (axis)
+            if ((fabs(this->startX - touch.x) > MAX_DELTA_MOVEMENT || fabs(this->startY - touch.y) > MAX_DELTA_MOVEMENT))
             {
-            case PanAxis::HORIZONTAL:
-                success = fabs(deltaX) > fabs(deltaY);
-                break;
-            case PanAxis::VERTICAL:
-                success = fabs(deltaX) < fabs(deltaY);
-                break;
-            case PanAxis::NONE:
-                success = true;
-                break;
+                switch (axis)
+                {
+                case PanAxis::HORIZONTAL:
+                    if (fabs(deltaX) > fabs(deltaY))
+                        this->state = GestureState::START;
+                    break;
+                case PanAxis::VERTICAL:
+                    if (fabs(deltaX) < fabs(deltaY))
+                        this->state = GestureState::START;
+                    break;
+                case PanAxis::NONE:
+                    this->state = GestureState::START;
+                    break;
+                }
             }
-            this->recognized = true;
-            state = TouchEvent::START;
+        }
+        else
+        {
+            if (touch.state == TouchEvent::STAY)
+                this->state = GestureState::STAY;
+            else
+                this->state = GestureState::END;
         }
 
-        if (respond && recognized && success && !locked) 
+        if (this->state == GestureState::START ||
+            this->state == GestureState::STAY ||
+            this->state == GestureState::END) 
         {
-            PanGestureCtx result
-            {
-                .state = state,
-                .startX = this->startX,
-                .startY = this->startY,
-                .currentX = touch.x,
-                .currentY = touch.y,
-                .deltaX = deltaX,
-                .deltaY = deltaY
-            };
-            this->respond(result);
+            this->respond(this);
         }
         break;
     case TouchEvent::NONE:
-        this->success = false;
+        this->state = GestureState::FAILED;
         break;
     }
 
-    return this->success;
+    return this->state;
 }
 
 };

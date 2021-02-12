@@ -21,8 +21,6 @@
 
 #include "gesture_recognizer.hpp"
 
-#define MAX_DELTA_MOVEMENT 10
-
 namespace brls
 {
 
@@ -32,7 +30,7 @@ class TapGestureRecognizer: public GestureRecognizer
 {
 public:
 	TapGestureRecognizer(TapGestureRespond respond, int target = 1);
-	bool recognitionLoop(TouchState touch, bool locked) override;
+	GestureState recognitionLoop(TouchState touch, View* view) override;
 private:
 	TapGestureRespond respond;
 	double x;

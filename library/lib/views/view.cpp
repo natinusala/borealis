@@ -97,22 +97,31 @@ NVGpaint View::a(NVGpaint paint)
     return newPaint;
 }
 
+void View::interruptGestures(bool onlyIfUnsureState)
+{
+    for (GestureRecognizer* recognizer : getGestureRecognizers()) 
+        recognizer->interrupt(onlyIfUnsureState);
+    
+    if (parent)
+        parent->interruptGestures(onlyIfUnsureState);
+}
+
 void View::addGestureRecognizer(GestureRecognizer* recognizer)
 {
     this->gestureRecognizers.push_back(recognizer);
 }
 
-void View::gestureRecognizerRequest(TouchState touch, bool locked) 
+void View::gestureRecognizerRequest(TouchState touch) 
 {
-    bool lock = locked;
-
     for (GestureRecognizer* recognizer : getGestureRecognizers()) 
     {
-        lock |= recognizer->recognitionLoop(touch, locked);
+        GestureState state = recognizer->recognitionLoop(touch, this);
+        if (state == GestureState::START)
+            Application::firstResponder->interruptGestures(true);
     }
 
     if (parent)
-        parent->gestureRecognizerRequest(touch, lock);
+        parent->gestureRecognizerRequest(touch);
 }
 
 void View::frame(FrameContext* ctx)
