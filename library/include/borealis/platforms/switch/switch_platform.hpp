@@ -23,7 +23,6 @@
 #include <borealis/platforms/switch/switch_font.hpp>
 #include <borealis/platforms/switch/switch_input.hpp>
 #include <borealis/platforms/switch/switch_video.hpp>
-#include <borealis/platforms/switch/switch_touch.hpp>
 
 namespace brls
 {
@@ -45,7 +44,6 @@ class SwitchPlatform : public Platform
     VideoContext* getVideoContext() override;
     AudioPlayer* getAudioPlayer() override;
     InputManager* getInputManager() override;
-    TouchManager* getTouchManager() override;
     FontLoader* getFontLoader() override;
 
     void appletCallback(AppletHookType hookType);
@@ -59,7 +57,6 @@ class SwitchPlatform : public Platform
     SwitchAudioPlayer* audioPlayer;
     SwitchInputManager* inputManager;
     SwitchVideoContext* videoContext;
-    SwitchTouchManager* touchManager;
     SwitchFontLoader* fontLoader;
 };
 

@@ -54,5 +54,5 @@
 #include <borealis/views/view.hpp>
 
 //Gestures
-#include <borealis/touch/tap_gesture_recognizer.hpp>
-#include <borealis/touch/pan_gesture_recognizer.hpp>
+#include <borealis/core/touch/tap_gesture_recognizer.hpp>
+#include <borealis/core/touch/pan_gesture_recognizer.hpp>

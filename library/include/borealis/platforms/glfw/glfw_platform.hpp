@@ -22,7 +22,6 @@
 #include <borealis/platforms/glfw/glfw_font.hpp>
 #include <borealis/platforms/glfw/glfw_input.hpp>
 #include <borealis/platforms/glfw/glfw_video.hpp>
-#include <borealis/platforms/glfw/glfw_touch.hpp>
 
 namespace brls
 {
@@ -43,14 +42,12 @@ class GLFWPlatform : public Platform
     AudioPlayer* getAudioPlayer() override;
     VideoContext* getVideoContext() override;
     InputManager* getInputManager() override;
-    TouchManager* getTouchManager() override;
     FontLoader* getFontLoader() override;
 
   private:
     NullAudioPlayer* audioPlayer   = nullptr;
     GLFWVideoContext* videoContext = nullptr;
     GLFWInputManager* inputManager = nullptr;
-    GLFWTouchManager* touchManager = nullptr;
     GLFWFontLoader* fontLoader     = nullptr;
 };
 

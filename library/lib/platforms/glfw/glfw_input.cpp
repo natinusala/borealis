@@ -1,6 +1,7 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2021  natinusala
+    Copyright (C) 2021  XITRIX
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,6 +18,7 @@
 */
 
 #include <borealis/core/logger.hpp>
+#include <borealis/core/application.hpp>
 #include <borealis/platforms/glfw/glfw_input.hpp>
 
 #define GLFW_INCLUDE_NONE
@@ -110,6 +112,32 @@ void GLFWInputManager::updateControllerState(ControllerState* state)
         size_t brlsButton          = GLFW_BUTTONS_MAPPING[i];
         state->buttons[brlsButton] = (bool)glfwState.buttons[i];
     }
+}
+
+void GLFWInputManager::updateTouchState(TouchState* state)
+{
+    // Get gamepad state
+    double x, y;
+    glfwGetCursorPos(this->window, &x, &y);
+
+    state->x = x / Application::windowScale;
+    state->y = y / Application::windowScale;
+
+    int clickState = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
+    if (clickState == GLFW_PRESS) {
+        if (oldTouch.state == TouchEvent::START || oldTouch.state == TouchEvent::STAY) {
+            state->state = TouchEvent::STAY;
+        } else {
+            state->state = TouchEvent::START;
+        }
+    } else {
+        if (oldTouch.state == TouchEvent::END || oldTouch.state == TouchEvent::NONE) {
+            state->state = TouchEvent::NONE;
+        } else {
+            state->state = TouchEvent::END;
+        }
+    }
+    oldTouch = *state;
 }
 
 };

@@ -74,6 +74,19 @@ typedef struct ControllerState
     float axes[_AXES_MAX]; // from 0.0f to 1.0f
 } ControllerState;
 
+enum class TouchEvent {
+    START,
+    STAY,
+    END,
+    NONE,
+};
+
+typedef struct TouchState
+{
+    TouchEvent state = TouchEvent::NONE;
+    double x, y;
+} TouchState;
+
 // Interface responsible for reporting input state to the application - button presses,
 // axis position and touch screen state
 class InputManager
@@ -85,6 +98,11 @@ class InputManager
      * Called once every frame to fill the given ControllerState struct with the controller state.
      */
     virtual void updateControllerState(ControllerState* state) = 0;
+
+    /**
+     * Called once every frame to fill the given TouchState struct with the touch state.
+     */
+    virtual void updateTouchState(TouchState* state) = 0;
 };
 
 }; // namespace brls

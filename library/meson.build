@@ -15,13 +15,12 @@ borealis_files = files(
     'lib/core/font.cpp',
     'lib/core/util.cpp',
 
-    'lib/touch/tap_gesture_recognizer.cpp',
-    'lib/touch/pan_gesture_recognizer.cpp',
+    'lib/core/touch/tap_gesture_recognizer.cpp',
+    'lib/core/touch/pan_gesture_recognizer.cpp',
 
     'lib/platforms/glfw/glfw_platform.cpp',
     'lib/platforms/glfw/glfw_video.cpp',
     'lib/platforms/glfw/glfw_input.cpp',
-    'lib/platforms/glfw/glfw_touch.cpp',
     'lib/platforms/glfw/glfw_font.cpp',
 
     'lib/platforms/switch/swkbd.cpp',  # TODO: remove it from build.meson, it's switch only

@@ -167,13 +167,14 @@ bool Application::mainLoop()
     }
 
     // Touch
-    TouchManager* touchManager = Application::platform->getTouchManager();
-    touchManager->updateTouchState(&Application::touchState);
+    InputManager* inputManager = Application::platform->getInputManager();
+    inputManager->updateTouchState(&Application::touchState);
 
     switch (Application::touchState.state)
     {
     case TouchEvent::START:
         Logger::debug("Touched at X: " + std::to_string(Application::touchState.x) + ", Y: " + std::to_string(Application::touchState.y));
+        Application::focusTouchMode = true;
         Application::firstResponder = Application::activitiesStack[Application::activitiesStack.size() - 1]
             ->getContentView()->hitTest(Application::touchState.x, Application::touchState.y);
         break;
@@ -188,7 +189,6 @@ bool Application::mainLoop()
     }
 
     // Input
-    InputManager* inputManager = Application::platform->getInputManager();
     inputManager->updateControllerState(&Application::controllerState);
 
     // Trigger controller events
@@ -318,6 +318,13 @@ void Application::onControllerButtonPressed(enum ControllerButton button, bool r
 
     if (repeating && Application::repetitionOldFocus == Application::currentFocus)
         return;
+
+    // If touch input mode enabled, disable it and move focus on last view
+    if (Application::focusTouchMode) {
+        Application::focusTouchMode = false;
+        Application::currentFocus->onFocusGained();
+        return;
+    }
 
     Application::repetitionOldFocus = Application::currentFocus;
 

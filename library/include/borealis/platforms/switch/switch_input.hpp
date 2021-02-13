@@ -1,6 +1,7 @@
 /*
     Borealis, a Nintendo Switch UI Library
     Copyright (C) 2021  natinusala
+    Copyright (C) 2021  XITRIX
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -33,8 +34,11 @@ class SwitchInputManager : public InputManager
 
     void updateControllerState(ControllerState* state);
 
+    void updateTouchState(TouchState* state);
+
   private:
     PadState padState;
+    TouchState oldTouch;
 };
 
 } // namespace brls

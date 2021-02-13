@@ -52,7 +52,6 @@ SwitchPlatform::SwitchPlatform()
     // Init platform impls
     this->audioPlayer  = new SwitchAudioPlayer();
     this->inputManager = new SwitchInputManager();
-    this->touchManager = new SwitchTouchManager();
     this->fontLoader   = new SwitchFontLoader();
 
     // Get locale
@@ -110,11 +109,6 @@ AudioPlayer* SwitchPlatform::getAudioPlayer()
 InputManager* SwitchPlatform::getInputManager()
 {
     return this->inputManager;
-}
-
-TouchManager* SwitchPlatform::getTouchManager()
-{
-    return this->touchManager;
 }
   
 FontLoader* SwitchPlatform::getFontLoader()

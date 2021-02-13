@@ -20,7 +20,7 @@
 #include <borealis/core/application.hpp>
 #include <borealis/core/util.hpp>
 #include <borealis/views/scrolling_frame.hpp>
-#include <borealis/touch/pan_gesture_recognizer.hpp>
+#include <borealis/core/touch/pan_gesture_recognizer.hpp>
 
 namespace brls
 {

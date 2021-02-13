@@ -16,6 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <borealis/core/application.hpp>
 #include <borealis/platforms/switch/switch_input.hpp>
 
 namespace brls
@@ -66,6 +67,40 @@ void SwitchInputManager::updateControllerState(ControllerState* state)
         uint64_t switchKey = SWITCH_BUTTONS_MAPPING[i];
         state->buttons[i]  = keysDown & switchKey;
     }
+}
+
+void SwitchInputManager::updateTouchState(TouchState* state)
+{
+    // Get gamepad state
+    double x = oldTouch.x;
+    double y = oldTouch.y;
+    
+    HidTouchScreenState hidState={0};
+    if (hidGetTouchScreenStates(&hidState, 1)) 
+    {
+        if (hidState.count > 0) {
+            x = hidState.touches[0].x;
+            y = hidState.touches[0].y;
+        }
+    }
+    
+    state->x = x / Application::windowScale;
+    state->y = y / Application::windowScale;
+
+    if (hidState.count > 0) {
+        if (oldTouch.state == TouchEvent::START || oldTouch.state == TouchEvent::STAY) {
+            state->state = TouchEvent::STAY;
+        } else {
+            state->state = TouchEvent::START;
+        }
+    } else {
+        if (oldTouch.state == TouchEvent::END || oldTouch.state == TouchEvent::NONE) {
+            state->state = TouchEvent::NONE;
+        } else {
+            state->state = TouchEvent::END;
+        }
+    }
+    oldTouch = *state;
 }
 
 } // namespace brls

@@ -17,27 +17,17 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#pragma once
-
-#include <borealis/core/touch.hpp>
-
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#include <borealis/core/touch/gesture_recognizer.hpp>
 
 namespace brls
 {
 
-// Input manager for GLFW coursor
-class GLFWTouchManager : public TouchManager
+void GestureRecognizer::interrupt(bool onlyIfUnsureState)
 {
-  public:
-    GLFWTouchManager(GLFWwindow* window);
+    if (onlyIfUnsureState && this->state != GestureState::UNSURE) 
+        return;
 
-    void updateTouchState(TouchState* state) override;
+    this->state = GestureState::INTERRUPTED;
+}
 
-  private:
-    GLFWwindow* window;
-    TouchState oldTouch;
-};
-
-};
+}

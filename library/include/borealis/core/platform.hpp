@@ -23,7 +23,6 @@
 #include <borealis/core/input.hpp>
 #include <borealis/core/theme.hpp>
 #include <borealis/core/video.hpp>
-#include <borealis/core/touch.hpp>
 #include <string>
 
 namespace brls
@@ -93,12 +92,6 @@ class Platform
      * Cannot return nullptr.
      */
     virtual InputManager* getInputManager() = 0;
-
-    /**
-     * Returns the TouchManager for the platform.
-     * Cannot return nullptr.
-     */
-    virtual TouchManager* getTouchManager() = 0;
 
 	/**
  	 * Returns the FontLoader for the platform.

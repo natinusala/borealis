@@ -214,6 +214,7 @@ class Application
      * View that was recognized as target for touch events.
      */
     inline static View* firstResponder; 
+    inline static bool focusTouchMode = false; 
 
   private:
     inline static bool inited        = false;

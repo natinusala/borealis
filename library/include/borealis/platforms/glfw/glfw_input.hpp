@@ -34,8 +34,11 @@ class GLFWInputManager : public InputManager
 
     void updateControllerState(ControllerState* state) override;
 
+    void updateTouchState(TouchState* state) override;
+
   private:
     GLFWwindow* window;
+    TouchState oldTouch;
 };
 
 };

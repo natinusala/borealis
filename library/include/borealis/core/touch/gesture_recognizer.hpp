@@ -21,7 +21,7 @@
 
 #include <functional>
 
-#include <borealis/core/touch.hpp>
+#include <borealis/core/input.hpp>
 
 namespace brls
 {
