@@ -251,6 +251,9 @@ void Application::quit()
 
 void Application::navigate(FocusDirection direction)
 {
+    if (Application::dismissTouchMode())
+        return;
+    
     View* currentFocus = Application::currentFocus;
 
     // Do nothing if there is no current focus
@@ -319,15 +322,8 @@ void Application::onControllerButtonPressed(enum ControllerButton button, bool r
     if (repeating && Application::repetitionOldFocus == Application::currentFocus)
         return;
 
-    // If touch input mode enabled, disable it and move focus on last view
-    if (Application::focusTouchMode) {
-        Application::focusTouchMode = false;
-        Application::currentFocus->onFocusGained();
-        return;
-    }
-
     Application::repetitionOldFocus = Application::currentFocus;
-
+    
     // Actions
     if (Application::handleAction(button))
         return;
@@ -354,6 +350,16 @@ void Application::onControllerButtonPressed(enum ControllerButton button, bool r
     }
 }
 
+bool Application::dismissTouchMode()
+{
+    if (Application::focusTouchMode) {
+        Application::focusTouchMode = false;
+        Application::currentFocus->onFocusGained();
+        return true;
+    }
+    return false;
+}
+
 View* Application::getCurrentFocus()
 {
     return Application::currentFocus;
@@ -361,6 +367,10 @@ View* Application::getCurrentFocus()
 
 bool Application::handleAction(char button)
 {
+    if (button == BUTTON_A &&
+        Application::dismissTouchMode())
+        return false;
+    
     if (Application::activitiesStack.empty())
         return false;
 
@@ -382,6 +392,7 @@ bool Application::handleAction(char button)
 
             if (action.available)
             {
+                
                 if (action.actionListener(hintParent))
                 {
                     if (button == BUTTON_A)

@@ -76,16 +76,15 @@ ScrollingFrame::ScrollingFrame()
             startY = this->scrollY * contentHeight;
 
         float newScroll = (startY - (pan->getY() - pan->getStartY())) / contentHeight;
-
-        // Top boundary
-        if (newScroll < 0.0f)
-            newScroll = 0.0f;
-
         float bottomLimit = (contentHeight - this->getScrollingAreaHeight()) / contentHeight;
         
         // // Bottom boundary
         if (newScroll > bottomLimit)
             newScroll = bottomLimit;
+
+        // Top boundary
+        if (newScroll < 0.0f)
+            newScroll = 0.0f;
 
         //Start animation
         this->startScrolling(true, newScroll);

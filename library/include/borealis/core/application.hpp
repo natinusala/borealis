@@ -214,7 +214,13 @@ class Application
      * View that was recognized as target for touch events.
      */
     inline static View* firstResponder; 
-    inline static bool focusTouchMode = false; 
+    inline static bool focusTouchMode = false;
+    
+    /**
+     * If touch input mode enabled, disable it and move focus on last view
+     * Returns true if touch mode was disabled.
+     */
+    static bool dismissTouchMode();
 
   private:
     inline static bool inited        = false;
