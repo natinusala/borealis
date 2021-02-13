@@ -33,8 +33,8 @@ public:
 	GestureState recognitionLoop(TouchState touch, View* view) override;
 private:
 	TapGestureRespond respond;
-	double x;
-	double y;
+	float x;
+	float y;
 	int counter;
 	int target;
 };

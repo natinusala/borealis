@@ -42,21 +42,21 @@ public:
 	PanGestureRecognizer(PanGestureRespond respond, PanAxis axis);
 	GestureState recognitionLoop(TouchState touch, View* view) override;
 	
-	double getX() const { return x; }
-	double getY() const { return y; }
-	double getStartX() const { return startX; }
-	double getStartY() const { return startY; }
-	double getDeltaX() const { return deltaX; }
-	double getDeltaY() const { return deltaY; }
+	float getX() const { return x; }
+	float getY() const { return y; }
+	float getStartX() const { return startX; }
+	float getStartY() const { return startY; }
+	float getDeltaX() const { return deltaX; }
+	float getDeltaY() const { return deltaY; }
 	PanAxis getAxis() const { return this->axis; }
 private:
 	PanGestureRespond respond;
-	double x;
-	double y;
-	double startX;
-	double startY;
-	double deltaX;
-	double deltaY;
+	float x;
+	float y;
+	float startX;
+	float startY;
+	float deltaX;
+	float deltaY;
 	PanAxis axis;
 };
 

@@ -83,8 +83,8 @@ enum class TouchEvent {
 
 typedef struct TouchState
 {
-    TouchEvent state = TouchEvent::NONE;
-    double x, y;
+    TouchEvent state;
+    float x, y;
 } TouchState;
 
 // Interface responsible for reporting input state to the application - button presses,
