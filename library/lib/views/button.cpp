@@ -93,10 +93,27 @@ Button::Button()
 
     this->applyStyle();
 
-    this->addGestureRecognizer(new TapGestureRecognizer([this]()
+    this->addGestureRecognizer(new TapGestureRecognizer([this](TapGestureRecognizer* recogniser)
     {
         Application::giveFocus(this);
-    }));
+        for (auto& action : getActions())
+        {
+            if (action.button != static_cast<enum ControllerButton>(BUTTON_A))
+                continue;
+
+            if (action.available) {
+                this->playClickAnimation(recogniser->getState() != GestureState::UNSURE);
+
+                if (recogniser->getState() != GestureState::END)
+                    return;
+
+                if (action.actionListener(this))
+                {
+                    Application::getAudioPlayer()->play(action.sound);
+                }
+            }
+        }
+    }, false));
 }
 
 void Button::applyStyle()

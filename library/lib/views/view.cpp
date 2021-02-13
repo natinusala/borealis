@@ -212,7 +212,7 @@ void View::playClickAnimation(bool reverse)
     menu_animation_ctx_entry_t entry;
 
     entry.cb = [this, reverse](void* userdata) {
-        if (reverse)
+        if (reverse || Application::focusTouchMode)
             return;
 
         this->playClickAnimation(true);

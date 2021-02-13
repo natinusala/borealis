@@ -22,10 +22,9 @@
 namespace brls
 {
 
-TapGestureRecognizer::TapGestureRecognizer(TapGestureRespond respond, int target)
-    : target(target), respond(respond)
+TapGestureRecognizer::TapGestureRecognizer(TapGestureRespond respond, bool callbackOnEndOnly)
+    : respond(respond), callbackOnEndOnly(callbackOnEndOnly)
 {
-    this->counter = 0;
 }
 
 GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view) 
@@ -36,7 +35,13 @@ GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view)
     {
         if (this->state == GestureState::INTERRUPTED ||
             this->state == GestureState::FAILED) 
+        {
+            if (respond && !this->callbackOnEndOnly && this->state != lastState) 
+                this->respond(this);
+
+            lastState = this->state;
             return this->state;
+        }
     }
 
     switch (touch.state)
@@ -45,30 +50,30 @@ GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view)
         this->state = GestureState::UNSURE;
         this->x = touch.x;
         this->y = touch.y;
+
+        if (respond && !this->callbackOnEndOnly) 
+            this->respond(this);
         break;
     case TouchEvent::STAY:
         if (touch.x < view->getX() || touch.x > view->getX() + view->getWidth() ||
             touch.y < view->getY() || touch.y > view->getY() + view->getHeight())
         {
             this->state = GestureState::FAILED;
-            counter = 0;
+            if (respond && !this->callbackOnEndOnly) 
+                this->respond(this);
         }
         break;
     case TouchEvent::END:
-        this->counter++;
-
-        if (counter >= target) 
-        {
-            if (respond) 
-                this->respond();
-            counter = 0;
-        }
+        this->state = GestureState::END;
+        if (respond) 
+            this->respond(this);
         break;
     case TouchEvent::NONE:
         this->state = GestureState::FAILED;
         break;
     }
 
+    lastState = this->state;
     return this->state;
 }
 

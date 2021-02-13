@@ -243,7 +243,8 @@ void ScrollingFrame::scrollAnimationTick()
 void ScrollingFrame::onChildFocusGained(View* directChild, View* focusedView)
 {
     // Start scrolling
-    this->updateScrolling(true);
+    if (!Application::focusTouchMode)
+        this->updateScrolling(true);
 
     Box::onChildFocusGained(directChild, focusedView);
 }

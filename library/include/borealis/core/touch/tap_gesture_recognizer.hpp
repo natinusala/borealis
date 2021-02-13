@@ -24,19 +24,20 @@
 namespace brls
 {
 
-typedef std::function<void()> TapGestureRespond;
+class TapGestureRecognizer;
+typedef std::function<void(TapGestureRecognizer*)> TapGestureRespond;
 
 class TapGestureRecognizer: public GestureRecognizer
 {
 public:
-	TapGestureRecognizer(TapGestureRespond respond, int target = 1);
+	TapGestureRecognizer(TapGestureRespond respond, bool callbackOnEndOnly = true);
 	GestureState recognitionLoop(TouchState touch, View* view) override;
 private:
 	TapGestureRespond respond;
 	float x;
 	float y;
-	int counter;
-	int target;
+    bool callbackOnEndOnly;
+    GestureState lastState;
 };
 
 };

@@ -82,9 +82,18 @@ SidebarItem::SidebarItem()
         },
         false, SOUND_CLICK_SIDEBAR);
 
-    this->addGestureRecognizer(new TapGestureRecognizer([this](){
+    this->addGestureRecognizer(new TapGestureRecognizer([this](TapGestureRecognizer* recogniser)
+    {
+        if (this->active) 
+            return;
+
+        this->playClickAnimation(recogniser->getState() != GestureState::UNSURE);
+        if (recogniser->getState() != GestureState::END)
+            return;
+
         Application::giveFocus(this);
-    }));
+        Application::getAudioPlayer()->play(SOUND_CLICK_SIDEBAR);
+    }, false));
 }
 
 void SidebarItem::setActive(bool active)
