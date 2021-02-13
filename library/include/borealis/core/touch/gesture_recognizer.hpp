@@ -41,8 +41,7 @@ enum class GestureState
 class GestureRecognizer
 {
 public:
-    virtual ~GestureRecognizer() { }
-    virtual GestureState recognitionLoop(TouchState touch, View* view) { }
+    virtual GestureState recognitionLoop(TouchState touch, View* view);
     void interrupt(bool onlyIfUnsureState);
     bool enabled = true;
 	GestureState getState() const { return state; }

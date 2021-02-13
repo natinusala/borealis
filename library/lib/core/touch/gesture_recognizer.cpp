@@ -22,6 +22,11 @@
 namespace brls
 {
 
+GestureState GestureRecognizer::recognitionLoop(TouchState touch, View* view)
+{
+    return GestureState::FAILED;
+}
+
 void GestureRecognizer::interrupt(bool onlyIfUnsureState)
 {
     if (onlyIfUnsureState && this->state != GestureState::UNSURE) 

@@ -58,7 +58,6 @@ void GLFWPlatform::createWindow(std::string windowTitle, uint32_t windowWidth, u
 {
     this->videoContext = new GLFWVideoContext(windowTitle, windowWidth, windowHeight);
     this->inputManager = new GLFWInputManager(this->videoContext->getGLFWWindow());
-    this->touchManager = new GLFWTouchManager(this->videoContext->getGLFWWindow());
 }
 
 std::string GLFWPlatform::getName()
@@ -95,11 +94,6 @@ VideoContext* GLFWPlatform::getVideoContext()
 InputManager* GLFWPlatform::getInputManager()
 {
     return this->inputManager;
-}
-
-TouchManager* GLFWPlatform::getTouchManager()
-{
-    return this->touchManager;
 }
   
 FontLoader* GLFWPlatform::getFontLoader()
