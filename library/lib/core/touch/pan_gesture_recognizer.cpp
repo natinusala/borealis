@@ -19,6 +19,11 @@
 
 #include <borealis.hpp>
 
+#define FPS 60.0f // TODO: get real FPS
+#define MAX_DELTA_MOVEMENT 10
+#define HISTORY_LIMIT 3
+#define PAN_SCROLL_ACCELERATION -5000
+
 namespace brls
 {
 
@@ -41,6 +46,7 @@ GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view)
     switch (touch.state)
     {
     case TouchEvent::START:
+        this->posHistory.clear();
         this->state = GestureState::UNSURE;
         this->startX = touch.x;
         this->startY = touch.y;
@@ -58,7 +64,8 @@ GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view)
 
         if (this->state == GestureState::UNSURE) 
         {
-            if ((fabs(this->startX - touch.x) > MAX_DELTA_MOVEMENT || fabs(this->startY - touch.y) > MAX_DELTA_MOVEMENT))
+            if (fabs(this->startX - touch.x) > MAX_DELTA_MOVEMENT ||
+                fabs(this->startY - touch.y) > MAX_DELTA_MOVEMENT)
             {
                 switch (axis)
                 {
@@ -83,6 +90,23 @@ GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view)
             else
                 this->state = GestureState::END;
         }
+            
+        if (this->state == GestureState::END)
+        {
+            float time = posHistory.size() / FPS;
+            
+            float distanceX = posHistory[posHistory.size()].x - posHistory[0].x;
+            float distanceY = posHistory[posHistory.size()].y - posHistory[0].y;
+            
+            float velocityX = distanceX / time;
+            float velocityY = distanceY / time;
+            
+            acceleration.timeX = -fabs(velocityX) / PAN_SCROLL_ACCELERATION;
+            acceleration.timeY = -fabs(velocityY) / PAN_SCROLL_ACCELERATION;
+            
+            acceleration.distanceX = velocityX * acceleration.timeX / 2;
+            acceleration.distanceY = velocityY * acceleration.timeY / 2;
+        }
 
         if (this->state == GestureState::START ||
             this->state == GestureState::STAY ||
@@ -90,10 +114,16 @@ GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view)
         {
             this->respond(this);
         }
+            
         break;
     case TouchEvent::NONE:
         this->state = GestureState::FAILED;
         break;
+    }
+    
+    posHistory.insert(posHistory.begin(), position{ .x = this->x, .y = this->y });
+    while (posHistory.size() > HISTORY_LIMIT) {
+        posHistory.pop_back();
     }
 
     return this->state;

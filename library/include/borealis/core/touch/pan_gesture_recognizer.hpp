@@ -21,8 +21,6 @@
 
 #include "gesture_recognizer.hpp"
 
-#define MAX_DELTA_MOVEMENT 10
-
 namespace brls
 {
 
@@ -34,6 +32,20 @@ enum class PanAxis
     HORIZONTAL,
     VERTICAL,
 	NONE,
+};
+
+struct position
+{
+    float x;
+    float y;
+};
+
+struct pan_acceleration
+{
+    float distanceX;
+    float distanceY;
+    float timeX;
+    float timeY;
 };
 
 class PanGestureRecognizer: public GestureRecognizer
@@ -49,6 +61,7 @@ public:
 	float getDeltaX() const { return deltaX; }
 	float getDeltaY() const { return deltaY; }
 	PanAxis getAxis() const { return this->axis; }
+    pan_acceleration getAcceleration() const { return this->acceleration; }
 private:
 	PanGestureRespond respond;
 	float x;
@@ -58,6 +71,8 @@ private:
 	float deltaX;
 	float deltaY;
 	PanAxis axis;
+    pan_acceleration acceleration;
+    std::vector<position> posHistory;
 };
 
 };

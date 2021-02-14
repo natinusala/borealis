@@ -84,6 +84,7 @@ class ScrollingFrame : public Box
     void prebakeScrolling();
     bool updateScrolling(bool animated);
     void startScrolling(bool animated, float newScroll);
+    void animateScrolling(float newScroll, float time);
     void scrollAnimationTick();
 
     float getScrollingAreaTopBoundary();

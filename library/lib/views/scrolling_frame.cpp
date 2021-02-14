@@ -87,7 +87,27 @@ ScrollingFrame::ScrollingFrame()
             newScroll = 0.0f;
 
         //Start animation
-        this->startScrolling(true, newScroll);
+        if (pan->getState() != GestureState::END)
+            startScrolling(true, newScroll);
+        else
+        {
+            newScroll = (this->scrollY * contentHeight + pan->getAcceleration().distanceY) / contentHeight;
+            
+            float bottomLimit = (contentHeight - this->getScrollingAreaHeight()) / contentHeight;
+            
+            // // Bottom boundary
+            if (newScroll > bottomLimit)
+                newScroll = bottomLimit;
+
+            // Top boundary
+            if (newScroll < 0.0f)
+                newScroll = 0.0f;
+            
+            if (newScroll == this->scrollY)
+                return;
+
+            animateScrolling(newScroll, pan->getAcceleration().timeY * 1000.0f);
+        }
     }, PanAxis::VERTICAL));
 }
 
@@ -193,30 +213,39 @@ void ScrollingFrame::startScrolling(bool animated, float newScroll)
     if (newScroll == this->scrollY)
         return;
 
-    menu_animation_ctx_tag tag = (menu_animation_ctx_tag) & this->scrollY;
-    menu_animation_kill_by_tag(&tag);
-
     if (animated)
     {
         Style style = Application::getStyle();
-
-        menu_animation_ctx_entry_t entry;
-        entry.cb           = [](void* userdata) {};
-        entry.duration     = style["brls/animations/highlight"];
-        entry.easing_enum  = EASING_OUT_QUAD;
-        entry.subject      = &this->scrollY;
-        entry.tag          = tag;
-        entry.target_value = newScroll;
-        entry.tick         = [this](void* userdata) { this->scrollAnimationTick(); };
-        entry.userdata     = nullptr;
-
-        menu_animation_push(&entry);
+        animateScrolling(newScroll, style["brls/animations/highlight"]);
     }
     else
     {
+        menu_animation_ctx_tag tag = (menu_animation_ctx_tag) & this->scrollY;
+        menu_animation_kill_by_tag(&tag);
+        
         this->scrollY = newScroll;
+        this->invalidate();
     }
 
+}
+
+void ScrollingFrame::animateScrolling(float newScroll, float time)
+{
+    menu_animation_ctx_tag tag = (menu_animation_ctx_tag) & this->scrollY;
+    menu_animation_kill_by_tag(&tag);
+    
+    menu_animation_ctx_entry_t entry;
+    entry.cb           = [](void* userdata) {};
+    entry.duration     = time;
+    entry.easing_enum  = EASING_OUT_QUAD;
+    entry.subject      = &this->scrollY;
+    entry.tag          = tag;
+    entry.target_value = newScroll;
+    entry.tick         = [this](void* userdata) { this->scrollAnimationTick(); };
+    entry.userdata     = nullptr;
+
+    menu_animation_push(&entry);
+    
     this->invalidate();
 }
 
