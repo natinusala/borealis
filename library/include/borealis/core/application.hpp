@@ -213,14 +213,18 @@ class Application
     /**
      * View that was recognized as target for touch events.
      */
-    inline static View* firstResponder; 
-    inline static bool focusTouchMode = false;
+    inline static View* firstResponder;
     
     /**
      * If touch input mode enabled, disable it and move focus on last view
      * Returns true if touch mode was disabled.
      */
     static bool dismissTouchMode();
+    
+    inline static bool getFocusTouchMode()
+    {
+        return focusTouchMode;
+    }
 
   private:
     inline static bool inited        = false;
@@ -247,6 +251,8 @@ class Application
     inline static ControllerState oldControllerState = {};
     inline static ControllerState controllerState    = {};
     inline static TouchState touchState              = {};
+    
+    inline static bool focusTouchMode = false;
 
     inline static unsigned blockInputsTokens = 0; // any value > 0 means inputs are blocked
 

@@ -212,7 +212,7 @@ void View::playClickAnimation(bool reverse)
     menu_animation_ctx_entry_t entry;
 
     entry.cb = [this, reverse](void* userdata) {
-        if (reverse || Application::focusTouchMode)
+        if (reverse || Application::getFocusTouchMode())
             return;
 
         this->playClickAnimation(true);
@@ -472,7 +472,7 @@ void View::setAlpha(float alpha)
 // TODO: Slight glow all around
 void View::drawHighlight(NVGcontext* vg, Theme theme, float alpha, Style style, bool background)
 {
-    if (Application::focusTouchMode) 
+    if (Application::getFocusTouchMode()) 
         return;
 
     nvgSave(vg);
