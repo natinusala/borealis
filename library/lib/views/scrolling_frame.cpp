@@ -78,7 +78,7 @@ ScrollingFrame::ScrollingFrame()
         float newScroll = (startY - (pan->getY() - pan->getStartY())) / contentHeight;
         float bottomLimit = (contentHeight - this->getScrollingAreaHeight()) / contentHeight;
         
-        // // Bottom boundary
+        // Bottom boundary
         if (newScroll > bottomLimit)
             newScroll = bottomLimit;
 
@@ -86,27 +86,35 @@ ScrollingFrame::ScrollingFrame()
         if (newScroll < 0.0f)
             newScroll = 0.0f;
 
-        //Start animation
+        // Start animation
         if (pan->getState() != GestureState::END)
             startScrolling(true, newScroll);
         else
         {
-            newScroll = (this->scrollY * contentHeight + pan->getAcceleration().distanceY) / contentHeight;
+            float time = pan->getAcceleration().timeY * 1000.0f;
+            float newPos = this->scrollY * contentHeight + pan->getAcceleration().distanceY;
             
-            float bottomLimit = (contentHeight - this->getScrollingAreaHeight()) / contentHeight;
+            // Bottom boundary
+            float bottomLimit = contentHeight - this->getScrollingAreaHeight();
+            if (newPos > bottomLimit)
+            {
+                time = time * (1 - fabs(newPos - bottomLimit) / fabs(pan->getAcceleration().distanceY));
+                newPos = bottomLimit;
+            }
             
-            // // Bottom boundary
-            if (newScroll > bottomLimit)
-                newScroll = bottomLimit;
-
             // Top boundary
-            if (newScroll < 0.0f)
-                newScroll = 0.0f;
+            if (newPos < 0)
+            {
+                time = time * (1 - fabs(newPos) / fabs(pan->getAcceleration().distanceY));
+                newPos = 0;
+            }
             
-            if (newScroll == this->scrollY)
+            newScroll = newPos / contentHeight;
+            
+            if (newScroll == this->scrollY || time < 100)
                 return;
 
-            animateScrolling(newScroll, pan->getAcceleration().timeY * 1000.0f);
+            animateScrolling(newScroll, time);
         }
     }, PanAxis::VERTICAL));
 }
