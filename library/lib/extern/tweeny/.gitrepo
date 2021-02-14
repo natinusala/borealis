@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/mobius3/tweeny
+	branch = master
+	commit = f38c166966b9cffcf11410e2a83f1f279f8ba014
+	parent = f77aa1bae746c77f8ed026db9d7eb907b1ac4897
+	method = merge
+	cmdver = 0.4.0
