@@ -47,6 +47,8 @@ class SidebarItem : public View
     Sidebar* sidebar     = nullptr;
     View* associatedView = nullptr;
 
+    ViewType viewType = ViewType::SIDEBARITEM;
+
   public:
     SidebarItem(std::string label, Sidebar* sidebar);
 
@@ -66,6 +68,7 @@ class SidebarItem : public View
 
     void setAssociatedView(View* view);
     View* getAssociatedView();
+    ViewType getViewType() override;
 
     ~SidebarItem();
 };

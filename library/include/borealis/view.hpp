@@ -61,6 +61,12 @@ enum class ViewBackground
     BACKDROP
 };
 
+enum class ViewType
+{
+  VIEW,
+  SIDEBARITEM,
+};
+
 extern NVGcolor transparent;
 
 class View;
@@ -102,6 +108,8 @@ class View
     bool hidden = false;
 
     std::vector<Action> actions;
+
+    ViewType viewType = ViewType::VIEW;
 
     /**
      * Parent user data, typically the index of the view
@@ -209,6 +217,11 @@ class View
     const std::vector<Action>& getActions()
     {
         return this->actions;
+    }
+
+    virtual ViewType getViewType()
+    {
+        return this->viewType;
     }
 
     /**

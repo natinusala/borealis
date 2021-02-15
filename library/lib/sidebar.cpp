@@ -169,6 +169,11 @@ View* SidebarItem::getAssociatedView()
     return this->associatedView;
 }
 
+ViewType SidebarItem::getViewType()
+{
+    return this->viewType;
+}
+
 SidebarItem::~SidebarItem()
 {
     if (this->associatedView)
