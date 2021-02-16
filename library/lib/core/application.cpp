@@ -185,7 +185,12 @@ bool Application::mainLoop()
 
     if (Application::firstResponder) 
     {
-        Application::firstResponder->gestureRecognizerRequest(Application::touchState);
+        if (Application::firstResponder->gestureRecognizerRequest(Application::touchState))
+        {
+            // Play touch sound with random pitch
+            float pitch = (rand() % 10) / 10.0f + 1.0f;
+            Application::getAudioPlayer()->play(SOUND_TOUCH, pitch);
+        }
     }
 
     // Input

@@ -35,4 +35,9 @@ void GestureRecognizer::interrupt(bool onlyIfUnsureState)
     this->state = GestureState::INTERRUPTED;
 }
 
+bool GestureRecognizer::soundOnTouch()
+{
+    return true;
+}
+
 }

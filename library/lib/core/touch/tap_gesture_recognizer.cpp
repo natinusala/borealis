@@ -23,7 +23,7 @@ namespace brls
 {
 
 TapGestureRecognizer::TapGestureRecognizer(TapGestureRespond respond, bool callbackOnEndOnly)
-    : respond(respond), callbackOnEndOnly(callbackOnEndOnly)
+    : respond(respond), callbackOnEndOnly(callbackOnEndOnly), playSound(true)
 {
 }
 
@@ -37,7 +37,7 @@ GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view)
             this->state == GestureState::FAILED) 
         {
             if (respond && !this->callbackOnEndOnly && this->state != lastState) 
-                this->respond(this);
+                this->playSound = this->respond(this);
 
             lastState = this->state;
             return this->state;
@@ -52,7 +52,7 @@ GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view)
         this->y = touch.y;
 
         if (respond && !this->callbackOnEndOnly) 
-            this->respond(this);
+            this->playSound = this->respond(this);
         break;
     case TouchEvent::STAY:
         if (touch.x < view->getX() || touch.x > view->getX() + view->getWidth() ||
@@ -60,13 +60,13 @@ GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view)
         {
             this->state = GestureState::FAILED;
             if (respond && !this->callbackOnEndOnly) 
-                this->respond(this);
+                this->playSound = this->respond(this);
         }
         break;
     case TouchEvent::END:
         this->state = GestureState::END;
         if (respond) 
-            this->respond(this);
+            this->playSound = this->respond(this);
         break;
     case TouchEvent::NONE:
         this->state = GestureState::FAILED;
@@ -75,6 +75,11 @@ GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view)
 
     lastState = this->state;
     return this->state;
+}
+
+bool TapGestureRecognizer::soundOnTouch()
+{
+    return this->playSound;
 }
 
 };

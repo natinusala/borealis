@@ -118,8 +118,10 @@ Button::Button()
                         Application::getAudioPlayer()->play(action.sound);
                     break;
                 }
+                return false;
             }
         }
+        return true;
     }, false));
 }
 

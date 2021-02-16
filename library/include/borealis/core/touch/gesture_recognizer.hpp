@@ -42,6 +42,7 @@ class GestureRecognizer
 {
 public:
     virtual GestureState recognitionLoop(TouchState touch, View* view);
+    virtual bool soundOnTouch();
     void interrupt(bool onlyIfUnsureState);
     bool enabled = true;
 	GestureState getState() const { return state; }

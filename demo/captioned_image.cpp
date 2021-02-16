@@ -47,6 +47,7 @@ CaptionedImage::CaptionedImage()
 
     this->addGestureRecognizer(new brls::TapGestureRecognizer([this](auto _){
         brls::Application::giveFocus(this);
+        return true;
     }));
 }
 

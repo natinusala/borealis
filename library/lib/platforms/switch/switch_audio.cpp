@@ -36,7 +36,8 @@ const std::string SOUNDS_MAP[_SOUND_MAX] = {
     "SeKeyError", // SOUND_CLICK_ERROR
     "SeUnlockKeyZR", // SOUND_HONK
     "SeNaviDecide", // SOUND_CLICK_SIDEBAR
-    "SeTouchUnfocus", //SOUND_TOUCH_UNFOCUS
+    "SeTouchUnfocus", // SOUND_TOUCH_UNFOCUS
+    "SeTouch", // SOUND_TOUCH
 };
 
 SwitchAudioPlayer::SwitchAudioPlayer()

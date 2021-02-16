@@ -85,7 +85,7 @@ SidebarItem::SidebarItem()
     this->addGestureRecognizer(new TapGestureRecognizer([this](TapGestureRecognizer* recogniser)
     {
         if (this->active) 
-            return;
+            return true;
 
         this->playClickAnimation(recogniser->getState() != GestureState::UNSURE);
 
@@ -103,6 +103,8 @@ SidebarItem::SidebarItem()
             Application::giveFocus(this);
             break;
         }
+
+        return false;
     }, false));
 }
 
