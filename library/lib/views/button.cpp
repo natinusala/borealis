@@ -104,12 +104,19 @@ Button::Button()
             if (action.available) {
                 this->playClickAnimation(recogniser->getState() != GestureState::UNSURE);
 
-                if (recogniser->getState() != GestureState::END)
-                    return;
-
-                if (action.actionListener(this))
+                switch (recogniser->getState()) 
                 {
-                    Application::getAudioPlayer()->play(action.sound);
+                case GestureState::UNSURE:
+                    Application::getAudioPlayer()->play(SOUND_FOCUS_CHANGE);
+                    break;
+                case GestureState::FAILED:
+                case GestureState::INTERRUPTED:
+                    Application::getAudioPlayer()->play(SOUND_TOUCH_UNFOCUS);
+                    break;
+                case GestureState::END:
+                    if (action.actionListener(this))
+                        Application::getAudioPlayer()->play(action.sound);
+                    break;
                 }
             }
         }

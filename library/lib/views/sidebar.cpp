@@ -88,11 +88,21 @@ SidebarItem::SidebarItem()
             return;
 
         this->playClickAnimation(recogniser->getState() != GestureState::UNSURE);
-        if (recogniser->getState() != GestureState::END)
-            return;
 
-        Application::giveFocus(this);
-        Application::getAudioPlayer()->play(SOUND_CLICK_SIDEBAR);
+        switch (recogniser->getState()) 
+        {
+        case GestureState::UNSURE:
+            Application::getAudioPlayer()->play(SOUND_FOCUS_SIDEBAR);
+            break;
+        case GestureState::FAILED:
+        case GestureState::INTERRUPTED:
+            Application::getAudioPlayer()->play(SOUND_TOUCH_UNFOCUS);
+            break;
+        case GestureState::END:
+            Application::getAudioPlayer()->play(SOUND_CLICK_SIDEBAR);
+            Application::giveFocus(this);
+            break;
+        }
     }, false));
 }
 

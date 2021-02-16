@@ -34,7 +34,7 @@ class SwitchAudioPlayer : public AudioPlayer
     ~SwitchAudioPlayer();
 
     bool load(enum Sound sound) override;
-    bool play(enum Sound sound) override;
+    bool play(enum Sound sound, float pitch) override;
 
   private:
     bool init = false;

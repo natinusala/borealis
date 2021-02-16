@@ -36,6 +36,7 @@ const std::string SOUNDS_MAP[_SOUND_MAX] = {
     "SeKeyError", // SOUND_CLICK_ERROR
     "SeUnlockKeyZR", // SOUND_HONK
     "SeNaviDecide", // SOUND_CLICK_SIDEBAR
+    "SeTouchUnfocus", //SOUND_TOUCH_UNFOCUS
 };
 
 SwitchAudioPlayer::SwitchAudioPlayer()
@@ -106,7 +107,7 @@ bool SwitchAudioPlayer::load(enum Sound sound)
     return true;
 }
 
-bool SwitchAudioPlayer::play(enum Sound sound)
+bool SwitchAudioPlayer::play(enum Sound sound, float pitch)
 {
     if (!this->init)
         return false;
@@ -122,6 +123,7 @@ bool SwitchAudioPlayer::play(enum Sound sound)
     }
 
     // Play the sound
+	plsrPlayerSetPitch(this->sounds[sound], pitch);
     PLSR_RC rc = plsrPlayerPlay(this->sounds[sound]);
     if (PLSR_RC_FAILED(rc))
     {
