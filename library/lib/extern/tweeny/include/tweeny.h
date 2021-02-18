@@ -78,6 +78,8 @@
 #ifndef TWEENY_H
 #define TWEENY_H
 
+#include <string>
+
 #include "tween.h"
 #include "tween.h"
 #include "easing.h"

@@ -27,6 +27,7 @@ INCLUDES	:=	$(INCLUDES) \
 				$(current_dir)/lib/extern/fmt/include \
 				$(current_dir)/lib/extern/yoga/src \
 				$(current_dir)/lib/extern/nanovg-deko3d/include \
+				$(current_dir)/lib/extern/tweeny/include \
 				$(current_dir)/include/borealis/extern \
 				$(current_dir)/include/borealis/extern/tinyxml2 \
 				$(addprefix $(current_dir)/lib/extern/switch-libpulsar/, $(PLSR_INCLUDES))
