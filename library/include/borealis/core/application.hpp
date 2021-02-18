@@ -23,7 +23,6 @@
 #include <tinyxml2.h>
 
 #include <borealis/core/activity.hpp>
-#include <borealis/core/animations.hpp>
 #include <borealis/core/audio.hpp>
 #include <borealis/core/font.hpp>
 #include <borealis/core/frame_context.hpp>
@@ -49,7 +48,7 @@ namespace brls
 /*class FramerateCounter : public Label
 {
   private:
-    retro_time_t lastSecond = 0;
+    Time lastSecond = 0;
     unsigned frames         = 0;
 
   public:

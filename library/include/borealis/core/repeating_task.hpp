@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <libretro-common/features/features_cpu.h>
+#include <borealis/core/time.hpp>
 
 namespace brls
 {
@@ -29,22 +29,22 @@ namespace brls
 class RepeatingTask
 {
   private:
-    retro_time_t interval;
+    Time interval;
 
-    retro_time_t lastRun = 0;
+    Time lastRun = 0;
 
     bool running       = false;
     bool stopRequested = false;
 
   public:
-    RepeatingTask(retro_time_t interval);
+    RepeatingTask(Time interval);
     virtual ~RepeatingTask();
 
     /**
       * Actual code to run by the task
       * Must call RepeatingTask::run() !
       */
-    virtual void run(retro_time_t currentTime);
+    virtual void run(Time currentTime);
 
     /**
       * Fired when the task starts
@@ -77,8 +77,8 @@ class RepeatingTask
       */
     void stop();
 
-    retro_time_t getInterval();
-    retro_time_t getLastRun();
+    Time getInterval();
+    Time getLastRun();
 
     bool isRunning();
     bool isStopRequested();

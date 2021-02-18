@@ -16,7 +16,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <borealis/core/animations.hpp>
 #include <borealis/core/application.hpp>
 #include <borealis/core/util.hpp>
 #include <borealis/views/scrolling_frame.hpp>
@@ -169,24 +168,21 @@ void ScrollingFrame::startScrolling(bool animated, float newScroll)
     if (newScroll == this->scrollY)
         return;
 
-    menu_animation_ctx_tag tag = (menu_animation_ctx_tag) & this->scrollY;
-    menu_animation_kill_by_tag(&tag);
+    this->scrollY.stop();
 
     if (animated)
     {
         Style style = Application::getStyle();
 
-        menu_animation_ctx_entry_t entry;
-        entry.cb           = [](void* userdata) {};
-        entry.duration     = style["brls/animations/highlight"];
-        entry.easing_enum  = EASING_OUT_QUAD;
-        entry.subject      = &this->scrollY;
-        entry.tag          = tag;
-        entry.target_value = newScroll;
-        entry.tick         = [this](void* userdata) { this->scrollAnimationTick(); };
-        entry.userdata     = nullptr;
+        this->scrollY.reset();
 
-        menu_animation_push(&entry);
+        this->scrollY.addStep(newScroll, style["brls/animations/highlight"], EasingFunction::quadraticOut);
+
+        this->scrollY.setTickCallback([this] {
+            this->scrollAnimationTick();
+        });
+
+        this->scrollY.start();
     }
     else
     {

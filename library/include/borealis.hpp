@@ -22,7 +22,7 @@
 // Core
 #include <borealis/core/actions.hpp>
 #include <borealis/core/activity.hpp>
-#include <borealis/core/animations.hpp>
+#include <borealis/core/animation.hpp>
 #include <borealis/core/application.hpp>
 #include <borealis/core/assets.hpp>
 #include <borealis/core/audio.hpp>
@@ -37,6 +37,8 @@
 #include <borealis/core/style.hpp>
 #include <borealis/core/task_manager.hpp>
 #include <borealis/core/theme.hpp>
+#include <borealis/core/time.hpp>
+#include <borealis/core/timer.hpp>
 #include <borealis/core/video.hpp>
 
 //Views

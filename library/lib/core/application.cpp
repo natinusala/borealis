@@ -20,11 +20,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <yoga/event/event.h>
 
 #include <algorithm>
 #include <borealis/core/application.hpp>
 #include <borealis/core/font.hpp>
 #include <borealis/core/i18n.hpp>
+#include <borealis/core/time.hpp>
 #include <borealis/core/util.hpp>
 #include <borealis/views/button.hpp>
 #include <borealis/views/header.hpp>
@@ -34,8 +36,6 @@
 #include <borealis/views/tab_frame.hpp>
 #include <stdexcept>
 #include <string>
-
-#include <yoga/event/event.h>
 
 #ifndef YG_ENABLE_EVENTS
 #error Please enable Yoga events with the YG_ENABLE_EVENTS define
@@ -150,9 +150,6 @@ void Application::createWindow(std::string windowTitle)
         Logger::warning("Regular font was not loaded, there will be no text displayed in the app");
     }
 
-    // Init animations engine
-    menu_animation_init();
-
     // Register built-in XML views
     Application::registerBuiltInXMLViews();
 }
@@ -173,10 +170,10 @@ bool Application::mainLoop()
     // Trigger controller events
     // TODO: Translate axis events to dpad events here
 
-    bool anyButtonPressed               = false;
-    bool repeating                      = false;
-    static retro_time_t buttonPressTime = 0;
-    static int repeatingButtonTimer     = 0;
+    bool anyButtonPressed           = false;
+    bool repeating                  = false;
+    static Time buttonPressTime     = 0;
+    static int repeatingButtonTimer = 0;
 
     for (int i = 0; i < _BUTTON_MAX; i++)
     {
@@ -193,16 +190,17 @@ bool Application::mainLoop()
             buttonPressTime = repeatingButtonTimer = 0;
     }
 
-    if (anyButtonPressed && cpu_features_get_time_usec() - buttonPressTime > 1000)
+    if (anyButtonPressed && getCPUTimeUsec() - buttonPressTime > 1000)
     {
-        buttonPressTime = cpu_features_get_time_usec();
+        buttonPressTime = getCPUTimeUsec();
         repeatingButtonTimer++; // Increased once every ~1ms
     }
 
     Application::oldControllerState = Application::controllerState;
 
     // Animations
-    menu_animation_update();
+    updateHighlightAnimation();
+    Ticking::updateTickings();
 
     // Tasks
     Application::taskManager->frame();
@@ -446,8 +444,6 @@ void Application::exit()
     Logger::info("Exiting...");
 
     Application::clear();
-
-    menu_animation_free();
 
     /*if (Application::framerateCounter)
         delete Application::framerateCounter; TODO: restore that*/
@@ -806,13 +802,13 @@ void Application::onWindowResized(int width, int height)
     this->setHorizontalAlign(NVG_ALIGN_RIGHT);
     this->setBackground(ViewBackground::BACKDROP);
 
-    this->lastSecond = cpu_features_get_time_usec() / 1000; TODO: restore that
+    this->lastSecond = getCPUTimeUsec() / 1000; TODO: restore that
 }*/
 
 /*void FramerateCounter::frame(FrameContext* ctx)
 {
     // Update counter
-    retro_time_t current = cpu_features_get_time_usec() / 1000;
+    Time current = getCPUTimeUsec() / 1000;
 
     if (current - this->lastSecond >= 1000)
     {

@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include <borealis/core/animation.hpp>
 #include <borealis/views/box.hpp>
 
 namespace brls
@@ -79,7 +80,7 @@ class ScrollingFrame : public Box
     float middleY = 0; // y + height/2
     float bottomY = 0; // y + height
 
-    float scrollY = 0.0f; // from 0.0f to 1.0f, in % of content view height
+    Animatable scrollY = 0.0f; // from 0.0f to 1.0f, in % of content view height
 
     void prebakeScrolling();
     bool updateScrolling(bool animated);

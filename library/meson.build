@@ -3,7 +3,6 @@ dep_glm   = dependency('glm', version : '>=0.9.8')
 
 borealis_files = files(
     'lib/core/logger.cpp',
-    'lib/core/animations.cpp',
     'lib/core/application.cpp',
     'lib/core/i18n.cpp',
     'lib/core/theme.cpp',
@@ -14,6 +13,9 @@ borealis_files = files(
     'lib/core/platform.cpp',
     'lib/core/font.cpp',
     'lib/core/util.cpp',
+    'lib/core/time.cpp',
+    'lib/core/timer.cpp',
+    'lib/core/animation.cpp',
 
     'lib/platforms/glfw/glfw_platform.cpp',
     'lib/platforms/glfw/glfw_video.cpp',
@@ -64,6 +66,7 @@ borealis_include = include_directories(
     'include/borealis/extern/tinyxml2',
     'include/borealis/extern/nanovg-gl',
     'lib/extern/yoga/src',
+    'lib/extern/tweeny/include',
 )
 
 borealis_dependencies = [ dep_glfw3, dep_glm, ]
