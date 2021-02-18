@@ -23,13 +23,13 @@
 namespace brls
 {
 
-RepeatingTask::RepeatingTask(retro_time_t interval)
+RepeatingTask::RepeatingTask(Time interval)
     : interval(interval)
 {
     Application::getTaskManager()->registerRepeatingTask(this);
 }
 
-void RepeatingTask::run(retro_time_t currentTime)
+void RepeatingTask::run(Time currentTime)
 {
     this->lastRun = currentTime;
 }
@@ -56,16 +56,16 @@ void RepeatingTask::fireNow()
     if (!this->isRunning())
         return;
 
-    retro_time_t currentTime = cpu_features_get_time_usec() / 1000;
+    Time currentTime = getCPUTimeUsec() / 1000;
     this->run(currentTime);
 }
 
-retro_time_t RepeatingTask::getInterval()
+Time RepeatingTask::getInterval()
 {
     return this->interval;
 }
 
-retro_time_t RepeatingTask::getLastRun()
+Time RepeatingTask::getLastRun()
 {
     return this->lastRun;
 }

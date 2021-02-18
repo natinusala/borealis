@@ -20,13 +20,13 @@
 #pragma once
 
 #include <cxxabi.h>
-#include <libretro-common/features/features_cpu.h>
 #include <nanovg.h>
 #include <stdio.h>
 #include <tinyxml2.h>
 #include <yoga/YGNode.h>
 
 #include <borealis/core/actions.hpp>
+#include <borealis/core/animation.hpp>
 #include <borealis/core/event.hpp>
 #include <borealis/core/frame_context.hpp>
 #include <borealis/core/util.hpp>
@@ -170,14 +170,14 @@ class View
     void drawWireframe(FrameContext* ctx, float x, float y, float width, float height);
     void drawLine(FrameContext* ctx, float x, float y, float width, float height);
 
-    float highlightAlpha        = 0.0f;
+    Animatable highlightAlpha   = 0.0f;
     float highlightPadding      = 0.0f;
     float highlightCornerRadius = 0.0f;
 
-    float clickAlpha = 0.0f; // animated between 0 and 1
+    Animatable clickAlpha = 0.0f; // animated between 0 and 1
 
     bool highlightShaking = false;
-    retro_time_t highlightShakeStart;
+    Time highlightShakeStart;
     FocusDirection highlightShakeDirection;
     float highlightShakeAmplitude;
 
@@ -249,7 +249,7 @@ class View
     std::unordered_map<FocusDirection, View*> customFocusByPtr;
 
   protected:
-    float collapseState = 1.0f;
+    Animatable collapseState = 1.0f;
 
     bool focused = false;
 
@@ -1216,7 +1216,7 @@ class View
 
     GenericEvent* getFocusEvent();
 
-    float alpha = 1.0f;
+    Animatable alpha = 1.0f;
 
     virtual float getAlpha(bool child = false);
 

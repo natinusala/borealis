@@ -406,12 +406,10 @@ void Label::stopScrollingAnimation()
     if (!this->animating)
         return;
 
-    menu_animation_ctx_tag tag = (menu_animation_ctx_tag)this;
-    menu_timer_kill(&this->scrollingTimer);
-    menu_animation_kill_by_tag(&tag);
+    this->scrollingTimer.stop();
+    this->scrollingTimer.reset();
 
     this->scrollingAnimation = 0.0f;
-    this->scrollingTimer     = 0.0f;
 
     this->animating = false;
 }
@@ -424,20 +422,17 @@ void Label::onScrollTimerFinished()
     float target   = this->requiredWidth + style["brls/label/scrolling_animation_spacing"];
     float duration = target / style["brls/animations/label_scrolling_speed"];
 
-    menu_animation_ctx_entry_t entry;
-    entry.duration = duration;
-    entry.cb       = [this](void* userdata) {
-        // Start over
-        this->startScrollTimer();
-    };
-    entry.easing_enum  = EASING_LINEAR;
-    entry.subject      = &this->scrollingAnimation;
-    entry.tag          = (menu_animation_ctx_tag)this;
-    entry.target_value = target;
-    entry.tick         = [](void* userdata) {};
-    entry.userdata     = nullptr;
+    this->scrollingAnimation.reset();
 
-    menu_animation_push(&entry);
+    this->scrollingAnimation.addStep(target, duration, EasingFunction::linear);
+
+    this->scrollingAnimation.setEndCallback([this](bool finished) {
+        // Start over if the scrolling animation ended naturally
+        if (finished)
+            this->startScrollTimer();
+    });
+
+    this->scrollingAnimation.start();
 
     this->animating = true;
 }
@@ -447,18 +442,17 @@ void Label::startScrollTimer()
     Style style = Application::getStyle();
 
     // Step 1: timer before starting to scroll
-    this->scrollingTimer     = 0.0f;
     this->scrollingAnimation = 0.0f;
 
-    menu_timer_ctx_entry_t entry;
+    this->scrollingTimer.reset();
 
-    entry.duration = style["brls/animations/label_scrolling_timer"];
-    entry.tick     = [](void* userdata) {};
-    entry.cb       = [this](void* userdata) {
+    this->scrollingTimer.setDuration(style["brls/animations/label_scrolling_timer"]);
+
+    this->scrollingTimer.setEndCallback([this](bool finished) {
         this->onScrollTimerFinished();
-    };
+    });
 
-    menu_timer_start(&this->scrollingTimer, &entry);
+    this->scrollingTimer.start();
 
     this->animating = true;
 }

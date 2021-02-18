@@ -19,7 +19,8 @@
 
 #pragma once
 
-#include <borealis/core/animations.hpp>
+#include <borealis/core/animation.hpp>
+#include <borealis/core/timer.hpp>
 #include <borealis/views/view.hpp>
 
 namespace brls
@@ -130,8 +131,8 @@ class Label : public View
     bool animated    = false; // should it animate?
     bool animating   = false; // currently animating?
 
-    menu_timer_t scrollingTimer;
-    float scrollingAnimation;
+    Timer scrollingTimer;
+    Animatable scrollingAnimation;
 
     void stopScrollingAnimation();
     void resetScrollingAnimation();

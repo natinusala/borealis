@@ -48,7 +48,7 @@ class Platform
 
     /**
      * Called at every iteration of the main loop.
-     * Must return if the app should continue running
+     * Must return false if the app should continue running
      * (for example, return false if the X button was pressed on the window).
      */
     virtual bool mainLoopIteration() = 0;

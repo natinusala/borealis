@@ -17,8 +17,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <libretro-common/features/features_cpu.h>
-
 #include <borealis/core/task_manager.hpp>
 
 namespace brls
@@ -27,7 +25,7 @@ namespace brls
 void TaskManager::frame()
 {
     // Repeating tasks
-    retro_time_t currentTime = cpu_features_get_time_usec() / 1000;
+    Time currentTime = getCPUTimeUsec() / 1000;
     for (auto i = this->repeatingTasks.begin(); i != this->repeatingTasks.end(); i++)
     {
         RepeatingTask* task = *i;
