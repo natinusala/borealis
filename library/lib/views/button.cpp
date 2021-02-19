@@ -25,11 +25,10 @@ namespace brls
 
 // TODO: soundboard in demo (powered by pulsar)
 
-// TODO: split platform driver entirely: nvg context, inputs, fonts, swkbd (move swkbd in switch platform driver folder (hpp too, it doesn't need to be in the regular includes))
+// TODO: split platform driver entirely: swkbd (move swkbd in switch platform driver folder (hpp too, it doesn't need to be in the regular includes))
 // TODO: not a single ifdef __SWITCH__ except from the platform driver selection!
 
 // TODO: image
-// TODO: click animation
 
 const std::string buttonXML = R"xml(
     <brls:Box

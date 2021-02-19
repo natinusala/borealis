@@ -259,8 +259,6 @@ class Box : public View
      */
     void inflateFromXMLFile(std::string path);
 
-    // TODO: inflate from file too
-
     /**
      * Handles a child XML element.
      *

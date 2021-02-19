@@ -37,8 +37,6 @@ namespace brls
 
 static constexpr const unsigned STATIC_CMD_SIZE = 0x1000;
 
-// TODO: fix glfw :shrek:
-
 SwitchVideoContext::SwitchVideoContext()
 {
     // Get display resolution change event

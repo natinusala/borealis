@@ -20,7 +20,6 @@ namespace brls
 {
 
 // TODO: expose internal stuff to allow using pulsar directly
-// TODO: add sounds to actions
 
 enum Sound
 {

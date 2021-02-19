@@ -25,7 +25,7 @@ using namespace brls::literals;
 namespace brls
 {
 
-// TODO: restore OK / Back behavior, as well as focus conservation
+// TODO: restore focus conservation
 
 const std::string sidebarItemXML = R"xml(
     <brls:Box

@@ -23,7 +23,6 @@ namespace brls
 
 // TODO: don't forget absolute positioning
 // TODO: RestoreFocus flag in Box to remember focus (sidebar...)
-// TODO: image (showcase + put in appletframe/tabframe header)
 // TODO: use a menu timer in tabframe to defer the tab loading on input like HOS does
 // TODO: fancy pants scrolling
 // TODO: clarify addView / removeView -> setContentView, add it for everything or remove it
@@ -37,7 +36,6 @@ namespace brls
 
 // TODO: it's time to do proper documentation using doxygen or whatever
 
-// TODO: fix shitty frame pacer - try cpp high precision clock - see if it works fine on Switch, in which case only enable it there
 // TODO: recycling, asynctask
 
 // TODO: translate everything in fr

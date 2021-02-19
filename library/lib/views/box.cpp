@@ -304,8 +304,6 @@ View* Box::getDefaultFocus()
             return newFocus;
     }
 
-    // TODO: try to get the currently focused view X (or Y) and focus the closest view of ours (use the middle)
-
     // Fallback to finding the first focusable view
     for (size_t i = 0; i < this->children.size(); i++)
     {

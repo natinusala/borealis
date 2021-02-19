@@ -50,7 +50,6 @@ TabFrame::TabFrame()
 
 // TODO: change getDefaultFocus to try to focus the right pane instead
 // TODO: remember focus when doing right side -> left sidebar -> right side (add a rememberFocus attribute to Box)
-// TODO: make sidebar items clickable, go to the right side when clicked
 
 void TabFrame::addTab(std::string label, TabViewCreator creator)
 {
