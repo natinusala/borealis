@@ -229,9 +229,6 @@ class Application
 
     inline static View* currentFocus;
 
-    inline static ControllerState oldControllerState = {};
-    inline static ControllerState controllerState    = {};
-
     inline static unsigned blockInputsTokens = 0; // any value > 0 means inputs are blocked
 
     inline static std::string commonFooter = "";

@@ -154,6 +154,8 @@ void Application::createWindow(std::string windowTitle)
 
 bool Application::mainLoop()
 {
+    static ControllerState oldControllerState = {};
+
     // Main loop callback
     if (!Application::platform->mainLoopIteration() || Application::quitRequested)
     {
@@ -162,8 +164,10 @@ bool Application::mainLoop()
     }
 
     // Input
+    ControllerState controllerState = {};
+
     InputManager* inputManager = Application::platform->getInputManager();
-    inputManager->updateControllerState(&Application::controllerState);
+    inputManager->updateControllerState(&controllerState);
 
     // Trigger controller events
     // TODO: Translate axis events to dpad events here
@@ -175,16 +179,16 @@ bool Application::mainLoop()
 
     for (int i = 0; i < _BUTTON_MAX; i++)
     {
-        if (Application::controllerState.buttons[i])
+        if (controllerState.buttons[i])
         {
             anyButtonPressed = true;
             repeating        = (repeatingButtonTimer > BUTTON_REPEAT_DELAY && repeatingButtonTimer % BUTTON_REPEAT_CADENCY == 0);
 
-            if (!Application::oldControllerState.buttons[i] || repeating)
+            if (!oldControllerState.buttons[i] || repeating)
                 Application::onControllerButtonPressed((enum ControllerButton)i, repeating);
         }
 
-        if (Application::controllerState.buttons[i] != Application::oldControllerState.buttons[i])
+        if (controllerState.buttons[i] != oldControllerState.buttons[i])
             buttonPressTime = repeatingButtonTimer = 0;
     }
 
@@ -194,7 +198,7 @@ bool Application::mainLoop()
         repeatingButtonTimer++; // Increased once every ~1ms
     }
 
-    Application::oldControllerState = Application::controllerState;
+    oldControllerState = controllerState;
 
     // Animations
     updateHighlightAnimation();
