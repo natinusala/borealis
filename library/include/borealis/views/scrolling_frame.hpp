@@ -46,6 +46,7 @@ class ScrollingFrame : public Box
 
     void draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx) override;
     void onChildFocusGained(View* directChild, View* focusedView) override;
+    void onChildFocusLost(View* directChild, View* focusedView) override;
     void willAppear(bool resetState) override;
     void addView(View* view) override;
     void removeView(View* view) override;
@@ -74,6 +75,7 @@ class ScrollingFrame : public Box
     View* contentView = nullptr;
 
     bool updateScrollingOnNextFrame = false;
+    bool childFocused               = false;
 
     float middleY = 0; // y + height/2
     float bottomY = 0; // y + height

@@ -211,15 +211,22 @@ void ScrollingFrame::scrollAnimationTick()
 
 void ScrollingFrame::onChildFocusGained(View* directChild, View* focusedView)
 {
+    this->childFocused = true;
+
     // Start scrolling
     this->updateScrolling(true);
 
     Box::onChildFocusGained(directChild, focusedView);
 }
 
+void ScrollingFrame::onChildFocusLost(View* directChild, View* focusedView)
+{
+    this->childFocused = false;
+}
+
 bool ScrollingFrame::updateScrolling(bool animated)
 {
-    if (!this->contentView)
+    if (!this->contentView || !this->childFocused)
         return false;
 
     float contentHeight = this->getContentHeight();
