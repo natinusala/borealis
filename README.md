@@ -1,12 +1,20 @@
 # borealis
 
-Hardware accelerated, Nintendo Switch inspired UI library for PC and Nintendo Switch. Powered by nanovg. Skeleton based on the [hybrid glfw app](https://github.com/fincs/hybrid_app) by fincs.
+Controller navigation oriented UI library for PC and Nintendo Switch (libnx).
 
-The library is still in early development and WILL lack features and contain bugs. Feel free to report them in the issues, or make a pull request if you happen to fix some.
+- Mimicks the Nintendo Switch system UI, but can also be used to make anything else painlessly
+- Hardware acceleration and vector graphics with automatic scaling for TV usage (powered by nanovg)
+- Can be ported to new platforms and graphics APIs by providing a nanovg implementation
+- Powerful layout engine using flex box as a base for everything (powered by Yoga Layout)
+- Automated navigation paths for out-of-the-box controller navigation
+- Out of the box touch support
+- Define user interfaces using XML and only write code when it matters
+- Use and restyle built-in components or make your own from scratch
+- Display large amount of data efficiently using recycling lists
+- Integrated internationalization and config systems
+- Integrated toolbox (logger, animations, timers, background tasks...)
 
-You can see the planned features in the Projects tab.
-
-Documentation is available [right here](https://github.com/natinusala/borealis/wiki). Warning: may not be up to date.
+Documentation is available [right here](https://github.com/natinusala/borealis/wiki). As every documentation, it may not be up to date. Feel free to report any missing info or inconsistency you may find.
 
 ## Building the demo for Switch
 
