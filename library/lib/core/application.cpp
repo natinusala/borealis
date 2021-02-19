@@ -100,7 +100,6 @@ void Application::createWindow(std::string windowTitle)
     std::srand(std::time(nullptr));
 
     // Init managers
-    Application::taskManager = new TaskManager();
     // Application::notificationManager = new NotificationManager(); TODO: restore
 
     // Init static variables
@@ -203,9 +202,6 @@ bool Application::mainLoop()
     // Animations
     updateHighlightAnimation();
     Ticking::updateTickings();
-
-    // Tasks
-    Application::taskManager->frame();
 
     // Render
     Application::frame();
@@ -450,7 +446,6 @@ void Application::exit()
     /*if (Application::framerateCounter)
         delete Application::framerateCounter; TODO: restore that*/
 
-    delete Application::taskManager;
     // delete Application::notificationManager; TODO: restore
     delete Application::platform;
 }
@@ -741,11 +736,6 @@ void Application::unblockInputs()
 NVGcontext* Application::getNVGContext()
 {
     return Application::platform->getVideoContext()->getNVGContext();
-}
-
-TaskManager* Application::getTaskManager()
-{
-    return Application::taskManager;
 }
 
 void Application::setCommonFooter(std::string footer)

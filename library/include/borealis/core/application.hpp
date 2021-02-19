@@ -27,7 +27,6 @@
 #include <borealis/core/logger.hpp>
 #include <borealis/core/platform.hpp>
 #include <borealis/core/style.hpp>
-#include <borealis/core/task_manager.hpp>
 #include <borealis/core/theme.hpp>
 // #include <borealis/core/notification_manager.hpp> TODO: restore
 
@@ -165,7 +164,6 @@ class Application
       */
     static void unblockInputs();
 
-    static TaskManager* getTaskManager();
     // static NotificationManager* getNotificationManager(); TODO: restore that
 
     static void setCommonFooter(std::string footer);
@@ -217,7 +215,6 @@ class Application
 
     inline static Background* background = nullptr;
 
-    inline static TaskManager* taskManager;
     // inline static NotificationManager* notificationManager; TODO: restore that
 
     inline static FontStash fontStash;

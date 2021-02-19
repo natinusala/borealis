@@ -1143,7 +1143,7 @@ class View
      *
      * When pressing a key, the flow is :
      *    1. starting from the currently focused view's parent, traverse the tree upwards and
-     *       repeatidly call getNextFocus() on every view until we find a next view to focus or meet the end of the tree
+     *       repeatedly call getNextFocus() on every view until we find a next view to focus or meet the end of the tree
      *    2. if a view is found, getNextFocus() will internally call getDefaultFocus() for the selected child
      *    3. give focus to the result, if it exists
      */

@@ -1,6 +1,5 @@
 /*
-    Copyright 2019-2021 natinusala
-    Copyright 2019 p-sam
+    Copyright 2021 natinusala
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -15,27 +14,28 @@
     limitations under the License.
 */
 
-#pragma once
-
-#include <borealis/core/repeating_task.hpp>
-#include <vector>
+#include <borealis/core/task.hpp>
 
 namespace brls
 {
 
-class TaskManager
+RepeatingTask::RepeatingTask(Time period)
 {
-  private:
-    std::vector<RepeatingTask*> repeatingTasks;
+    this->setPeriod(period);
 
-    void stopRepeatingTask(RepeatingTask* task);
+    this->setCallback([this]() {
+        this->run();
+    });
+}
 
-  public:
-    void frame();
+void RepeatingTask::start()
+{
+    RepeatingTimer::start();
+}
 
-    void registerRepeatingTask(RepeatingTask* task);
-
-    ~TaskManager();
-};
+void RepeatingTask::stop()
+{
+    RepeatingTimer::stop();
+}
 
 } // namespace brls

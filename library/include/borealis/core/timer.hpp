@@ -21,8 +21,6 @@
 namespace brls
 {
 
-// TODO: rewrite RepeatingTask to just use a RepeatingTimer internally
-
 // A Timer allows to run a callback once after a given period of time, in ms
 // Add the callback with setEndCallback(), set the duration with setDuration() then start the timer
 class Timer : public FiniteTicking
@@ -54,7 +52,7 @@ class Timer : public FiniteTicking
     Time progress = 0;
 };
 
-// A RepeatingTimer allows to run a callback repeatidly at a given time interval, in ms
+// A RepeatingTimer allows to run a callback repeatedly at a given time interval, in ms
 // Add the callback with setCallback(), set the period with setPeriod() then start the timer
 class RepeatingTimer : public Ticking
 {
