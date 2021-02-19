@@ -90,7 +90,7 @@ bool RepeatingTimer::onUpdate(Time delta)
     if (this->progress >= this->period)
     {
         this->callback();
-        this->period = 0;
+        this->progress = 0;
     }
 
     return true; // never stop
