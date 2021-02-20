@@ -17,8 +17,8 @@
 #include <tinyxml2.h>
 
 #include <borealis/core/application.hpp>
+#include <borealis/core/box.hpp>
 #include <borealis/core/util.hpp>
-#include <borealis/views/box.hpp>
 #include <cmath>
 
 namespace brls

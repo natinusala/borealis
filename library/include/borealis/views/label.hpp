@@ -19,7 +19,7 @@
 
 #include <borealis/core/animation.hpp>
 #include <borealis/core/timer.hpp>
-#include <borealis/views/view.hpp>
+#include <borealis/core/view.hpp>
 
 namespace brls
 {

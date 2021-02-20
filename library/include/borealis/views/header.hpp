@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <borealis/views/box.hpp>
+#include <borealis/core/box.hpp>
 #include <borealis/views/label.hpp>
 
 namespace brls

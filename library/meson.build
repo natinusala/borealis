@@ -15,6 +15,8 @@ borealis_files = files(
     'lib/core/timer.cpp',
     'lib/core/animation.cpp',
     'lib/core/task.cpp',
+    'lib/core/view.cpp',
+    'lib/core/box.cpp',
 
     'lib/platforms/glfw/glfw_platform.cpp',
     'lib/platforms/glfw/glfw_video.cpp',
@@ -23,8 +25,6 @@ borealis_files = files(
 
     'lib/platforms/switch/swkbd.cpp',  # TODO: remove it from build.meson, it's switch only
 
-    'lib/views/view.cpp',
-    'lib/views/box.cpp',
     'lib/views/scrolling_frame.cpp',
     'lib/views/applet_frame.cpp',
     'lib/views/tab_frame.cpp',

@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <borealis/views/view.hpp>
+#include <borealis/core/view.hpp>
 
 namespace brls
 {
