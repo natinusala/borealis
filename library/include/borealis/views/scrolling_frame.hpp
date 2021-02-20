@@ -17,7 +17,7 @@
 #pragma once
 
 #include <borealis/core/animation.hpp>
-#include <borealis/views/box.hpp>
+#include <borealis/core/box.hpp>
 
 namespace brls
 {

@@ -24,6 +24,7 @@
 #include <borealis/core/application.hpp>
 #include <borealis/core/assets.hpp>
 #include <borealis/core/audio.hpp>
+#include <borealis/core/box.hpp>
 #include <borealis/core/event.hpp>
 #include <borealis/core/font.hpp>
 #include <borealis/core/frame_context.hpp>
@@ -37,11 +38,11 @@
 #include <borealis/core/time.hpp>
 #include <borealis/core/timer.hpp>
 #include <borealis/core/video.hpp>
+#include <borealis/core/view.hpp>
 
 //Views
 #include <borealis/views/applet_frame.hpp>
 #include <borealis/views/background.hpp>
-#include <borealis/views/box.hpp>
 #include <borealis/views/button.hpp>
 #include <borealis/views/header.hpp>
 #include <borealis/views/image.hpp>
@@ -50,7 +51,6 @@
 #include <borealis/views/scrolling_frame.hpp>
 #include <borealis/views/sidebar.hpp>
 #include <borealis/views/tab_frame.hpp>
-#include <borealis/views/view.hpp>
 
 //Gestures
 #include <borealis/core/touch/tap_gesture_recognizer.hpp>

@@ -31,9 +31,9 @@
 #include <borealis/core/theme.hpp>
 // #include <borealis/core/notification_manager.hpp> TODO: restore
 
+#include <borealis/core/view.hpp>
 #include <borealis/views/background.hpp>
 #include <borealis/views/label.hpp>
-#include <borealis/views/view.hpp>
 // #include <borealis/views/hint.hpp> // TODO: restore
 
 #include <unordered_map>
