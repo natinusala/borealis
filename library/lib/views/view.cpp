@@ -153,7 +153,7 @@ void View::frame(FrameContext* ctx)
         this->drawBackground(ctx->vg, ctx, style);
 
         // Draw shadow
-        if (this->shadowType != ShadowType::NONE && this->showShadow)
+        if (this->shadowType != ShadowType::NONE && (this->showShadow || Application::getFocusTouchMode()))
             this->drawShadow(ctx->vg, ctx, style, x, y, width, height);
 
         // Draw border
