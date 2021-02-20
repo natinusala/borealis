@@ -205,11 +205,6 @@ class Application
      * Returns the current system locale.
      */
     static std::string getLocale();
-
-    /**
-     * View that was recognized as target for touch events.
-     */
-    inline static View* firstResponder;
     
     /**
      * If touch input mode enabled, disable it and move focus on last view

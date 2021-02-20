@@ -155,6 +155,7 @@ void Application::createWindow(std::string windowTitle)
 bool Application::mainLoop()
 {
     static ControllerState oldControllerState = {};
+    static View* firstResponder;
 
     // Main loop callback
     if (!Application::platform->mainLoopIteration() || Application::quitRequested)
@@ -177,18 +178,18 @@ bool Application::mainLoop()
     case TouchEvent::START:
         Logger::debug("Touched at X: " + std::to_string(touchState.x) + ", Y: " + std::to_string(touchState.y));
         Application::focusTouchMode = true;
-        Application::firstResponder = Application::activitiesStack[Application::activitiesStack.size() - 1]
+        firstResponder = Application::activitiesStack[Application::activitiesStack.size() - 1]
             ->getContentView()->hitTest(touchState.x, touchState.y);
         break;
     case TouchEvent::NONE:
-        Application::firstResponder = nullptr;
+        firstResponder = nullptr;
         break;
     default: break;
     }
 
-    if (Application::firstResponder)
+    if (firstResponder)
     {
-        if (Application::firstResponder->gestureRecognizerRequest(touchState))
+        if (firstResponder->gestureRecognizerRequest(touchState, firstResponder))
         {
             // Play touch sound with random pitch
             float pitch = (rand() % 10) / 10.0f + 1.0f;

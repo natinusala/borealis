@@ -110,7 +110,7 @@ void View::addGestureRecognizer(GestureRecognizer* recognizer)
     this->gestureRecognizers.push_back(recognizer);
 }
 
-bool View::gestureRecognizerRequest(TouchState touch) 
+bool View::gestureRecognizerRequest(TouchState touch, View* firstResponder)
 {
     bool res = touch.state == TouchEvent::START;
     for (GestureRecognizer* recognizer : getGestureRecognizers()) 
@@ -118,11 +118,11 @@ bool View::gestureRecognizerRequest(TouchState touch)
         GestureState state = recognizer->recognitionLoop(touch, this);
         if (res) res &= recognizer->enabled && recognizer->soundOnTouch();
         if (state == GestureState::START)
-            Application::firstResponder->interruptGestures(true);
+            firstResponder->interruptGestures(true);
     }
 
     if (parent)
-        res &= parent->gestureRecognizerRequest(touch);
+        res &= parent->gestureRecognizerRequest(touch, firstResponder);
 
     return res;
 }
