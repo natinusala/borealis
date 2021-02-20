@@ -1,26 +1,25 @@
 /*
-    Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2019-2021  natinusala
-    Copyright (C) 2019  p-sam
+    Copyright 2019-2021 natinusala
+    Copyright 2019 p-sam
+    Copyright 2021 XITRIX
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+        http://www.apache.org/licenses/LICENSE-2.0
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 */
 
 #include <math.h>
 
 #include <algorithm>
-#include <borealis/core/animations.hpp>
+#include <borealis/core/animation.hpp>
 #include <borealis/core/application.hpp>
 #include <borealis/core/i18n.hpp>
 #include <borealis/core/input.hpp>
@@ -72,7 +71,7 @@ static int shakeAnimation(float t, float a) // a = amplitude
 void View::shakeHighlight(FocusDirection direction)
 {
     this->highlightShaking        = true;
-    this->highlightShakeStart     = cpu_features_get_time_usec() / 1000;
+    this->highlightShakeStart     = getCPUTimeUsec() / 1000;
     this->highlightShakeDirection = direction;
     this->highlightShakeAmplitude = std::rand() % 15 + 10;
 }
@@ -201,36 +200,30 @@ void View::frame(FrameContext* ctx)
 
 void View::resetClickAnimation()
 {
-    menu_animation_ctx_tag tag = (menu_animation_ctx_tag) & this->clickAlpha;
-    menu_animation_kill_by_tag(&tag);
+    this->clickAlpha.stop();
 }
 
 void View::playClickAnimation(bool reverse)
 {
     this->resetClickAnimation();
 
-    this->clickAlpha = reverse ? 1.0f : 0.0f;
-
     Style style = Application::getStyle();
 
-    menu_animation_ctx_entry_t entry;
+    this->clickAlpha.reset(reverse ? 1.0f : 0.0f);
 
-    entry.cb = [this, reverse](void* userdata) {
+    this->clickAlpha.addStep(
+        reverse ? 0.0f : 1.0f,
+        style["brls/animations/highlight"],
+        reverse ? EasingFunction::quadraticOut : EasingFunction::quadraticIn);
+
+    this->clickAlpha.setEndCallback([this, reverse](bool finished) {
         if (reverse || Application::getFocusTouchMode())
             return;
 
         this->playClickAnimation(true);
-    };
+    });
 
-    entry.duration     = style["brls/animations/highlight"];
-    entry.easing_enum  = reverse ? EASING_OUT_QUAD : EASING_IN_QUAD;
-    entry.subject      = &this->clickAlpha;
-    entry.tag          = (menu_animation_ctx_tag) & this->clickAlpha;
-    entry.target_value = reverse ? 0.0f : 1.0f;
-    entry.tick         = [](void* userdata) {};
-    entry.userdata     = nullptr;
-
-    menu_animation_push(&entry);
+    this->clickAlpha.start();
 }
 
 void View::drawClickAnimation(NVGcontext* vg, FrameContext* ctx, float x, float y, float width, float height)
@@ -409,25 +402,20 @@ void View::drawShadow(NVGcontext* vg, FrameContext* ctx, Style style, float x, f
 
 void View::collapse(bool animated)
 {
-    menu_animation_ctx_tag tag = (menu_animation_ctx_tag) & this->collapseState;
-    menu_animation_kill_by_tag(&tag);
-
     if (animated)
     {
         Style style = Application::getStyle();
 
-        menu_animation_ctx_entry_t entry;
+        this->collapseState.reset();
 
-        entry.cb           = [](void* userdata) {};
-        entry.duration     = style["brls/animations/collapse"];
-        entry.easing_enum  = EASING_OUT_QUAD;
-        entry.subject      = &this->collapseState;
-        entry.tag          = tag;
-        entry.target_value = 0.0f;
-        entry.tick         = [this](void* userdata) { if (this->hasParent()) this->getParent()->invalidate(); };
-        entry.userdata     = nullptr;
+        this->collapseState.addStep(0.0f, style["brls/animations/collapse"], EasingFunction::quadraticOut);
 
-        menu_animation_push(&entry);
+        this->collapseState.setTickCallback([this] {
+            if (this->hasParent())
+                this->getParent()->invalidate();
+        });
+
+        this->collapseState.start();
     }
     else
     {
@@ -442,25 +430,20 @@ bool View::isCollapsed()
 
 void View::expand(bool animated)
 {
-    menu_animation_ctx_tag tag = (menu_animation_ctx_tag) & this->collapseState;
-    menu_animation_kill_by_tag(&tag);
-
     if (animated)
     {
         Style style = Application::getStyle();
 
-        menu_animation_ctx_entry_t entry;
+        this->collapseState.reset();
 
-        entry.cb           = [](void* userdata) {};
-        entry.duration     = style["brls/animations/collapse"];
-        entry.easing_enum  = EASING_OUT_QUAD;
-        entry.subject      = &this->collapseState;
-        entry.tag          = tag;
-        entry.target_value = 1.0f;
-        entry.tick         = [this](void* userdata) { if (this->hasParent()) this->getParent()->invalidate(); };
-        entry.userdata     = nullptr;
+        this->collapseState.addStep(1.0f, style["brls/animations/collapse"], EasingFunction::quadraticOut);
 
-        menu_animation_push(&entry);
+        this->collapseState.setTickCallback([this] {
+            if (this->hasParent())
+                this->getParent()->invalidate();
+        });
+
+        this->collapseState.start();
     }
     else
     {
@@ -494,8 +477,8 @@ void View::drawHighlight(NVGcontext* vg, Theme theme, float alpha, Style style, 
     // Shake animation
     if (this->highlightShaking)
     {
-        retro_time_t curTime = cpu_features_get_time_usec() / 1000;
-        retro_time_t t       = (curTime - highlightShakeStart) / 10;
+        Time curTime = getCPUTimeUsec() / 1000;
+        Time t       = (curTime - highlightShakeStart) / 10;
 
         if (t >= style["brls/animations/highlight_shake"])
         {
@@ -552,7 +535,7 @@ void View::drawHighlight(NVGcontext* vg, Theme theme, float alpha, Style style, 
 
         // Border
         float gradientX, gradientY, color;
-        menu_animation_get_highlight(&gradientX, &gradientY, &color);
+        getHighlightAnimation(&gradientX, &gradientY, &color);
 
         NVGcolor highlightColor1 = theme["brls/highlight/color1"];
 
@@ -1063,7 +1046,7 @@ float View::getY()
 
 float View::getHeight(bool includeCollapse)
 {
-    return YGNodeLayoutGetHeight(this->ygNode) * (includeCollapse ? this->collapseState : 1.0f);
+    return YGNodeLayoutGetHeight(this->ygNode) * (includeCollapse ? this->collapseState.getValue() : 1.0f);
 }
 
 float View::getWidth()
@@ -1093,19 +1076,9 @@ void View::onFocusGained()
 
     Style style = Application::getStyle();
 
-    menu_animation_ctx_tag tag = (menu_animation_ctx_tag)this->highlightAlpha;
-
-    menu_animation_ctx_entry_t entry;
-    entry.cb           = [](void* userdata) {};
-    entry.duration     = style["brls/animations/highlight"];
-    entry.easing_enum  = EASING_OUT_QUAD;
-    entry.subject      = &this->highlightAlpha;
-    entry.tag          = tag;
-    entry.target_value = 1.0f;
-    entry.tick         = [](void* userdata) {};
-    entry.userdata     = nullptr;
-
-    menu_animation_push(&entry);
+    this->highlightAlpha.reset();
+    this->highlightAlpha.addStep(1.0f, style["brls/animations/highlight"], EasingFunction::quadraticOut);
+    this->highlightAlpha.start();
 
     this->focusEvent.fire(this);
 
@@ -1124,19 +1097,9 @@ void View::onFocusLost()
 
     Style style = Application::getStyle();
 
-    menu_animation_ctx_tag tag = (menu_animation_ctx_tag)this->highlightAlpha;
-
-    menu_animation_ctx_entry_t entry;
-    entry.cb           = [](void* userdata) {};
-    entry.duration     = style["brls/animations/highlight"];
-    entry.easing_enum  = EASING_OUT_QUAD;
-    entry.subject      = &this->highlightAlpha;
-    entry.tag          = tag;
-    entry.target_value = 0.0f;
-    entry.tick         = [](void* userdata) {};
-    entry.userdata     = nullptr;
-
-    menu_animation_push(&entry);
+    this->highlightAlpha.reset();
+    this->highlightAlpha.addStep(0.0f, style["brls/animations/highlight"], EasingFunction::quadraticOut);
+    this->highlightAlpha.start();
 
     if (this->hasParent())
         this->getParent()->onChildFocusLost(this, this);
@@ -1170,30 +1133,21 @@ void View::show(std::function<void(void)> cb, bool animate, float animationDurat
 
     this->hidden = false;
 
-    menu_animation_ctx_tag tag = (menu_animation_ctx_tag) & this->alpha;
-    menu_animation_kill_by_tag(&tag);
-
     this->fadeIn = true;
 
     if (animate)
     {
-        this->alpha = 0.0f;
+        this->alpha.reset(0.0f);
 
-        menu_animation_ctx_entry_t entry;
-        entry.cb = [this, cb](void* userdata) {
+        this->alpha.addStep(1.0f, animationDuration, EasingFunction::quadraticOut);
+
+        this->alpha.setEndCallback([this, cb](bool finished) {
             this->fadeIn = false;
             this->onShowAnimationEnd();
             cb();
-        };
-        entry.duration     = animationDuration;
-        entry.easing_enum  = EASING_OUT_QUAD;
-        entry.subject      = &this->alpha;
-        entry.tag          = tag;
-        entry.target_value = 1.0f;
-        entry.tick         = [](void* userdata) {};
-        entry.userdata     = nullptr;
+        });
 
-        menu_animation_push(&entry);
+        this->alpha.start();
     }
     else
     {
@@ -1222,24 +1176,15 @@ void View::hide(std::function<void(void)> cb, bool animated, float animationDura
     this->hidden = true;
     this->fadeIn = false;
 
-    menu_animation_ctx_tag tag = (menu_animation_ctx_tag) & this->alpha;
-    menu_animation_kill_by_tag(&tag);
-
     if (animated)
     {
-        this->alpha = 1.0f;
+        this->alpha.reset(1.0f);
 
-        menu_animation_ctx_entry_t entry;
-        entry.cb           = [cb](void* userdata) { cb(); };
-        entry.duration     = animationDuration;
-        entry.easing_enum  = EASING_OUT_QUAD;
-        entry.subject      = &this->alpha;
-        entry.tag          = tag;
-        entry.target_value = 0.0f;
-        entry.tick         = [](void* userdata) {};
-        entry.userdata     = nullptr;
+        this->alpha.addStep(0.0f, animationDuration, EasingFunction::quadraticOut);
 
-        menu_animation_push(&entry);
+        this->alpha.setEndCallback([cb](bool finished) { cb(); });
+
+        this->alpha.start();
     }
     else
     {
@@ -1314,15 +1259,6 @@ std::string View::getCustomNavigationRouteId(FocusDirection direction)
 
 View::~View()
 {
-    menu_animation_ctx_tag alphaTag = (menu_animation_ctx_tag) & this->alpha;
-    menu_animation_kill_by_tag(&alphaTag);
-
-    menu_animation_ctx_tag highlightTag = (menu_animation_ctx_tag) & this->highlightAlpha;
-    menu_animation_kill_by_tag(&highlightTag);
-
-    menu_animation_ctx_tag collapseTag = (menu_animation_ctx_tag) & this->collapseState;
-    menu_animation_kill_by_tag(&collapseTag);
-
     this->resetClickAnimation();
 
     // Parent userdata

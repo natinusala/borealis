@@ -3,17 +3,18 @@ dep_glm   = dependency('glm', version : '>=0.9.8')
 
 borealis_files = files(
     'lib/core/logger.cpp',
-    'lib/core/animations.cpp',
     'lib/core/application.cpp',
     'lib/core/i18n.cpp',
     'lib/core/theme.cpp',
     'lib/core/style.cpp',
     'lib/core/activity.cpp',
-    'lib/core/task_manager.cpp',
-    'lib/core/repeating_task.cpp',
     'lib/core/platform.cpp',
     'lib/core/font.cpp',
     'lib/core/util.cpp',
+    'lib/core/time.cpp',
+    'lib/core/timer.cpp',
+    'lib/core/animation.cpp',
+    'lib/core/task.cpp',
 
     'lib/core/touch/gesture_recognizer.cpp',
     'lib/core/touch/tap_gesture_recognizer.cpp',
@@ -68,6 +69,7 @@ borealis_include = include_directories(
     'include/borealis/extern/tinyxml2',
     'include/borealis/extern/nanovg-gl',
     'lib/extern/yoga/src',
+    'lib/extern/tweeny/include',
 )
 
 borealis_dependencies = [ dep_glfw3, dep_glm, ]

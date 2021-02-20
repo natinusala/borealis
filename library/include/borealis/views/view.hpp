@@ -1,32 +1,30 @@
 /*
-    Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2019-2021  natinusala
-    Copyright (C) 2019  p-sam
+    Copyright 2019-2021 natinusala
+    Copyright 2019 p-sam
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+        http://www.apache.org/licenses/LICENSE-2.0
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 */
 
 #pragma once
 
 #include <cxxabi.h>
-#include <libretro-common/features/features_cpu.h>
 #include <nanovg.h>
 #include <stdio.h>
 #include <tinyxml2.h>
 #include <yoga/YGNode.h>
 
 #include <borealis/core/actions.hpp>
+#include <borealis/core/animation.hpp>
 #include <borealis/core/event.hpp>
 #include <borealis/core/frame_context.hpp>
 #include <borealis/core/touch/gesture_recognizer.hpp>
@@ -171,14 +169,14 @@ class View
     void drawWireframe(FrameContext* ctx, float x, float y, float width, float height);
     void drawLine(FrameContext* ctx, float x, float y, float width, float height);
 
-    float highlightAlpha        = 0.0f;
+    Animatable highlightAlpha   = 0.0f;
     float highlightPadding      = 0.0f;
     float highlightCornerRadius = 0.0f;
 
-    float clickAlpha = 0.0f; // animated between 0 and 1
+    Animatable clickAlpha = 0.0f; // animated between 0 and 1
 
     bool highlightShaking = false;
-    retro_time_t highlightShakeStart;
+    Time highlightShakeStart;
     FocusDirection highlightShakeDirection;
     float highlightShakeAmplitude;
 
@@ -251,7 +249,7 @@ class View
     std::unordered_map<FocusDirection, View*> customFocusByPtr;
 
   protected:
-    float collapseState = 1.0f;
+    Animatable collapseState = 1.0f;
 
     bool focused = false;
 
@@ -1165,7 +1163,7 @@ class View
      *
      * When pressing a key, the flow is :
      *    1. starting from the currently focused view's parent, traverse the tree upwards and
-     *       repeatidly call getNextFocus() on every view until we find a next view to focus or meet the end of the tree
+     *       repeatedly call getNextFocus() on every view until we find a next view to focus or meet the end of the tree
      *    2. if a view is found, getNextFocus() will internally call getDefaultFocus() for the selected child
      *    3. give focus to the result, if it exists
      */
@@ -1250,7 +1248,7 @@ class View
 
     GenericEvent* getFocusEvent();
 
-    float alpha = 1.0f;
+    Animatable alpha = 1.0f;
 
     virtual float getAlpha(bool child = false);
 

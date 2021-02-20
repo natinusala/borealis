@@ -1,20 +1,18 @@
 /*
-    Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2019-2021  natinusala
-    Copyright (C) 2019  p-sam
+    Copyright 2019-2021 natinusala
+    Copyright 2019 p-sam
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+        http://www.apache.org/licenses/LICENSE-2.0
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 */
 
 #include <borealis/core/application.hpp>
@@ -406,12 +404,10 @@ void Label::stopScrollingAnimation()
     if (!this->animating)
         return;
 
-    menu_animation_ctx_tag tag = (menu_animation_ctx_tag)this;
-    menu_timer_kill(&this->scrollingTimer);
-    menu_animation_kill_by_tag(&tag);
+    this->scrollingTimer.stop();
+    this->scrollingTimer.reset();
 
     this->scrollingAnimation = 0.0f;
-    this->scrollingTimer     = 0.0f;
 
     this->animating = false;
 }
@@ -424,20 +420,17 @@ void Label::onScrollTimerFinished()
     float target   = this->requiredWidth + style["brls/label/scrolling_animation_spacing"];
     float duration = target / style["brls/animations/label_scrolling_speed"];
 
-    menu_animation_ctx_entry_t entry;
-    entry.duration = duration;
-    entry.cb       = [this](void* userdata) {
-        // Start over
-        this->startScrollTimer();
-    };
-    entry.easing_enum  = EASING_LINEAR;
-    entry.subject      = &this->scrollingAnimation;
-    entry.tag          = (menu_animation_ctx_tag)this;
-    entry.target_value = target;
-    entry.tick         = [](void* userdata) {};
-    entry.userdata     = nullptr;
+    this->scrollingAnimation.reset();
 
-    menu_animation_push(&entry);
+    this->scrollingAnimation.addStep(target, duration, EasingFunction::linear);
+
+    this->scrollingAnimation.setEndCallback([this](bool finished) {
+        // Start over if the scrolling animation ended naturally
+        if (finished)
+            this->startScrollTimer();
+    });
+
+    this->scrollingAnimation.start();
 
     this->animating = true;
 }
@@ -447,18 +440,17 @@ void Label::startScrollTimer()
     Style style = Application::getStyle();
 
     // Step 1: timer before starting to scroll
-    this->scrollingTimer     = 0.0f;
     this->scrollingAnimation = 0.0f;
 
-    menu_timer_ctx_entry_t entry;
+    this->scrollingTimer.reset();
 
-    entry.duration = style["brls/animations/label_scrolling_timer"];
-    entry.tick     = [](void* userdata) {};
-    entry.cb       = [this](void* userdata) {
+    this->scrollingTimer.setDuration(style["brls/animations/label_scrolling_timer"]);
+
+    this->scrollingTimer.setEndCallback([this](bool finished) {
         this->onScrollTimerFinished();
-    };
+    });
 
-    menu_timer_start(&this->scrollingTimer, &entry);
+    this->scrollingTimer.start();
 
     this->animating = true;
 }

@@ -1,30 +1,31 @@
 /*
-    Borealis, a Nintendo Switch UI Library
-    Copyright (C) 2019-2020  natinusala
-    Copyright (C) 2019  p-sam
-    Copyright (C) 2020  WerWolv
+    Copyright 2019-2020 natinusala
+    Copyright 2019 p-sam
+    Copyright 2020 WerWolv
+    Copyright 2021 XITRIX
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+        http://www.apache.org/licenses/LICENSE-2.0
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 */
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <yoga/event/event.h>
 
 #include <algorithm>
 #include <borealis/core/application.hpp>
 #include <borealis/core/font.hpp>
 #include <borealis/core/i18n.hpp>
+#include <borealis/core/time.hpp>
 #include <borealis/core/util.hpp>
 #include <borealis/views/button.hpp>
 #include <borealis/views/header.hpp>
@@ -34,8 +35,6 @@
 #include <borealis/views/tab_frame.hpp>
 #include <stdexcept>
 #include <string>
-
-#include <yoga/event/event.h>
 
 #ifndef YG_ENABLE_EVENTS
 #error Please enable Yoga events with the YG_ENABLE_EVENTS define
@@ -102,7 +101,6 @@ void Application::createWindow(std::string windowTitle)
     std::srand(std::time(nullptr));
 
     // Init managers
-    Application::taskManager = new TaskManager();
     // Application::notificationManager = new NotificationManager(); TODO: restore
 
     // Init static variables
@@ -150,15 +148,14 @@ void Application::createWindow(std::string windowTitle)
         Logger::warning("Regular font was not loaded, there will be no text displayed in the app");
     }
 
-    // Init animations engine
-    menu_animation_init();
-
     // Register built-in XML views
     Application::registerBuiltInXMLViews();
 }
 
 bool Application::mainLoop()
 {
+    static ControllerState oldControllerState = {};
+
     // Main loop callback
     if (!Application::platform->mainLoopIteration() || Application::quitRequested)
     {
@@ -166,26 +163,32 @@ bool Application::mainLoop()
         return false;
     }
 
-    // Touch
-    InputManager* inputManager = Application::platform->getInputManager();
-    inputManager->updateTouchState(&Application::touchState);
+    // Input
+    ControllerState controllerState = {};
+    TouchState touchState = {};
 
-    switch (Application::touchState.state)
+    InputManager* inputManager = Application::platform->getInputManager();
+    inputManager->updateTouchState(&touchState);
+    inputManager->updateControllerState(&controllerState);
+    
+    // Touch controller events
+    switch (touchState.state)
     {
     case TouchEvent::START:
-        Logger::debug("Touched at X: " + std::to_string(Application::touchState.x) + ", Y: " + std::to_string(Application::touchState.y));
+        Logger::debug("Touched at X: " + std::to_string(touchState.x) + ", Y: " + std::to_string(touchState.y));
         Application::focusTouchMode = true;
         Application::firstResponder = Application::activitiesStack[Application::activitiesStack.size() - 1]
-            ->getContentView()->hitTest(Application::touchState.x, Application::touchState.y);
+            ->getContentView()->hitTest(touchState.x, touchState.y);
         break;
     case TouchEvent::NONE:
         Application::firstResponder = nullptr;
         break;
+    default: break;
     }
 
-    if (Application::firstResponder) 
+    if (Application::firstResponder)
     {
-        if (Application::firstResponder->gestureRecognizerRequest(Application::touchState))
+        if (Application::firstResponder->gestureRecognizerRequest(touchState))
         {
             // Play touch sound with random pitch
             float pitch = (rand() % 10) / 10.0f + 1.0f;
@@ -193,45 +196,40 @@ bool Application::mainLoop()
         }
     }
 
-    // Input
-    inputManager->updateControllerState(&Application::controllerState);
-
     // Trigger controller events
     // TODO: Translate axis events to dpad events here
 
-    bool anyButtonPressed               = false;
-    bool repeating                      = false;
-    static retro_time_t buttonPressTime = 0;
-    static int repeatingButtonTimer     = 0;
+    bool anyButtonPressed           = false;
+    bool repeating                  = false;
+    static Time buttonPressTime     = 0;
+    static int repeatingButtonTimer = 0;
 
     for (int i = 0; i < _BUTTON_MAX; i++)
     {
-        if (Application::controllerState.buttons[i])
+        if (controllerState.buttons[i])
         {
             anyButtonPressed = true;
             repeating        = (repeatingButtonTimer > BUTTON_REPEAT_DELAY && repeatingButtonTimer % BUTTON_REPEAT_CADENCY == 0);
 
-            if (!Application::oldControllerState.buttons[i] || repeating)
+            if (!oldControllerState.buttons[i] || repeating)
                 Application::onControllerButtonPressed((enum ControllerButton)i, repeating);
         }
 
-        if (Application::controllerState.buttons[i] != Application::oldControllerState.buttons[i])
+        if (controllerState.buttons[i] != oldControllerState.buttons[i])
             buttonPressTime = repeatingButtonTimer = 0;
     }
 
-    if (anyButtonPressed && cpu_features_get_time_usec() - buttonPressTime > 1000)
+    if (anyButtonPressed && getCPUTimeUsec() - buttonPressTime > 1000)
     {
-        buttonPressTime = cpu_features_get_time_usec();
+        buttonPressTime = getCPUTimeUsec();
         repeatingButtonTimer++; // Increased once every ~1ms
     }
 
-    Application::oldControllerState = Application::controllerState;
+    oldControllerState = controllerState;
 
     // Animations
-    menu_animation_update();
-
-    // Tasks
-    Application::taskManager->frame();
+    updateHighlightAnimation();
+    Ticking::updateTickings();
 
     // Render
     Application::frame();
@@ -491,12 +489,9 @@ void Application::exit()
 
     Application::clear();
 
-    menu_animation_free();
-
     /*if (Application::framerateCounter)
         delete Application::framerateCounter; TODO: restore that*/
 
-    delete Application::taskManager;
     // delete Application::notificationManager; TODO: restore
     delete Application::platform;
 }
@@ -789,11 +784,6 @@ NVGcontext* Application::getNVGContext()
     return Application::platform->getVideoContext()->getNVGContext();
 }
 
-TaskManager* Application::getTaskManager()
-{
-    return Application::taskManager;
-}
-
 void Application::setCommonFooter(std::string footer)
 {
     Application::commonFooter = footer;
@@ -850,13 +840,13 @@ void Application::onWindowResized(int width, int height)
     this->setHorizontalAlign(NVG_ALIGN_RIGHT);
     this->setBackground(ViewBackground::BACKDROP);
 
-    this->lastSecond = cpu_features_get_time_usec() / 1000; TODO: restore that
+    this->lastSecond = getCPUTimeUsec() / 1000; TODO: restore that
 }*/
 
 /*void FramerateCounter::frame(FrameContext* ctx)
 {
     // Update counter
-    retro_time_t current = cpu_features_get_time_usec() / 1000;
+    Time current = getCPUTimeUsec() / 1000;
 
     if (current - this->lastSecond >= 1000)
     {
