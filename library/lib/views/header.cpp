@@ -60,9 +60,6 @@ Header::Header()
 {
     this->inflateFromXMLString(headerXML);
 
-    this->title    = (Label*)this->getView("brls/header/title");
-    this->subtitle = (Label*)this->getView("brls/header/subtitle");
-
     this->registerStringXMLAttribute("title", [this](std::string value) {
         this->setTitle(value);
     });

@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include <borealis/core/bind.hpp>
 #include <borealis/core/box.hpp>
 #include <borealis/views/label.hpp>
 
@@ -168,7 +169,7 @@ class Button : public Box
 
     void applyStyle();
 
-    Label* label;
+    BRLS_BIND(Label, label, "brls/button/label");
 };
 
 } // namespace brls

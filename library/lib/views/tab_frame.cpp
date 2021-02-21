@@ -44,8 +44,6 @@ TabFrame::TabFrame()
 {
     View* contentView = View::createFromXMLString(tabFrameContentXML);
     this->setContentView(contentView);
-
-    this->sidebar = (Sidebar*)this->getView("brls/tab_frame/sidebar");
 }
 
 // TODO: change getDefaultFocus to try to focus the right pane instead

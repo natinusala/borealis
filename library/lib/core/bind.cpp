@@ -1,6 +1,5 @@
 /*
-    Copyright 2019-2021 natinusala
-    Copyright 2019 p-sam
+    Copyright 2021 natinusala
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -15,30 +14,24 @@
     limitations under the License.
 */
 
-#pragma once
-
 #include <borealis/core/bind.hpp>
-#include <borealis/core/box.hpp>
-#include <borealis/views/label.hpp>
 
 namespace brls
 {
 
-// A simple header with a title, an optional subtitle, a rectangle on the left
-// and a separator
-class Header : public Box
+ViewNotFoundException::ViewNotFoundException(View* owner, std::string searchedId)
 {
-  public:
-    Header();
+    this->errorMessage = "Cannot find view with ID \"" + searchedId + "\" in owner view " + owner->describe();
+}
 
-    void setTitle(std::string text);
-    void setSubtitle(std::string text);
+ViewNotFoundException::ViewNotFoundException(Activity* owner, std::string searchedId)
+{
+    this->errorMessage = "Cannot find view with ID \"" + searchedId + "\" in given owner activity";
+}
 
-    static View* create();
-
-  private:
-    BRLS_BIND(Label, title, "brls/header/title");
-    BRLS_BIND(Label, subtitle, "brls/header/subtitle");
-};
+const char* ViewNotFoundException::what() const noexcept
+{
+    return this->errorMessage.c_str();
+}
 
 } // namespace brls

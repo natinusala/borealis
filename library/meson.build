@@ -17,6 +17,7 @@ borealis_files = files(
     'lib/core/task.cpp',
     'lib/core/view.cpp',
     'lib/core/box.cpp',
+    'lib/core/bind.cpp',
 
     'lib/platforms/glfw/glfw_platform.cpp',
     'lib/platforms/glfw/glfw_video.cpp',

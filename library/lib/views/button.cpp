@@ -59,8 +59,6 @@ Button::Button()
 {
     this->inflateFromXMLString(buttonXML);
 
-    this->label = (Label*)this->getView("brls/button/label");
-
     this->forwardXMLAttribute("text", this->label);
     this->forwardXMLAttribute("singleLine", this->label);
     this->forwardXMLAttribute("fontSize", this->label);

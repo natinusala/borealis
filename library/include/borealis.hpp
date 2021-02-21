@@ -24,6 +24,7 @@
 #include <borealis/core/application.hpp>
 #include <borealis/core/assets.hpp>
 #include <borealis/core/audio.hpp>
+#include <borealis/core/bind.hpp>
 #include <borealis/core/box.hpp>
 #include <borealis/core/event.hpp>
 #include <borealis/core/font.hpp>

@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include <borealis/core/bind.hpp>
 #include <borealis/core/box.hpp>
 #include <borealis/views/image.hpp>
 #include <borealis/views/label.hpp>
@@ -47,8 +48,8 @@ class AppletFrame : public Box
     static View* create();
 
   private:
-    Label* title;
-    Image* icon;
+    BRLS_BIND(Label, title, "brls/applet_frame/title_label");
+    BRLS_BIND(Image, icon, "brls/applet_frame/title_icon");
 
   protected:
     View* contentView = nullptr;
