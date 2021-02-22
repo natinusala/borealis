@@ -24,10 +24,6 @@ CaptionedImage::CaptionedImage()
     // The CaptionedImage instance basically becomes what's written in the XML
     this->inflateFromXMLRes("xml/views/captioned_image.xml");
 
-    // Get the handle to all our children views (that exist because we inflated from the XML)
-    this->image = (brls::Image*)this->getView("image");
-    this->label = (brls::Label*)this->getView("label");
-
     // The label stays hidden until focused, so hide it right away
     this->label->hide([] {});
 

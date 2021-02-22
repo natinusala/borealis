@@ -86,6 +86,7 @@ class Animatable : public FiniteTicking
     float getProgress();
 
     operator float() const;
+    operator float();
     void operator=(const float value);
     bool operator==(const float value);
 

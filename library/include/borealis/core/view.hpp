@@ -323,6 +323,15 @@ class View
      */
     virtual void onLayout() {};
 
+    /**
+     * Returns the view with the corresponding id in the view or its children,
+     * or nullptr if it hasn't been found.
+     *
+     * Research is done recursively by traversing the tree starting from this view.
+     * This view's parents are not traversed.
+     */
+    virtual View* getView(std::string id);
+
     // -----------------------------------------------------------
     // Flex layout properties
     // -----------------------------------------------------------
@@ -750,15 +759,6 @@ class View
     }
 
     // -----------------------------------------------------------
-
-    /**
-     * Returns the view with the corresponding id in the view or its children,
-     * or nullptr if it hasn't been found.
-     *
-     * Research is done recursively by traversing the tree starting from this view.
-     * This view's parents are not traversed.
-     */
-    virtual View* getView(std::string id);
 
     /**
      * Returns the "nearest" view with the corresponding id, or nullptr if none has

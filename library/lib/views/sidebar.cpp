@@ -63,9 +63,6 @@ SidebarItem::SidebarItem()
 {
     this->inflateFromXMLString(sidebarItemXML);
 
-    this->accent = (Rectangle*)this->getView("brls/sidebar/item_accent");
-    this->label  = (Label*)this->getView("brls/sidebar/item_label");
-
     this->registerStringXMLAttribute("label", [this](std::string value) {
         this->setLabel(value);
     });

@@ -17,6 +17,7 @@ borealis_files = files(
     'lib/core/task.cpp',
     'lib/core/view.cpp',
     'lib/core/box.cpp',
+    'lib/core/bind.cpp',
 
     'lib/core/touch/gesture_recognizer.cpp',
     'lib/core/touch/tap_gesture_recognizer.cpp',

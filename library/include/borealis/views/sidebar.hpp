@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include <borealis/core/bind.hpp>
 #include <borealis/core/box.hpp>
 #include <borealis/views/label.hpp>
 #include <borealis/views/rectangle.hpp>
@@ -62,8 +63,8 @@ class SidebarItem : public Box
     GenericEvent* getActiveEvent();
 
   private:
-    Rectangle* accent;
-    Label* label;
+    BRLS_BIND(Rectangle, accent, "brls/sidebar/item_accent");
+    BRLS_BIND(Label, label, "brls/sidebar/item_label");
 
     GenericEvent activeEvent;
 

@@ -29,6 +29,6 @@ class CaptionedImage : public brls::Box
     static brls::View* create();
 
   private:
-    brls::Image* image;
-    brls::Label* label;
+    BRLS_BIND(brls::Image, image, "image");
+    BRLS_BIND(brls::Label, label, "label");
 };

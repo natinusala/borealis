@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include <borealis/core/bind.hpp>
 #include <borealis/views/applet_frame.hpp>
 #include <borealis/views/sidebar.hpp>
 #include <functional>
@@ -41,7 +42,7 @@ class TabFrame : public AppletFrame
     static View* create();
 
   private:
-    Sidebar* sidebar;
+    BRLS_BIND(Sidebar, sidebar, "brls/tab_frame/sidebar");
 
     View* activeTab = nullptr;
 };

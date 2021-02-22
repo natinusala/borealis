@@ -76,6 +76,11 @@ Animatable::operator float() const
     return this->currentValue;
 }
 
+Animatable::operator float()
+{
+    return this->currentValue;
+}
+
 void Animatable::operator=(const float value)
 {
     this->reset(value);

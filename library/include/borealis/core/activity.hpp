@@ -76,6 +76,12 @@ class Activity
     View* getContentView();
 
     /**
+     * Returns the view with the corresponding id, or nullptr
+     * if it hasn't been found in the activity.
+     */
+    View* getView(std::string id);
+
+    /**
      * Resizes the activity to fit the window. Called when the activity
      * is created and when the window is resized (Switch dock counts as window resize).
      */
@@ -119,13 +125,6 @@ class Activity
     View* getDefaultFocus();
 
     void setAlpha(float alpha);
-
-  protected:
-    /**
-     * Returns the view with the corresponding id, or nullptr
-     * if it hasn't been found in the activity.
-     */
-    View* getView(std::string id);
 
   private:
     View* contentView = nullptr;

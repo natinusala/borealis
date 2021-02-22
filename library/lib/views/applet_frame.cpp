@@ -100,9 +100,6 @@ AppletFrame::AppletFrame()
 {
     this->inflateFromXMLString(appletFrameXML);
 
-    this->title = (Label*)this->getView("brls/applet_frame/title_label");
-    this->icon  = (Image*)this->getView("brls/applet_frame/title_icon");
-
     this->registerStringXMLAttribute("title", [this](std::string value) {
         this->setTitle(value);
     });
