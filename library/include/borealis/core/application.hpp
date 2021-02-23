@@ -55,6 +55,11 @@ namespace brls
     void frame(FrameContext* ctx) override;
 }; TODO: restore that */
 
+enum class InputType {
+    GAMEPAD,
+    TOUCH,
+};
+
 typedef std::function<View*(void)> XMLViewCreator;
 
 class Application
@@ -207,14 +212,11 @@ class Application
     static std::string getLocale();
     
     /**
-     * If touch input mode enabled, disable it and move focus on last view
-     * Returns true if touch mode was disabled.
+     * Returns the current input type.
      */
-    static bool dismissTouchMode();
-    
-    inline static bool getFocusTouchMode()
+    inline static InputType getInputType()
     {
-        return focusTouchMode;
+        return inputType;
     }
 
   private:
@@ -237,8 +239,10 @@ class Application
     inline static unsigned windowWidth, windowHeight;
 
     inline static View* currentFocus;
-
-    inline static bool focusTouchMode = false;
+    
+    static bool setInputType(InputType type);
+    
+    inline static InputType inputType = InputType::GAMEPAD;
     
     inline static unsigned blockInputsTokens = 0; // any value > 0 means inputs are blocked
 

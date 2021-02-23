@@ -272,7 +272,7 @@ void ScrollingFrame::onChildFocusGained(View* directChild, View* focusedView)
     this->childFocused = true;
 
     // Start scrolling
-    if (!Application::getFocusTouchMode())
+    if (Application::getInputType() != InputType::TOUCH)
         this->updateScrolling(true);
 
     Box::onChildFocusGained(directChild, focusedView);

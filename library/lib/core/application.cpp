@@ -177,7 +177,7 @@ bool Application::mainLoop()
     {
     case TouchEvent::START:
         Logger::debug("Touched at X: " + std::to_string(touchState.x) + ", Y: " + std::to_string(touchState.y));
-        Application::focusTouchMode = true;
+        Application::setInputType(InputType::TOUCH);
         firstResponder = Application::activitiesStack[Application::activitiesStack.size() - 1]
             ->getContentView()->hitTest(touchState.x, touchState.y);
         break;
@@ -255,7 +255,7 @@ void Application::quit()
 
 void Application::navigate(FocusDirection direction)
 {
-    if (Application::dismissTouchMode())
+    if (Application::setInputType(InputType::GAMEPAD))
         return;
     
     View* currentFocus = Application::currentFocus;
@@ -354,14 +354,18 @@ void Application::onControllerButtonPressed(enum ControllerButton button, bool r
     }
 }
 
-bool Application::dismissTouchMode()
+bool Application::setInputType(InputType type)
 {
-    if (Application::focusTouchMode) {
-        Application::focusTouchMode = false;
+    if (type == Application::inputType)
+        return false;
+    
+    Application::inputType = type;
+    
+    if (type == InputType::GAMEPAD) {
         Application::currentFocus->onFocusGained();
-        return true;
     }
-    return false;
+    
+    return true;
 }
 
 View* Application::getCurrentFocus()
@@ -372,7 +376,7 @@ View* Application::getCurrentFocus()
 bool Application::handleAction(char button)
 {
     if (button == BUTTON_A &&
-        Application::dismissTouchMode())
+        setInputType(InputType::GAMEPAD))
         return false;
     
     if (Application::activitiesStack.empty())

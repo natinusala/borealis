@@ -152,7 +152,7 @@ void View::frame(FrameContext* ctx)
         this->drawBackground(ctx->vg, ctx, style);
 
         // Draw shadow
-        if (this->shadowType != ShadowType::NONE && (this->showShadow || Application::getFocusTouchMode()))
+        if (this->shadowType != ShadowType::NONE && (this->showShadow || Application::getInputType() == InputType::TOUCH))
             this->drawShadow(ctx->vg, ctx, style, x, y, width, height);
 
         // Draw border
@@ -217,7 +217,7 @@ void View::playClickAnimation(bool reverse)
         reverse ? EasingFunction::quadraticOut : EasingFunction::quadraticIn);
 
     this->clickAlpha.setEndCallback([this, reverse](bool finished) {
-        if (reverse || Application::getFocusTouchMode())
+        if (reverse || Application::getInputType() == InputType::TOUCH)
             return;
 
         this->playClickAnimation(true);
@@ -459,7 +459,7 @@ void View::setAlpha(float alpha)
 // TODO: Slight glow all around
 void View::drawHighlight(NVGcontext* vg, Theme theme, float alpha, Style style, bool background)
 {
-    if (Application::getFocusTouchMode()) 
+    if (Application::getInputType() == InputType::TOUCH) 
         return;
 
     nvgSave(vg);
