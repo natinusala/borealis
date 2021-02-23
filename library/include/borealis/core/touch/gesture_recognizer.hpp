@@ -25,23 +25,36 @@ namespace brls
 
 class View;
 
+// Represents current gesture state
 enum class GestureState
 {
-    INTERRUPTED,
-    UNSURE,
-    START,
-    STAY,
-    END,
-    FAILED,
+    INTERRUPTED, // Gesture has been interupted, no callbacks will come
+    UNSURE, // Gesture started recognition and not sure if it should interupt other recognizers
+    START, // Gesture sure that it match to conditions and will interupt other recognizers
+    STAY, // Gesture in process, user still hold finger on screen
+    END, // User released it's finger from screen, final frame of gesture
+    FAILED, // Gesture failed conditions
 };
 
+// Superclass for all the other recognizers
 class GestureRecognizer
 {
 public:
+    // Main recognition loop, for internal usage only, should not be called anywhere, but Application
     virtual GestureState recognitionLoop(TouchState touch, View* view);
+    
+    // Returns true if recognizer plays default 'click' sound on touch start 
     virtual bool soundOnTouch();
+    
+    // Interupt this recognizer
+    // If onlyIfUnsureState == true recognizer will be interupted
+    // only if current state is UNSURE
     void interrupt(bool onlyIfUnsureState);
+    
+    // If false, this recognizer will be skipped
     bool enabled = true;
+    
+    // Get the current state of recognizer
 	GestureState getState() const { return state; }
 protected:
 	GestureState state;

@@ -24,11 +24,12 @@ namespace brls
 class PanGestureRecognizer;
 typedef std::function<void(PanGestureRecognizer*)> PanGestureRespond;
 
+// Axis of pan recognition start conditions
 enum class PanAxis
 {
-    HORIZONTAL,
-    VERTICAL,
-	NONE,
+    HORIZONTAL, // Triggers only on horizontal coordinate changes
+    VERTICAL, // Triggers only on vertical coordinate changes
+	NONE, // Any movement allowed
 };
 
 struct position
@@ -37,27 +38,52 @@ struct position
     float y;
 };
 
+// Contains info about acceleration on pan ends
 struct pan_acceleration
 {
+    // distances in pixels
     float distanceX;
     float distanceY;
+    
+    // times to cover the distance
     float timeX;
     float timeY;
 };
 
+// Pan recognizer
+// UNSURE: while touch not moved enough to recognize it as pan
+// START: gesture has been recognized
+// MOVE: gesture in process
+// END: finger released, acceleration will be calculated
+// FAILED: unsupported
 class PanGestureRecognizer: public GestureRecognizer
 {
 public:
 	PanGestureRecognizer(PanGestureRespond respond, PanAxis axis);
 	GestureState recognitionLoop(TouchState touch, View* view) override;
 	
+    // Get current X position
 	float getX() const { return x; }
+    
+    // Get current Y position
 	float getY() const { return y; }
+    
+    // Get start X position
 	float getStartX() const { return startX; }
+    
+    // Get start Y position
 	float getStartY() const { return startY; }
+    
+    // Get difference between current and previous positions by X
 	float getDeltaX() const { return deltaX; }
+    
+    // Get difference between current and previous positions by Y
 	float getDeltaY() const { return deltaY; }
+    
+    // 
 	PanAxis getAxis() const { return this->axis; }
+    
+    // Get acceleration info, actual data only when current state is END
     pan_acceleration getAcceleration() const { return this->acceleration; }
 private:
 	PanGestureRespond respond;
@@ -70,6 +96,7 @@ private:
 	PanAxis axis;
     pan_acceleration acceleration;
     std::vector<position> posHistory;
+    GestureState lastState;
 };
 
 };

@@ -39,7 +39,7 @@ CaptionedImage::CaptionedImage()
 
     this->forwardXMLAttribute("caption", this->label, "text");
 
-    this->addGestureRecognizer(new brls::TapGestureRecognizer([this](auto _){
+    this->addGestureRecognizer(new brls::TapGestureRecognizer([this](brls::TapGestureRecognizer* recognizer){
         brls::Application::giveFocus(this);
         return true;
     }));

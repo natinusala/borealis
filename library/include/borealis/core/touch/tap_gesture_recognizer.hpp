@@ -24,6 +24,12 @@ namespace brls
 class TapGestureRecognizer;
 typedef std::function<bool(TapGestureRecognizer*)> TapGestureRespond;
 
+// Tap recognizer
+// UNSURE: while touch moves inside of View bounds
+// START: unsupported
+// MOVE: unsupported
+// END: touch released inside View's bounds
+// FAILED: touch moved outside View's bounds
 class TapGestureRecognizer: public GestureRecognizer
 {
 public:

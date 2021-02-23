@@ -1036,13 +1036,24 @@ class View
         return this->actions;
     }
 
+    /**
+     * Get the vector of all gesture recognizers attached to that view.
+     */
     const std::vector<GestureRecognizer*>& getGestureRecognizers()
     {
         return this->gestureRecognizers;
     }
 
+    /**
+     * Interrupt every recognizer on this view.
+     * If onlyIfUnsureState == true, only recognizers with
+     * current state UNSURE will be interupted
+     */
     void interruptGestures(bool onlyIfUnsureState);
 
+    /**
+     * Add new gesture recognizer on this view.
+     */
     void addGestureRecognizer(GestureRecognizer* recognizer);
 
     /**

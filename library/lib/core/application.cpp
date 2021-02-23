@@ -178,6 +178,8 @@ bool Application::mainLoop()
     case TouchEvent::START:
         Logger::debug("Touched at X: " + std::to_string(touchState.x) + ", Y: " + std::to_string(touchState.y));
         Application::setInputType(InputType::TOUCH);
+            
+        // Search for first responder, which will be the root of recognition tree
         firstResponder = Application::activitiesStack[Application::activitiesStack.size() - 1]
             ->getContentView()->hitTest(touchState.x, touchState.y);
         break;

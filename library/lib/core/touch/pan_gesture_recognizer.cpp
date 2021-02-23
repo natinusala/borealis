@@ -33,11 +33,19 @@ GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view)
 {
     if (!enabled) return GestureState::FAILED;
     
+    // If not first touch frame and state is
+    // INTERRUPTED or FAILED, stop recognition
     if (touch.state != TouchEvent::START) 
     {
         if (this->state == GestureState::INTERRUPTED ||
-            this->state == GestureState::FAILED) 
+            this->state == GestureState::FAILED)
+        {
+            if (respond && this->state != lastState)
+                this->respond(this);
+            
+            lastState = this->state;
             return this->state;
+        }
     }
 
     switch (touch.state)
@@ -59,6 +67,7 @@ GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view)
         this->x = touch.x;
         this->y = touch.y;
 
+        // Check if pass any condition to set state START
         if (this->state == GestureState::UNSURE) 
         {
             if (fabs(this->startX - touch.x) > MAX_DELTA_MOVEMENT ||
@@ -87,7 +96,8 @@ GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view)
             else
                 this->state = GestureState::END;
         }
-            
+        
+        // If last touch frame, calculate acceleration
         if (this->state == GestureState::END)
         {
             float time = posHistory.size() / FPS;
@@ -118,7 +128,8 @@ GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view)
         break;
     }
     
-    posHistory.insert(posHistory.begin(), position{ .x = this->x, .y = this->y });
+    // Add current state to history
+    posHistory.insert(posHistory.begin(), position { .x = this->x, .y = this->y });
     while (posHistory.size() > HISTORY_LIMIT) {
         posHistory.pop_back();
     }
