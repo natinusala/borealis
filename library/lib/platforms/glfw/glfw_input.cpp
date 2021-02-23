@@ -15,8 +15,8 @@
     limitations under the License.
 */
 
-#include <borealis/core/logger.hpp>
 #include <borealis/core/application.hpp>
+#include <borealis/core/logger.hpp>
 #include <borealis/platforms/glfw/glfw_input.hpp>
 
 #define GLFW_INCLUDE_NONE
@@ -122,16 +122,25 @@ void GLFWInputManager::updateTouchState(TouchState* state)
     state->y = y / Application::windowScale;
 
     int clickState = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
-    if (clickState == GLFW_PRESS) {
-        if (oldTouch.state == TouchEvent::START || oldTouch.state == TouchEvent::STAY) {
+    if (clickState == GLFW_PRESS)
+    {
+        if (oldTouch.state == TouchEvent::START || oldTouch.state == TouchEvent::STAY)
+        {
             state->state = TouchEvent::STAY;
-        } else {
+        }
+        else
+        {
             state->state = TouchEvent::START;
         }
-    } else {
-        if (oldTouch.state == TouchEvent::END || oldTouch.state == TouchEvent::NONE) {
+    }
+    else
+    {
+        if (oldTouch.state == TouchEvent::END || oldTouch.state == TouchEvent::NONE)
+        {
             state->state = TouchEvent::NONE;
-        } else {
+        }
+        else
+        {
             state->state = TouchEvent::END;
         }
     }

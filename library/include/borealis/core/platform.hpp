@@ -91,7 +91,7 @@ class Platform
      */
     virtual InputManager* getInputManager() = 0;
 
-	/**
+    /**
  	 * Returns the FontLoader for the platform.
      * Cannot return nullptr.
      */

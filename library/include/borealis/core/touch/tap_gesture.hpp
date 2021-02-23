@@ -30,17 +30,18 @@ typedef std::function<bool(TapGestureRecognizer*)> TapGestureRespond;
 // MOVE: unsupported
 // END: touch released inside View's bounds
 // FAILED: touch moved outside View's bounds
-class TapGestureRecognizer: public GestureRecognizer
+class TapGestureRecognizer : public GestureRecognizer
 {
-public:
-	TapGestureRecognizer(TapGestureRespond respond, bool callbackOnEndOnly = true);
-	GestureState recognitionLoop(TouchState touch, View* view) override;
+  public:
+    TapGestureRecognizer(TapGestureRespond respond, bool callbackOnEndOnly = true);
+    GestureState recognitionLoop(TouchState touch, View* view) override;
     bool soundOnTouch() override;
-private:
-	TapGestureRespond respond;
+
+  private:
+    TapGestureRespond respond;
     bool playSound;
-	float x;
-	float y;
+    float x;
+    float y;
     bool callbackOnEndOnly;
     GestureState lastState;
 };

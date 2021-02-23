@@ -18,8 +18,8 @@
 
 #include <borealis/core/application.hpp>
 #include <borealis/core/i18n.hpp>
-#include <borealis/views/sidebar.hpp>
 #include <borealis/core/touch/tap_gesture.hpp>
+#include <borealis/views/sidebar.hpp>
 
 using namespace brls::literals;
 
@@ -77,30 +77,30 @@ SidebarItem::SidebarItem()
         },
         false, SOUND_CLICK_SIDEBAR);
 
-    this->addGestureRecognizer(new TapGestureRecognizer([this](TapGestureRecognizer* recogniser)
-    {
-        if (this->active) 
+    this->addGestureRecognizer(new TapGestureRecognizer([this](TapGestureRecognizer* recogniser) {
+        if (this->active)
             return true;
 
         this->playClickAnimation(recogniser->getState() != GestureState::UNSURE);
 
-        switch (recogniser->getState()) 
+        switch (recogniser->getState())
         {
-        case GestureState::UNSURE:
-            Application::getAudioPlayer()->play(SOUND_FOCUS_SIDEBAR);
-            break;
-        case GestureState::FAILED:
-        case GestureState::INTERRUPTED:
-            Application::getAudioPlayer()->play(SOUND_TOUCH_UNFOCUS);
-            break;
-        case GestureState::END:
-            Application::getAudioPlayer()->play(SOUND_CLICK_SIDEBAR);
-            Application::giveFocus(this);
-            break;
+            case GestureState::UNSURE:
+                Application::getAudioPlayer()->play(SOUND_FOCUS_SIDEBAR);
+                break;
+            case GestureState::FAILED:
+            case GestureState::INTERRUPTED:
+                Application::getAudioPlayer()->play(SOUND_TOUCH_UNFOCUS);
+                break;
+            case GestureState::END:
+                Application::getAudioPlayer()->play(SOUND_CLICK_SIDEBAR);
+                Application::giveFocus(this);
+                break;
         }
 
         return false;
-    }, false));
+    },
+        false));
 }
 
 void SidebarItem::setActive(bool active)

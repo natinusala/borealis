@@ -108,7 +108,7 @@ InputManager* SwitchPlatform::getInputManager()
 {
     return this->inputManager;
 }
-  
+
 FontLoader* SwitchPlatform::getFontLoader()
 {
     return this->fontLoader;

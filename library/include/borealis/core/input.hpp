@@ -72,7 +72,8 @@ typedef struct ControllerState
     float axes[_AXES_MAX]; // from 0.0f to 1.0f
 } ControllerState;
 
-enum class TouchEvent {
+enum class TouchEvent
+{
     START,
     STAY,
     END,

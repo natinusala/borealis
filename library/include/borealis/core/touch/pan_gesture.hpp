@@ -29,7 +29,7 @@ enum class PanAxis
 {
     HORIZONTAL, // Triggers only on horizontal coordinate changes
     VERTICAL, // Triggers only on vertical coordinate changes
-	NONE, // Any movement allowed
+    NONE, // Any movement allowed
 };
 
 struct position
@@ -44,7 +44,7 @@ struct pan_acceleration
     // distances in pixels
     float distanceX;
     float distanceY;
-    
+
     // times to cover the distance
     float timeX;
     float timeY;
@@ -56,44 +56,45 @@ struct pan_acceleration
 // MOVE: gesture in process
 // END: finger released, acceleration will be calculated
 // FAILED: unsupported
-class PanGestureRecognizer: public GestureRecognizer
+class PanGestureRecognizer : public GestureRecognizer
 {
-public:
-	PanGestureRecognizer(PanGestureRespond respond, PanAxis axis);
-	GestureState recognitionLoop(TouchState touch, View* view) override;
-	
+  public:
+    PanGestureRecognizer(PanGestureRespond respond, PanAxis axis);
+    GestureState recognitionLoop(TouchState touch, View* view) override;
+
     // Get current X position
-	float getX() const { return x; }
-    
+    float getX() const { return x; }
+
     // Get current Y position
-	float getY() const { return y; }
-    
+    float getY() const { return y; }
+
     // Get start X position
-	float getStartX() const { return startX; }
-    
+    float getStartX() const { return startX; }
+
     // Get start Y position
-	float getStartY() const { return startY; }
-    
+    float getStartY() const { return startY; }
+
     // Get difference between current and previous positions by X
-	float getDeltaX() const { return deltaX; }
-    
+    float getDeltaX() const { return deltaX; }
+
     // Get difference between current and previous positions by Y
-	float getDeltaY() const { return deltaY; }
-    
-    // 
-	PanAxis getAxis() const { return this->axis; }
-    
+    float getDeltaY() const { return deltaY; }
+
+    //
+    PanAxis getAxis() const { return this->axis; }
+
     // Get acceleration info, actual data only when current state is END
     pan_acceleration getAcceleration() const { return this->acceleration; }
-private:
-	PanGestureRespond respond;
-	float x;
-	float y;
-	float startX;
-	float startY;
-	float deltaX;
-	float deltaY;
-	PanAxis axis;
+
+  private:
+    PanGestureRespond respond;
+    float x;
+    float y;
+    float startX;
+    float startY;
+    float deltaX;
+    float deltaY;
+    PanAxis axis;
     pan_acceleration acceleration;
     std::vector<position> posHistory;
     GestureState lastState;

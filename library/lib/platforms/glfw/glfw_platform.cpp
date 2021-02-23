@@ -93,7 +93,7 @@ InputManager* GLFWPlatform::getInputManager()
 {
     return this->inputManager;
 }
-  
+
 FontLoader* GLFWPlatform::getFontLoader()
 {
     return this->fontLoader;

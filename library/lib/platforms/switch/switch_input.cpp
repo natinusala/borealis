@@ -72,11 +72,12 @@ void SwitchInputManager::updateTouchState(TouchState* state)
     // Get gamepad state
     float x = oldTouch.x;
     float y = oldTouch.y;
-    
-    HidTouchScreenState hidState={0};
-    if (hidGetTouchScreenStates(&hidState, 1)) 
+
+    HidTouchScreenState hidState = { 0 };
+    if (hidGetTouchScreenStates(&hidState, 1))
     {
-        if (hidState.count > 0) {
+        if (hidState.count > 0)
+        {
             x = hidState.touches[0].x / Application::windowScale;
             y = hidState.touches[0].y / Application::windowScale;
         }
@@ -85,16 +86,25 @@ void SwitchInputManager::updateTouchState(TouchState* state)
     state->x = x;
     state->y = y;
 
-    if (hidState.count > 0) {
-        if (oldTouch.state == TouchEvent::START || oldTouch.state == TouchEvent::STAY) {
+    if (hidState.count > 0)
+    {
+        if (oldTouch.state == TouchEvent::START || oldTouch.state == TouchEvent::STAY)
+        {
             state->state = TouchEvent::STAY;
-        } else {
+        }
+        else
+        {
             state->state = TouchEvent::START;
         }
-    } else {
-        if (oldTouch.state == TouchEvent::END || oldTouch.state == TouchEvent::NONE) {
+    }
+    else
+    {
+        if (oldTouch.state == TouchEvent::END || oldTouch.state == TouchEvent::NONE)
+        {
             state->state = TouchEvent::NONE;
-        } else {
+        }
+        else
+        {
             state->state = TouchEvent::END;
         }
     }

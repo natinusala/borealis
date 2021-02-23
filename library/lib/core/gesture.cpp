@@ -26,7 +26,7 @@ GestureState GestureRecognizer::recognitionLoop(TouchState touch, View* view)
 
 void GestureRecognizer::interrupt(bool onlyIfUnsureState)
 {
-    if (onlyIfUnsureState && this->state != GestureState::UNSURE) 
+    if (onlyIfUnsureState && this->state != GestureState::UNSURE)
         return;
 
     this->state = GestureState::INTERRUPTED;

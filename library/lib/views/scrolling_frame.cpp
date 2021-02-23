@@ -16,9 +16,9 @@
 */
 
 #include <borealis/core/application.hpp>
+#include <borealis/core/touch/pan_gesture.hpp>
 #include <borealis/core/util.hpp>
 #include <borealis/views/scrolling_frame.hpp>
-#include <borealis/core/touch/pan_gesture.hpp>
 
 namespace brls
 {
@@ -63,17 +63,16 @@ ScrollingFrame::ScrollingFrame()
 
     this->setMaximumAllowedXMLElements(1);
 
-    addGestureRecognizer(new PanGestureRecognizer([this](PanGestureRecognizer* pan)
-    {
+    addGestureRecognizer(new PanGestureRecognizer([this](PanGestureRecognizer* pan) {
         float contentHeight = this->getContentHeight();
 
         static float startY;
-        if (pan->getState() == GestureState::START) 
+        if (pan->getState() == GestureState::START)
             startY = this->scrollY * contentHeight;
 
-        float newScroll = (startY - (pan->getY() - pan->getStartY())) / contentHeight;
+        float newScroll   = (startY - (pan->getY() - pan->getStartY())) / contentHeight;
         float bottomLimit = (contentHeight - this->getScrollingAreaHeight()) / contentHeight;
-        
+
         // Bottom boundary
         if (newScroll > bottomLimit)
             newScroll = bottomLimit;
@@ -87,32 +86,33 @@ ScrollingFrame::ScrollingFrame()
             startScrolling(true, newScroll);
         else
         {
-            float time = pan->getAcceleration().timeY * 1000.0f;
+            float time   = pan->getAcceleration().timeY * 1000.0f;
             float newPos = this->scrollY * contentHeight + pan->getAcceleration().distanceY;
-            
+
             // Bottom boundary
             float bottomLimit = contentHeight - this->getScrollingAreaHeight();
             if (newPos > bottomLimit)
             {
-                time = time * (1 - fabs(newPos - bottomLimit) / fabs(pan->getAcceleration().distanceY));
+                time   = time * (1 - fabs(newPos - bottomLimit) / fabs(pan->getAcceleration().distanceY));
                 newPos = bottomLimit;
             }
-            
+
             // Top boundary
             if (newPos < 0)
             {
-                time = time * (1 - fabs(newPos) / fabs(pan->getAcceleration().distanceY));
+                time   = time * (1 - fabs(newPos) / fabs(pan->getAcceleration().distanceY));
                 newPos = 0;
             }
-            
+
             newScroll = newPos / contentHeight;
-            
+
             if (newScroll == this->scrollY || time < 100)
                 return;
 
             animateScrolling(newScroll, time);
         }
-    }, PanAxis::VERTICAL));
+    },
+        PanAxis::VERTICAL));
 }
 
 void ScrollingFrame::draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx)
@@ -228,13 +228,12 @@ void ScrollingFrame::startScrolling(bool animated, float newScroll)
         this->scrollY = newScroll;
         this->invalidate();
     }
-
 }
 
 void ScrollingFrame::animateScrolling(float newScroll, float time)
 {
     this->scrollY.stop();
-    
+
     this->scrollY.reset();
 
     this->scrollY.addStep(newScroll, time, EasingFunction::quadraticOut);
@@ -244,7 +243,7 @@ void ScrollingFrame::animateScrolling(float newScroll, float time)
     });
 
     this->scrollY.start();
-    
+
     this->invalidate();
 }
 

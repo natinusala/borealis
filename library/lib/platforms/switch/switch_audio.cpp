@@ -122,7 +122,7 @@ bool SwitchAudioPlayer::play(enum Sound sound, float pitch)
     }
 
     // Play the sound
-	plsrPlayerSetPitch(this->sounds[sound], pitch);
+    plsrPlayerSetPitch(this->sounds[sound], pitch);
     PLSR_RC rc = plsrPlayerPlay(this->sounds[sound]);
     if (PLSR_RC_FAILED(rc))
     {

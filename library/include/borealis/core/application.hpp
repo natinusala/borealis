@@ -56,7 +56,8 @@ namespace brls
 }; TODO: restore that */
 
 // Input types for entire app
-enum class InputType {
+enum class InputType
+{
     GAMEPAD, // Gamepad or keyboard
     TOUCH, // Touch screen
 };
@@ -211,7 +212,7 @@ class Application
      * Returns the current system locale.
      */
     static std::string getLocale();
-    
+
     /**
      * Returns the current input type.
      */
@@ -240,11 +241,11 @@ class Application
     inline static unsigned windowWidth, windowHeight;
 
     inline static View* currentFocus;
-    
+
     static bool setInputType(InputType type);
-    
+
     inline static InputType inputType = InputType::GAMEPAD;
-    
+
     inline static unsigned blockInputsTokens = 0; // any value > 0 means inputs are blocked
 
     inline static std::string commonFooter = "";

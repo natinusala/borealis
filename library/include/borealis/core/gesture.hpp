@@ -16,9 +16,8 @@
 
 #pragma once
 
-#include <functional>
-
 #include <borealis/core/input.hpp>
+#include <functional>
 
 namespace brls
 {
@@ -39,29 +38,30 @@ enum class GestureState
 // Superclass for all the other recognizers
 class GestureRecognizer
 {
-public:
+  public:
     // Main recognition loop, for internal usage only, should not be called anywhere, but Application
     virtual GestureState recognitionLoop(TouchState touch, View* view);
-    
-    // Returns true if recognizer plays default 'click' sound on touch start 
+
+    // Returns true if recognizer plays default 'click' sound on touch start
     virtual bool soundOnTouch();
-    
+
     // Interupt this recognizer
     // If onlyIfUnsureState == true recognizer will be interupted
     // only if current state is UNSURE
     void interrupt(bool onlyIfUnsureState);
-    
+
     // If false, this recognizer will be skipped
     bool isEnabled() const { return this->enabled; }
-    
+
     // If false, this recognizer will be skipped
     void setEnabled(bool enabled) { this->enabled = enabled; }
-    
+
     // Get the current state of recognizer
-	GestureState getState() const { return state; }
-protected:
-	GestureState state = GestureState::FAILED;
-    bool enabled = true;
+    GestureState getState() const { return state; }
+
+  protected:
+    GestureState state = GestureState::FAILED;
+    bool enabled       = true;
 };
 
 } // namespace brls

@@ -98,9 +98,9 @@ NVGpaint View::a(NVGpaint paint)
 
 void View::interruptGestures(bool onlyIfUnsureState)
 {
-    for (GestureRecognizer* recognizer : getGestureRecognizers()) 
+    for (GestureRecognizer* recognizer : getGestureRecognizers())
         recognizer->interrupt(onlyIfUnsureState);
-    
+
     if (parent)
         parent->interruptGestures(onlyIfUnsureState);
 }
@@ -113,10 +113,11 @@ void View::addGestureRecognizer(GestureRecognizer* recognizer)
 bool View::gestureRecognizerRequest(TouchState touch, View* firstResponder)
 {
     bool res = touch.state == TouchEvent::START;
-    for (GestureRecognizer* recognizer : getGestureRecognizers()) 
+    for (GestureRecognizer* recognizer : getGestureRecognizers())
     {
         GestureState state = recognizer->recognitionLoop(touch, this);
-        if (res) res &= recognizer->isEnabled() && recognizer->soundOnTouch();
+        if (res)
+            res &= recognizer->isEnabled() && recognizer->soundOnTouch();
         if (state == GestureState::START)
             firstResponder->interruptGestures(true);
     }
@@ -459,7 +460,7 @@ void View::setAlpha(float alpha)
 // TODO: Slight glow all around
 void View::drawHighlight(NVGcontext* vg, Theme theme, float alpha, Style style, bool background)
 {
-    if (Application::getInputType() == InputType::TOUCH) 
+    if (Application::getInputType() == InputType::TOUCH)
         return;
 
     nvgSave(vg);
@@ -1274,7 +1275,7 @@ View::~View()
 
     for (tinyxml2::XMLDocument* document : this->boundDocuments)
         delete document;
-    
+
     for (GestureRecognizer* recognizer : this->gestureRecognizers)
         delete recognizer;
 }
@@ -2048,11 +2049,7 @@ View* View::getDefaultFocus()
 
 bool View::pointInside(double x, double y)
 {
-    return 
-        getX() <= x && 
-        getWidth() + getX() >= x && 
-        getY() <= y && 
-        getHeight() + getY() >= y;
+    return getX() <= x && getWidth() + getX() >= x && getY() <= y && getHeight() + getY() >= y;
 }
 
 View* View::hitTest(double x, double y)
@@ -2060,9 +2057,9 @@ View* View::hitTest(double x, double y)
     // Check if can focus ourself first
     if (!this->isFocusable())
         return nullptr;
-        
+
     Logger::debug(describe() + ": --- X: " + std::to_string((int)getX()) + ", Y: " + std::to_string((int)getY()) + ", W: " + std::to_string((int)getWidth()) + ", H: " + std::to_string((int)getHeight()));
-        
+
     if (pointInside(x, y))
     {
         Logger::debug(describe() + ": OK");

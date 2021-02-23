@@ -20,22 +20,24 @@ namespace brls
 {
 
 TapGestureRecognizer::TapGestureRecognizer(TapGestureRespond respond, bool callbackOnEndOnly)
-    : respond(respond), callbackOnEndOnly(callbackOnEndOnly), playSound(true)
+    : respond(respond)
+    , callbackOnEndOnly(callbackOnEndOnly)
+    , playSound(true)
 {
 }
 
-GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view) 
+GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view)
 {
-    if (!enabled) return GestureState::FAILED;
-    
+    if (!enabled)
+        return GestureState::FAILED;
+
     // If not first touch frame and state is
     // INTERRUPTED or FAILED, stop recognition
-    if (touch.state != TouchEvent::START) 
+    if (touch.state != TouchEvent::START)
     {
-        if (this->state == GestureState::INTERRUPTED ||
-            this->state == GestureState::FAILED) 
+        if (this->state == GestureState::INTERRUPTED || this->state == GestureState::FAILED)
         {
-            if (respond && !this->callbackOnEndOnly && this->state != lastState) 
+            if (respond && !this->callbackOnEndOnly && this->state != lastState)
                 this->respond(this);
 
             lastState = this->state;
@@ -45,33 +47,32 @@ GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view)
 
     switch (touch.state)
     {
-    case TouchEvent::START:
-        this->state = GestureState::UNSURE;
-        this->x = touch.x;
-        this->y = touch.y;
+        case TouchEvent::START:
+            this->state = GestureState::UNSURE;
+            this->x     = touch.x;
+            this->y     = touch.y;
 
-        if (respond && !this->callbackOnEndOnly) 
-            this->playSound = this->respond(this);
-        break;
-    case TouchEvent::STAY:
-        // Check if touch is out view's bounds
-        // if true, FAIL recognition
-        if (touch.x < view->getX() || touch.x > view->getX() + view->getWidth() ||
-            touch.y < view->getY() || touch.y > view->getY() + view->getHeight())
-        {
-            this->state = GestureState::FAILED;
-            if (respond && !this->callbackOnEndOnly) 
+            if (respond && !this->callbackOnEndOnly)
+                this->playSound = this->respond(this);
+            break;
+        case TouchEvent::STAY:
+            // Check if touch is out view's bounds
+            // if true, FAIL recognition
+            if (touch.x < view->getX() || touch.x > view->getX() + view->getWidth() || touch.y < view->getY() || touch.y > view->getY() + view->getHeight())
+            {
+                this->state = GestureState::FAILED;
+                if (respond && !this->callbackOnEndOnly)
+                    this->respond(this);
+            }
+            break;
+        case TouchEvent::END:
+            this->state = GestureState::END;
+            if (respond)
                 this->respond(this);
-        }
-        break;
-    case TouchEvent::END:
-        this->state = GestureState::END;
-        if (respond) 
-            this->respond(this);
-        break;
-    case TouchEvent::NONE:
-        this->state = GestureState::FAILED;
-        break;
+            break;
+        case TouchEvent::NONE:
+            this->state = GestureState::FAILED;
+            break;
     }
 
     lastState = this->state;

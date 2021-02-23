@@ -166,27 +166,29 @@ bool Application::mainLoop()
 
     // Input
     ControllerState controllerState = {};
-    TouchState touchState = {};
+    TouchState touchState           = {};
 
     InputManager* inputManager = Application::platform->getInputManager();
     inputManager->updateTouchState(&touchState);
     inputManager->updateControllerState(&controllerState);
-    
+
     // Touch controller events
     switch (touchState.state)
     {
-    case TouchEvent::START:
-        Logger::debug("Touched at X: " + std::to_string(touchState.x) + ", Y: " + std::to_string(touchState.y));
-        Application::setInputType(InputType::TOUCH);
-            
-        // Search for first responder, which will be the root of recognition tree
-        firstResponder = Application::activitiesStack[Application::activitiesStack.size() - 1]
-            ->getContentView()->hitTest(touchState.x, touchState.y);
-        break;
-    case TouchEvent::NONE:
-        firstResponder = nullptr;
-        break;
-    default: break;
+        case TouchEvent::START:
+            Logger::debug("Touched at X: " + std::to_string(touchState.x) + ", Y: " + std::to_string(touchState.y));
+            Application::setInputType(InputType::TOUCH);
+
+            // Search for first responder, which will be the root of recognition tree
+            firstResponder = Application::activitiesStack[Application::activitiesStack.size() - 1]
+                                 ->getContentView()
+                                 ->hitTest(touchState.x, touchState.y);
+            break;
+        case TouchEvent::NONE:
+            firstResponder = nullptr;
+            break;
+        default:
+            break;
     }
 
     if (firstResponder)
@@ -259,7 +261,7 @@ void Application::navigate(FocusDirection direction)
 {
     if (Application::setInputType(InputType::GAMEPAD))
         return;
-    
+
     View* currentFocus = Application::currentFocus;
 
     // Do nothing if there is no current focus
@@ -329,7 +331,7 @@ void Application::onControllerButtonPressed(enum ControllerButton button, bool r
         return;
 
     Application::repetitionOldFocus = Application::currentFocus;
-    
+
     // Actions
     if (Application::handleAction(button))
         return;
@@ -360,13 +362,14 @@ bool Application::setInputType(InputType type)
 {
     if (type == Application::inputType)
         return false;
-    
+
     Application::inputType = type;
-    
-    if (type == InputType::GAMEPAD) {
+
+    if (type == InputType::GAMEPAD)
+    {
         Application::currentFocus->onFocusGained();
     }
-    
+
     return true;
 }
 
@@ -377,10 +380,9 @@ View* Application::getCurrentFocus()
 
 bool Application::handleAction(char button)
 {
-    if (button == BUTTON_A &&
-        setInputType(InputType::GAMEPAD))
+    if (button == BUTTON_A && setInputType(InputType::GAMEPAD))
         return false;
-    
+
     if (Application::activitiesStack.empty())
         return false;
 
@@ -402,7 +404,7 @@ bool Application::handleAction(char button)
 
             if (action.available)
             {
-                
+
                 if (action.actionListener(hintParent))
                 {
                     if (button == BUTTON_A)

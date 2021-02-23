@@ -18,8 +18,8 @@
 #include <math.h>
 
 #include <borealis/core/application.hpp>
-#include <borealis/views/button.hpp>
 #include <borealis/core/touch/tap_gesture.hpp>
+#include <borealis/views/button.hpp>
 
 namespace brls
 {
@@ -88,36 +88,37 @@ Button::Button()
 
     this->applyStyle();
 
-    this->addGestureRecognizer(new TapGestureRecognizer([this](TapGestureRecognizer* recogniser)
-    {
+    this->addGestureRecognizer(new TapGestureRecognizer([this](TapGestureRecognizer* recogniser) {
         Application::giveFocus(this);
         for (auto& action : getActions())
         {
             if (action.button != static_cast<enum ControllerButton>(BUTTON_A))
                 continue;
 
-            if (action.available) {
+            if (action.available)
+            {
                 this->playClickAnimation(recogniser->getState() != GestureState::UNSURE);
 
-                switch (recogniser->getState()) 
+                switch (recogniser->getState())
                 {
-                case GestureState::UNSURE:
-                    Application::getAudioPlayer()->play(SOUND_FOCUS_CHANGE);
-                    break;
-                case GestureState::FAILED:
-                case GestureState::INTERRUPTED:
-                    Application::getAudioPlayer()->play(SOUND_TOUCH_UNFOCUS);
-                    break;
-                case GestureState::END:
-                    if (action.actionListener(this))
-                        Application::getAudioPlayer()->play(action.sound);
-                    break;
+                    case GestureState::UNSURE:
+                        Application::getAudioPlayer()->play(SOUND_FOCUS_CHANGE);
+                        break;
+                    case GestureState::FAILED:
+                    case GestureState::INTERRUPTED:
+                        Application::getAudioPlayer()->play(SOUND_TOUCH_UNFOCUS);
+                        break;
+                    case GestureState::END:
+                        if (action.actionListener(this))
+                            Application::getAudioPlayer()->play(action.sound);
+                        break;
                 }
                 return false;
             }
         }
         return true;
-    }, false));
+    },
+        false));
 }
 
 void Button::applyStyle()
