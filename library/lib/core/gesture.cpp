@@ -14,7 +14,7 @@
     limitations under the License.
 */
 
-#include <borealis/core/touch/gesture_recognizer.hpp>
+#include <borealis/core/gesture.hpp>
 
 namespace brls
 {

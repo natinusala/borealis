@@ -19,9 +19,9 @@ borealis_files = files(
     'lib/core/box.cpp',
     'lib/core/bind.cpp',
 
-    'lib/core/touch/gesture_recognizer.cpp',
-    'lib/core/touch/tap_gesture_recognizer.cpp',
-    'lib/core/touch/pan_gesture_recognizer.cpp',
+    'lib/core/gesture.cpp',
+    'lib/core/touch/tap_gesture.cpp',
+    'lib/core/touch/pan_gesture.cpp',
 
     'lib/platforms/glfw/glfw_platform.cpp',
     'lib/platforms/glfw/glfw_video.cpp',

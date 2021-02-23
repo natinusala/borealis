@@ -52,12 +52,16 @@ public:
     void interrupt(bool onlyIfUnsureState);
     
     // If false, this recognizer will be skipped
-    bool enabled = true;
+    bool isEnabled() const { return this->enabled; }
+    
+    // If false, this recognizer will be skipped
+    void setEnabled(bool enabled) { this->enabled = enabled; }
     
     // Get the current state of recognizer
 	GestureState getState() const { return state; }
 protected:
-	GestureState state;
+	GestureState state = GestureState::FAILED;
+    bool enabled = true;
 };
 
-};
+} // namespace brls

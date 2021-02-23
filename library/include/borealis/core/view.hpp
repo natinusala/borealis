@@ -27,7 +27,7 @@
 #include <borealis/core/animation.hpp>
 #include <borealis/core/event.hpp>
 #include <borealis/core/frame_context.hpp>
-#include <borealis/core/touch/gesture_recognizer.hpp>
+#include <borealis/core/gesture.hpp>
 #include <borealis/core/util.hpp>
 #include <functional>
 #include <memory>

@@ -19,7 +19,7 @@
 #include <borealis/core/application.hpp>
 #include <borealis/core/i18n.hpp>
 #include <borealis/views/sidebar.hpp>
-#include <borealis/core/touch/tap_gesture_recognizer.hpp>
+#include <borealis/core/touch/tap_gesture.hpp>
 
 using namespace brls::literals;
 

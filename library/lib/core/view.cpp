@@ -116,7 +116,7 @@ bool View::gestureRecognizerRequest(TouchState touch, View* firstResponder)
     for (GestureRecognizer* recognizer : getGestureRecognizers()) 
     {
         GestureState state = recognizer->recognitionLoop(touch, this);
-        if (res) res &= recognizer->enabled && recognizer->soundOnTouch();
+        if (res) res &= recognizer->isEnabled() && recognizer->soundOnTouch();
         if (state == GestureState::START)
             firstResponder->interruptGestures(true);
     }

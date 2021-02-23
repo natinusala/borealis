@@ -40,6 +40,7 @@
 #include <borealis/core/timer.hpp>
 #include <borealis/core/video.hpp>
 #include <borealis/core/view.hpp>
+#include <borealis/core/gesture.hpp>
 
 //Views
 #include <borealis/views/applet_frame.hpp>
@@ -54,5 +55,5 @@
 #include <borealis/views/tab_frame.hpp>
 
 //Gestures
-#include <borealis/core/touch/tap_gesture_recognizer.hpp>
-#include <borealis/core/touch/pan_gesture_recognizer.hpp>
+#include <borealis/core/touch/tap_gesture.hpp>
+#include <borealis/core/touch/pan_gesture.hpp>

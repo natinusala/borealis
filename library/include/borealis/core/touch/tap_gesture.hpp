@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "gesture_recognizer.hpp"
+#include <borealis/core/gesture.hpp>
 
 namespace brls
 {

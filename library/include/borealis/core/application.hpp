@@ -55,9 +55,10 @@ namespace brls
     void frame(FrameContext* ctx) override;
 }; TODO: restore that */
 
+// Input types for entire app
 enum class InputType {
-    GAMEPAD,
-    TOUCH,
+    GAMEPAD, // Gamepad or keyboard
+    TOUCH, // Touch screen
 };
 
 typedef std::function<View*(void)> XMLViewCreator;
