@@ -60,7 +60,7 @@ class PanGestureRecognizer : public GestureRecognizer
 {
   public:
     PanGestureRecognizer(PanGestureRespond respond, PanAxis axis);
-    GestureState recognitionLoop(TouchState touch, View* view) override;
+    GestureState recognitionLoop(TouchState touch, View* view, bool* shouldPlayDefaultSound) override;
 
     // Get current X position
     float getX() const { return x; }

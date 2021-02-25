@@ -22,11 +22,10 @@ namespace brls
 TapGestureRecognizer::TapGestureRecognizer(TapGestureRespond respond, bool callbackOnEndOnly)
     : respond(respond)
     , callbackOnEndOnly(callbackOnEndOnly)
-    , playSound(true)
 {
 }
 
-GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view)
+GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view, bool* shouldPlayDefaultSound)
 {
     if (!enabled)
         return GestureState::FAILED;
@@ -53,7 +52,7 @@ GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view)
             this->y     = touch.y;
 
             if (respond && !this->callbackOnEndOnly)
-                this->playSound = this->respond(this);
+                *shouldPlayDefaultSound &= this->respond(this);
             break;
         case TouchEvent::STAY:
             // Check if touch is out view's bounds
@@ -77,11 +76,6 @@ GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view)
 
     lastState = this->state;
     return this->state;
-}
-
-bool TapGestureRecognizer::soundOnTouch()
-{
-    return this->playSound;
 }
 
 };

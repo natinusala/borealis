@@ -40,10 +40,7 @@ class GestureRecognizer
 {
   public:
     // Main recognition loop, for internal usage only, should not be called anywhere, but Application
-    virtual GestureState recognitionLoop(TouchState touch, View* view);
-
-    // Returns true if recognizer plays default 'click' sound on touch start
-    virtual bool soundOnTouch();
+    virtual GestureState recognitionLoop(TouchState touch, View* view, bool* shouldPlayDefaultSound);
 
     // Interupt this recognizer
     // If onlyIfUnsureState == true recognizer will be interupted

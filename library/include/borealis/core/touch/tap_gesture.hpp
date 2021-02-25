@@ -34,12 +34,10 @@ class TapGestureRecognizer : public GestureRecognizer
 {
   public:
     TapGestureRecognizer(TapGestureRespond respond, bool callbackOnEndOnly = true);
-    GestureState recognitionLoop(TouchState touch, View* view) override;
-    bool soundOnTouch() override;
+    GestureState recognitionLoop(TouchState touch, View* view, bool* shouldPlayDefaultSound) override;
 
   private:
     TapGestureRespond respond;
-    bool playSound;
     float x;
     float y;
     bool callbackOnEndOnly;

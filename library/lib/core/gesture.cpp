@@ -19,7 +19,7 @@
 namespace brls
 {
 
-GestureState GestureRecognizer::recognitionLoop(TouchState touch, View* view)
+GestureState GestureRecognizer::recognitionLoop(TouchState touch, View* view, bool* shouldPlayDefaultSound)
 {
     return GestureState::FAILED;
 }
@@ -30,11 +30,6 @@ void GestureRecognizer::interrupt(bool onlyIfUnsureState)
         return;
 
     this->state = GestureState::INTERRUPTED;
-}
-
-bool GestureRecognizer::soundOnTouch()
-{
-    return true;
 }
 
 }

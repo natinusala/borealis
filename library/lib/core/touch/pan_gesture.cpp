@@ -30,7 +30,7 @@ PanGestureRecognizer::PanGestureRecognizer(PanGestureRespond respond, PanAxis ax
 {
 }
 
-GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view)
+GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view, bool* shouldPlayDefaultSound)
 {
     if (!enabled)
         return GestureState::FAILED;
