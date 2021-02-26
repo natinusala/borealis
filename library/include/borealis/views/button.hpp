@@ -163,6 +163,10 @@ class Button : public Box
      */
     void setState(ButtonState state);
 
+
+    /**
+     * Sets the text of the button. 
+     */
     void setText(std::string text);
 
   private:
