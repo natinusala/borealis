@@ -163,6 +163,8 @@ class Button : public Box
      */
     void setState(ButtonState state);
 
+    void setText(std::string text);
+
   private:
     const ButtonStyle* style = &BUTTONSTYLE_DEFAULT;
     ButtonState state        = ButtonState::ENABLED;

@@ -165,6 +165,10 @@ void Button::setState(ButtonState state)
     this->applyStyle();
 }
 
+void Button::setText(std::string text) {
+    this->label->setText(text);
+}
+
 View* Button::create()
 {
     return new Button();
