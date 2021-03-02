@@ -42,7 +42,7 @@
 #include <borealis/core/video.hpp>
 #include <borealis/core/view.hpp>
 
-//Views
+// Views
 #include <borealis/views/applet_frame.hpp>
 #include <borealis/views/background.hpp>
 #include <borealis/views/button.hpp>
@@ -54,6 +54,6 @@
 #include <borealis/views/sidebar.hpp>
 #include <borealis/views/tab_frame.hpp>
 
-//Gestures
+// Gestures
 #include <borealis/core/touch/pan_gesture.hpp>
 #include <borealis/core/touch/tap_gesture.hpp>

@@ -70,10 +70,11 @@ void SwitchInputManager::updateControllerState(ControllerState* state)
 void SwitchInputManager::updateTouchState(TouchState* state)
 {
     // Get gamepad state
-    float x = oldTouch.x;
-    float y = oldTouch.y;
+    static float x = oldTouch.x;
+    static float y = oldTouch.y;
 
-    HidTouchScreenState hidState = { 0 };
+    static HidTouchScreenState hidState = { 0 };
+    
     if (hidGetTouchScreenStates(&hidState, 1))
     {
         if (hidState.count > 0)

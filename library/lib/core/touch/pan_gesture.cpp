@@ -83,7 +83,7 @@ GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view,
                             if (fabs(deltaX) < fabs(deltaY))
                                 this->state = GestureState::START;
                             break;
-                        case PanAxis::NONE:
+                        case PanAxis::ANY:
                             this->state = GestureState::START;
                             break;
                     }
@@ -127,7 +127,7 @@ GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view,
     }
 
     // Add current state to history
-    posHistory.insert(posHistory.begin(), position { .x = this->x, .y = this->y });
+    posHistory.insert(posHistory.begin(), PanPosition { .x = this->x, .y = this->y });
     while (posHistory.size() > HISTORY_LIMIT)
     {
         posHistory.pop_back();

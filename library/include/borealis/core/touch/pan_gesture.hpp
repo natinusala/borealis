@@ -29,17 +29,17 @@ enum class PanAxis
 {
     HORIZONTAL, // Triggers only on horizontal coordinate changes
     VERTICAL, // Triggers only on vertical coordinate changes
-    NONE, // Any movement allowed
+    ANY, // Any movement allowed
 };
 
-struct position
+struct PanPosition
 {
     float x;
     float y;
 };
 
 // Contains info about acceleration on pan ends
-struct pan_acceleration
+struct PanAcceleration
 {
     // distances in pixels
     float distanceX;
@@ -84,7 +84,7 @@ class PanGestureRecognizer : public GestureRecognizer
     PanAxis getAxis() const { return this->axis; }
 
     // Get acceleration info, actual data only when current state is END
-    pan_acceleration getAcceleration() const { return this->acceleration; }
+    PanAcceleration getAcceleration() const { return this->acceleration; }
 
   private:
     PanGestureRespond respond;
@@ -95,8 +95,8 @@ class PanGestureRecognizer : public GestureRecognizer
     float deltaX;
     float deltaY;
     PanAxis axis;
-    pan_acceleration acceleration;
-    std::vector<position> posHistory;
+    PanAcceleration acceleration;
+    std::vector<PanPosition> posHistory;
     GestureState lastState;
 };
 

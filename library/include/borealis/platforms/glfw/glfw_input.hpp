@@ -36,7 +36,6 @@ class GLFWInputManager : public InputManager
 
   private:
     GLFWwindow* window;
-    TouchState oldTouch;
 };
 
 };

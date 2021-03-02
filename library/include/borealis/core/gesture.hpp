@@ -31,7 +31,7 @@ enum class GestureState
     UNSURE, // Gesture started recognition and not sure if it should interupt other recognizers
     START, // Gesture sure that it match to conditions and will interupt other recognizers
     STAY, // Gesture in process, user still hold finger on screen
-    END, // User released it's finger from screen, final frame of gesture
+    END, // User released their finger from screen, final frame of gesture
     FAILED, // Gesture failed conditions
 };
 
@@ -42,7 +42,7 @@ class GestureRecognizer
     // Main recognition loop, for internal usage only, should not be called anywhere, but Application
     virtual GestureState recognitionLoop(TouchState touch, View* view, bool* shouldPlayDefaultSound);
 
-    // Interupt this recognizer
+    // Interrupt this recognizer
     // If onlyIfUnsureState == true recognizer will be interupted
     // only if current state is UNSURE
     void interrupt(bool onlyIfUnsureState);
