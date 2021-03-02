@@ -169,6 +169,11 @@ class Button : public Box
      */
     void setText(std::string text);
 
+    /**
+     * Gets the text of the button and returns it
+     */
+    std::string getText();
+
   private:
     const ButtonStyle* style = &BUTTONSTYLE_DEFAULT;
     ButtonState state        = ButtonState::ENABLED;

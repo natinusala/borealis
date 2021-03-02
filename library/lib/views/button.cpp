@@ -169,6 +169,10 @@ void Button::setText(std::string text) {
     this->label->setText(text);
 }
 
+std::string Button::getText() {
+    return label->getFullText();
+}
+
 View* Button::create()
 {
     return new Button();
