@@ -988,6 +988,11 @@ class View
     void registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden = false, enum Sound sound = SOUND_NONE);
 
     /**
+     * Unregisters an action for the given button.
+     */
+    void unregisterAction(std::string hintText, enum ControllerButton button, bool hidden = false, enum Sound sound = SOUND_NONE);
+
+    /**
      * Shortcut to register a generic "A OK" click action.
      */
     void registerClickAction(ActionListener actionListener);

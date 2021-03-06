@@ -118,6 +118,8 @@ class Activity
 
     void registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden = false, enum Sound sound = SOUND_NONE);
 
+    void unregisterAction(std::string hintText, enum ControllerButton button, bool hidden = false, enum Sound sound = SOUND_NONE);
+
     void onWindowSizeChanged();
 
     View* getDefaultFocus();

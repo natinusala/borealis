@@ -619,6 +619,16 @@ void View::registerAction(std::string hintText, enum ControllerButton button, Ac
         this->actions.push_back({ button, hintText, true, hidden, sound, actionListener });
 }
 
+void View::unregisterAction(std::string hintText, enum ControllerButton button, bool hidden, enum Sound sound)
+{
+    auto is_matched_action = [hintText, button, hidden, sound](Action action)
+    {
+        return action.hintText == hintText && action.button == button && action.hidden == hidden && action.sound == sound;
+    };
+    if (auto it = std::find_if(this->actions.begin(), this->actions.end(), is_matched_action); it != this->actions.end())
+        this->actions.erase(it);
+}
+
 void View::registerClickAction(ActionListener actionListener)
 {
     this->registerAction("brls/hints/ok"_i18n, BUTTON_A, actionListener, false, SOUND_CLICK);

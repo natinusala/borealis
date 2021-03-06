@@ -118,6 +118,12 @@ void Activity::registerAction(std::string hintText, enum ControllerButton button
         this->contentView->registerAction(hintText, button, actionListener, hidden, sound);
 }
 
+void Activity::unregisterAction(std::string hintText, enum ControllerButton button, bool hidden, enum Sound sound)
+{
+    if (this->contentView)
+        this->contentView->unregisterAction(hintText, button, hidden, sound);
+}
+
 View* Activity::getDefaultFocus()
 {
     if (!this->contentView)
