@@ -23,7 +23,8 @@ namespace brls
 
 #define QLAUNCH_PID 0x0100000000001000
 #define QLAUNCH_MOUNT_POINT "qlaunch"
-#define QLAUNCH_BFSAR_PATH "qlaunch:/sound/qlaunch.bfsar"
+#define ROMFS_MOUNT_POINT "romfs"
+#define BFSAR_PATH "/sound/qlaunch.bfsar"
 
 const std::string SOUNDS_MAP[_SOUND_MAX] = {
     "", // SOUND_NONE
@@ -51,18 +52,28 @@ SwitchAudioPlayer::SwitchAudioPlayer()
         return;
     }
 
-    // Mount qlaunch ROMFS for the BFSAR
-    Result result = romfsMountDataStorageFromProgram(QLAUNCH_PID, QLAUNCH_MOUNT_POINT);
-    if (!R_SUCCEEDED(result))
-    {
-        Logger::error("Unable to mount qlaunch ROMFS: {:#x}", result);
+    // Check if the program running is qlaunch
+    char bfsarPath[29];
+    u64 programId = 0;
+    svcGetInfo(&programId, InfoType_ProgramId, CUR_PROCESS_HANDLE, 0);
+    if (programId != QLAUNCH_PID) {
+        // Mount qlaunch ROMFS for the BFSAR
+        Result result = romfsMountDataStorageFromProgram(QLAUNCH_PID, QLAUNCH_MOUNT_POINT);
+        if (!R_SUCCEEDED(result))
+        {
+            Logger::error("Unable to mount qlaunch ROMFS: {:#x}", result);
 
-        plsrPlayerExit();
-        return;
+            plsrPlayerExit();
+            return;
+        }
+
+        sprintf(bfsarPath, "%s:%s", QLAUNCH_MOUNT_POINT, BFSAR_PATH);
     }
+    else
+        sprintf(bfsarPath, "%s:%s", ROMFS_MOUNT_POINT, BFSAR_PATH);
 
     // Open qlaunch BFSAR
-    rc = plsrBFSAROpen(QLAUNCH_BFSAR_PATH, &this->qlaunchBfsar);
+    rc = plsrBFSAROpen(bfsarPath, &this->qlaunchBfsar);
     if (PLSR_RC_FAILED(rc))
     {
         Logger::error("Unable to open qlaunch BFSAR: {:#x}", rc);
