@@ -77,13 +77,13 @@ SidebarItem::SidebarItem()
         },
         false, SOUND_CLICK_SIDEBAR);
 
-    this->addGestureRecognizer(new TapGestureRecognizer([this](TapGestureRecognizer* recogniser) {
+    this->addGestureRecognizer(new TapGestureRecognizer([this](TapGestureStatus status) {
         if (this->active)
             return true;
 
-        this->playClickAnimation(recogniser->getState() != GestureState::UNSURE);
+        this->playClickAnimation(status.state != GestureState::UNSURE);
 
-        switch (recogniser->getState())
+        switch (status.state)
         {
             case GestureState::UNSURE:
                 Application::getAudioPlayer()->play(SOUND_FOCUS_SIDEBAR);

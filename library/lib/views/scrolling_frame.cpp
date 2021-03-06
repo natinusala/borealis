@@ -63,14 +63,14 @@ ScrollingFrame::ScrollingFrame()
 
     this->setMaximumAllowedXMLElements(1);
 
-    addGestureRecognizer(new PanGestureRecognizer([this](PanGestureRecognizer* pan) {
+    addGestureRecognizer(new PanGestureRecognizer([this](PanGestureStatus state) {
         float contentHeight = this->getContentHeight();
 
         static float startY;
-        if (pan->getState() == GestureState::START)
+        if (state.state == GestureState::START)
             startY = this->scrollY * contentHeight;
 
-        float newScroll   = (startY - (pan->getY() - pan->getStartY())) / contentHeight;
+        float newScroll   = (startY - (state.y - state.startY)) / contentHeight;
         float bottomLimit = (contentHeight - this->getScrollingAreaHeight()) / contentHeight;
 
         // Bottom boundary
@@ -82,25 +82,25 @@ ScrollingFrame::ScrollingFrame()
             newScroll = 0.0f;
 
         // Start animation
-        if (pan->getState() != GestureState::END)
+        if (state.state != GestureState::END)
             startScrolling(true, newScroll);
         else
         {
-            float time   = pan->getAcceleration().timeY * 1000.0f;
-            float newPos = this->scrollY * contentHeight + pan->getAcceleration().distanceY;
+            float time   = state.acceleration.timeY * 1000.0f;
+            float newPos = this->scrollY * contentHeight + state.acceleration.distanceY;
 
             // Bottom boundary
             float bottomLimit = contentHeight - this->getScrollingAreaHeight();
             if (newPos > bottomLimit)
             {
-                time   = time * (1 - fabs(newPos - bottomLimit) / fabs(pan->getAcceleration().distanceY));
+                time   = time * (1 - fabs(newPos - bottomLimit) / fabs(state.acceleration.distanceY));
                 newPos = bottomLimit;
             }
 
             // Top boundary
             if (newPos < 0)
             {
-                time   = time * (1 - fabs(newPos) / fabs(pan->getAcceleration().distanceY));
+                time   = time * (1 - fabs(newPos) / fabs(state.acceleration.distanceY));
                 newPos = 0;
             }
 

@@ -42,7 +42,7 @@ GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view,
         if (this->state == GestureState::INTERRUPTED || this->state == GestureState::FAILED)
         {
             if (respond && this->state != lastState)
-                this->respond(this);
+                this->respond(getCurrentStatus());
 
             lastState = this->state;
             return this->state;
@@ -98,6 +98,8 @@ GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view,
             }
 
             // If last touch frame, calculate acceleration
+            
+            static PanAcceleration acceleration;
             if (this->state == GestureState::END)
             {
                 float time = posHistory.size() / FPS;
@@ -117,7 +119,9 @@ GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view,
 
             if (this->state == GestureState::START || this->state == GestureState::STAY || this->state == GestureState::END)
             {
-                this->respond(this);
+                PanGestureStatus state = getCurrentStatus();
+                state.acceleration = acceleration;
+                this->respond(state);
             }
 
             break;
@@ -134,6 +138,20 @@ GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view,
     }
 
     return this->state;
+}
+
+PanGestureStatus PanGestureRecognizer::getCurrentStatus()
+{
+    return PanGestureStatus
+    {
+        .state = this->state,
+        .x = this->x,
+        .y = this->y,
+        .startX = this->startX,
+        .startY = this->startY,
+        .deltaX = this->deltaX,
+        .deltaY = this->deltaY
+    };
 }
 
 };

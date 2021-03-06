@@ -21,8 +21,13 @@
 namespace brls
 {
 
-class TapGestureRecognizer;
-typedef std::function<bool(TapGestureRecognizer*)> TapGestureRespond;
+struct TapGestureStatus
+{
+    GestureState state; // Gesture state
+    float x; // Current X position
+    float y; // Current Y position
+};
+typedef std::function<bool(TapGestureStatus)> TapGestureRespond;
 
 // Tap recognizer
 // UNSURE: while touch moves inside of View bounds
@@ -35,6 +40,9 @@ class TapGestureRecognizer : public GestureRecognizer
   public:
     TapGestureRecognizer(TapGestureRespond respond, bool callbackOnEndOnly = true);
     GestureState recognitionLoop(TouchState touch, View* view, bool* shouldPlayDefaultSound) override;
+    
+    // Get current state of recognizer
+    TapGestureStatus getCurrentStatus();
 
   private:
     TapGestureRespond respond;

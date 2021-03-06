@@ -37,7 +37,7 @@ GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view,
         if (this->state == GestureState::INTERRUPTED || this->state == GestureState::FAILED)
         {
             if (respond && !this->callbackOnEndOnly && this->state != lastState)
-                this->respond(this);
+                this->respond(getCurrentStatus());
 
             lastState = this->state;
             return this->state;
@@ -52,7 +52,7 @@ GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view,
             this->y     = touch.y;
 
             if (respond && !this->callbackOnEndOnly)
-                *shouldPlayDefaultSound &= this->respond(this);
+                *shouldPlayDefaultSound &= this->respond(getCurrentStatus());
             break;
         case TouchEvent::STAY:
             // Check if touch is out view's bounds
@@ -61,13 +61,13 @@ GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view,
             {
                 this->state = GestureState::FAILED;
                 if (respond && !this->callbackOnEndOnly)
-                    this->respond(this);
+                    this->respond(getCurrentStatus());
             }
             break;
         case TouchEvent::END:
             this->state = GestureState::END;
             if (respond)
-                this->respond(this);
+                this->respond(getCurrentStatus());
             break;
         case TouchEvent::NONE:
             this->state = GestureState::FAILED;
@@ -76,6 +76,16 @@ GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view,
 
     lastState = this->state;
     return this->state;
+}
+
+TapGestureStatus TapGestureRecognizer::getCurrentStatus()
+{
+    return TapGestureStatus
+    {
+        .state = this->state,
+        .x = this->x,
+        .y = this->y,
+    };
 }
 
 };
