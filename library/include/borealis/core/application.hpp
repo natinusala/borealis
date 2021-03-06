@@ -156,6 +156,9 @@ class Application
 
     inline static float windowScale;
 
+    static void setGlobalQuit(bool enabled);
+    static void setGlobalFPSToggle(bool enabled);
+
     static GenericEvent* getGlobalFocusChangeEvent();
     static VoidEvent* getGlobalHintsUpdateEvent();
 
@@ -202,6 +205,9 @@ class Application
     inline static unsigned blockInputsTokens = 0; // any value > 0 means inputs are blocked
 
     inline static std::string commonFooter = "";
+
+    inline static bool globalQuitEnabled = true;
+    inline static bool globalFPSToggleEnabled = true;
 
     inline static View* repetitionOldFocus = nullptr;
 
