@@ -170,7 +170,7 @@ class Button : public Box
     void setText(std::string text);
 
     /**
-     * Gets the text of the button and returns it
+     * Returns the text of the button
      */
     std::string getText();
 
