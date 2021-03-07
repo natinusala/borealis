@@ -33,12 +33,6 @@ ComponentsTab::ComponentsTab()
 bool ComponentsTab::onPrimaryButtonClicked(brls::View* view)
 {
     // TODO: actually do something here
-    primary_button->setText("Some basic text");
-
-    if (primary_button->getText() == "Some basic text") brls::Logger::info("Test was successfull");
-
-    primary_button->setText("Primary button");
-
     brls::Logger::info("Clicked");
     return true;
 }

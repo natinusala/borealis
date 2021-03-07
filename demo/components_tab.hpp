@@ -27,5 +27,4 @@ class ComponentsTab : public brls::Box
 
   private:
     bool onPrimaryButtonClicked(brls::View* view);
-    BRLS_BIND(brls::Button, primary_button, "button_primary");
 };
