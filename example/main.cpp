@@ -103,8 +103,11 @@ int main(int argc, char* argv[])
             "main/jank/ios"_i18n,
         });
 
-    brls::ListItem* crashItem = new brls::ListItem("main/divide/title"_i18n, "main/divide/description"_i18n);
-    crashItem->getClickEvent()->subscribe([](brls::View* view) { brls::Application::crash("main/divide/crash"_i18n); });
+    brls::ListItem* devideItem = new brls::ListItem("main/divide/title"_i18n, "main/divide/description"_i18n);
+    devideItem->getClickEvent()->subscribe([](brls::View* view) {
+        std::string notification = "It is possible! 10/0 = " + std::to_string(10/0);
+        brls::Application::notify(notification);
+    });
 
     brls::ListItem* popupItem = new brls::ListItem("popup/open"_i18n);
     popupItem->getClickEvent()->subscribe([](brls::View* view) {
