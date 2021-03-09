@@ -36,7 +36,20 @@ class StorageFile
 
 public:
 
-bool init(std::string filename);
+/*
+ * Inits the config folder if it doesn't exist and creates a file
+ */
+bool init(std::string filename) {
+    if (!std::filesystem::exists(config_folder))
+        std::filesystem::create_directory(config_folder);
+
+    std::fstream file;
+    file.open(filename, std::ios::out|std::ios::app);
+    file.close();
+
+    return true;
+}
+
 
 private:
 
