@@ -29,8 +29,11 @@ using namespace brls::literals;
 namespace brls 
 {
 
+#define BRLS_STORAGE_FILE_INIT(filename) StorageFile::init(filename)
+
 // The StorageFile class allows you to create, write, or read from files for anything
 // For example, you can use it for a config or track when a user last used the app
+template <typename T>
 class StorageFile
 {
 
@@ -43,6 +46,8 @@ bool init(std::string filename) {
     if (!std::filesystem::exists(config_folder))
         std::filesystem::create_directory(config_folder);
 
+    this->filename = filename + ".xml";
+
     std::fstream file;
     file.open(filename, std::ios::out|std::ios::app);
     file.close();
@@ -50,6 +55,15 @@ bool init(std::string filename) {
     return true;
 }
 
+/*
+ * Writes a value to the config file
+ */
+T writeToFile(T value) {
+    std::fstream file;
+    file.open(filename, std::ios::out|std::ios::app);
+    // TODO: Actually write data in an XML form
+    file.close();
+}
 
 private:
 
@@ -58,6 +72,8 @@ std::string config_folder = std::string("/config/") + "brls/appname"_i18n;
 #else
 std::string config_folder = std::string("./config") + "brls/appname"_i18n;
 #endif
+
+std::string filename;
 
 };
 
