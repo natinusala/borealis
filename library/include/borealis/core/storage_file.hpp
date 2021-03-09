@@ -23,6 +23,9 @@
 #include <fstream>
 #include <string>
 #include <borealis/core/logger.hpp>
+#include <borealis/core/i18n.hpp>
+
+using namespace brls::literals;
 
 namespace brls 
 {
@@ -31,6 +34,14 @@ namespace brls
 // For example, you can use it for a config or track when a user last used the app
 class StorageFile
 {
+
+public:
+
+bool init(std::string filename);
+
+private:
+
+std::string config_folder = std::string("/config/") + "brls/appname"_i18n;
 
 };
 
