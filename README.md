@@ -11,7 +11,7 @@ Controller and TV oriented UI library for PC and Nintendo Switch (libnx).
 - Define user interfaces using XML and only write code when it matters
 - Use and restyle built-in components or make your own from scratch
 - Display large amount of data efficiently using recycling lists
-- Integrated internationalization and config systems
+- Integrated internationalization and storage systems
 - Integrated toolbox (logger, animations, timers, background tasks...)
 
 Documentation is available [right here](https://github.com/natinusala/borealis/wiki). As every documentation, it may not be up to date. Feel free to report any missing info or inconsistency you may find.
