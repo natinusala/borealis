@@ -43,7 +43,6 @@
 
 //Views
 #include <borealis/views/applet_frame.hpp>
-#include <borealis/views/background.hpp>
 #include <borealis/views/button.hpp>
 #include <borealis/views/header.hpp>
 #include <borealis/views/image.hpp>

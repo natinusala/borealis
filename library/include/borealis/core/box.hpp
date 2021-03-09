@@ -62,7 +62,6 @@ class Box : public View
   public:
     Box(Axis flexDirection);
     Box();
-    // TODO: dtor, use asan to check for leaks once it's done
 
     void draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx) override;
     View* getDefaultFocus() override;
@@ -208,9 +207,7 @@ class Box : public View
 
     std::vector<View*> children;
 
-    size_t defaultFocusedIndex = 0; // TODO: rewrite that to call a view instead of putting it in the ctor (addView(View*, defaultFocus)) + a defaultFocus="true" attribute
-
-    // TODO: rememberFocus
+    size_t defaultFocusedIndex = 0;
 
     std::unordered_map<std::string, std::pair<std::string, View*>> forwardedAttributes;
 

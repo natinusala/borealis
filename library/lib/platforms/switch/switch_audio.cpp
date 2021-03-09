@@ -44,7 +44,6 @@ SwitchAudioPlayer::SwitchAudioPlayer()
         this->sounds[sound] = PLSR_PLAYER_INVALID_SOUND;
 
     // Init pulsar player
-    // TODO: give a custom config with more than 24 voices if needed
     PLSR_RC rc = plsrPlayerInit();
     if (PLSR_RC_FAILED(rc))
     {

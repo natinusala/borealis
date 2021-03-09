@@ -23,13 +23,6 @@
 namespace brls
 {
 
-// TODO: soundboard in demo (powered by pulsar)
-
-// TODO: split platform driver entirely: swkbd (move swkbd in switch platform driver folder (hpp too, it doesn't need to be in the regular includes))
-// TODO: not a single ifdef __SWITCH__ except from the platform driver selection!
-
-// TODO: image
-
 const std::string buttonXML = R"xml(
     <brls:Box
         width="auto"
@@ -142,7 +135,6 @@ void Button::onFocusGained()
     Box::onFocusGained();
 
     this->setShadowVisibility(false);
-    // TODO: setBorderVisibility(false);
 }
 
 void Button::onFocusLost()
@@ -150,7 +142,6 @@ void Button::onFocusLost()
     Box::onFocusLost();
 
     this->setShadowVisibility(true);
-    // TODO: setBorderVisibility(true);
 }
 
 void Button::setStyle(const ButtonStyle* style)
@@ -172,6 +163,7 @@ void Button::setText(std::string text) {
 std::string Button::getText() {
     return label->getFullText();
 }
+
 
 View* Button::create()
 {

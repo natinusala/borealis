@@ -42,7 +42,6 @@ class ViewNotFoundException : public std::exception
 // Dereferencing operator has been overridden to directly resolve the view by ID and forward the call to the view pointer for you.
 // Allows easy access of child views inside the parent class when used with the BRLS_BIND macro.
 // Does NOT do any type check - it assumes the type you give it is the same as the view you are trying to get.
-// TODO: add a "manual" mode that disables resolve(), add setView (and assignment operator) that enable that mode
 template <typename T>
 class BoundView
 {

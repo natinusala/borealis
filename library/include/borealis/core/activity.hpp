@@ -21,8 +21,6 @@
 namespace brls
 {
 
-// TODO: once things are back to normal and we can test it, remove the focus stack from Application and put the focus in each activity instead to have only one stack
-
 #define CONTENT_FROM_XML_RES(x) \
     brls::View* createContentView() override { return brls::View::createFromXMLResource(x); }
 #define CONTENT_FROM_XML_FILE(x) \

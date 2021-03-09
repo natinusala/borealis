@@ -15,8 +15,6 @@
     limitations under the License.
 */
 
-// TODO: rename to switch_keyboard once properly abstracted out
-
 #include <borealis/core/logger.hpp>
 #include <borealis/platforms/switch/swkbd.hpp>
 #include <cstring>

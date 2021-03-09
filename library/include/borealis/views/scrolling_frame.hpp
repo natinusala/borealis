@@ -32,9 +32,6 @@ enum class ScrollingBehavior
     CENTERED,
 };
 
-// TODO: horizontal scrolling, add a scrolling direction attribute
-// TODO: Scrollbar
-
 // A vertical-only frame that can scroll if its content overflows.
 // This frame can only contain one child view.
 // The content view is detached from the rest of the tree

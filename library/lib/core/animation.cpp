@@ -17,8 +17,6 @@
 #include <borealis/core/animation.hpp>
 #include <vector>
 
-// TODO: looping animations, backwards / forwards
-
 namespace brls
 {
 

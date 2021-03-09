@@ -20,9 +20,6 @@
 
 #include <borealis/core/time.hpp>
 
-// TODO: looping animations
-// TODO: backwards / forwards
-
 namespace brls
 {
 

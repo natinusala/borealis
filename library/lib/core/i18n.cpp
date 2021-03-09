@@ -36,7 +36,7 @@ static bool endsWith(const std::string& str, const std::string& suffix)
 
 static void loadLocale(std::string locale, nlohmann::json* target)
 {
-    std::string localePath = BRLS_ASSET("i18n/" + locale); // TODO: use a platform agnostic separator if someone cares about Windows
+    std::string localePath = BRLS_ASSET("i18n/" + locale);
 
     if (!std::filesystem::exists(localePath))
     {
