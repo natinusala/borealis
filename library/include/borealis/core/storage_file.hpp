@@ -40,7 +40,7 @@ class StorageFile
 public:
 
 /*
- * Inits the config folder if it doesn't exist and creates a file
+ * Inits the config folder if it doesn't exist and creates a file.
  */
 bool init(std::string filename) {
     if (!std::filesystem::exists(config_folder))
@@ -56,16 +56,31 @@ bool init(std::string filename) {
 }
 
 /*
- * Writes a value to the config file
+ * Writes a value to the config file.
+ * 
+ * An example would be the following:
+ * 
+ * <brls:StorageFile>
+ *      <brls:BoolProperty name="wizard_shown" value="true" />
+ *	
+ *	    <brls:BoolProperty name="username" value="h4ck3rm4n" />
+ *	
+ *	    <brls:StringListProperty name="favorites">
+ *		    <brls:Value value="borealis" />
+ *	    </brls:StringListProperty>
+ * </brls>
  */
-bool writeToFile(T value) {
-    std::fstream file;
-    file.open(filename, std::ios::out|std::ios::app);
-    // TODO: Actually write data in an XML form
-    file.close();
+bool writeToFile(T value, std::string name) {
+    tinyxml2::XMLDocument file;
+    file.LoadFile(filename.c_str());
+
+    return true;
 }
 
-T readToFile(T value) {
+/*
+ * Reads a value from the config file, then returns a variable pointing to that value.
+ */
+T readToFile(std::string name) {
     std::fstream file;
     file.open(filename);
     // TODO: Actually read data from an XML form into a normal variable
