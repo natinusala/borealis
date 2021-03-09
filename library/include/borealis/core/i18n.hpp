@@ -45,8 +45,6 @@ const std::string LOCALE_ES_419  = "es-419";
 
 const std::string LOCALE_DEFAULT = LOCALE_EN_US;
 
-// TODO: add support for string arrays
-
 namespace internal
 {
     std::string getRawStr(std::string stringName);

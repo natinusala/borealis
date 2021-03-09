@@ -1,6 +1,6 @@
 # borealis
 
-Controller navigation oriented UI library for PC and Nintendo Switch (libnx).
+Controller and TV oriented UI library for PC and Nintendo Switch (libnx).
 
 - Mimicks the Nintendo Switch system UI, but can also be used to make anything else painlessly
 - Hardware acceleration and vector graphics with automatic scaling for TV usage (powered by nanovg)

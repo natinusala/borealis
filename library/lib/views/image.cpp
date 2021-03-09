@@ -186,7 +186,6 @@ void Image::invalidateImageBounds()
     {
         case ImageScalingType::FIT:
         {
-            // TODO: alignment
             if (viewAspectRatio >= imageAspectRatio)
             {
                 this->imageHeight = this->getHeight();
@@ -210,7 +209,6 @@ void Image::invalidateImageBounds()
             this->imageHeight = this->getHeight();
             break;
         case ImageScalingType::CROP:
-            // TODO: alignment
             if (viewAspectRatio < imageAspectRatio)
             {
                 this->imageHeight = this->originalImageHeight;

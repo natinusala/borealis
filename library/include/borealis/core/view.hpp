@@ -257,7 +257,7 @@ class View
 
     GenericEvent focusEvent;
 
-    YGNode* ygNode; // TODO: free in dtor
+    YGNode* ygNode;
 
     std::string id = "";
 
@@ -729,8 +729,6 @@ class View
     {
         this->showShadow = visible;
     }
-
-    // TODO: add inline void setShadowEverything, say that it only applies when type is custom... + shadowColor + corresponding XML attrs
 
     /**
      * If set to true, the highlight background will be hidden for this view

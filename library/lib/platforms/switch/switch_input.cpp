@@ -28,7 +28,6 @@ static const uint64_t SWITCH_BUTTONS_MAPPING[_BUTTON_MAX] = {
 
     HidNpadButton_StickL, // BUTTON_LSB
 
-    // TODO: stop using the Any bitmasks after implementing axes to dpad in brls
     HidNpadButton_AnyUp, // BUTTON_UP
     HidNpadButton_AnyRight, // BUTTON_RIGHT
     HidNpadButton_AnyDown, // BUTTON_DOWN

@@ -29,31 +29,15 @@
 #include <borealis/core/platform.hpp>
 #include <borealis/core/style.hpp>
 #include <borealis/core/theme.hpp>
-// #include <borealis/core/notification_manager.hpp> TODO: restore
 
 #include <borealis/core/view.hpp>
-#include <borealis/views/background.hpp>
 #include <borealis/views/label.hpp>
-// #include <borealis/views/hint.hpp> // TODO: restore
 
 #include <unordered_map>
 #include <vector>
 
 namespace brls
 {
-
-// The top-right framerate counter
-/*class FramerateCounter : public Label
-{
-  private:
-    Time lastSecond = 0;
-    unsigned frames         = 0;
-
-  public:
-    FramerateCounter();
-
-    void frame(FrameContext* ctx) override;
-}; TODO: restore that */
 
 // Input types for entire app
 enum class InputType
@@ -96,8 +80,6 @@ class Application
      * and when the context is ready (to setup the initial content scaling).
      */
     static void onWindowResized(int width, int height);
-
-    // static void setBackground(Background* background);
 
     /**
       * Pushes a view on this applications's view stack.
@@ -172,8 +154,6 @@ class Application
       */
     static void unblockInputs();
 
-    // static NotificationManager* getNotificationManager(); TODO: restore that
-
     static void setCommonFooter(std::string footer);
     static std::string* getCommonFooter();
 
@@ -183,9 +163,6 @@ class Application
     static void setMaximumFPS(unsigned fps);
 
     inline static float windowScale;
-
-    static void resizeFramerateCounter();
-    static void resizeNotificationManager();
 
     static GenericEvent* getGlobalFocusChangeEvent();
     static VoidEvent* getGlobalHintsUpdateEvent();
@@ -229,14 +206,10 @@ class Application
 
     inline static std::string title;
 
-    inline static Background* background = nullptr;
-
-    // inline static NotificationManager* notificationManager; TODO: restore that
-
     inline static FontStash fontStash;
 
     inline static std::vector<Activity*> activitiesStack;
-    inline static std::vector<View*> focusStack; // TODO: move that to the activities stack
+    inline static std::vector<View*> focusStack;
 
     inline static unsigned windowWidth, windowHeight;
 
@@ -249,8 +222,6 @@ class Application
     inline static unsigned blockInputsTokens = 0; // any value > 0 means inputs are blocked
 
     inline static std::string commonFooter = "";
-
-    // inline static FramerateCounter* framerateCounter = nullptr; TODO: restore that
 
     inline static View* repetitionOldFocus = nullptr;
 

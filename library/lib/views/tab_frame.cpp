@@ -46,9 +46,6 @@ TabFrame::TabFrame()
     this->setContentView(contentView);
 }
 
-// TODO: change getDefaultFocus to try to focus the right pane instead
-// TODO: remember focus when doing right side -> left sidebar -> right side (add a rememberFocus attribute to Box)
-
 void TabFrame::addTab(std::string label, TabViewCreator creator)
 {
     this->sidebar->addItem(label, [this, creator](brls::View* view) {

@@ -34,12 +34,9 @@ enum class ImageScalingType
     STRETCH,
     // The image is either cropped (not enough space) or untouched (too much space)
     CROP,
-
-    // TODO: try to do a TILED type with NVGimageFlags
 };
 
 // Alignment of the image inside the view for FIT and CROP scaling types
-// TODO: add diagonals too
 enum class ImageAlignment
 {
     TOP,

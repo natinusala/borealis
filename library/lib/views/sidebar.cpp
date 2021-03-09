@@ -26,8 +26,6 @@ using namespace brls::literals;
 namespace brls
 {
 
-// TODO: restore focus conservation
-
 const std::string sidebarItemXML = R"xml(
     <brls:Box
         width="auto"
@@ -71,7 +69,6 @@ SidebarItem::SidebarItem()
 
     this->registerAction(
         "brls/hints/ok"_i18n, BUTTON_A, [this](View* view) {
-            // TODO: find a way to not play the focus sound when calling that
             Application::onControllerButtonPressed(BUTTON_RIGHT, false);
             return true;
         },

@@ -377,7 +377,6 @@ void View::drawShadow(NVGcontext* vg, FrameContext* ctx, Style style, float x, f
             shadowOffset  = style["brls/shadow/offset"];
             break;
         case ShadowType::CUSTOM:
-            // TODO: use custom values
             break;
         case ShadowType::NONE:
             break;
@@ -459,7 +458,6 @@ void View::setAlpha(float alpha)
     this->alpha = alpha;
 }
 
-// TODO: Slight glow all around
 void View::drawHighlight(NVGcontext* vg, Theme theme, float alpha, Style style, bool background)
 {
     if (Application::getInputType() == InputType::TOUCH)
@@ -1547,7 +1545,7 @@ bool View::isXMLAttributeValid(std::string attributeName)
 
 View* View::createFromXMLResource(std::string name)
 {
-    return View::createFromXMLFile(std::string(BRLS_RESOURCES) + "xml/" + name); // TODO: platform agnostic separator here if anyone cares about Windows
+    return View::createFromXMLFile(std::string(BRLS_RESOURCES) + "xml/" + name);
 }
 
 View* View::createFromXMLString(std::string xml)
@@ -1926,8 +1924,6 @@ void View::setTranslationX(float translationX)
 {
     this->translationX = translationX;
 }
-
-// TODO: remove show/hide, add a fade duration setting to setVisibility instead
 
 void View::setVisibility(Visibility visibility)
 {

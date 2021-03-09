@@ -19,8 +19,6 @@
 namespace brls
 {
 
-// TODO: expose internal stuff to allow using pulsar directly
-
 enum Sound
 {
     SOUND_NONE = 0, // no sound

@@ -100,9 +100,6 @@ void Application::createWindow(std::string windowTitle)
     // Init rng
     std::srand(std::time(nullptr));
 
-    // Init managers
-    // Application::notificationManager = new NotificationManager(); TODO: restore
-
     // Init static variables
     Application::currentFocus = nullptr;
     Application::title        = title;
@@ -202,8 +199,6 @@ bool Application::mainLoop()
     }
 
     // Trigger controller events
-    // TODO: Translate axis events to dpad events here
-
     bool anyButtonPressed           = false;
     bool repeating                  = false;
     static Time buttonPressTime     = 0;
@@ -444,9 +439,6 @@ void Application::frame()
     videoContext->beginFrame();
     videoContext->clear(backgroundColor);
 
-    if (Application::background)
-        Application::background->preFrame();
-
     nvgBeginFrame(Application::getNVGContext(), Application::windowWidth, Application::windowHeight, frameContext.pixelRatio);
     nvgScale(Application::getNVGContext(), Application::windowScale, Application::windowScale);
 
@@ -466,28 +458,15 @@ void Application::frame()
             break;
     }
 
-    if (Application::background)
-        Application::background->frame(&frameContext);
-
     for (size_t i = 0; i < viewsToDraw.size(); i++)
     {
         View* view = viewsToDraw[viewsToDraw.size() - 1 - i];
         view->frame(&frameContext);
     }
 
-    // Framerate counter
-    /*if (Application::framerateCounter)
-        Application::framerateCounter->frame(&frameContext); TODO: restore that */
-
-    // Notifications
-    // Application::notificationManager->frame(&frameContext); TODO: restore
-
     // End frame
     nvgResetTransform(Application::getNVGContext()); // scale
     nvgEndFrame(Application::getNVGContext());
-
-    if (Application::background)
-        Application::background->postFrame();
 
     Application::platform->getVideoContext()->endFrame();
 }
@@ -498,66 +477,23 @@ void Application::exit()
 
     Application::clear();
 
-    /*if (Application::framerateCounter)
-        delete Application::framerateCounter; TODO: restore that*/
-
-    // delete Application::notificationManager; TODO: restore
     delete Application::platform;
 }
 
 void Application::setDisplayFramerate(bool enabled)
 {
-    /*if (!Application::framerateCounter && enabled)
-    {
-        Logger::debug("Enabling framerate counter");
-        Application::framerateCounter = new FramerateCounter();
-        Application::resizeFramerateCounter();
-    }
-    else if (Application::framerateCounter && !enabled)
-    {
-        Logger::debug("Disabling framerate counter");
-        delete Application::framerateCounter;
-        Application::framerateCounter = nullptr;
-    } TODO: restore that */
+    // To be implemented
 }
 
 void Application::toggleFramerateDisplay()
 {
-    // Application::setDisplayFramerate(!Application::framerateCounter); TODO: restore that
-}
-
-void Application::resizeFramerateCounter()
-{
-    //     if (!Application::framerateCounter)
-    //         return;
-
-    //     Style* style                   = Application::getStyle();
-    //     unsigned framerateCounterWidth = style->FramerateCounter.width;
-    //     unsigned width                 = WINDOW_WIDTH;
-
-    //     Application::framerateCounter->setBoundaries(
-    //         width - framerateCounterWidth,
-    //         0,
-    //         framerateCounterWidth,
-    //         style->FramerateCounter.height);
-    //     Application::framerateCounter->invalidate(); TODO: restore that
-}
-
-void Application::resizeNotificationManager()
-{
-    //     Application::notificationManager->setBoundaries(0, 0, Application::contentWidth, Application::contentHeight);
-    //     Application::notificationManager->invalidate(); TODO: restore that
+    // To be implemented (call setDisplayFramerate)
 }
 
 void Application::notify(std::string text)
 {
-    //Application::notificationManager->notify(text); TODO: restore
+    // To be implemented
 }
-
-/* NotificationManager* Application::getNotificationManager()
-{
-    return Application::notificationManager;
-} TODO: restore */
 
 void Application::giveFocus(View* view)
 {
@@ -641,7 +577,6 @@ void Application::popActivity(TransitionAnimation animation, std::function<void(
     }
 }
 
-// TODO: transition animation should be an attribute of the activity, not given when pushing
 void Application::pushActivity(Activity* activity, TransitionAnimation animation)
 {
     Application::blockInputs();
@@ -770,8 +705,7 @@ bool Application::loadFontFromMemory(std::string fontName, void* address, size_t
 
 void Application::crash(std::string text)
 {
-    /* CrashFrame* crashFrame = new CrashFrame(text);
-    Application::pushView(crashFrame); TODO: restore */
+    // To be implemented
 }
 
 void Application::blockInputs()
@@ -824,55 +758,7 @@ void Application::onWindowResized(int width, int height)
 
     for (Activity* activity : Application::activitiesStack)
         activity->onWindowSizeChanged();
-
-    // if (Application::background)
-    // {
-    //     Application::background->setBoundaries(
-    //         0,
-    //         0,
-    //         Application::contentWidth,
-    //         Application::contentHeight);
-
-    //     Application::background->invalidate();
-    //     Application::background->onWindowSizeChanged();
-    // }
-
-    Application::resizeNotificationManager();
-    Application::resizeFramerateCounter();
 }
-
-/*FramerateCounter::FramerateCounter()
-    : Label(LabelStyle::LIST_ITEM, "FPS: ---")
-{
-    this->setColor(nvgRGB(255, 255, 255));
-    this->setVerticalAlign(NVG_ALIGN_MIDDLE);
-    this->setHorizontalAlign(NVG_ALIGN_RIGHT);
-    this->setBackground(ViewBackground::BACKDROP);
-
-    this->lastSecond = getCPUTimeUsec() / 1000; TODO: restore that
-}*/
-
-/*void FramerateCounter::frame(FrameContext* ctx)
-{
-    // Update counter
-    Time current = getCPUTimeUsec() / 1000;
-
-    if (current - this->lastSecond >= 1000)
-    {
-        char fps[10];
-        snprintf(fps, sizeof(fps), "FPS: %03d", this->frames);
-        this->setText(std::string(fps));
-        this->invalidate(); // update width for background
-
-        this->frames     = 0;
-        this->lastSecond = current;
-    }
-
-    this->frames++; TODO: restore that
-
-    // Regular frame
-    Label::frame(ctx); TODO: restore that
-}*/
 
 std::string Application::getTitle()
 {
@@ -896,21 +782,6 @@ int Application::getFont(std::string fontName)
 
     return Application::fontStash[fontName];
 }
-
-// void Application::setBackground(Background* background)
-// {
-//     if (Application::background)
-//     {
-//         Application::background->willDisappear();
-//         delete Application::background;
-//     }
-
-//     Application::background = background;
-
-//     background->setBoundaries(0, 0, Application::contentWidth, Application::contentHeight);
-//     background->invalidate();
-//     background->willAppear(true);
-// }
 
 bool Application::XMLViewsRegisterContains(std::string name)
 {

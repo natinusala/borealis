@@ -461,8 +461,6 @@ void Box::setAxis(Axis axis)
 
 void Box::setDirection(Direction direction)
 {
-    // TODO: direction must flip focus too!
-
     switch (direction)
     {
         case Direction::INHERIT:
