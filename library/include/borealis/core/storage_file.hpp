@@ -58,10 +58,17 @@ bool init(std::string filename) {
 /*
  * Writes a value to the config file
  */
-T writeToFile(T value) {
+bool writeToFile(T value) {
     std::fstream file;
     file.open(filename, std::ios::out|std::ios::app);
     // TODO: Actually write data in an XML form
+    file.close();
+}
+
+T readToFile(T value) {
+    std::fstream file;
+    file.open(filename);
+    // TODO: Actually read data from an XML form into a normal variable
     file.close();
 }
 
