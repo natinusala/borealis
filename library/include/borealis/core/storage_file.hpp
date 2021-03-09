@@ -16,7 +16,6 @@
 
 #pragma once
 
-#include <nlohmann/json.hpp>
 #include <tinyxml2/tinyxml2.h>
 #include <filesystem>
 #include <iostream>
