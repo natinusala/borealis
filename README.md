@@ -2,6 +2,8 @@
 
 Controller and TV oriented UI library for PC and Nintendo Switch (libnx).
 
+WIP - See the Projects tab to follow the journey towards a stable version!
+
 - Mimicks the Nintendo Switch system UI, but can also be used to make anything else painlessly
 - Hardware acceleration and vector graphics with automatic scaling for TV usage (powered by nanovg)
 - Can be ported to new platforms and graphics APIs by providing a nanovg implementation
