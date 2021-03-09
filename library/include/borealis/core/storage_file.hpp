@@ -41,7 +41,11 @@ bool init(std::string filename);
 
 private:
 
+#ifdef __SWITCH__
 std::string config_folder = std::string("/config/") + "brls/appname"_i18n;
+#else
+std::string config_folder = std::string("./config") + "brls/appname"_i18n;
+#endif
 
 };
 
