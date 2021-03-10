@@ -156,15 +156,18 @@ T readFromFile(std::string name) {
     std::string config_path = config_folder + filename;
     if (!std::filesystem::exists(config_path)) {
         Logger::error("file {} not found in {}. ", filename, config_folder);
-        return false;
+        return "";
     }
 
-    XMLDocument file;
+    XMLDocument doc;
     XMLError errorCode;
-    errorCode = file.LoadFile(filename.c_str());
+
+    FILE *file = fopen(config_path.c_str(), "rb");
+
+    errorCode = doc.LoadFile(file);
 
     if (errorCode == 0) {
-        auto elementToFind = file.FirstChildElement("brls:Property");
+        auto elementToFind = doc.FirstChildElement("brls:Property");
         const char * nameFromElement;
 
         // Uses an infinite while loop to find the right element to read from
@@ -174,7 +177,7 @@ T readFromFile(std::string name) {
             if (nameFromElement == name.c_str()) 
                 break;
             else 
-                elementToFind = file.NextSiblingElement("brls:Property");
+                elementToFind = doc.NextSiblingElement("brls:Property");
             
         }
         T value;
@@ -185,7 +188,7 @@ T readFromFile(std::string name) {
         return value;
     } else {
         Logger::error("failed to open file via TinyXML2.");
-        return NULL;
+        return "";
     }
 }
 

@@ -37,6 +37,7 @@ bool ComponentsTab::onPrimaryButtonClicked(brls::View* view)
     SettingsFile settings;
     
     settings.writeToFile("Test", "test");
+    settings.readFromFile("test");
 
     return true;
 }
