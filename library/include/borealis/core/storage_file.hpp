@@ -39,6 +39,49 @@ namespace brls
 #define BRLS_STORAGE_FILE_WRITE_DATA(value, name) this->writeToFile(value, name)
 #define BRLS_STORAGE_FILE_READ_DATA(value, name) auto value = this->readFromFile(name)
 
+// This is a StorageObject, which is a data type of a value stored onto the XML file.
+// They have two variables they hold onto throughout their lifetime: the value and name.
+// They also have an std::string of their type, since the value will be stored as a char *
+// In the XML File
+template <typename T>
+class StorageObject 
+{
+
+public:
+
+StorageObject(T val, std::string type) {this->set(val); this->setType(type)}
+
+void setValue(T newValue) {
+    valueSet = newValue;
+}
+
+T value() {
+    return valueSet;
+}
+
+void setName(std::string val) {
+    nameInXML = val;
+}
+
+std::string name() {
+    return nameInXML;
+}
+
+void setType(std::string newType) {
+    typeOfValue = newType;
+} 
+
+std::string type() {
+    return typeOfValue;
+}
+
+private:
+T valueSet;
+std::string nameInXML;
+std::string typeOfValue;
+
+};
+
 // The StorageFile class allows you to create, write, or read from files for anything
 // For example, you can use it for a config or track when a user last used the app
 template <typename T>
@@ -49,6 +92,8 @@ public:
 
 /*
  * Inits the config folder if it doesn't exist and creates a file.
+ * Remember to not include the .xml part in the filename argument, it's already added.
+ * If you don't, tinyxml2 will look for file (.)/config/(appname here)/(filename here).xml.xml later on.
  */
 bool init(std::string filename) {
     if (!std::filesystem::exists(config_folder))
@@ -79,70 +124,13 @@ bool init(std::string filename) {
  *	    <brls:ListProperty name="favorites">
  *		    <brls:Value value="borealis" />
  *	    </brls:ListProperty>
- * </brls>
+ * </brls:StorageFile>
  * 
- * It gives a fatal error if the filename is not found (call the init function before these functions)
+ * It gives a fatal error if the filename is not found (call the init function before these functions).
  */
-bool writeToFile(T value, std::string name) {
-    std::string config_path = config_folder + filename;
-    if (!std::filesystem::exists(config_path)) {
-        Logger::error("file {} not found in {}. ", filename, config_folder);
-        return false;
-    }
-
-    Logger::debug("Passed config path exists test");
-
-    FILE *file = fopen(config_path.c_str(), "wb");
-
-    Logger::debug("Made FILE * variable");
-
-    XMLDocument doc;
-    XMLError errorCode;
-    errorCode = doc.LoadFile(file);
-
-    if (errorCode != 0) {
-
-        auto root = doc.RootElement();
-
-        if (!root) {
-            auto newElement = doc.NewElement("brls:StorageFile");
-            doc.InsertFirstChild(newElement);
-            doc.SaveFile(file);
-            Logger::debug("Empty xml file, added contents");
-        }
-
-        root = doc.RootElement();
-
-        auto newElement = doc.NewElement("brls:Property");
-        newElement->SetAttribute("name", name.c_str());
-        if (std::is_same<T, std::string>::value) { // TODO: Find a different solution to compare a template type with std::string
-            //newElement->SetAttribute("value", value.c_str());
-            newElement->SetAttribute("value", value.c_str());
-            Logger::debug("std::string detected");
-        } else {
-            //newElement->SetAttribute("value", value);
-        }
-
-        if (!root) Logger::error("null pointer to root element");
-
-        root->InsertEndChild(newElement);
-        Logger::debug("Inserted element into XML file");
-
-        fclose(file);
-        errorCode = doc.SaveFile(file);
-
-        if (errorCode != 0) {
-            fclose(file);
-            return true;
-        } else {
-            Logger::error("failed to save file via TinyXML2.");
-            return false;
-        }
-
-    } else {
-        Logger::error("failed to open file via TinyXML2.");
-        return false;
-    }
+bool writeToFile(StorageObject<t> value, std::string name)
+{
+    T objectFromValue = value.value();
 }
 
 /*
@@ -150,46 +138,11 @@ bool writeToFile(T value, std::string name) {
  * 
  * For example, if you store a variable with the data "EmreTech is awesome" into a storage file,
  * This function will find that value and return it, so you can read/change the value throughout
- * the program running
+ * the program running.
  */
-T readFromFile(std::string name) {
-    std::string config_path = config_folder + filename;
-    if (!std::filesystem::exists(config_path)) {
-        Logger::error("file {} not found in {}. ", filename, config_folder);
-        return "";
-    }
+StorageObject<T> readFromFile(std::string name)
+{
 
-    XMLDocument doc;
-    XMLError errorCode;
-
-    FILE *file = fopen(config_path.c_str(), "rb");
-
-    errorCode = doc.LoadFile(file);
-
-    if (errorCode == 0) {
-        auto elementToFind = doc.FirstChildElement("brls:Property");
-        const char * nameFromElement;
-
-        // Uses an infinite while loop to find the right element to read from
-        while (true) {
-            elementToFind->QueryStringAttribute("name", &nameFromElement);
-
-            if (nameFromElement == name.c_str()) 
-                break;
-            else 
-                elementToFind = doc.NextSiblingElement("brls:Property");
-            
-        }
-        T value;
-
-        /*elementToFind->QueryAttribute("value", &value);
-        TODO: Find a better solution than QueryAttribute*/
-
-        return value;
-    } else {
-        Logger::error("failed to open file via TinyXML2.");
-        return "";
-    }
 }
 
 private:
@@ -204,4 +157,4 @@ std::string filename;
 
 };
 
-}
+} // namespace brls

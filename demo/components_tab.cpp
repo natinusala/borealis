@@ -1,5 +1,6 @@
 /*
     Copyright 2021 natinusala
+    Copyright 2021 EmreTech
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -34,10 +35,10 @@ ComponentsTab::ComponentsTab()
 bool ComponentsTab::onPrimaryButtonClicked(brls::View* view)
 {
     brls::Logger::info("Clicked");
-    SettingsFile settings;
+    //SettingsFile settings;
     
-    settings.writeToFile("Test", "test");
-    settings.readFromFile("test");
+    //settings.writeToFile("Test", "test");
+    //settings.readFromFile("test"); TODO: Restore Storage_File example once read/write functions are working properly
 
     return true;
 }
