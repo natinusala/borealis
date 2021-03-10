@@ -37,7 +37,7 @@ namespace brls
 {
 
 template <typename R>
-R stringToOther(std::string input) {
+R stringToOther(std::string input, R blank) {
     std::stringstream ss;
     ss << input;
 
@@ -56,7 +56,7 @@ std::string otherToString(R input) {
 }
 
 template <typename R>
-R charToOther(char * input) {
+R charToOther(char * input, R blank) {
     std::stringstream ss;
     ss << input;
 
@@ -295,8 +295,8 @@ void parseXMLToVector(std::string name)
             }
         }
 
-        char * valueOfValue;
-        char * valueOfType;
+        const char * valueOfValue;
+        const char * valueOfType;
 
         elementToBeFound->QueryStringAttribute("value", &valueOfValue);
         elementToBeFound->QueryStringAttribute("type", &valueOfType);
@@ -304,7 +304,7 @@ void parseXMLToVector(std::string name)
         StorageObject<T> obj{};
         obj.setName(name);
         obj.setType(std::string(valueOfType));
-        T actualVal = charToOther(valueOfValue);
+        T actualVal = charToOther(valueOfValue, new T{});
         obj.setValue(actualVal);
 
         allStorageObjects.push_back(obj);
