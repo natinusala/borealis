@@ -61,6 +61,8 @@ bool init(std::string filename) {
     file.open(config_path, std::ios::out|std::ios::app);
     file.close();
 
+    Logger::debug("Successfully made file at {}!", config_path);
+
     return true;
 }
 
@@ -88,11 +90,11 @@ bool writeToFile(T value, std::string name) {
         return false;
     }
 
-    char path_to_file[25];
-    strcpy(path_to_file, config_folder.c_str());
-    strcat(path_to_file, filename.c_str());
+    Logger::debug("Passed config path exists test");
 
-    FILE *file = fopen(path_to_file, "ab");
+    FILE *file = fopen(config_path.c_str(), "wb");
+
+    Logger::debug("Made FILE * variable");
 
     XMLDocument doc;
     XMLError errorCode;
@@ -102,23 +104,33 @@ bool writeToFile(T value, std::string name) {
 
         auto root = doc.RootElement();
 
-        if (root == NULL) {
+        if (!root) {
             auto newElement = doc.NewElement("brls:StorageFile");
             doc.InsertFirstChild(newElement);
+            doc.SaveFile(file);
+            Logger::debug("Empty xml file, added contents");
         }
+
+        root = doc.RootElement();
 
         auto newElement = doc.NewElement("brls:Property");
         newElement->SetAttribute("name", name.c_str());
         if (std::is_same<T, std::string>::value) { // TODO: Find a different solution to compare a template type with std::string
             //newElement->SetAttribute("value", value.c_str());
             newElement->SetAttribute("value", value.c_str());
+            Logger::debug("std::string detected");
         } else {
             //newElement->SetAttribute("value", value);
         }
 
-        root->InsertEndChild(newElement);
+        if (!root) Logger::error("null pointer to root element");
 
+        root->InsertEndChild(newElement);
+        Logger::debug("Inserted element into XML file");
+
+        fclose(file);
         errorCode = doc.SaveFile(file);
+
         if (errorCode != 0) {
             fclose(file);
             return true;
