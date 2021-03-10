@@ -50,7 +50,7 @@ class StorageObject
 
 public:
 
-StorageObject(T val, std::string type) {this->set(val); this->setType(type)}
+StorageObject(T val, std::string type) {this->set(val); this->setType(type);}
 
 void setValue(T newValue) {
     valueSet = newValue;
@@ -136,12 +136,12 @@ bool init(std::string filename) {
  * 
  * It gives a fatal error if the filename is not found (call the init function before these functions).
  */
-bool writeToFile(StorageObject<t> value)
+bool writeToFile(StorageObject<T> value)
 {   
     std::string config_path = config_folder + filename;
     T objectFromValue = value.value();
     std::string type = value.type();
-    std::string name = value.name()
+    std::string name = value.name();
 
     FILE *file = fopen(config_path.c_str(), "wb");
     XMLError errorCode;
@@ -166,6 +166,10 @@ bool writeToFile(StorageObject<t> value)
             element->SetAttribute("type", type.c_str());
             root->InsertFirstChild(element);
 
+            doc.SaveFile(file);
+            fclose(file);
+            return true;
+
         } else {
             XMLElement *element = doc.NewElement("brls:Property");
 
@@ -173,9 +177,20 @@ bool writeToFile(StorageObject<t> value)
             //element->SetAttribute("value", "str"); TODO: Convert value to char *, then add to attribute
             element->SetAttribute("type", type.c_str());
             root->InsertFirstChild(element);
+
+            errorCode = doc.SaveFile(file);
+            fclose(file);
+
+            if (errorCode == 0)
+                return true;
+            else {
+                Logger::error("TinyXML2 could not save the file. Error code {}.", std::to_string(errorCode));
+                return false;
+            }
         }
     } else {
         Logger::error("TinyXML2 could not open the file. Error code {}.", std::to_string(errorCode));
+        return false;
     }
 }
 
