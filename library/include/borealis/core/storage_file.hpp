@@ -39,6 +39,7 @@ namespace brls
 #define BRLS_STORAGE_FILE_WRITE_DATA(StorageObject) this->writeToFile(StorageObject)
 #define BRLS_STORAGE_FILE_READ_DATA(StorageObject, name) auto StorageObject = this->readFromFile(name)
 #define BRLS_STORAGE_FILE_STORAGE_OBJECT(variableName, value, name, type) auto variableName = this->createStorageObject(value, name, type)
+#define BRLS_STORAGE_FILE_STORAGE_OBJECT(variableName) auto variableName = this->createStorageObject()
 
 // This is a StorageObject, which is a data type of a value stored onto the XML file.
 // They have two variables they hold onto throughout their lifetime: the value and name.
@@ -50,6 +51,7 @@ class StorageObject
 
 public:
 
+StorageObject() {}
 StorageObject(T val, std::string name, std::string type) {this->setValue(val); this->setName(name); this->setType(type);}
 
 void setValue(T newValue) {
@@ -104,9 +106,8 @@ bool init(std::string filename) {
         std::filesystem::create_directory(config_folder);
 
     this->filename = filename + ".xml";
-
     
-    std::string config_path = config_folder + this->filename;
+    this->setConfigPath();
 
     if (std::filesystem::exists(config_path))
         Logger::debug("File exists already. Getting data from the XML file...");
@@ -118,6 +119,10 @@ bool init(std::string filename) {
     Logger::debug("Successfully made file at {}!", config_path);
 
     return true;
+}
+
+void setConfigPath() {
+    config_path = config_folder + filename;
 }
 
 /*
@@ -140,7 +145,6 @@ bool init(std::string filename) {
 bool writeToFile(StorageObject<T> value)
 {   
     // Gets values from the StorageObject and configures the config_path variable
-    std::string config_path = config_folder + filename;
     T objectFromValue = value.value();
     std::string type = value.type();
     std::string name = value.name();
@@ -241,7 +245,15 @@ StorageObject<T>& readFromFile(std::string name)
  */
 StorageObject<T>& createStorageObject(T value, std::string name, std::string type)
 {
-    return StorageObject<T>(value, name, type);
+    return StorageObject<T>(value, name, type); // Returns a new StorageObject
+}
+
+/*
+ * Creates a new blank StorageObject for the child class.
+ */
+StorageObject<T>& createStorageObject()
+{
+    return StorageObject<T>(); // Returns a blank StorageObject
 }
 
 private:
@@ -252,6 +264,8 @@ std::string config_folder = std::string("/config/") + "brls/appname"_i18n + "/";
 std::string config_folder = std::string("./config/") + "brls/appname"_i18n + "/";
 #endif
 std::string filename;
+
+std::string config_path; // This is blank until Init function is called
 
 };
 
