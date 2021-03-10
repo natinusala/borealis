@@ -19,12 +19,13 @@
 #include <tinyxml2/tinyxml2.h>
 #include <filesystem>
 #include <iostream>
+#include <sstream>
 #include <fstream>
 #include <stdio.h>
-#include <string.h>
+//#include <string.h>
 #include <string>
-#include <type_traits>
 #include <vector>
+#include <type_traits>
 #include <borealis/core/logger.hpp>
 #include <borealis/core/util.hpp>
 #include <borealis/core/i18n.hpp>
@@ -34,6 +35,47 @@ using namespace tinyxml2;
 
 namespace brls 
 {
+
+template <typename R>
+R stringToOther(std::string input) {
+    std::stringstream ss;
+    ss << input;
+
+    R output;
+    ss >> output;
+
+    return output;
+}
+
+template <typename R>
+std::string otherToString(R input) {
+    std::stringstream ss;
+    ss << input;
+
+    return ss.str();
+}
+
+template <typename R>
+R charToOther(char * input) {
+    std::stringstream ss;
+    ss << input;
+
+    R output;
+    ss >> output;
+
+    return output;
+}
+
+template <typename R>
+char * otherToChar(R input) {
+    std::stringstream ss;
+    ss << input;
+
+    std::string tmp_output = ss.str();
+    char * output = (char*) tmp_output.c_str();
+
+    return output;
+}
 
 #define BRLS_STORAGE_FILE_INIT(filename) bool initSuccess = this->init(filename)
 #define BRLS_STORAGE_FILE_WRITE_DATA(StorageObject) this->writeToFile(StorageObject)
@@ -175,7 +217,10 @@ bool writeToFile(StorageObject<T> value)
             XMLElement *element = doc.NewElement("brls:Property");
 
             element->SetAttribute("name", name.c_str());
-            //element->SetAttribute("value", "str"); TODO: Convert value to char *, then add to attribute
+            if (std::is_same<T, std::string>::value)
+                element->SetAttribute("value", objectFromValue.c_str());
+            else
+                element->SetAttribute("value", otherToChar(objectFromValue));
             element->SetAttribute("type", type.c_str());
             root->InsertFirstChild(element);
 
@@ -194,7 +239,10 @@ bool writeToFile(StorageObject<T> value)
             XMLElement *element = doc.NewElement("brls:Property");
 
             element->SetAttribute("name", name.c_str());
-            //element->SetAttribute("value", "str"); TODO: Convert value to char *, then add to attribute
+            if (std::is_same<T, std::string>::value)
+                element->SetAttribute("value", objectFromValue.c_str());
+            else
+                element->SetAttribute("value", otherToChar(objectFromValue));
             element->SetAttribute("type", type.c_str());
             root->InsertFirstChild(element);
 
@@ -256,7 +304,8 @@ void parseXMLToVector(std::string name)
         StorageObject<T> obj{};
         obj.setName(name);
         obj.setType(std::string(valueOfType));
-        //obj.setValue(); TODO: Find a way to convert the value from char * to the type given
+        T actualVal = charToOther(valueOfValue);
+        obj.setValue(actualVal);
 
         allStorageObjects.push_back(obj);
 
@@ -275,7 +324,7 @@ void parseXMLToVector(std::string name)
  */
 StorageObject<T> readFromFile(std::string name)
 {
-    // TODO: Insert function that can parse the XML elements into elements for the std::vector
+    parseXMLToVector(name);
 
     size_t numberElement{ 0 }; // Defines numberElement for the return
 
