@@ -19,7 +19,8 @@
 #include <tinyxml2/tinyxml2.h>
 #include <filesystem>
 #include <iostream>
-#include <fstream>
+#include <stdio.h>
+#include <string.h>
 #include <string>
 #include <borealis/core/util.hpp>
 #include <borealis/core/i18n.hpp>
@@ -82,10 +83,30 @@ bool writeToFile(T value, std::string name) {
         return false;
     }
 
-    XMLDocument file;
-    file.LoadFile(filename.c_str());
+    char path_to_file[25];
+    strcpy(path_to_file, config_folder.c_str());
+    strcat(path_to_file, filename.c_str());
 
-    // TODO: Write an element with a layout similar to above, then save
+    FILE *file = fopen(path_to_file, "ab");
+
+    XMLDocument doc;
+    doc.LoadFile(file);
+
+    auto root = doc.RootElement();
+
+    if (root == NULL) {
+        auto newElement = doc.NewElement("brls:StorageFile");
+        doc.InsertFirstChild(newElement);
+    }
+
+    auto newElement = doc.NewElement("brls:Property");
+    newElement->SetAttribute("name", name.c_str());
+    newElement->SetAttribute("value", value);
+
+    root->InsertEndChild(newElement);
+
+    doc.SaveFile(file);
+    fclose(file);
 
     return true;
 }
@@ -131,7 +152,7 @@ private:
 #ifdef __SWITCH__ // If the client is running on a Switch, this approach is used
 std::string config_folder = std::string("/config/") + "brls/appname"_i18n;
 #else // Otherwise, we assume that the client is running on a PC.
-std::string config_folder = std::string("./config") + "brls/appname"_i18n;
+std::string config_folder = std::string("./config/") + "brls/appname"_i18n;
 #endif
 
 std::string filename;
