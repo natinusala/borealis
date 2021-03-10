@@ -128,9 +128,9 @@ T readFromFile(std::string name) {
 
 private:
 
-#ifdef __SWITCH__
+#ifdef __SWITCH__ // If the client is running on a Switch, this approach is used
 std::string config_folder = std::string("/config/") + "brls/appname"_i18n;
-#else
+#else // Otherwise, we assume that the client is running on a PC.
 std::string config_folder = std::string("./config") + "brls/appname"_i18n;
 #endif
 
