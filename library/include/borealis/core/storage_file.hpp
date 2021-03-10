@@ -30,42 +30,6 @@ using namespace tinyxml2;
 namespace brls 
 {
 
-XMLElement *getElementByName(XMLDocument &ele, std::string const &elemt_value)
-{
-    // Code taken from: https://stackoverflow.com/questions/11921463/find-a-specific-node-in-a-xml-document-with-tinyxml/60964820#60964820
-    XMLElement *elem = ele.FirstChildElement(); //Tree root
-
-    while (elem)
-    {
-        if (!std::string(elem->Value()).compare(elemt_value))
-            return elem;
-        if (elem->FirstChildElement())
-        {
-            elem = elem->FirstChildElement();
-        }
-        else if (elem->NextSiblingElement())
-        {
-            elem = elem->NextSiblingElement();
-        }
-        else
-        {
-            if (elem->Parent()->ToElement()->NextSiblingElement())
-            {
-                elem = elem->Parent()->ToElement()->NextSiblingElement();
-            }
-            else if (elem->Parent()->ToElement()->FirstChildElement()
-                        &&  strcmp(elem->Name(), elem->Parent()->ToElement()->FirstChildElement()->Name()))
-            {
-                elem = elem->Parent()->ToElement()->FirstChildElement();
-            }
-            else {
-                break;
-            }
-        }
-    }
-    return NULL;
-}
-
 #define BRLS_STORAGE_FILE_INIT(filename) StorageFile::init(filename)
 
 // The StorageFile class allows you to create, write, or read from files for anything
@@ -118,7 +82,7 @@ bool writeToFile(T value, std::string name) {
     XMLDocument file;
     file.LoadFile(filename.c_str());
 
-    
+    // TODO: Write an element with a layout similar to above, then save
 
     return true;
 }
@@ -139,8 +103,24 @@ T readToFile(std::string name) {
     XMLDocument file;
     file.LoadFile(filename.c_str());
 
-    auto elementToFind = getElementByName(file, "brls:Property");
+    auto elementToFind = file.FirstChildElement("brls:Property");
+    char * nameFromElement;
 
+    // Uses an infinite while loop to find the right element to read from
+    while (true) {
+        elementToFind->QueryStringAttribute("name", &nameFromElement);
+
+        if (nameFromElement == name.c_str()) 
+            break;
+        else 
+            elementToFind = file.NextSiblingElement("brls:Property");
+        
+    }
+    T value;
+
+    elementToFind->QueryAttribute("value", &value);
+
+    return value;
 }
 
 private:
