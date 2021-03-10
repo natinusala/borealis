@@ -15,6 +15,7 @@
 */
 
 #include "components_tab.hpp"
+#include "settings_file.hpp"
 
 ComponentsTab::ComponentsTab()
 {
@@ -33,6 +34,10 @@ ComponentsTab::ComponentsTab()
 bool ComponentsTab::onPrimaryButtonClicked(brls::View* view)
 {
     brls::Logger::info("Clicked");
+    SettingsFile settings;
+    
+    settings.writeToFile("Test", "test");
+
     return true;
 }
 

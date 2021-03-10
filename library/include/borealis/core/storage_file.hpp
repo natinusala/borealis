@@ -34,7 +34,7 @@ using namespace tinyxml2;
 namespace brls 
 {
 
-#define BRLS_STORAGE_FILE_INIT(filename) this->init(filename)
+#define BRLS_STORAGE_FILE_INIT(filename) bool initSuccess = this->init(filename)
 
 #define BRLS_STORAGE_FILE_WRITE_DATA(value, name) this->writeToFile(value, name)
 #define BRLS_STORAGE_FILE_READ_DATA(value, name) auto value = this->readFromFile(name)
@@ -57,7 +57,8 @@ bool init(std::string filename) {
     this->filename = filename + ".xml";
 
     std::fstream file;
-    file.open(filename, std::ios::out|std::ios::app);
+    std::string config_path = config_folder + this->filename;
+    file.open(config_path, std::ios::out|std::ios::app);
     file.close();
 
     return true;
@@ -81,7 +82,8 @@ bool init(std::string filename) {
  * It gives a fatal error if the filename is not found (call the init function before these functions)
  */
 bool writeToFile(T value, std::string name) {
-    if (!std::filesystem::exists(config_folder + filename)) {
+    std::string config_path = config_folder + filename;
+    if (!std::filesystem::exists(config_path)) {
         Logger::error("file {} not found in {}. ", filename, config_folder);
         return false;
     }
@@ -107,10 +109,12 @@ bool writeToFile(T value, std::string name) {
 
         auto newElement = doc.NewElement("brls:Property");
         newElement->SetAttribute("name", name.c_str());
-        if (std::is_same<T, std::string>::value)
+        if (std::is_same<T, std::string>::value) { // TODO: Find a different solution to compare a template type with std::string
+            //newElement->SetAttribute("value", value.c_str());
             newElement->SetAttribute("value", value.c_str());
-        else
-            newElement->SetAttribute("value", value);
+        } else {
+            //newElement->SetAttribute("value", value);
+        }
 
         root->InsertEndChild(newElement);
 
@@ -137,7 +141,8 @@ bool writeToFile(T value, std::string name) {
  * the program running
  */
 T readFromFile(std::string name) {
-    if (!std::filesystem::exists(config_folder + filename)) {
+    std::string config_path = config_folder + filename;
+    if (!std::filesystem::exists(config_path)) {
         Logger::error("file {} not found in {}. ", filename, config_folder);
         return false;
     }
@@ -162,7 +167,8 @@ T readFromFile(std::string name) {
         }
         T value;
 
-        elementToFind->QueryAttribute("value", &value);
+        /*elementToFind->QueryAttribute("value", &value);
+        TODO: Find a better solution than QueryAttribute*/
 
         return value;
     } else {
@@ -174,9 +180,9 @@ T readFromFile(std::string name) {
 private:
 
 #ifdef __SWITCH__ // If the client is running on a Switch, this approach is used
-std::string config_folder = std::string("/config/") + "brls/appname"_i18n;
+std::string config_folder = std::string("/config/") + "brls/appname"_i18n + "/";
 #else // Otherwise, we assume that the client is running on a PC.
-std::string config_folder = std::string("./config/") + "brls/appname"_i18n;
+std::string config_folder = std::string("./config/") + "brls/appname"_i18n + "/";
 #endif
 
 std::string filename;
