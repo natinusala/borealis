@@ -39,7 +39,7 @@ namespace brls
 #define BRLS_STORAGE_FILE_WRITE_DATA(StorageObject) this->writeToFile(StorageObject)
 #define BRLS_STORAGE_FILE_READ_DATA(StorageObject, name) auto StorageObject = this->readFromFile(name)
 #define BRLS_STORAGE_FILE_STORAGE_OBJECT(variableName, value, name, type) auto variableName = this->createStorageObject(value, name, type)
-#define BRLS_STORAGE_FILE_STORAGE_OBJECT(variableName) auto variableName = this->createStorageObject()
+#define BRLS_STORAGE_FILE_BLANK_STORAGE_OBJECT(variableName) auto variableName = this->createStorageObject()
 
 // This is a StorageObject, which is a data type of a value stored onto the XML file.
 // They have two variables they hold onto throughout their lifetime: the value and name.
@@ -237,7 +237,7 @@ StorageObject<T>& readFromFile(std::string name)
         }
     }
 
-    return allStorageObjects[numberElement]; // Return the StorageObject object from the std::vector
+    return &allStorageObjects[numberElement]; // Return the StorageObject object from the std::vector
 }
 
 /*
@@ -264,7 +264,7 @@ bool isFileEmpty() {
 /*
  * Creates a new StorageObject for the child class.
  */
-StorageObject<T>& createStorageObject(T value, std::string name, std::string type)
+StorageObject<T> createStorageObject(T value, std::string name, std::string type)
 {
     return StorageObject<T>(value, name, type); // Returns a new StorageObject
 }
@@ -272,7 +272,7 @@ StorageObject<T>& createStorageObject(T value, std::string name, std::string typ
 /*
  * Creates a new blank StorageObject for the child class.
  */
-StorageObject<T>& createStorageObject()
+StorageObject<T> createStorageObject()
 {
     return StorageObject<T>(); // Returns a blank StorageObject
 }
