@@ -22,4 +22,8 @@ class SettingsFile : public brls::StorageFile<std::string> {
 
     BRLS_STORAGE_FILE_INIT("settings.xml");
 
+    void save(std::string& value, std::string name) {
+        BRLS_STORAGE_FILE_WRITE_DATA(value, name);
+    }
+
 }
