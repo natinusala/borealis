@@ -215,6 +215,57 @@ bool writeToFile(StorageObject<T> value)
     }
 }
 
+void parseXMLToVector(std::string name) 
+{
+    FILE *file = fopen(config_path.c_str(), "rb");
+
+    XMLError errorCode;
+    XMLDocument doc;
+
+    errorCode = doc.LoadFile(file);
+
+    if (errorCode == 0)
+    {
+
+        XMLElement *root = doc.RootElement();
+
+        if (!root) {
+            Logger::error("NULL root element. This means the XML file is blank (hasn't been written to yet), or the XML file is broken.");
+            return;
+        }
+
+        XMLElement *elementToBeFound = doc.FirstChildElement();
+        
+        while (true) {
+            auto nameAttrib = elementToBeFound->FindAttribute(name.c_str());
+
+            if (nameAttrib->Value() == name.c_str())
+                break;
+            else {
+                elementToBeFound = doc.NextSiblingElement();
+                continue;
+            }
+        }
+
+        char * valueOfValue;
+        char * valueOfType;
+
+        elementToBeFound->QueryStringAttribute("value", &valueOfValue);
+        elementToBeFound->QueryStringAttribute("type", &valueOfType);
+
+        StorageObject<T> obj{};
+        obj.setName(name);
+        obj.setType(std::string(valueOfType));
+        //obj.setValue(); TODO: Find a way to convert the value from char * to the type given
+
+        allStorageObjects.push_back(obj);
+
+    } else {
+        Logger::error("TinyXML2 could not open the file. Error code {}.", std::to_string(errorCode));
+        return;
+    }
+}
+
 /*
  * Reads a value from the config file, then returns a variable pointing to that value.
  * 
