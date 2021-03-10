@@ -137,8 +137,29 @@ bool init(std::string filename) {
  * It gives a fatal error if the filename is not found (call the init function before these functions).
  */
 bool writeToFile(StorageObject<t> value, std::string name)
-{
+{   
+    std::string config_path = config_folder + filename;
     T objectFromValue = value.value();
+    std::string type = value.type();
+
+    FILE *file = fopen(config_path.c_str(), "wb");
+    XMLError errorCode;
+
+    XMLDocument doc;
+    errorCode = doc.LoadFile(file);
+
+    if (errorCode == 0) // If doc.LoadFile succeded 
+    {
+
+        XMLElement *root = doc.RootElement();
+
+        if (!root) // If root is null (which means a new file)
+        {
+            // TODO: Make root element if the file is empty
+        } else {
+
+        }
+    }
 }
 
 /*
