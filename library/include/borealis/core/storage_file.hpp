@@ -136,11 +136,12 @@ bool init(std::string filename) {
  * 
  * It gives a fatal error if the filename is not found (call the init function before these functions).
  */
-bool writeToFile(StorageObject<t> value, std::string name)
+bool writeToFile(StorageObject<t> value)
 {   
     std::string config_path = config_folder + filename;
     T objectFromValue = value.value();
     std::string type = value.type();
+    std::string name = value.name()
 
     FILE *file = fopen(config_path.c_str(), "wb");
     XMLError errorCode;
@@ -155,10 +156,26 @@ bool writeToFile(StorageObject<t> value, std::string name)
 
         if (!root) // If root is null (which means a new file)
         {
-            // TODO: Make root element if the file is empty
-        } else {
+            root = doc.NewElement("brls:StorageFile");
+            root->SetText("\n");
 
+            XMLElement *element = doc.NewElement("brls:Property");
+
+            element->SetAttribute("name", name.c_str());
+            //element->SetAttribute("value", "str"); TODO: Convert value to char *, then add to attribute
+            element->SetAttribute("type", type.c_str());
+            root->InsertFirstChild(element);
+
+        } else {
+            XMLElement *element = doc.NewElement("brls:Property");
+
+            element->SetAttribute("name", name.c_str());
+            //element->SetAttribute("value", "str"); TODO: Convert value to char *, then add to attribute
+            element->SetAttribute("type", type.c_str());
+            root->InsertFirstChild(element);
         }
+    } else {
+        Logger::error("TinyXML2 could not open the file. Error code {}.", std::to_string(errorCode));
     }
 }
 
