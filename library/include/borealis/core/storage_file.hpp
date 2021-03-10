@@ -19,10 +19,12 @@
 #include <tinyxml2/tinyxml2.h>
 #include <filesystem>
 #include <iostream>
+#include <fstream>
 #include <stdio.h>
 #include <string.h>
 #include <string>
 #include <type_traits>
+#include <borealis/core/logger.hpp>
 #include <borealis/core/util.hpp>
 #include <borealis/core/i18n.hpp>
 
@@ -80,7 +82,7 @@ bool init(std::string filename) {
  */
 bool writeToFile(T value, std::string name) {
     if (!std::filesystem::exists(config_folder + filename)) {
-        fatal("file {} not found in {}. ", filename, config_folder);
+        Logger::error("file {} not found in {}. ", filename, config_folder);
         return false;
     }
 
@@ -105,7 +107,7 @@ bool writeToFile(T value, std::string name) {
 
         auto newElement = doc.NewElement("brls:Property");
         newElement->SetAttribute("name", name.c_str());
-        if (std::is_same<T, std::string>)
+        if (std::is_same<T, std::string>::value)
             newElement->SetAttribute("value", value.c_str());
         else
             newElement->SetAttribute("value", value);
@@ -117,12 +119,12 @@ bool writeToFile(T value, std::string name) {
             fclose(file);
             return true;
         } else {
-            fatal("failed to save file via TinyXML2.");
+            Logger::error("failed to save file via TinyXML2.");
             return false;
         }
 
     } else {
-        fatal("failed to open file via TinyXML2.");
+        Logger::error("failed to open file via TinyXML2.");
         return false;
     }
 }
@@ -136,7 +138,7 @@ bool writeToFile(T value, std::string name) {
  */
 T readFromFile(std::string name) {
     if (!std::filesystem::exists(config_folder + filename)) {
-        fatal("file {} not found in {}. ", filename, config_folder);
+        Logger::error("file {} not found in {}. ", filename, config_folder);
         return false;
     }
 
@@ -146,7 +148,7 @@ T readFromFile(std::string name) {
 
     if (errorCode == 0) {
         auto elementToFind = file.FirstChildElement("brls:Property");
-        char * nameFromElement;
+        const char * nameFromElement;
 
         // Uses an infinite while loop to find the right element to read from
         while (true) {
@@ -164,7 +166,7 @@ T readFromFile(std::string name) {
 
         return value;
     } else {
-        fatal("failed to open file via TinyXML2.");
+        Logger::error("failed to open file via TinyXML2.");
         return NULL;
     }
 }
