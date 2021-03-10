@@ -89,7 +89,7 @@ template <typename T>
 class StorageFile
 {
 
-std::vector<StorageObject<T>> allStorageObjects;
+std::vector<StorageObject<T>> allStorageObjects; // Main std::vector where all StorageObjects are stored.
 
 public:
 
@@ -148,9 +148,22 @@ bool writeToFile(StorageObject<t> value, std::string name)
  * This function will find that value and return it, so you can read/change the value throughout
  * the program running.
  */
-StorageObject<T> readFromFile(std::string name)
+StorageObject<T>& readFromFile(std::string name)
 {
-    
+    // TODO: Insert function that can parse the XML elements into elements for the std::vector
+
+    size_t numberElement{ 0 };
+
+    for (size_t i{ 0 }; i < allStorageObjects.size(); i++) {
+        auto currentElement = allStorageObjects[i];
+
+        if (currentElement.name() == name) {
+            numberElement = i;
+            break;
+        }
+    }
+
+    return allStorageObjects[numberElement];
 }
 private:
 
