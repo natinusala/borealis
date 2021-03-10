@@ -26,4 +26,4 @@ class SettingsFile : public brls::StorageFile<std::string> {
         BRLS_STORAGE_FILE_WRITE_DATA(value, name);
     }
 
-}
+};

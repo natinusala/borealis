@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <string>
+#include <type_traits>
 #include <borealis/core/util.hpp>
 #include <borealis/core/i18n.hpp>
 
@@ -101,7 +102,10 @@ bool writeToFile(T value, std::string name) {
 
     auto newElement = doc.NewElement("brls:Property");
     newElement->SetAttribute("name", name.c_str());
-    newElement->SetAttribute("value", value);
+    if (std::is_same<T, std::string>)
+        newElement->SetAttribute("value", value.c_str());
+    else
+        newElement->SetAttribute("value", value);
 
     root->InsertEndChild(newElement);
 
