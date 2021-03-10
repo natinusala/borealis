@@ -222,7 +222,7 @@ bool writeToFile(StorageObject<T> value)
  * This function will find that value and return it, so you can read/change the value throughout
  * the program running.
  */
-StorageObject<T>& readFromFile(std::string name)
+StorageObject<T> readFromFile(std::string name)
 {
     // TODO: Insert function that can parse the XML elements into elements for the std::vector
 
@@ -237,7 +237,7 @@ StorageObject<T>& readFromFile(std::string name)
         }
     }
 
-    return &allStorageObjects[numberElement]; // Return the StorageObject object from the std::vector
+    return allStorageObjects[numberElement]; // Return the StorageObject object from the std::vector
 }
 
 /*
