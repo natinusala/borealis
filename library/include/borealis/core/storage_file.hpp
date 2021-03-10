@@ -30,7 +30,10 @@ using namespace tinyxml2;
 namespace brls 
 {
 
-#define BRLS_STORAGE_FILE_INIT(filename) StorageFile::init(filename)
+#define BRLS_STORAGE_FILE_INIT(filename) this->init(filename)
+
+#define BRLS_STORAGE_FILE_WRITE_DATA(value, name) this->writeToFile(value, name)
+#define BRLS_STORAGE_FILE_READ_DATA(value, name) auto value = this->readFromFile(name)
 
 // The StorageFile class allows you to create, write, or read from files for anything
 // For example, you can use it for a config or track when a user last used the app
@@ -94,7 +97,7 @@ bool writeToFile(T value, std::string name) {
  * This function will find that value and return it, so you can read/change the value throughout
  * the program running
  */
-T readToFile(std::string name) {
+T readFromFile(std::string name) {
     if (!std::filesystem::exists(config_folder + filename)) {
         fatal("File {} not found in {}. ", filename, config_folder);
         return false;
