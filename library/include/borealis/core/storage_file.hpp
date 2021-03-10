@@ -80,7 +80,7 @@ bool init(std::string filename) {
  */
 bool writeToFile(T value, std::string name) {
     if (!std::filesystem::exists(config_folder + filename)) {
-        fatal("File {} not found in {}. ", filename, config_folder);
+        fatal("file {} not found in {}. ", filename, config_folder);
         return false;
     }
 
@@ -91,28 +91,40 @@ bool writeToFile(T value, std::string name) {
     FILE *file = fopen(path_to_file, "ab");
 
     XMLDocument doc;
-    doc.LoadFile(file);
+    XMLError errorCode;
+    errorCode = doc.LoadFile(file);
 
-    auto root = doc.RootElement();
+    if (errorCode != 0) {
 
-    if (root == NULL) {
-        auto newElement = doc.NewElement("brls:StorageFile");
-        doc.InsertFirstChild(newElement);
+        auto root = doc.RootElement();
+
+        if (root == NULL) {
+            auto newElement = doc.NewElement("brls:StorageFile");
+            doc.InsertFirstChild(newElement);
+        }
+
+        auto newElement = doc.NewElement("brls:Property");
+        newElement->SetAttribute("name", name.c_str());
+        if (std::is_same<T, std::string>)
+            newElement->SetAttribute("value", value.c_str());
+        else
+            newElement->SetAttribute("value", value);
+
+        root->InsertEndChild(newElement);
+
+        errorCode = doc.SaveFile(file);
+        if (errorCode != 0) {
+            fclose(file);
+            return true;
+        } else {
+            fatal("failed to save file via TinyXML2.");
+            return false;
+        }
+
+    } else {
+        fatal("failed to open file via TinyXML2.");
+        return false;
     }
-
-    auto newElement = doc.NewElement("brls:Property");
-    newElement->SetAttribute("name", name.c_str());
-    if (std::is_same<T, std::string>)
-        newElement->SetAttribute("value", value.c_str());
-    else
-        newElement->SetAttribute("value", value);
-
-    root->InsertEndChild(newElement);
-
-    doc.SaveFile(file);
-    fclose(file);
-
-    return true;
 }
 
 /*
@@ -124,31 +136,37 @@ bool writeToFile(T value, std::string name) {
  */
 T readFromFile(std::string name) {
     if (!std::filesystem::exists(config_folder + filename)) {
-        fatal("File {} not found in {}. ", filename, config_folder);
+        fatal("file {} not found in {}. ", filename, config_folder);
         return false;
     }
 
     XMLDocument file;
-    file.LoadFile(filename.c_str());
+    XMLError errorCode;
+    errorCode = file.LoadFile(filename.c_str());
 
-    auto elementToFind = file.FirstChildElement("brls:Property");
-    char * nameFromElement;
+    if (errorCode == 0) {
+        auto elementToFind = file.FirstChildElement("brls:Property");
+        char * nameFromElement;
 
-    // Uses an infinite while loop to find the right element to read from
-    while (true) {
-        elementToFind->QueryStringAttribute("name", &nameFromElement);
+        // Uses an infinite while loop to find the right element to read from
+        while (true) {
+            elementToFind->QueryStringAttribute("name", &nameFromElement);
 
-        if (nameFromElement == name.c_str()) 
-            break;
-        else 
-            elementToFind = file.NextSiblingElement("brls:Property");
-        
+            if (nameFromElement == name.c_str()) 
+                break;
+            else 
+                elementToFind = file.NextSiblingElement("brls:Property");
+            
+        }
+        T value;
+
+        elementToFind->QueryAttribute("value", &value);
+
+        return value;
+    } else {
+        fatal("failed to open file via TinyXML2.");
+        return NULL;
     }
-    T value;
-
-    elementToFind->QueryAttribute("value", &value);
-
-    return value;
 }
 
 private:
