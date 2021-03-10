@@ -241,6 +241,27 @@ StorageObject<T>& readFromFile(std::string name)
 }
 
 /*
+ * Allows you to check if the file is empty or not.
+ * Returns true if it's empty, false if it's not 
+ */
+bool isFileEmpty() {
+    FILE *file = fopen(config_path.c_str(), "rb");
+
+    XMLDocument doc;
+    doc.LoadFile(file);
+
+    XMLElement *root = doc.RootElement();
+    if (!root) {
+        fclose(file);
+        return true;
+    }
+    else {
+        fclose(file);
+        return false;
+    } 
+}
+
+/*
  * Creates a new StorageObject for the child class.
  */
 StorageObject<T>& createStorageObject(T value, std::string name, std::string type)
