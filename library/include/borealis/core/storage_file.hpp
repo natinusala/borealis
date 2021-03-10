@@ -24,6 +24,7 @@
 #include <string.h>
 #include <string>
 #include <type_traits>
+#include <vector>
 #include <borealis/core/logger.hpp>
 #include <borealis/core/util.hpp>
 #include <borealis/core/i18n.hpp>
@@ -88,6 +89,8 @@ template <typename T>
 class StorageFile
 {
 
+std::vector<StorageObject<T>> allStorageObjects;
+
 public:
 
 /*
@@ -101,8 +104,13 @@ bool init(std::string filename) {
 
     this->filename = filename + ".xml";
 
-    std::fstream file;
+    
     std::string config_path = config_folder + this->filename;
+
+    if (std::filesystem::exists(config_path))
+        Logger::debug("File exists already. Getting data from the XML file...");
+
+    std::fstream file;
     file.open(config_path, std::ios::out|std::ios::app);
     file.close();
 
@@ -117,9 +125,9 @@ bool init(std::string filename) {
  * An example would be the following:
  * 
  * <brls:StorageFile>
- *      <brls:Property name="wizard_shown" value="true" />
+ *      <brls:Property name="wizard_shown" value="true" type="boolean"/>
  *	
- *	    <brls:Property name="username" value="h4ck3rm4n" />
+ *	    <brls:Property name="username" value="h4ck3rm4n" type="string"/>
  *	
  *	    <brls:ListProperty name="favorites">
  *		    <brls:Value value="borealis" />
@@ -142,9 +150,8 @@ bool writeToFile(StorageObject<t> value, std::string name)
  */
 StorageObject<T> readFromFile(std::string name)
 {
-
+    
 }
-
 private:
 
 #ifdef __SWITCH__ // If the client is running on a Switch, this approach is used
@@ -152,7 +159,6 @@ std::string config_folder = std::string("/config/") + "brls/appname"_i18n + "/";
 #else // Otherwise, we assume that the client is running on a PC.
 std::string config_folder = std::string("./config/") + "brls/appname"_i18n + "/";
 #endif
-
 std::string filename;
 
 };
