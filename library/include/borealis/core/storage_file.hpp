@@ -36,9 +36,9 @@ namespace brls
 {
 
 #define BRLS_STORAGE_FILE_INIT(filename) bool initSuccess = this->init(filename)
-
-#define BRLS_STORAGE_FILE_WRITE_DATA(value, name) this->writeToFile(value, name)
-#define BRLS_STORAGE_FILE_READ_DATA(value, name) auto value = this->readFromFile(name)
+#define BRLS_STORAGE_FILE_WRITE_DATA(StorageObject) this->writeToFile(StorageObject)
+#define BRLS_STORAGE_FILE_READ_DATA(StorageObject, name) auto StorageObject = this->readFromFile(name)
+#define BRLS_STORAGE_FILE_STORAGE_OBJECT(variableName, value, name, type) auto variableName = this->createStorageObject(value, name, type)
 
 // This is a StorageObject, which is a data type of a value stored onto the XML file.
 // They have two variables they hold onto throughout their lifetime: the value and name.
@@ -50,7 +50,7 @@ class StorageObject
 
 public:
 
-StorageObject(T val, std::string type) {this->set(val); this->setType(type);}
+StorageObject(T val, std::string name, std::string type) {this->setValue(val); this->setName(name); this->setType(type);}
 
 void setValue(T newValue) {
     valueSet = newValue;
@@ -84,7 +84,8 @@ std::string typeOfValue;
 };
 
 // The StorageFile class allows you to create, write, or read from files for anything
-// For example, you can use it for a config or track when a user last used the app
+// For example, you can use it for a config or track when a user last used the app.
+// The template is required and can only be one type. You can, however, transform the type into something else
 template <typename T>
 class StorageFile
 {
@@ -138,27 +139,35 @@ bool init(std::string filename) {
  */
 bool writeToFile(StorageObject<T> value)
 {   
+    // Gets values from the StorageObject and configures the config_path variable
     std::string config_path = config_folder + filename;
     T objectFromValue = value.value();
     std::string type = value.type();
     std::string name = value.name();
 
+    if (!std::filesystem::exists(config_path))
+        Logger::error("File not found. Make sure to call the init function before this.");
+
+    // Opens a file from stdio (tinyxml2 doesn't support STL) and defines an errorCode variable
     FILE *file = fopen(config_path.c_str(), "wb");
     XMLError errorCode;
 
+    // Defines a doc variable and attempts to load the file
     XMLDocument doc;
     errorCode = doc.LoadFile(file);
 
     if (errorCode == 0) // If doc.LoadFile succeded 
     {
 
-        XMLElement *root = doc.RootElement();
+        XMLElement *root = doc.RootElement(); // We determine the root element (null or an actual element)
 
         if (!root) // If root is null (which means a new file)
         {
+            // New root element
             root = doc.NewElement("brls:StorageFile");
             root->SetText("\n");
 
+            // New child element
             XMLElement *element = doc.NewElement("brls:Property");
 
             element->SetAttribute("name", name.c_str());
@@ -166,11 +175,18 @@ bool writeToFile(StorageObject<T> value)
             element->SetAttribute("type", type.c_str());
             root->InsertFirstChild(element);
 
-            doc.SaveFile(file);
+            // We try to save the file
+            errorCode = doc.SaveFile(file);
             fclose(file);
-            return true;
+            if (errorCode == 0) // If it succedded
+                return true;
+            else { // Otherwise
+                Logger::error("TinyXML2 could not save the file. Error code {}.", std::to_string(errorCode));
+                return false;
+            }
 
-        } else {
+        } else { // Otherwise if there is a root element
+            // New child element
             XMLElement *element = doc.NewElement("brls:Property");
 
             element->SetAttribute("name", name.c_str());
@@ -178,17 +194,18 @@ bool writeToFile(StorageObject<T> value)
             element->SetAttribute("type", type.c_str());
             root->InsertFirstChild(element);
 
+            // We try to save the file
             errorCode = doc.SaveFile(file);
             fclose(file);
 
-            if (errorCode == 0)
+            if (errorCode == 0) // If it succedded
                 return true;
-            else {
+            else { // Otherwise
                 Logger::error("TinyXML2 could not save the file. Error code {}.", std::to_string(errorCode));
                 return false;
             }
         }
-    } else {
+    } else { // Otherwise
         Logger::error("TinyXML2 could not open the file. Error code {}.", std::to_string(errorCode));
         return false;
     }
@@ -205,19 +222,28 @@ StorageObject<T>& readFromFile(std::string name)
 {
     // TODO: Insert function that can parse the XML elements into elements for the std::vector
 
-    size_t numberElement{ 0 };
+    size_t numberElement{ 0 }; // Defines numberElement for the return
 
-    for (size_t i{ 0 }; i < allStorageObjects.size(); i++) {
-        auto currentElement = allStorageObjects[i];
+    for (size_t i{ 0 }; i < allStorageObjects.size(); i++) { // For loop to loop through all elements of the std::vector
+        auto currentElement = allStorageObjects[i]; // Set current element 
 
-        if (currentElement.name() == name) {
-            numberElement = i;
+        if (currentElement.name() == name) { // If the current element name is equal to the name we are looking for
+            numberElement = i; // Set numberElement to i and break the loop
             break;
         }
     }
 
-    return allStorageObjects[numberElement];
+    return allStorageObjects[numberElement]; // Return the StorageObject object from the std::vector
 }
+
+/*
+ * Creates a new StorageObject for the child class.
+ */
+StorageObject<T>& createStorageObject(T value, std::string name, std::string type)
+{
+    return StorageObject<T>(value, name, type);
+}
+
 private:
 
 #ifdef __SWITCH__ // If the client is running on a Switch, this approach is used
