@@ -22,7 +22,7 @@
 #include <sstream>
 #include <fstream>
 #include <stdio.h>
-//#include <string.h>
+#include <string.h>
 #include <string>
 #include <vector>
 #include <type_traits>
@@ -33,55 +33,52 @@
 using namespace brls::literals;
 using namespace tinyxml2;
 
+template <typename T1, typename T2>
+struct is_same_type {static const bool result = false;};
+
+template <typename T>
+struct is_same_type<T,T> {static const bool result = true;};
+
+template <typename R>
+R charToOther(const char * input) {
+    if (is_same_type<R, std::basic_string<char>>().result == true) {
+        return std::string(input);
+    } else if (is_same_type<R, char*>().result == true) {
+        return input;
+    } else {
+        std::istringstream iss(input);
+        R output;
+        iss >> output;
+        return output;
+    }
+}
+
+template <typename R>
+char* otherToChar(R input) {
+    if (is_same_type<R, std::basic_string<char>>().result == true) {
+        char * output;
+        std::strcpy(output, input.c_str());
+        return output;
+    } else if (is_same_type<R, char*>().result == true) {
+        char * output;
+        std::strcpy(output, input.c_str());
+        return output;
+    } else {
+        std::istringstream iss(input);
+        char * output;
+        std::strcpy(output, iss.str().c_str());
+        return output;
+    }
+}
+
 namespace brls 
 {
-
-template <typename R>
-R stringToOther(std::string input, R blank) {
-    std::stringstream ss;
-    ss << input;
-
-    R output;
-    ss >> output;
-
-    return output;
-}
-
-template <typename R>
-std::string otherToString(R input) {
-    std::stringstream ss;
-    ss << input;
-
-    return ss.str();
-}
-
-template <typename R>
-R charToOther(char * input, R blank) {
-    std::stringstream ss;
-    ss << input;
-
-    R output;
-    ss >> output;
-
-    return output;
-}
-
-template <typename R>
-char * otherToChar(R input) {
-    std::stringstream ss;
-    ss << input;
-
-    std::string tmp_output = ss.str();
-    char * output = (char*) tmp_output.c_str();
-
-    return output;
-}
 
 #define BRLS_STORAGE_FILE_INIT(filename) bool initSuccess = this->init(filename)
 #define BRLS_STORAGE_FILE_WRITE_DATA(StorageObject) this->writeToFile(StorageObject)
 #define BRLS_STORAGE_FILE_READ_DATA(StorageObject, name) auto StorageObject = this->readFromFile(name)
 #define BRLS_STORAGE_FILE_STORAGE_OBJECT(variableName, value, name, type) auto variableName = this->createStorageObject(value, name, type)
-#define BRLS_STORAGE_FILE_BLANK_STORAGE_OBJECT(variableName) auto variableName = this->createStorageObject()
+#define BRLS_STORAGE_FILE_BLANK_STORAGE_OBJECT(variableName, type) brls::StorageObject<type> variableName = this->createStorageObject()
 
 // This is a StorageObject, which is a data type of a value stored onto the XML file.
 // They have two variables they hold onto throughout their lifetime: the value and name.
@@ -217,10 +214,10 @@ bool writeToFile(StorageObject<T> value)
             XMLElement *element = doc.NewElement("brls:Property");
 
             element->SetAttribute("name", name.c_str());
-            if (std::is_same<T, std::string>::value)
+            if (is_same_type<T, std::string>().result == true)
                 element->SetAttribute("value", objectFromValue.c_str());
             else
-                element->SetAttribute("value", otherToChar(objectFromValue));
+                element->SetAttribute("value", otherToChar<T>(objectFromValue));
             element->SetAttribute("type", type.c_str());
             root->InsertFirstChild(element);
 
@@ -239,10 +236,10 @@ bool writeToFile(StorageObject<T> value)
             XMLElement *element = doc.NewElement("brls:Property");
 
             element->SetAttribute("name", name.c_str());
-            if (std::is_same<T, std::string>::value)
+            if (is_same_type<T, std::string>().result == true)
                 element->SetAttribute("value", objectFromValue.c_str());
             else
-                element->SetAttribute("value", otherToChar(objectFromValue));
+                element->SetAttribute("value", otherToChar<T>(objectFromValue));
             element->SetAttribute("type", type.c_str());
             root->InsertFirstChild(element);
 
@@ -282,7 +279,7 @@ void parseXMLToVector(std::string name)
             return;
         }
 
-        XMLElement *elementToBeFound = doc.FirstChildElement();
+        XMLElement *elementToBeFound = root->FirstChildElement();
         
         while (true) {
             auto nameAttrib = elementToBeFound->FindAttribute(name.c_str());
@@ -290,7 +287,7 @@ void parseXMLToVector(std::string name)
             if (nameAttrib->Value() == name.c_str())
                 break;
             else {
-                elementToBeFound = doc.NextSiblingElement();
+                elementToBeFound = root->NextSiblingElement();
                 continue;
             }
         }
@@ -304,7 +301,10 @@ void parseXMLToVector(std::string name)
         StorageObject<T> obj{};
         obj.setName(name);
         obj.setType(std::string(valueOfType));
-        T actualVal = charToOther(valueOfValue, new T{});
+
+        char * newValueOfValue;
+        std::strcpy(newValueOfValue, valueOfValue);
+        T actualVal = charToOther<T>(newValueOfValue);
         obj.setValue(actualVal);
 
         allStorageObjects.push_back(obj);

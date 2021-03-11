@@ -35,10 +35,10 @@ ComponentsTab::ComponentsTab()
 bool ComponentsTab::onPrimaryButtonClicked(brls::View* view)
 {
     brls::Logger::info("Clicked");
-    //SettingsFile settings;
+    SettingsFile settings;
     
-    //settings.writeToFile("Test", "test");
-    //settings.readFromFile("test"); TODO: Restore Storage_File example once read/write functions are working properly
+    settings.setup();
+    auto valFromXML = settings.testValue.value();
 
     return true;
 }

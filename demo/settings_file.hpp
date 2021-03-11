@@ -23,16 +23,15 @@ class SettingsFile : public brls::StorageFile<std::string> {
     BRLS_STORAGE_FILE_INIT("settings");
 
     public:
-    brls::StorageObject<std::string> testValue;
+    BRLS_STORAGE_FILE_BLANK_STORAGE_OBJECT(testValue, std::string);
 
     void setup() {
         if (this->isFileEmpty()) {
-            BRLS_STORAGE_FILE_STORAGE_OBJECT(testValue, "Hi", "test", "std::string"); // In order, the arguments mean variableName, value, name, and type (in this case, std::string)
+            testValue = this->createStorageObject("Hi", "test", "std::string"); // In order, the arguments mean variableName, value, name, and type (in this case, std::string)
             BRLS_STORAGE_FILE_WRITE_DATA(testValue);
         } 
-        else {
-            BRLS_STORAGE_FILE_BLANK_STORAGE_OBJECT(testValue);
-            BRLS_STORAGE_FILE_READ_DATA(testValue, "test");
+        else {     
+            testValue = this->readFromFile("test");
         }
     }
 };
