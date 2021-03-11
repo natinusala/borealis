@@ -143,13 +143,16 @@ public:
 bool init(std::string filename) {
     if (!std::filesystem::exists(config_folder))
         std::filesystem::create_directory(config_folder);
+    
 
     this->filename = filename + ".xml";
     
     this->setConfigPath();
 
-    if (std::filesystem::exists(config_path))
-        Logger::debug("File exists already. Getting data from the XML file...");
+    if (std::filesystem::exists(config_path)) {
+        Logger::debug("File already exists. Quitting out of init function...");
+        return true;
+    }
 
     std::fstream file;
     file.open(config_path, std::ios::out|std::ios::app);
@@ -192,12 +195,13 @@ bool writeToFile(StorageObject<T> value)
         Logger::error("File not found. Make sure to call the init function before this.");
 
     // Opens a file from stdio (tinyxml2 doesn't support STL) and defines an errorCode variable
-    FILE *file = fopen(config_path.c_str(), "wb");
+    //FILE *file = fopen(config_path.c_str(), "wb");
     XMLError errorCode;
 
     // Defines a doc variable and attempts to load the file
     XMLDocument doc;
-    errorCode = doc.LoadFile(file);
+    //errorCode = doc.LoadFile(file);
+    errorCode = doc.LoadFile(config_path.c_str());
 
     if (errorCode == 0) // If doc.LoadFile succeded 
     {
@@ -207,23 +211,33 @@ bool writeToFile(StorageObject<T> value)
         if (!root) // If root is null (which means a new file)
         {
             // New root element
-            root = doc.NewElement("brls:StorageFile");
-            root->SetText("\n");
+            XMLNode *pRoot = doc.NewElement("brls:StorageFile");
+            doc.InsertFirstChild(pRoot);
+            Logger::debug("Made new root element");
 
             // New child element
             XMLElement *element = doc.NewElement("brls:Property");
+            Logger::debug("Made new child element");
 
             element->SetAttribute("name", name.c_str());
+            Logger::debug("Name attribute set");
             if (is_same_type<T, std::string>().result == true)
                 element->SetAttribute("value", objectFromValue.c_str());
             else
                 element->SetAttribute("value", otherToChar<T>(objectFromValue));
+            Logger::debug("Value attribute set");
             element->SetAttribute("type", type.c_str());
-            root->InsertFirstChild(element);
+            Logger::debug("Type attribute set");
+            pRoot->InsertFirstChild(element);
+            Logger::debug("Insertted into root");
 
             // We try to save the file
-            errorCode = doc.SaveFile(file);
-            fclose(file);
+            //errorCode = doc.SaveFile(file);
+            //fclose(file);
+
+            doc.SaveFile(config_path.c_str());
+            Logger::debug("Saved file");
+
             if (errorCode == 0) // If it succedded
                 return true;
             else { // Otherwise
@@ -234,83 +248,103 @@ bool writeToFile(StorageObject<T> value)
         } else { // Otherwise if there is a root element
             // New child element
             XMLElement *element = doc.NewElement("brls:Property");
+            Logger::debug("Made new child element");
 
             element->SetAttribute("name", name.c_str());
+            Logger::debug("Name attribute set");
             if (is_same_type<T, std::string>().result == true)
                 element->SetAttribute("value", objectFromValue.c_str());
             else
                 element->SetAttribute("value", otherToChar<T>(objectFromValue));
+            Logger::debug("Value attribute set");
             element->SetAttribute("type", type.c_str());
+            Logger::debug("Type attribute set");
             root->InsertFirstChild(element);
+            Logger::debug("Insertted into root");
 
             // We try to save the file
-            errorCode = doc.SaveFile(file);
-            fclose(file);
+            //errorCode = doc.SaveFile(file);
+            //fclose(file);
+
+            doc.SaveFile(config_path.c_str());
+            Logger::debug("Saved file");
 
             if (errorCode == 0) // If it succedded
                 return true;
             else { // Otherwise
                 Logger::error("TinyXML2 could not save the file. Error code {}.", std::to_string(errorCode));
+                Logger::error("More details: {}", doc.ErrorStr());
                 return false;
             }
         }
     } else { // Otherwise
         Logger::error("TinyXML2 could not open the file. Error code {}.", std::to_string(errorCode));
+        Logger::error("More details: {}", doc.ErrorStr());
         return false;
     }
 }
 
 void parseXMLToVector(std::string name) 
 {
-    FILE *file = fopen(config_path.c_str(), "rb");
+    //FILE *file = fopen(config_path.c_str(), "rb");
 
     XMLError errorCode;
     XMLDocument doc;
 
-    errorCode = doc.LoadFile(file);
+    //errorCode = doc.LoadFile(file);
+    errorCode = doc.LoadFile(config_path.c_str());
 
     if (errorCode == 0)
     {
-
-        XMLElement *root = doc.RootElement();
+        XMLNode *root = doc.RootElement();
+        Logger::debug("Root node created");
 
         if (!root) {
             Logger::error("NULL root element. This means the XML file is blank (hasn't been written to yet), or the XML file is broken.");
             return;
         }
 
-        XMLElement *elementToBeFound = root->FirstChildElement();
-        
-        while (true) {
-            auto nameAttrib = elementToBeFound->FindAttribute(name.c_str());
+        XMLElement *element = root->FirstChildElement();
+        Logger::debug("elementToBeFound variable defined");
 
-            if (nameAttrib->Value() == name.c_str())
+        for (XMLElement *e = root->FirstChildElement(); e != NULL;
+            e = e->NextSiblingElement()) {
+            Logger::debug("Looping through all child elements in root element...");
+            Logger::debug("{}", e->Attribute("name"));
+
+            if (e->Attribute("name") == name.c_str()) {
+                element = e;
                 break;
-            else {
-                elementToBeFound = root->NextSiblingElement();
-                continue;
             }
         }
 
         const char * valueOfValue;
         const char * valueOfType;
 
-        elementToBeFound->QueryStringAttribute("value", &valueOfValue);
-        elementToBeFound->QueryStringAttribute("type", &valueOfType);
+        element->QueryStringAttribute("value", &valueOfValue);
+        element->QueryStringAttribute("type", &valueOfType);
+        Logger::debug("Attributes extracted");
 
         StorageObject<T> obj{};
+
+        Logger::debug("{} {} {}", valueOfValue, name, valueOfType);
+
         obj.setName(name);
         obj.setType(std::string(valueOfType));
 
-        char * newValueOfValue;
+        char * newValueOfValue = new char[100];
         std::strcpy(newValueOfValue, valueOfValue);
         T actualVal = charToOther<T>(newValueOfValue);
         obj.setValue(actualVal);
 
+        Logger::debug("Set elements of the StorageObject");
+
         allStorageObjects.push_back(obj);
+        Logger::debug("Pushed StorageObject into vector");
 
     } else {
         Logger::error("TinyXML2 could not open the file. Error code {}.", std::to_string(errorCode));
+        Logger::error("More details: {}", doc.ErrorStr());
         return;
     }
 }
@@ -345,18 +379,21 @@ StorageObject<T> readFromFile(std::string name)
  * Returns true if it's empty, false if it's not 
  */
 bool isFileEmpty() {
-    FILE *file = fopen(config_path.c_str(), "rb");
+    //FILE *file = fopen(config_path.c_str(), "rb");
 
     XMLDocument doc;
-    doc.LoadFile(file);
+    //doc.LoadFile(file);
+    doc.LoadFile(config_path.c_str());
 
     XMLElement *root = doc.RootElement();
     if (!root) {
-        fclose(file);
+        //fclose(file);
+        Logger::debug("True returned");
         return true;
     }
     else {
-        fclose(file);
+        //fclose(file);
+        Logger::debug("False returned");
         return false;
     } 
 }

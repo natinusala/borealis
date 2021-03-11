@@ -38,7 +38,12 @@ bool ComponentsTab::onPrimaryButtonClicked(brls::View* view)
     SettingsFile settings;
     
     settings.setup();
-    auto valFromXML = settings.testValue.value();
+    auto valueFromXML = settings.testValue.value();
+
+    valueFromXML = "How are you today?";
+    settings.testValue.setValue(valueFromXML);
+
+    settings.writeToFile(settings.testValue);
 
     return true;
 }
