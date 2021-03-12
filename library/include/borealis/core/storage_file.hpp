@@ -56,7 +56,7 @@ R charToOther(const char * input) {
 
 template <typename R>
 char* otherToChar(R input) {
-    if (is_same_type<R, std::basic_string<char>>().result == true) {
+    if (is_same_type<R, std::basic_string<char>>().result == true) { // This will somehow be true no matter what (maybe I should use a preprocessor check?)
         char * output;
         std::strcpy(output, input.c_str());
         return output;
@@ -65,7 +65,8 @@ char* otherToChar(R input) {
         std::strcpy(output, input.c_str());
         return output;
     } else {
-        std::istringstream iss(input);
+        std::istringstream ss;
+        ss << input;
         char * output;
         std::strcpy(output, iss.str().c_str());
         return output;
@@ -199,13 +200,11 @@ bool writeToFile(StorageObject<T> value, bool overwriteExisting = true)
     if (!std::filesystem::exists(config_path))
         Logger::error("File not found. Make sure to call the init function before this.");
 
-    // Opens a file from stdio (tinyxml2 doesn't support STL) and defines an errorCode variable
-    //FILE *file = fopen(config_path.c_str(), "wb");
+    // Defines an errorCode variable
     XMLError errorCode;
 
     // Defines a doc variable and attempts to load the file
     XMLDocument doc;
-    //errorCode = doc.LoadFile(file);
     errorCode = doc.LoadFile(config_path.c_str());
 
     if (errorCode == 0) // If doc.LoadFile succeded 
@@ -218,30 +217,20 @@ bool writeToFile(StorageObject<T> value, bool overwriteExisting = true)
             // New root element
             XMLNode *pRoot = doc.NewElement("brls:StorageFile");
             doc.InsertFirstChild(pRoot);
-            Logger::debug("Made new root element");
 
             // New child element
             XMLElement *element = doc.NewElement("brls:Property");
-            Logger::debug("Made new child element");
 
             element->SetAttribute("name", name.c_str());
-            Logger::debug("Name attribute set");
             if (is_same_type<T, std::string>().result == true)
                 element->SetAttribute("value", objectFromValue.c_str());
             else
                 element->SetAttribute("value", otherToChar<T>(objectFromValue));
-            Logger::debug("Value attribute set");
             element->SetAttribute("type", type.c_str());
-            Logger::debug("Type attribute set");
             pRoot->InsertFirstChild(element);
-            Logger::debug("Insertted into root");
 
             // We try to save the file
-            //errorCode = doc.SaveFile(file);
-            //fclose(file);
-
             doc.SaveFile(config_path.c_str());
-            Logger::debug("Saved file");
 
             if (errorCode == 0) // If it succedded
                 return true;
@@ -251,28 +240,18 @@ bool writeToFile(StorageObject<T> value, bool overwriteExisting = true)
             }
 
         } else { // Otherwise if there is a root element
-
-            // TODO: Add a check here if there is already an XML Element with the same name attribute
-            // If there is, this function will automatically overwrite it with the new element
-            // If the overwrite bool value is false instead, the new element will not be written
-
-            
             for (XMLElement *e = root->FirstChildElement(); e != NULL;
                     e = e->NextSiblingElement()) {
-                    Logger::debug("Looping through all child elements in root element...");
-                    Logger::debug("{} from XML file, {} from here", e->Attribute("name"), name);
 
                     if (e == nullptr) {
                             Logger::debug("nullptr???");
                             break;
                     }
 
-                    
-
                     if (strcmp(e->Attribute("name"), name.c_str()) == 0 && overwriteExisting) {
-                            Logger::debug("Found another element with the same name as this new element. Overwrite Existing is enabled (by default).");
-                            root->DeleteChild(e);
-                            break;
+                        Logger::debug("Found another element with the same name as this new element. Overwrite Existing is enabled (by default).");
+                        root->DeleteChild(e);
+                        break;
                     } else if (!overwriteExisting) {
                         Logger::debug("Found another element with the same name as this new element. Overwrite Existing is disabled.");
                         return false;
@@ -282,26 +261,17 @@ bool writeToFile(StorageObject<T> value, bool overwriteExisting = true)
 
             // New child element
             XMLElement *element = doc.NewElement("brls:Property");
-            Logger::debug("Made new child element");
 
             element->SetAttribute("name", name.c_str());
-            Logger::debug("Name attribute set");
             if (is_same_type<T, std::string>().result == true)
                 element->SetAttribute("value", objectFromValue.c_str());
             else
                 element->SetAttribute("value", otherToChar<T>(objectFromValue));
-            Logger::debug("Value attribute set");
             element->SetAttribute("type", type.c_str());
-            Logger::debug("Type attribute set");
             root->InsertFirstChild(element);
-            Logger::debug("Insertted into root");
 
             // We try to save the file
-            //errorCode = doc.SaveFile(file);
-            //fclose(file);
-
             doc.SaveFile(config_path.c_str());
-            Logger::debug("Saved file");
 
             if (errorCode == 0) // If it succedded
                 return true;
@@ -325,18 +295,13 @@ bool writeToFile(StorageObject<T> value, bool overwriteExisting = true)
  */
 bool parseXMLToVector(std::string name) 
 {
-    //FILE *file = fopen(config_path.c_str(), "rb");
-
     XMLError errorCode;
     XMLDocument doc;
-
-    //errorCode = doc.LoadFile(file);
     errorCode = doc.LoadFile(config_path.c_str());
 
     if (errorCode == 0)
     {
         XMLNode *root = doc.RootElement();
-        Logger::debug("Root node created");
 
         if (root == nullptr) {
             Logger::error("NULL root element. This means the XML file is blank (hasn't been written to yet), or the XML file is broken.");
@@ -344,12 +309,9 @@ bool parseXMLToVector(std::string name)
         }
 
         XMLElement *element = root->FirstChildElement();
-        Logger::debug("element variable defined");
 
         for (XMLElement *e = root->FirstChildElement(); e != NULL;
             e = e->NextSiblingElement()) {
-            Logger::debug("Looping through all child elements in root element...");
-            Logger::debug("{}", e->Attribute("name"));
 
             if (e == nullptr) {
                 Logger::debug("nullptr???");
@@ -367,11 +329,8 @@ bool parseXMLToVector(std::string name)
 
             element->QueryStringAttribute("value", &valueOfValue);
             element->QueryStringAttribute("type", &valueOfType);
-            Logger::debug("Attributes extracted");
 
             StorageObject<T> obj{};
-
-            Logger::debug("{} {} {}", valueOfValue, name, valueOfType);
 
             obj.setName(name);
             obj.setType(std::string(valueOfType));
@@ -381,13 +340,10 @@ bool parseXMLToVector(std::string name)
             T actualVal = charToOther<T>(newValueOfValue);
             obj.setValue(actualVal);
 
-            Logger::debug("Set elements of the StorageObject");
-
             allStorageObjects.push_back(obj);
-            Logger::debug("Pushed StorageObject into vector");
             return true;
         } else {
-            Logger::error("NULL element variable. This means there is a root element, but no child elements.");
+            Logger::warning("NULL element variable. This means there is a root element, but no child elements.");
             return false;
         }
 
@@ -434,21 +390,14 @@ StorageObject<T> readFromFile(std::string name)
  * Returns true if it's empty, false if it's not 
  */
 bool isFileEmpty() {
-    //FILE *file = fopen(config_path.c_str(), "rb");
-
     XMLDocument doc;
-    //doc.LoadFile(file);
     doc.LoadFile(config_path.c_str());
 
     XMLElement *root = doc.RootElement();
     if (!root) {
-        //fclose(file);
-        Logger::debug("True returned");
         return true;
     }
     else {
-        //fclose(file);
-        Logger::debug("False returned");
         return false;
     } 
 }

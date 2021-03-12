@@ -50,6 +50,10 @@ bool ComponentsTab::onPrimaryButtonClicked(brls::View* view)
     settingObject.setValue("Now I am very cool! :)");
     settings.save(settingObject);
 
+    settingObject.setName("Boolean");
+    settingObject.setType("bool");
+    settingObject.setValue(otherToChar<bool>(true)); //Bang!
+
     return true;
 }
 
