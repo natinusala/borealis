@@ -116,9 +116,28 @@ class Activity
 
     bool isHidden();
 
-    void registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden = false, enum Sound sound = SOUND_NONE);
+    /**
+     * Registers an action with the given parameters on the content view. The listener will be fired
+     * when the user presses the key.
+     *
+     * The listener should return true if the action was consumed, false otherwise.
+     * The sound will only be played if the listener returned true.
+     *
+     * A hidden action will not show up in the bottom-right hints.
+     *
+     * Must be called after the content view is set.
+     *
+     * Returns the identifier for the action, so it can be unregistered later on. Returns -1 if the
+     * action was not registered.
+     */
+    int registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden = false, enum Sound sound = SOUND_NONE);
 
-    void unregisterAction(std::string hintText, enum ControllerButton button, bool hidden = false, enum Sound sound = SOUND_NONE);
+    /**
+     * Unregisters an action with the given identifier on the content view.
+     *
+     * Must be called after the content view is set.
+     */
+    void unregisterAction(int identifier);
 
     void onWindowSizeChanged();
 

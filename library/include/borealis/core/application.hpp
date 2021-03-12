@@ -206,8 +206,10 @@ class Application
 
     inline static std::string commonFooter = "";
 
-    inline static bool globalQuitEnabled = true;
-    inline static bool globalFPSToggleEnabled = true;
+    inline static bool globalQuitEnabled = false;
+    inline static int gloablQuitIdentifier = -1;
+    inline static bool globalFPSToggleEnabled = false;
+    inline static int gloablFPSToggleIdentifier = -1;
 
     inline static View* repetitionOldFocus = nullptr;
 

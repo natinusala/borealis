@@ -439,9 +439,10 @@ void Application::setGlobalQuit(bool enabled) {
     Application::globalQuitEnabled = enabled;
     for (auto it = Application::activitiesStack.begin(); it != Application::activitiesStack.end(); ++it) {
         if (enabled)
-            (*it)->registerAction("brls/hints/exit"_i18n, BUTTON_START, [](View* view) { Application::quit(); return true; });
+            Application::gloablQuitIdentifier = (*it)->registerAction(
+                "brls/hints/exit"_i18n, BUTTON_START, [](View* view) { Application::quit(); return true; });
         else
-            (*it)->unregisterAction("brls/hints/exit"_i18n, BUTTON_START);
+            (*it)->unregisterAction(Application::gloablQuitIdentifier);
     }
 }
 
@@ -449,10 +450,10 @@ void Application::setGlobalFPSToggle(bool enabled) {
     Application::globalFPSToggleEnabled = enabled;
     for (auto it = Application::activitiesStack.begin(); it != Application::activitiesStack.end(); ++it) {
         if (enabled)
-            (*it)->registerAction(
+            Application::gloablFPSToggleIdentifier = (*it)->registerAction(
                 "FPS", BUTTON_BACK, [](View* view) { Application::toggleFramerateDisplay(); return true; }, true);
         else
-            (*it)->unregisterAction("FPS", BUTTON_BACK, true);
+            (*it)->unregisterAction(Application::gloablFPSToggleIdentifier);
     }
 }
 
@@ -561,10 +562,11 @@ void Application::pushActivity(Activity* activity, TransitionAnimation animation
     bool wait    = animation == TransitionAnimation::FADE; // wait for the old activity animation to be done before showing the new one?
 
     if (Application::globalQuitEnabled)
-        activity->registerAction("brls/hints/exit"_i18n, BUTTON_START, [](View* view) { Application::quit(); return true; });
+        Application::gloablQuitIdentifier = activity->registerAction(
+            "brls/hints/exit"_i18n, BUTTON_START, [](View* view) { Application::quit(); return true; });
 
     if (Application::globalFPSToggleEnabled)
-        activity->registerAction(
+        Application::gloablFPSToggleIdentifier = activity->registerAction(
             "FPS", BUTTON_BACK, [](View* view) { Application::toggleFramerateDisplay(); return true; }, true);
 
     // Fade out animation

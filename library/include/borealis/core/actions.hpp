@@ -32,6 +32,7 @@ struct Action
 {
     enum ControllerButton button;
 
+    int identifier;
     std::string hintText;
     bool available;
     bool hidden;

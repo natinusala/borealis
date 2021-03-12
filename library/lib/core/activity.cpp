@@ -112,16 +112,18 @@ bool Activity::isHidden()
     return this->contentView->isHidden();
 }
 
-void Activity::registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden, enum Sound sound)
+int Activity::registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden, enum Sound sound)
 {
     if (this->contentView)
-        this->contentView->registerAction(hintText, button, actionListener, hidden, sound);
+        return this->contentView->registerAction(hintText, button, actionListener, hidden, sound);
+
+    return -1;
 }
 
-void Activity::unregisterAction(std::string hintText, enum ControllerButton button, bool hidden, enum Sound sound)
+void Activity::unregisterAction(int identifier)
 {
     if (this->contentView)
-        this->contentView->unregisterAction(hintText, button, hidden, sound);
+        this->contentView->unregisterAction(identifier);
 }
 
 View* Activity::getDefaultFocus()

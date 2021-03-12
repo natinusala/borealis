@@ -984,13 +984,16 @@ class View
      * The sound will only be played if the listener returned true.
      *
      * A hidden action will not show up in the bottom-right hints.
+     *
+     * Returns the identifier for the action, so it can be unregistered later on. Returns -1 if the
+     * action was not registered.
      */
-    void registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden = false, enum Sound sound = SOUND_NONE);
+    int registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden = false, enum Sound sound = SOUND_NONE);
 
     /**
-     * Unregisters an action for the given button.
+     * Unregisters an action with the given identifier.
      */
-    void unregisterAction(std::string hintText, enum ControllerButton button, bool hidden = false, enum Sound sound = SOUND_NONE);
+    void unregisterAction(int identifier);
 
     /**
      * Shortcut to register a generic "A OK" click action.
