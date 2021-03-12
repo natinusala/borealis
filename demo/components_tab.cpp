@@ -40,14 +40,14 @@ bool ComponentsTab::onPrimaryButtonClicked(brls::View* view)
     SettingsFile settings;
     brls::StorageObject<std::string> burnerObject = brls::StorageObject<std::string>();
 
-    settings.setup(settingObject, burnerObject, "Test");
+    settings.grab(burnerObject, "Test");
 
     if (!burnerObject.getIsEmpty()) 
         settingObject = burnerObject;
 
     std::cout << settingObject.value() << std::endl;
 
-    settingObject.setValue("Now I'm very cool! :)");
+    settingObject.setValue("Now I am very cool! :)");
     settings.save(settingObject);
 
     return true;

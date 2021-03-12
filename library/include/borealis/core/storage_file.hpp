@@ -189,7 +189,7 @@ bool init(std::string filename) {
  * 
  * It gives a fatal error if the filename is not found (call the init function before these functions).
  */
-bool writeToFile(StorageObject<T> value)
+bool writeToFile(StorageObject<T> value, bool overwriteExisting = true)
 {   
     // Gets values from the StorageObject and configures the config_path variable
     T objectFromValue = value.value();
@@ -251,6 +251,35 @@ bool writeToFile(StorageObject<T> value)
             }
 
         } else { // Otherwise if there is a root element
+
+            // TODO: Add a check here if there is already an XML Element with the same name attribute
+            // If there is, this function will automatically overwrite it with the new element
+            // If the overwrite bool value is false instead, the new element will not be written
+
+            
+            for (XMLElement *e = root->FirstChildElement(); e != NULL;
+                    e = e->NextSiblingElement()) {
+                    Logger::debug("Looping through all child elements in root element...");
+                    Logger::debug("{} from XML file, {} from here", e->Attribute("name"), name);
+
+                    if (e == nullptr) {
+                            Logger::debug("nullptr???");
+                            break;
+                    }
+
+                    
+
+                    if (strcmp(e->Attribute("name"), name.c_str()) == 0 && overwriteExisting) {
+                            Logger::debug("Found another element with the same name as this new element. Overwrite Existing is enabled (by default).");
+                            root->DeleteChild(e);
+                            break;
+                    } else if (!overwriteExisting) {
+                        Logger::debug("Found another element with the same name as this new element. Overwrite Existing is disabled.");
+                        return false;
+                    }
+            }
+            
+
             // New child element
             XMLElement *element = doc.NewElement("brls:Property");
             Logger::debug("Made new child element");
@@ -314,10 +343,25 @@ bool parseXMLToVector(std::string name)
             return false;
         }
 
-        XMLElement *element = this->findElementWithCertainAttribute(root, name.c_str());
+        XMLElement *element = root->FirstChildElement();
         Logger::debug("element variable defined");
 
-        if (element != nullptr) {
+        for (XMLElement *e = root->FirstChildElement(); e != NULL;
+            e = e->NextSiblingElement()) {
+            Logger::debug("Looping through all child elements in root element...");
+            Logger::debug("{}", e->Attribute("name"));
+
+            if (e == nullptr) {
+                Logger::debug("nullptr???");
+                break;
+            }
+
+            if (e->Attribute("name") == name.c_str()) {
+                element = e;
+            }
+        }
+
+        if (element != nullptr) { // TODO: Find out why this is always true (are two elements with the same attribute value freaking out the program?)
             const char * valueOfValue;
             const char * valueOfType;
 
@@ -430,24 +474,6 @@ private:
 void setConfigPath(std::string filename) {
     this->filename = filename + ".xml";
     config_path = config_folder + this->filename;
-}
-
-XMLElement* findElementWithCertainAttribute(XMLNode *root, const char *name) {
-    for (XMLElement *e = root->FirstChildElement(); e != NULL;
-        e = e->NextSiblingElement()) {
-        Logger::debug("Looping through all child elements in root element...");
-        Logger::debug("{}", e->Attribute("name"));
-
-        if (e->Attribute("name") == nullptr) {
-            break;
-        }
-
-        if (e->Attribute("name") == name) {
-            return e;
-        }
-    }
-
-    return nullptr;
 }
 
 #ifdef __SWITCH__ // If the client is running on a Switch, this approach is used
