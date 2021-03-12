@@ -156,7 +156,14 @@ class Application
 
     inline static float windowScale;
 
+    /**
+     * Sets whether BUTTON_START will globally be used to close the application.
+     */
     static void setGlobalQuit(bool enabled);
+
+    /**
+     * Sets whether BUTTON_BACK will globally be used to toggle an FPS display.
+     */
     static void setGlobalFPSToggle(bool enabled);
 
     static GenericEvent* getGlobalFocusChangeEvent();
