@@ -33,6 +33,7 @@
 using namespace brls::literals;
 using namespace tinyxml2;
 
+// The following are misc functions that are used for the rest of this program.
 template <typename T1, typename T2>
 struct is_same_type {static const bool result = false;};
 
@@ -74,6 +75,7 @@ char* otherToChar(R input) {
 namespace brls 
 {
 
+// Macros (more will be added once the whole Storage system is simpilified)
 #define BRLS_STORAGE_FILE_INIT(filename) bool initSuccess = this->init(filename)
 #define BRLS_STORAGE_FILE_WRITE_DATA(StorageObject) this->writeToFile(StorageObject)
 #define BRLS_STORAGE_FILE_READ_DATA(StorageObject, name) auto StorageObject = this->readFromFile(name)
@@ -117,10 +119,20 @@ std::string type() {
     return typeOfValue;
 }
 
+void setIsEmpty(bool newVal) {
+    isEmpty = newVal;
+}
+
+bool getIsEmpty() {
+    return isEmpty;
+}
+
 private:
 T valueSet;
 std::string nameInXML;
 std::string typeOfValue;
+
+bool isEmpty;
 
 };
 
@@ -128,7 +140,7 @@ std::string typeOfValue;
 // For example, you can use it for a config or track when a user last used the app.
 // The template is required and can only be one type. You can, however, transform the type into something else
 template <typename T>
-class StorageFile
+class BasicStorageFile
 {
 
 std::vector<StorageObject<T>> allStorageObjects; // Main std::vector where all StorageObjects are stored.
@@ -144,10 +156,7 @@ bool init(std::string filename) {
     if (!std::filesystem::exists(config_folder))
         std::filesystem::create_directory(config_folder);
     
-
-    this->filename = filename + ".xml";
-    
-    this->setConfigPath();
+    this->setConfigPath(filename);
 
     if (std::filesystem::exists(config_path)) {
         Logger::debug("File already exists. Quitting out of init function...");
@@ -163,24 +172,20 @@ bool init(std::string filename) {
     return true;
 }
 
-void setConfigPath() {
-    config_path = config_folder + filename;
-}
-
 /*
- * Writes a value to the config file.
+ * Writes a value to the storage file.
  * 
- * An example would be the following:
- * 
- * <brls:StorageFile>
- *      <brls:Property name="wizard_shown" value="true" type="boolean"/>
+ * An example would be the following: 
+ *
+ *   <brls:StorageFile>
+ *       <brls:Property name="wizard_shown" value="true" type="boolean"/>
  *	
  *	    <brls:Property name="username" value="h4ck3rm4n" type="string"/>
  *	
  *	    <brls:ListProperty name="favorites">
  *		    <brls:Value value="borealis" />
  *	    </brls:ListProperty>
- * </brls:StorageFile>
+ *   </brls:StorageFile>
  * 
  * It gives a fatal error if the filename is not found (call the init function before these functions).
  */
@@ -284,7 +289,12 @@ bool writeToFile(StorageObject<T> value)
     }
 }
 
-void parseXMLToVector(std::string name) 
+/*
+ * In short, this function parses a certain XML element into a
+ * element for the allStorageObjects vector. The certain XML element
+ * is determined by its name attribute, since that attribute is like an id
+ */
+bool parseXMLToVector(std::string name) 
 {
     //FILE *file = fopen(config_path.c_str(), "rb");
 
@@ -299,53 +309,48 @@ void parseXMLToVector(std::string name)
         XMLNode *root = doc.RootElement();
         Logger::debug("Root node created");
 
-        if (!root) {
+        if (root == nullptr) {
             Logger::error("NULL root element. This means the XML file is blank (hasn't been written to yet), or the XML file is broken.");
-            return;
+            return false;
         }
 
-        XMLElement *element = root->FirstChildElement();
-        Logger::debug("elementToBeFound variable defined");
+        XMLElement *element = this->findElementWithCertainAttribute(root, name.c_str());
+        Logger::debug("element variable defined");
 
-        for (XMLElement *e = root->FirstChildElement(); e != NULL;
-            e = e->NextSiblingElement()) {
-            Logger::debug("Looping through all child elements in root element...");
-            Logger::debug("{}", e->Attribute("name"));
+        if (element != nullptr) {
+            const char * valueOfValue;
+            const char * valueOfType;
 
-            if (e->Attribute("name") == name.c_str()) {
-                element = e;
-                break;
-            }
+            element->QueryStringAttribute("value", &valueOfValue);
+            element->QueryStringAttribute("type", &valueOfType);
+            Logger::debug("Attributes extracted");
+
+            StorageObject<T> obj{};
+
+            Logger::debug("{} {} {}", valueOfValue, name, valueOfType);
+
+            obj.setName(name);
+            obj.setType(std::string(valueOfType));
+
+            char * newValueOfValue = new char[100];
+            std::strcpy(newValueOfValue, valueOfValue);
+            T actualVal = charToOther<T>(newValueOfValue);
+            obj.setValue(actualVal);
+
+            Logger::debug("Set elements of the StorageObject");
+
+            allStorageObjects.push_back(obj);
+            Logger::debug("Pushed StorageObject into vector");
+            return true;
+        } else {
+            Logger::error("NULL element variable. This means there is a root element, but no child elements.");
+            return false;
         }
-
-        const char * valueOfValue;
-        const char * valueOfType;
-
-        element->QueryStringAttribute("value", &valueOfValue);
-        element->QueryStringAttribute("type", &valueOfType);
-        Logger::debug("Attributes extracted");
-
-        StorageObject<T> obj{};
-
-        Logger::debug("{} {} {}", valueOfValue, name, valueOfType);
-
-        obj.setName(name);
-        obj.setType(std::string(valueOfType));
-
-        char * newValueOfValue = new char[100];
-        std::strcpy(newValueOfValue, valueOfValue);
-        T actualVal = charToOther<T>(newValueOfValue);
-        obj.setValue(actualVal);
-
-        Logger::debug("Set elements of the StorageObject");
-
-        allStorageObjects.push_back(obj);
-        Logger::debug("Pushed StorageObject into vector");
 
     } else {
         Logger::error("TinyXML2 could not open the file. Error code {}.", std::to_string(errorCode));
         Logger::error("More details: {}", doc.ErrorStr());
-        return;
+        return false;
     }
 }
 
@@ -358,20 +363,26 @@ void parseXMLToVector(std::string name)
  */
 StorageObject<T> readFromFile(std::string name)
 {
-    parseXMLToVector(name);
+    bool result = parseXMLToVector(name);
 
-    size_t numberElement{ 0 }; // Defines numberElement for the return
+    if (result) {
+        size_t numberElement{ 0 }; // Defines numberElement for the return
 
-    for (size_t i{ 0 }; i < allStorageObjects.size(); i++) { // For loop to loop through all elements of the std::vector
-        auto currentElement = allStorageObjects[i]; // Set current element 
+        for (size_t i{ 0 }; i < allStorageObjects.size(); i++) { // For loop to loop through all elements of the std::vector
+            auto currentElement = allStorageObjects[i]; // Set current element 
 
-        if (currentElement.name() == name) { // If the current element name is equal to the name we are looking for
-            numberElement = i; // Set numberElement to i and break the loop
-            break;
+            if (currentElement.name() == name) { // If the current element name is equal to the name we are looking for
+                numberElement = i; // Set numberElement to i and break the loop
+                break;
+            }
         }
-    }
 
-    return allStorageObjects[numberElement]; // Return the StorageObject object from the std::vector
+        return allStorageObjects[numberElement]; // Return the StorageObject object from the std::vector
+    } else {
+        StorageObject<T> nullStorageObject;
+        nullStorageObject.setIsEmpty(true);
+        return nullStorageObject;
+    }
 }
 
 /*
@@ -416,6 +427,29 @@ StorageObject<T> createStorageObject()
 
 private:
 
+void setConfigPath(std::string filename) {
+    this->filename = filename + ".xml";
+    config_path = config_folder + this->filename;
+}
+
+XMLElement* findElementWithCertainAttribute(XMLNode *root, const char *name) {
+    for (XMLElement *e = root->FirstChildElement(); e != NULL;
+        e = e->NextSiblingElement()) {
+        Logger::debug("Looping through all child elements in root element...");
+        Logger::debug("{}", e->Attribute("name"));
+
+        if (e->Attribute("name") == nullptr) {
+            break;
+        }
+
+        if (e->Attribute("name") == name) {
+            return e;
+        }
+    }
+
+    return nullptr;
+}
+
 #ifdef __SWITCH__ // If the client is running on a Switch, this approach is used
 std::string config_folder = std::string("/config/") + "brls/appname"_i18n + "/";
 #else // Otherwise, we assume that the client is running on a PC.
@@ -424,6 +458,48 @@ std::string config_folder = std::string("./config/") + "brls/appname"_i18n + "/"
 std::string filename;
 
 std::string config_path; // This is blank until Init function is called
+
+};
+
+
+// This is a more simple version of the BasicStorageFile class
+// It includes functions that will improve how you use StorageFiles
+// This class is a child class of a BasicStorageFile, so you can use all of those commands
+// from BasicStorageFile, here.
+class StorageFile : public BasicStorageFile<std::string>
+{
+    public:
+
+    /*
+    * A function that either writes data to the Storage File, or reads data depending on if the file is empty or not.
+    * The first argument is for a vaild, not-empty brls::StorageObject variable, 
+    * the second is for a possibly empty brls::StorageObject variable.
+    */
+    bool setup(StorageObject<std::string>& obj1, StorageObject<std::string>& obj2, std::string name) {
+        if (this->isFileEmpty()) {
+            this->writeToFile(obj1);
+        } else {
+            obj2 = this->readFromFile(name);
+        }
+
+        return true;
+    }
+
+    /*
+    * A function that can save your changes to the Storage File.
+    */ 
+    bool save(StorageObject<std::string>& obj) {
+        bool success = this->writeToFile(obj);
+        return success;
+    }
+
+    /*
+    * A function that can grab a value from the Storage File.
+    */
+    bool grab(StorageObject<std::string>& obj, std::string name) {
+        obj = this->readFromFile(name);
+        return true;
+    }
 
 };
 

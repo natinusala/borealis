@@ -35,15 +35,20 @@ ComponentsTab::ComponentsTab()
 bool ComponentsTab::onPrimaryButtonClicked(brls::View* view)
 {
     brls::Logger::info("Clicked");
+
+    brls::StorageObject<std::string> settingObject = brls::StorageObject<std::string>("hi", "Test", "std::string");
     SettingsFile settings;
-    
-    settings.setup();
-    auto valueFromXML = settings.testValue.value();
+    brls::StorageObject<std::string> burnerObject = brls::StorageObject<std::string>();
 
-    valueFromXML = "How are you today?";
-    settings.testValue.setValue(valueFromXML);
+    settings.setup(settingObject, burnerObject, "Test");
 
-    settings.writeToFile(settings.testValue);
+    if (!burnerObject.getIsEmpty()) 
+        settingObject = burnerObject;
+
+    std::cout << settingObject.value() << std::endl;
+
+    settingObject.setValue("Now I'm very cool! :)");
+    settings.save(settingObject);
 
     return true;
 }

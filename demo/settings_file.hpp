@@ -19,20 +19,6 @@
 #include <iostream>
 #include <borealis.hpp>
 
-class SettingsFile : public brls::StorageFile<std::string> {
+class SettingsFile : public brls::StorageFile {
     BRLS_STORAGE_FILE_INIT("settings");
-
-    public:
-    BRLS_STORAGE_FILE_BLANK_STORAGE_OBJECT(testValue, std::string);
-
-    void setup() {
-        if (this->isFileEmpty()) {
-            testValue = this->createStorageObject("Hi", "test", "std::string"); // In order, the arguments mean variableName, value, name, and type (in this case, std::string)
-            brls::Logger::debug("Value: {} Name: {} Type: {}", testValue.value(), testValue.name(), testValue.type());
-            this->writeToFile(testValue);
-        } 
-        else {     
-            testValue = this->readFromFile("test");
-        }
-    }
 };
