@@ -2,6 +2,10 @@
 
 Controller and TV oriented UI library for PC and Nintendo Switch (libnx).
 
+WIP - See the Projects tab to follow the journey towards a stable version!
+
+The code for the old version is available in the `legacy` branch.
+
 - Mimicks the Nintendo Switch system UI, but can also be used to make anything else painlessly
 - Hardware acceleration and vector graphics with automatic scaling for TV usage (powered by nanovg)
 - Can be ported to new platforms and graphics APIs by providing a nanovg implementation
@@ -11,7 +15,7 @@ Controller and TV oriented UI library for PC and Nintendo Switch (libnx).
 - Define user interfaces using XML and only write code when it matters
 - Use and restyle built-in components or make your own from scratch
 - Display large amount of data efficiently using recycling lists
-- Integrated internationalization and config systems
+- Integrated internationalization and storage systems
 - Integrated toolbox (logger, animations, timers, background tasks...)
 
 Documentation is available [right here](https://github.com/natinusala/borealis/wiki). As every documentation, it may not be up to date. Feel free to report any missing info or inconsistency you may find.
