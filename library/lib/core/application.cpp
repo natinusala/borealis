@@ -163,25 +163,29 @@ bool Application::mainLoop()
 
     // Input
     ControllerState controllerState = {};
-    TouchState touchState           = {};
+    RawTouch rawTouch           = {};
 
     InputManager* inputManager = Application::platform->getInputManager();
-    inputManager->updateTouchState(&touchState);
+    inputManager->updateTouchState(&rawTouch);
     inputManager->updateControllerState(&controllerState);
 
+    static Touch oldTouch;
+    Touch touchState = InputManager::computeTouchState(rawTouch, oldTouch);
+    oldTouch = touchState;
+
     // Touch controller events
-    switch (touchState.state)
+    switch (touchState.phase)
     {
-        case TouchEvent::START:
-            Logger::debug("Touched at X: " + std::to_string(touchState.x) + ", Y: " + std::to_string(touchState.y));
+        case TouchPhase::START:
+            Logger::debug("Touched at X: " + std::to_string(touchState.position.x) + ", Y: " + std::to_string(touchState.position.y));
             Application::setInputType(InputType::TOUCH);
 
             // Search for first responder, which will be the root of recognition tree
             firstResponder = Application::activitiesStack[Application::activitiesStack.size() - 1]
                                  ->getContentView()
-                                 ->hitTest(touchState.x, touchState.y);
+                                 ->hitTest(touchState.position);
             break;
-        case TouchEvent::NONE:
+        case TouchPhase::NONE:
             firstResponder = nullptr;
             break;
         default:

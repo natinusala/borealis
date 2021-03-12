@@ -25,24 +25,19 @@ namespace brls
 struct PanAcceleration
 {
     // distances in pixels
-    float distanceX;
-    float distanceY;
+    Point distance;
 
     // times to cover the distance
-    float timeX;
-    float timeY;
+    Point time;
 };
 
 // Current status of gesture
 struct PanGestureStatus
 {
     GestureState state; // Gesture state
-    float x; // Current X position
-    float y; // Current Y position
-    float startX; // Start X position
-    float startY; // Start Y position
-    float deltaX; // Difference between current and previous positions by X
-    float deltaY; // Difference between current and previous positions by Y
+    Point position; // Current position
+    Point startPosition; // Start X position
+    Point delta; // Difference between current and previous positions by X
     
     // Acceleration info, NOT NULL ONLY from
     // gesture callback and when current state is END
@@ -59,12 +54,6 @@ enum class PanAxis
     ANY, // Any movement allowed
 };
 
-struct PanPosition
-{
-    float x;
-    float y;
-};
-
 // Pan recognizer
 // UNSURE: while touch not moved enough to recognize it as pan
 // START: gesture has been recognized
@@ -75,7 +64,7 @@ class PanGestureRecognizer : public GestureRecognizer
 {
   public:
     PanGestureRecognizer(PanGestureRespond respond, PanAxis axis);
-    GestureState recognitionLoop(TouchState touch, View* view, bool* shouldPlayDefaultSound) override;
+    GestureState recognitionLoop(Touch touch, View* view, bool* shouldPlayDefaultSound) override;
 
     // Get pan gesture axis
     PanAxis getAxis() const { return this->axis; }
@@ -85,14 +74,11 @@ class PanGestureRecognizer : public GestureRecognizer
 
   private:
     PanGestureRespond respond;
-    float x;
-    float y;
-    float startX;
-    float startY;
-    float deltaX;
-    float deltaY;
+    Point position;
+    Point startPosition; 
+    Point delta;
     PanAxis axis;
-    std::vector<PanPosition> posHistory;
+    std::vector<Point> posHistory;
     GestureState lastState;
 };
 

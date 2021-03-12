@@ -1,5 +1,6 @@
 /*
     Copyright 2021 natinusala
+    Copyright 2021 XITRIX
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -15,6 +16,8 @@
 */
 
 #pragma once
+
+#include <borealis/core/metrics/point.hpp>
 
 namespace brls
 {
@@ -66,13 +69,14 @@ enum ControllerAxis
 };
 
 // Represents the state of the controller (a gamepad or a keyboard) in the current frame
-typedef struct ControllerState
+struct ControllerState
 {
     bool buttons[_BUTTON_MAX]; // true: pressed
     float axes[_AXES_MAX]; // from 0.0f to 1.0f
-} ControllerState;
+};
 
-enum class TouchEvent
+// Represents a touch phase in the current frame
+enum class TouchPhase
 {
     START,
     STAY,
@@ -80,11 +84,19 @@ enum class TouchEvent
     NONE,
 };
 
-typedef struct TouchState
+// Contains raw touch data
+struct RawTouch 
 {
-    TouchEvent state;
-    float x, y;
-} TouchState;
+    bool pressed;
+    Point position;
+};
+
+// Contains touch data filled with it's current phase
+struct Touch
+{
+    TouchPhase phase;
+    Point position;
+};
 
 // Interface responsible for reporting input state to the application - button presses,
 // axis position and touch screen state
@@ -99,9 +111,14 @@ class InputManager
     virtual void updateControllerState(ControllerState* state) = 0;
 
     /**
-     * Called once every frame to fill the given TouchState struct with the touch state.
+     * Called once every frame to fill the given Touch struct with the touch state.
      */
-    virtual void updateTouchState(TouchState* state) = 0;
+    virtual void updateTouchState(RawTouch* state) = 0;
+
+    /**
+     * Calculate current touch phase based on it's previous state
+     */
+    static Touch computeTouchState(RawTouch currentTouch, Touch lastFrameState);
 };
 
 }; // namespace brls

@@ -112,41 +112,20 @@ void GLFWInputManager::updateControllerState(ControllerState* state)
     }
 }
 
-void GLFWInputManager::updateTouchState(TouchState* state)
+void GLFWInputManager::updateTouchState(RawTouch* state)
 {
-    // Get gamepad state
+    // Get touchscreen state
     double x, y;
     glfwGetCursorPos(this->window, &x, &y);
 
-    state->x = x / Application::windowScale;
-    state->y = y / Application::windowScale;
-    
-    static TouchState oldTouch;
-
+    state->pressed = false;
     int clickState = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
     if (clickState == GLFW_PRESS)
     {
-        if (oldTouch.state == TouchEvent::START || oldTouch.state == TouchEvent::STAY)
-        {
-            state->state = TouchEvent::STAY;
-        }
-        else
-        {
-            state->state = TouchEvent::START;
-        }
+        state->pressed = true;
+        state->position.x = x / Application::windowScale;
+        state->position.y = y / Application::windowScale;
     }
-    else
-    {
-        if (oldTouch.state == TouchEvent::END || oldTouch.state == TouchEvent::NONE)
-        {
-            state->state = TouchEvent::NONE;
-        }
-        else
-        {
-            state->state = TouchEvent::END;
-        }
-    }
-    oldTouch = *state;
 }
 
 };

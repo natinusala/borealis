@@ -32,11 +32,11 @@ class SwitchInputManager : public InputManager
 
     void updateControllerState(ControllerState* state);
 
-    void updateTouchState(TouchState* state);
+    void updateTouchState(RawTouch* state);
 
   private:
     PadState padState;
-    TouchState oldTouch;
+    Touch oldTouch;
 };
 
 } // namespace brls

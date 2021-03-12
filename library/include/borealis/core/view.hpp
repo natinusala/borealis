@@ -26,6 +26,7 @@
 #include <borealis/core/actions.hpp>
 #include <borealis/core/animation.hpp>
 #include <borealis/core/event.hpp>
+#include <borealis/core/metrics/rect.hpp>
 #include <borealis/core/frame_context.hpp>
 #include <borealis/core/gesture.hpp>
 #include <borealis/core/util.hpp>
@@ -162,12 +163,12 @@ class View
     ViewBackground background = ViewBackground::NONE;
 
     void drawBackground(NVGcontext* vg, FrameContext* ctx, Style style);
-    void drawShadow(NVGcontext* vg, FrameContext* ctx, Style style, float x, float y, float width, float height);
-    void drawBorder(NVGcontext* vg, FrameContext* ctx, Style style, float x, float y, float width, float height);
+    void drawShadow(NVGcontext* vg, FrameContext* ctx, Style style, Rect frame);
+    void drawBorder(NVGcontext* vg, FrameContext* ctx, Style style, Rect frame);
     void drawHighlight(NVGcontext* vg, Theme theme, float alpha, Style style, bool background);
-    void drawClickAnimation(NVGcontext* vg, FrameContext* ctx, float x, float y, float width, float height);
-    void drawWireframe(FrameContext* ctx, float x, float y, float width, float height);
-    void drawLine(FrameContext* ctx, float x, float y, float width, float height);
+    void drawClickAnimation(NVGcontext* vg, FrameContext* ctx, Rect frame);
+    void drawWireframe(FrameContext* ctx, Rect frame);
+    void drawLine(FrameContext* ctx, Rect frame);
 
     Animatable highlightAlpha   = 0.0f;
     float highlightPadding      = 0.0f;
@@ -193,11 +194,9 @@ class View
     bool hideHighlightBackground = false;
 
     bool detached         = false;
-    float detachedOriginX = 0.0f;
-    float detachedOriginY = 0.0f;
+    Point detachedOrigin;
 
-    float translationX = 0.0f;
-    float translationY = 0.0f;
+    Point translation;
 
     bool wireframeEnabled = false;
 
@@ -304,6 +303,7 @@ class View
 
     void shakeHighlight(FocusDirection direction);
 
+    Rect getFrame();
     float getX();
     float getY();
     float getWidth();
@@ -1061,7 +1061,7 @@ class View
      * that needs to play it's own click sound, 
      * so play default is allowed
      */
-    bool gestureRecognizerRequest(TouchState touch, View* firstResponder);
+    bool gestureRecognizerRequest(Touch touch, View* firstResponder);
 
     /**
       * Called each frame
@@ -1179,18 +1179,13 @@ class View
     virtual View* getDefaultFocus();
 
     /**
-     * Returns true if point hits inside this view
-     */
-    virtual bool pointInside(double x, double y);
-
-    /**
      * Returns the view to focus with the corresponding screen coordinates in the view or its children,
      * or nullptr if it hasn't been found.
      *
      * Research is done recursively by traversing the tree starting from this view.
      * This view's parents are not traversed.
      */
-    virtual View* hitTest(double x, double y);
+    virtual View* hitTest(Point point);
 
     /**
      * Returns the next view to focus given the requested direction

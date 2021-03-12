@@ -3,6 +3,7 @@ dep_glm   = dependency('glm', version : '>=0.9.8')
 
 borealis_files = files(
     'lib/core/logger.cpp',
+    'lib/core/input.cpp',
     'lib/core/application.cpp',
     'lib/core/i18n.cpp',
     'lib/core/theme.cpp',

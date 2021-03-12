@@ -66,49 +66,21 @@ void SwitchInputManager::updateControllerState(ControllerState* state)
     }
 }
 
-void SwitchInputManager::updateTouchState(TouchState* state)
+void SwitchInputManager::updateTouchState(RawTouch* state)
 {
-    // Get gamepad state
-    static float x = oldTouch.x;
-    static float y = oldTouch.y;
-
+    // Get touchscreen state
     static HidTouchScreenState hidState = { 0 };
     
+    state->pressed = false;
     if (hidGetTouchScreenStates(&hidState, 1))
     {
         if (hidState.count > 0)
         {
-            x = hidState.touches[0].x / Application::windowScale;
-            y = hidState.touches[0].y / Application::windowScale;
+            state->pressed = true;
+            state->position.x = hidState.touches[0].x / Application::windowScale;
+            state->position.y = hidState.touches[0].y / Application::windowScale;
         }
     }
-
-    state->x = x;
-    state->y = y;
-
-    if (hidState.count > 0)
-    {
-        if (oldTouch.state == TouchEvent::START || oldTouch.state == TouchEvent::STAY)
-        {
-            state->state = TouchEvent::STAY;
-        }
-        else
-        {
-            state->state = TouchEvent::START;
-        }
-    }
-    else
-    {
-        if (oldTouch.state == TouchEvent::END || oldTouch.state == TouchEvent::NONE)
-        {
-            state->state = TouchEvent::NONE;
-        }
-        else
-        {
-            state->state = TouchEvent::END;
-        }
-    }
-    oldTouch = *state;
 }
 
 } // namespace brls

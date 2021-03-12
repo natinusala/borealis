@@ -41,7 +41,7 @@ ScrollingFrame::ScrollingFrame()
         if (state.state == GestureState::START)
             startY = this->scrollY * contentHeight;
 
-        float newScroll   = (startY - (state.y - state.startY)) / contentHeight;
+        float newScroll   = (startY - (state.position.y - state.startPosition.y)) / contentHeight;
         float bottomLimit = (contentHeight - this->getScrollingAreaHeight()) / contentHeight;
 
         // Bottom boundary
@@ -57,21 +57,21 @@ ScrollingFrame::ScrollingFrame()
             startScrolling(true, newScroll);
         else
         {
-            float time   = state.acceleration.timeY * 1000.0f;
-            float newPos = this->scrollY * contentHeight + state.acceleration.distanceY;
+            float time   = state.acceleration.time.y * 1000.0f;
+            float newPos = this->scrollY * contentHeight + state.acceleration.distance.y;
 
             // Bottom boundary
             float bottomLimit = contentHeight - this->getScrollingAreaHeight();
             if (newPos > bottomLimit)
             {
-                time   = time * (1 - fabs(newPos - bottomLimit) / fabs(state.acceleration.distanceY));
+                time   = time * (1 - fabs(newPos - bottomLimit) / fabs(state.acceleration.distance.y));
                 newPos = bottomLimit;
             }
 
             // Top boundary
             if (newPos < 0)
             {
-                time   = time * (1 - fabs(newPos) / fabs(state.acceleration.distanceY));
+                time   = time * (1 - fabs(newPos) / fabs(state.acceleration.distance.y));
                 newPos = 0;
             }
 

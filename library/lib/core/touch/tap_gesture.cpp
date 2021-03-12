@@ -25,14 +25,14 @@ TapGestureRecognizer::TapGestureRecognizer(TapGestureRespond respond, bool callb
 {
 }
 
-GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view, bool* shouldPlayDefaultSound)
+GestureState TapGestureRecognizer::recognitionLoop(Touch touch, View* view, bool* shouldPlayDefaultSound)
 {
     if (!enabled)
         return GestureState::FAILED;
 
     // If not first touch frame and state is
     // INTERRUPTED or FAILED, stop recognition
-    if (touch.state != TouchEvent::START)
+    if (touch.phase != TouchPhase::START)
     {
         if (this->state == GestureState::INTERRUPTED || this->state == GestureState::FAILED)
         {
@@ -44,32 +44,31 @@ GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view,
         }
     }
 
-    switch (touch.state)
+    switch (touch.phase)
     {
-        case TouchEvent::START:
+        case TouchPhase::START:
             this->state = GestureState::UNSURE;
-            this->x     = touch.x;
-            this->y     = touch.y;
+            this->position = touch.position;
 
             if (respond && !this->callbackOnEndOnly)
                 *shouldPlayDefaultSound &= this->respond(getCurrentStatus());
             break;
-        case TouchEvent::STAY:
+        case TouchPhase::STAY:
             // Check if touch is out view's bounds
             // if true, FAIL recognition
-            if (touch.x < view->getX() || touch.x > view->getX() + view->getWidth() || touch.y < view->getY() || touch.y > view->getY() + view->getHeight())
+            if (touch.position.x < view->getX() || touch.position.x > view->getX() + view->getWidth() || touch.position.y < view->getY() || touch.position.y > view->getY() + view->getHeight())
             {
                 this->state = GestureState::FAILED;
                 if (respond && !this->callbackOnEndOnly)
                     this->respond(getCurrentStatus());
             }
             break;
-        case TouchEvent::END:
+        case TouchPhase::END:
             this->state = GestureState::END;
             if (respond)
                 this->respond(getCurrentStatus());
             break;
-        case TouchEvent::NONE:
+        case TouchPhase::NONE:
             this->state = GestureState::FAILED;
             break;
     }
@@ -83,8 +82,7 @@ TapGestureStatus TapGestureRecognizer::getCurrentStatus()
     return TapGestureStatus
     {
         .state = this->state,
-        .x = this->x,
-        .y = this->y,
+        .position = this->position,
     };
 }
 

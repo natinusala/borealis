@@ -24,8 +24,7 @@ namespace brls
 struct TapGestureStatus
 {
     GestureState state; // Gesture state
-    float x; // Current X position
-    float y; // Current Y position
+    Point position; // Current position
 };
 typedef std::function<bool(TapGestureStatus)> TapGestureRespond;
 
@@ -39,15 +38,14 @@ class TapGestureRecognizer : public GestureRecognizer
 {
   public:
     TapGestureRecognizer(TapGestureRespond respond, bool callbackOnEndOnly = true);
-    GestureState recognitionLoop(TouchState touch, View* view, bool* shouldPlayDefaultSound) override;
+    GestureState recognitionLoop(Touch touch, View* view, bool* shouldPlayDefaultSound) override;
     
     // Get current state of recognizer
     TapGestureStatus getCurrentStatus();
 
   private:
     TapGestureRespond respond;
-    float x;
-    float y;
+    Point position;
     bool callbackOnEndOnly;
     GestureState lastState;
 };
