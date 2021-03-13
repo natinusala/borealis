@@ -28,11 +28,15 @@ class View;
 
 typedef std::function<bool(View*)> ActionListener;
 
+typedef int ActionIdentifier;
+
+#define ACTION_NONE -1
+
 struct Action
 {
     enum ControllerButton button;
 
-    int identifier;
+    ActionIdentifier identifier;
     std::string hintText;
     bool available;
     bool hidden;

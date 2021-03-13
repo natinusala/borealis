@@ -985,15 +985,15 @@ class View
      *
      * A hidden action will not show up in the bottom-right hints.
      *
-     * Returns the identifier for the action, so it can be unregistered later on. Returns -1 if the
+     * Returns the identifier for the action, so it can be unregistered later on. Returns ACTION_NONE if the
      * action was not registered.
      */
-    int registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden = false, enum Sound sound = SOUND_NONE);
+    ActionIdentifier registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden = false, enum Sound sound = SOUND_NONE);
 
     /**
      * Unregisters an action with the given identifier.
      */
-    void unregisterAction(int identifier);
+    void unregisterAction(ActionIdentifier identifier);
 
     /**
      * Shortcut to register a generic "A OK" click action.

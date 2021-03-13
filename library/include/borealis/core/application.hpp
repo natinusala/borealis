@@ -28,10 +28,8 @@
 #include <borealis/core/platform.hpp>
 #include <borealis/core/style.hpp>
 #include <borealis/core/theme.hpp>
-
 #include <borealis/core/view.hpp>
 #include <borealis/views/label.hpp>
-
 #include <unordered_map>
 #include <vector>
 
@@ -213,10 +211,10 @@ class Application
 
     inline static std::string commonFooter = "";
 
-    inline static bool globalQuitEnabled = false;
-    inline static int gloablQuitIdentifier = -1;
-    inline static bool globalFPSToggleEnabled = false;
-    inline static int gloablFPSToggleIdentifier = -1;
+    inline static bool globalQuitEnabled                     = false;
+    inline static ActionIdentifier gloablQuitIdentifier      = ACTION_NONE;
+    inline static bool globalFPSToggleEnabled                = false;
+    inline static ActionIdentifier gloablFPSToggleIdentifier = ACTION_NONE;
 
     inline static View* repetitionOldFocus = nullptr;
 

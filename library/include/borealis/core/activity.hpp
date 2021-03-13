@@ -127,27 +127,27 @@ class Activity
      *
      * Must be called after the content view is set.
      *
-     * Returns the identifier for the action, so it can be unregistered later on. Returns -1 if the
+     * Returns the identifier for the action, so it can be unregistered later on. Returns ACTION_NONE if the
      * action was not registered.
      */
-    int registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden = false, enum Sound sound = SOUND_NONE);
+    ActionIdentifier registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden = false, enum Sound sound = SOUND_NONE);
 
     /**
      * Unregisters an action with the given identifier on the content view.
      *
      * Must be called after the content view is set.
      */
-    void unregisterAction(int identifier);
+    void unregisterAction(ActionIdentifier identifier);
 
     /**
      * Registers an action to exit the application with the default button BUTTON_START.
      *
      * Must be called after the content view is set.
      *
-     * Returns the identifier for the action, so it can be unregistered later on. Returns -1 if the
+     * Returns the identifier for the action, so it can be unregistered later on. Returns ACTION_NONE if the
      * action was not registered.
      */
-    int registerExitAction(enum ControllerButton button = brls::BUTTON_START);
+    ActionIdentifier registerExitAction(enum ControllerButton button = brls::BUTTON_START);
 
     void onWindowSizeChanged();
 

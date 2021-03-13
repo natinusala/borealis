@@ -611,9 +611,9 @@ void View::drawBackground(NVGcontext* vg, FrameContext* ctx, Style style)
     }
 }
 
-int View::registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden, enum Sound sound)
+ActionIdentifier View::registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden, enum Sound sound)
 {
-    int nextIdentifier = (this->actions.size() == 0) ? 1 : this->actions.back().identifier + 1;
+    ActionIdentifier nextIdentifier = (this->actions.size() == 0) ? 1 : this->actions.back().identifier + 1;
 
     if (auto it = std::find(this->actions.begin(), this->actions.end(), button); it != this->actions.end())
         *it = { button, nextIdentifier, hintText, true, hidden, sound, actionListener };
@@ -623,10 +623,9 @@ int View::registerAction(std::string hintText, enum ControllerButton button, Act
     return nextIdentifier;
 }
 
-void View::unregisterAction(int identifier)
+void View::unregisterAction(ActionIdentifier identifier)
 {
-    auto is_matched_action = [identifier](Action action)
-    {
+    auto is_matched_action = [identifier](Action action) {
         return action.identifier == identifier;
     };
     if (auto it = std::find_if(this->actions.begin(), this->actions.end(), is_matched_action); it != this->actions.end())
