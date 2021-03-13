@@ -16,6 +16,9 @@
 
 #include <borealis/core/activity.hpp>
 #include <borealis/core/application.hpp>
+#include <borealis/core/i18n.hpp>
+
+using namespace brls::literals;
 
 namespace brls
 {
@@ -124,6 +127,14 @@ void Activity::unregisterAction(int identifier)
 {
     if (this->contentView)
         this->contentView->unregisterAction(identifier);
+}
+
+int Activity::registerExitAction(enum ControllerButton button)
+{
+    if (this->contentView)
+        return this->contentView->registerAction("brls/hints/exit"_i18n, button, [](View* view) { Application::quit(); return true; });
+
+    return -1;
 }
 
 View* Activity::getDefaultFocus()

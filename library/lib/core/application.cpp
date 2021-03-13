@@ -51,8 +51,6 @@ constexpr uint32_t ORIGINAL_WINDOW_HEIGHT = 720;
 #define BUTTON_REPEAT_DELAY 15
 #define BUTTON_REPEAT_CADENCY 5
 
-using namespace brls::literals;
-
 namespace brls
 {
 
@@ -439,8 +437,7 @@ void Application::setGlobalQuit(bool enabled) {
     Application::globalQuitEnabled = enabled;
     for (auto it = Application::activitiesStack.begin(); it != Application::activitiesStack.end(); ++it) {
         if (enabled)
-            Application::gloablQuitIdentifier = (*it)->registerAction(
-                "brls/hints/exit"_i18n, BUTTON_START, [](View* view) { Application::quit(); return true; });
+            Application::gloablQuitIdentifier = (*it)->registerExitAction();
         else
             (*it)->unregisterAction(Application::gloablQuitIdentifier);
     }
@@ -562,8 +559,7 @@ void Application::pushActivity(Activity* activity, TransitionAnimation animation
     bool wait    = animation == TransitionAnimation::FADE; // wait for the old activity animation to be done before showing the new one?
 
     if (Application::globalQuitEnabled)
-        Application::gloablQuitIdentifier = activity->registerAction(
-            "brls/hints/exit"_i18n, BUTTON_START, [](View* view) { Application::quit(); return true; });
+        Application::gloablQuitIdentifier = activity->registerExitAction();
 
     if (Application::globalFPSToggleEnabled)
         Application::gloablFPSToggleIdentifier = activity->registerAction(

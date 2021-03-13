@@ -139,6 +139,16 @@ class Activity
      */
     void unregisterAction(int identifier);
 
+    /**
+     * Registers an action to exit the application with the default button BUTTON_START.
+     *
+     * Must be called after the content view is set.
+     *
+     * Returns the identifier for the action, so it can be unregistered later on. Returns -1 if the
+     * action was not registered.
+     */
+    int registerExitAction(enum ControllerButton button = brls::BUTTON_START);
+
     void onWindowSizeChanged();
 
     View* getDefaultFocus();
