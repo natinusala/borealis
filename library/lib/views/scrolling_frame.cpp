@@ -54,7 +54,7 @@ ScrollingFrame::ScrollingFrame()
 
         // Start animation
         if (state.state != GestureState::END)
-            startScrolling(true, newScroll);
+            startScrolling(false, newScroll);
         else
         {
             float time   = state.acceleration.time.y * 1000.0f;
@@ -197,6 +197,7 @@ void ScrollingFrame::startScrolling(bool animated, float newScroll)
     {
         this->scrollY.stop();
         this->scrollY = newScroll;
+        this->scrollAnimationTick();
         this->invalidate();
     }
 }
