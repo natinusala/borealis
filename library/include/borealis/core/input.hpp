@@ -85,7 +85,7 @@ enum class TouchPhase
 };
 
 // Contains raw touch data
-struct RawTouch 
+struct RawTouch
 {
     bool pressed;
     Point position;

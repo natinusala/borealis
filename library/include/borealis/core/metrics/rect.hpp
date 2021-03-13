@@ -27,57 +27,54 @@ struct Rect
 {
     Point origin; // A point that specifies the coordinates of the rectangle’s origin.
     Size size; // A size that specifies the height and width of the rectangle.
-    
+
     // Creates a rectangle with origin (0,0) and size (0,0).
     Rect()
     {
         this->origin = Point();
-        this->size = Size();
+        this->size   = Size();
     }
-    
+
     // Creates a rectangle with the specified origin and size.
     Rect(Point origin, Size size)
     {
         this->origin = origin;
-        this->size = size;
+        this->size   = size;
     }
-    
+
     // Creates a rectangle with coordinates and dimensions specified as float values.
     Rect(float x, float y, float width, float height)
     {
         this->origin = Point(x, y);
-        this->size = Size(width, height);
+        this->size   = Size(width, height);
     }
-    
+
     float getWidth() const { return this->size.width; } // Returns the width of a rectangle.
     float getHeight() const { return this->size.height; } // Returns the height of a rectangle.
-    
+
     float getMinX() const { return this->origin.x; } // Returns the smallest value for the x-coordinate of the rectangle.
     float getMinY() const { return this->origin.y; } // Returns the smallest value for the y-coordinate of the rectangle.
-    
+
     float getMidX() const { return this->origin.x + getWidth() / 2; } // Returns the x-coordinate that establishes the center of a rectangle.
     float getMidY() const { return this->origin.y + getHeight() / 2; } // Returns the y-coordinate that establishes the center of the rectangle.
-    
+
     float getMaxX() const { return this->origin.x + getWidth(); } // Returns the largest value of the x-coordinate for the rectangle.
     float getMaxY() const { return this->origin.y + getHeight(); } // Returns the largest value for the y-coordinate of the rectangle.
-    
-    bool operator==(const Rect& other) const {
+
+    bool operator==(const Rect& other) const
+    {
         return origin == other.origin && size == other.size;
     }
-    
-    
+
     // Returns true if point is inside this Rect
     bool pointInside(Point point)
     {
         return getMinX() <= point.x && getMaxX() >= point.x && getMinY() <= point.y && getMaxY() >= point.y;
     }
-    
+
     std::string describe()
     {
-        return "X: " + std::to_string((int)getMinX()) +
-             ", Y: " + std::to_string((int)getMinY()) +
-             ", W: " + std::to_string((int)getWidth()) +
-             ", H: " + std::to_string((int)getHeight());
+        return "X: " + std::to_string((int)getMinX()) + ", Y: " + std::to_string((int)getMinY()) + ", W: " + std::to_string((int)getWidth()) + ", H: " + std::to_string((int)getHeight());
     }
 };
 

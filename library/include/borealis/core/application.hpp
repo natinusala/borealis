@@ -29,10 +29,8 @@
 #include <borealis/core/platform.hpp>
 #include <borealis/core/style.hpp>
 #include <borealis/core/theme.hpp>
-
 #include <borealis/core/view.hpp>
 #include <borealis/views/label.hpp>
-
 #include <unordered_map>
 #include <vector>
 

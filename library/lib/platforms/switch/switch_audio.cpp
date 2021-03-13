@@ -57,7 +57,8 @@ SwitchAudioPlayer::SwitchAudioPlayer()
     char bfsarPath[29];
     u64 programId = 0;
     svcGetInfo(&programId, InfoType_ProgramId, CUR_PROCESS_HANDLE, 0);
-    if (programId != QLAUNCH_PID) {
+    if (programId != QLAUNCH_PID)
+    {
         // Mount qlaunch ROMFS for the BFSAR
         Result result = romfsMountDataStorageFromProgram(QLAUNCH_PID, QLAUNCH_MOUNT_POINT);
         if (!R_SUCCEEDED(result))

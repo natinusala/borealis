@@ -122,7 +122,7 @@ void GLFWInputManager::updateTouchState(RawTouch* state)
     int clickState = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
     if (clickState == GLFW_PRESS)
     {
-        state->pressed = true;
+        state->pressed    = true;
         state->position.x = x / Application::windowScale;
         state->position.y = y / Application::windowScale;
     }

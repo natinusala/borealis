@@ -163,7 +163,7 @@ bool Application::mainLoop()
 
     // Input
     ControllerState controllerState = {};
-    RawTouch rawTouch           = {};
+    RawTouch rawTouch               = {};
 
     InputManager* inputManager = Application::platform->getInputManager();
     inputManager->updateTouchState(&rawTouch);
@@ -171,7 +171,7 @@ bool Application::mainLoop()
 
     static Touch oldTouch;
     Touch touchState = InputManager::computeTouchState(rawTouch, oldTouch);
-    oldTouch = touchState;
+    oldTouch         = touchState;
 
     // Touch controller events
     switch (touchState.phase)

@@ -24,42 +24,44 @@ struct Size
 {
     float width; // A width value.
     float height; // A height value.
-    
+
     // Creates a size with zero width and height.
-    Size(): Size(0.0f, 0.0f)
-    { }
-    
+    Size()
+        : Size(0.0f, 0.0f)
+    {
+    }
+
     // Creates a size with dimensions specified as float values.
     Size(float width, float height)
     {
-        this->width = width;
+        this->width  = width;
         this->height = height;
     }
-    
+
     Size operator+(const Size& a) const
     {
-        return Size(a.width+width, a.height+height);
+        return Size(a.width + width, a.height + height);
     }
-    
+
     Size operator-(const Size& a) const
     {
-        return Size(a.width-width, a.height-height);
+        return Size(a.width - width, a.height - height);
     }
-    
+
     Size operator/(const float& a) const
     {
-        return Size(width/a, height/a);
+        return Size(width / a, height / a);
     }
-    
+
     Size operator*(const float& a) const
     {
-        return Size(width*a, height*a);
+        return Size(width * a, height * a);
     }
-    
-    bool operator==(const Size& other) const {
+
+    bool operator==(const Size& other) const
+    {
         return width == other.width && height == other.height;
     }
 };
-
 
 } // namespace brls

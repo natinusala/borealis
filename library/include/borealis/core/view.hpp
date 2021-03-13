@@ -26,9 +26,9 @@
 #include <borealis/core/actions.hpp>
 #include <borealis/core/animation.hpp>
 #include <borealis/core/event.hpp>
-#include <borealis/core/metrics/rect.hpp>
 #include <borealis/core/frame_context.hpp>
 #include <borealis/core/gesture.hpp>
+#include <borealis/core/metrics/rect.hpp>
 #include <borealis/core/util.hpp>
 #include <functional>
 #include <memory>
@@ -193,7 +193,7 @@ class View
 
     bool hideHighlightBackground = false;
 
-    bool detached         = false;
+    bool detached = false;
     Point detachedOrigin;
 
     Point translation;

@@ -24,42 +24,44 @@ struct Point
 {
     float x; // The x-coordinate of the point.
     float y; // The y-coordinate of the point.
-    
+
     // Creates a point with location (0,0).
-    Point(): Point(0.0f, 0.0f)
-    { }
-    
+    Point()
+        : Point(0.0f, 0.0f)
+    {
+    }
+
     // Creates a point with coordinates specified as float values.
     Point(float x, float y)
     {
         this->x = x;
         this->y = y;
     }
-    
+
     Point operator+(const Point& a) const
     {
-        return Point(a.x+x, a.y+y);
+        return Point(a.x + x, a.y + y);
     }
-    
+
     Point operator-(const Point& a) const
     {
-        return Point(a.x-x, a.y-y);
+        return Point(a.x - x, a.y - y);
     }
-    
+
     Point operator/(const float& a) const
     {
-        return Point(x/a, y/a);
+        return Point(x / a, y / a);
     }
-    
+
     Point operator*(const float& a) const
     {
-        return Point(x*a, y*a);
+        return Point(x * a, y * a);
     }
-    
-    bool operator==(const Point& other) const {
+
+    bool operator==(const Point& other) const
+    {
         return x == other.x && y == other.y;
     }
 };
-
 
 } // namespace brls

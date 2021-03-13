@@ -38,7 +38,7 @@ struct PanGestureStatus
     Point position; // Current position
     Point startPosition; // Start X position
     Point delta; // Difference between current and previous positions by X
-    
+
     // Acceleration info, NOT NULL ONLY from
     // gesture callback and when current state is END
     PanAcceleration acceleration;
@@ -68,14 +68,14 @@ class PanGestureRecognizer : public GestureRecognizer
 
     // Get pan gesture axis
     PanAxis getAxis() const { return this->axis; }
-    
+
     // Get current state of recognizer
     PanGestureStatus getCurrentStatus();
 
   private:
     PanGestureRespond respond;
     Point position;
-    Point startPosition; 
+    Point startPosition;
     Point delta;
     PanAxis axis;
     std::vector<Point> posHistory;

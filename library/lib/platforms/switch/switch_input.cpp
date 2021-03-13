@@ -70,13 +70,13 @@ void SwitchInputManager::updateTouchState(RawTouch* state)
 {
     // Get touchscreen state
     static HidTouchScreenState hidState = { 0 };
-    
+
     state->pressed = false;
     if (hidGetTouchScreenStates(&hidState, 1))
     {
         if (hidState.count > 0)
         {
-            state->pressed = true;
+            state->pressed    = true;
             state->position.x = hidState.touches[0].x / Application::windowScale;
             state->position.y = hidState.touches[0].y / Application::windowScale;
         }

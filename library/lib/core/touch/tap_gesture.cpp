@@ -47,7 +47,7 @@ GestureState TapGestureRecognizer::recognitionLoop(Touch touch, View* view, bool
     switch (touch.phase)
     {
         case TouchPhase::START:
-            this->state = GestureState::UNSURE;
+            this->state    = GestureState::UNSURE;
             this->position = touch.position;
 
             if (respond && !this->callbackOnEndOnly)
@@ -79,9 +79,8 @@ GestureState TapGestureRecognizer::recognitionLoop(Touch touch, View* view, bool
 
 TapGestureStatus TapGestureRecognizer::getCurrentStatus()
 {
-    return TapGestureStatus
-    {
-        .state = this->state,
+    return TapGestureStatus {
+        .state    = this->state,
         .position = this->position,
     };
 }

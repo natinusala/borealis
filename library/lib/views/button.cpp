@@ -189,14 +189,15 @@ void Button::setState(ButtonState state)
     this->applyStyle();
 }
 
-void Button::setText(std::string text) {
+void Button::setText(std::string text)
+{
     this->label->setText(text);
 }
 
-std::string Button::getText() {
+std::string Button::getText()
+{
     return label->getFullText();
 }
-
 
 View* Button::create()
 {

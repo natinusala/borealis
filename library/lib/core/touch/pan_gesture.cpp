@@ -53,7 +53,7 @@ GestureState PanGestureRecognizer::recognitionLoop(Touch touch, View* view, bool
     {
         case TouchPhase::START:
             this->posHistory.clear();
-            this->state  = GestureState::UNSURE;
+            this->state         = GestureState::UNSURE;
             this->startPosition = touch.position;
             this->position      = touch.position;
             break;
@@ -94,7 +94,7 @@ GestureState PanGestureRecognizer::recognitionLoop(Touch touch, View* view, bool
             }
 
             // If last touch frame, calculate acceleration
-            
+
             static PanAcceleration acceleration;
             if (this->state == GestureState::END)
             {
@@ -116,7 +116,7 @@ GestureState PanGestureRecognizer::recognitionLoop(Touch touch, View* view, bool
             if (this->state == GestureState::START || this->state == GestureState::STAY || this->state == GestureState::END)
             {
                 PanGestureStatus state = getCurrentStatus();
-                state.acceleration = acceleration;
+                state.acceleration     = acceleration;
                 this->respond(state);
             }
 
@@ -138,12 +138,11 @@ GestureState PanGestureRecognizer::recognitionLoop(Touch touch, View* view, bool
 
 PanGestureStatus PanGestureRecognizer::getCurrentStatus()
 {
-    return PanGestureStatus
-    {
-        .state = this->state,
-        .position = this->position,
+    return PanGestureStatus {
+        .state         = this->state,
+        .position      = this->position,
         .startPosition = this->startPosition,
-        .delta = this->delta,
+        .delta         = this->delta,
     };
 }
 
