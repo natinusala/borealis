@@ -36,24 +36,6 @@ bool ComponentsTab::onPrimaryButtonClicked(brls::View* view)
 {
     brls::Logger::info("Clicked");
 
-    brls::StorageObject<std::string> settingObject = brls::StorageObject<std::string>("hi", "Test", "std::string");
-    SettingsFile settings;
-    brls::StorageObject<std::string> burnerObject = brls::StorageObject<std::string>();
-
-    settings.grab(burnerObject, "Test");
-
-    if (!burnerObject.getIsEmpty()) 
-        settingObject = burnerObject;
-
-    std::cout << settingObject.value() << std::endl;
-
-    settingObject.setValue("Now I am very cool! :)");
-    settings.save(settingObject);
-
-    settingObject.setName("Boolean");
-    settingObject.setType("bool");
-    settingObject.setValue(otherToChar<bool>(true)); //Bang!
-
     return true;
 }
 

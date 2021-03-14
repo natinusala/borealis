@@ -18,6 +18,11 @@
 
     <brls:Separator />
 
+    <!-- For testing of Storage File (might be removed before merge) -->
+    <brls:Tab label="Storage File demo">
+        <StorageFileDemo />
+    </brls:Tab>
+
     <brls:Tab label="@i18n/demo/tabs/popups" />
     <brls:Tab label="@i18n/demo/tabs/hos_layout" />
 
