@@ -18,7 +18,7 @@
 
 #define FPS 60.0f // TODO: get real FPS
 #define MAX_DELTA_MOVEMENT 10
-#define HISTORY_LIMIT 3
+#define HISTORY_LIMIT 2
 #define PAN_SCROLL_ACCELERATION -5000
 
 namespace brls
