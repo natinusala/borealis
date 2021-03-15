@@ -27,8 +27,8 @@
 #include <borealis/core/animation.hpp>
 #include <borealis/core/event.hpp>
 #include <borealis/core/frame_context.hpp>
+#include <borealis/core/geometry.hpp>
 #include <borealis/core/gesture.hpp>
-#include <borealis/core/metrics/rect.hpp>
 #include <borealis/core/util.hpp>
 #include <functional>
 #include <memory>

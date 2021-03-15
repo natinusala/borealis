@@ -29,6 +29,7 @@
 #include <borealis/core/event.hpp>
 #include <borealis/core/font.hpp>
 #include <borealis/core/frame_context.hpp>
+#include <borealis/core/geometry.hpp>
 #include <borealis/core/gesture.hpp>
 #include <borealis/core/i18n.hpp>
 #include <borealis/core/input.hpp>

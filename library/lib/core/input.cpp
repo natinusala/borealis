@@ -21,7 +21,7 @@ namespace brls
 
 Touch InputManager::computeTouchState(RawTouch currentTouch, Touch lastFrameState)
 {
-    Touch result    = {};
+    Touch result = {};
 
     if (currentTouch.pressed)
     {

@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <borealis/core/metrics/point.hpp>
+#include <borealis/core/geometry.hpp>
 
 namespace brls
 {
