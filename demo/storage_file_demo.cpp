@@ -27,17 +27,19 @@ StorageFileDemo::StorageFileDemo() {
 }
 
 bool StorageFileDemo::onWriteDataButtonPressed(brls::View *view) {
-    SettingsFile settings;
+    SettingsFile *settings = new SettingsFile();
     settingsObject.setName("Demo");
-    settingsObject.setType("std::string");
-    settingsObject.setValue("Hello! I'm coming soon to the release of Borealis!");
-    settings.save(settingsObject);
+    settingsObject.setType("char*");
+
+    const char *const_val = "Hello! I'm coming soon to the release of Borealis!";
+    settingsObject.setValue((char*) const_val);
+    settings->save(settingsObject);
     return true;
 }
 
 bool StorageFileDemo::onReadDataButtonPressed(brls::View *view) {
-    SettingsFile settings;
-    settings.grab(burnerObject, "Demo");
+    SettingsFile *settings = new SettingsFile();
+    settings->grab(burnerObject, "Demo");
 
     if (!burnerObject.getIsEmpty())
         settingsObject = burnerObject;

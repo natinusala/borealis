@@ -17,17 +17,13 @@
 #pragma once
 
 #include <tinyxml2/tinyxml2.h>
-#include <filesystem>
 #include <iostream>
-#include <sstream>
 #include <fstream>
-#include <stdio.h>
+#include <filesystem>
 #include <string.h>
 #include <string>
 #include <vector>
-#include <type_traits>
 #include <borealis/core/logger.hpp>
-#include <borealis/core/util.hpp>
 #include <borealis/core/i18n.hpp>
 
 using namespace brls::literals;
@@ -38,7 +34,7 @@ namespace brls
 
 // Macros (more will be added once the whole Storage system is simpilified)
 #define BRLS_STORAGE_FILE_INIT(filename) bool initSuccess = this->init(filename)
-#define BRLS_STORAGE_FILE_WRITE_DATA(StorageObject) this->writeToFile(StorageObject)
+#define BRLS_STORAGE_FILE_WRITE_DATA(StorageObject, variableBool) variableBool = this->writeToFile(StorageObject)
 #define BRLS_STORAGE_FILE_READ_DATA(StorageObject, name) StorageObject = this->readFromFile(name)
 #define BRLS_STORAGE_FILE_STORAGE_OBJECT(variableName, value, name, type) brls::StorageObject variableName = brls::StorageObject(value, name, type)
 #define BRLS_STORAGE_FILE_BLANK_STORAGE_OBJECT(variableName) brls::StorageObject variableName = brls::StorageObject()
@@ -53,7 +49,12 @@ class StorageObject
     public:
 
     StorageObject() {}
-    StorageObject(char *val, std::string name, std::string type) {this->setValue(val); this->setName(name); this->setType(type);}
+    StorageObject(char *val, std::string name, std::string type) {
+        valueSet = new char[sizeof(val) + 1];
+        this->setValue(val);
+        this->setName(name); 
+        this->setType(type);
+    }
 
     void setValue(char *newValue) {
         valueSet = newValue;
@@ -92,7 +93,7 @@ class StorageObject
     std::string nameInXML;
     std::string typeOfValue;
 
-    bool isEmpty;
+    bool isEmpty = false;
 
 };
 
@@ -106,10 +107,10 @@ class BasicStorageFile
     public:
 
     /*
-    * Inits the config folder if it doesn't exist and creates a file.
-    * Remember to not include the .xml part in the filename argument, it's already added.
-    * If you don't, tinyxml2 will look for file (.)/config/(appname here)/(filename here).xml.xml later on.
-    */
+     * Inits the config folder if it doesn't exist and creates a file.
+     * Remember to not include the .xml part in the filename argument, it's already added.
+     * If you don't, tinyxml2 will look for file (.)/config/(appname here)/(filename here).xml.xml later on.
+     */
     bool init(std::string filename) {
         if (!std::filesystem::exists(config_folder))
             std::filesystem::create_directory(config_folder);
@@ -131,22 +132,22 @@ class BasicStorageFile
     }
 
     /*
-    * Writes a value to the storage file.
-    * 
-    * An example would be the following: 
-    *
-    *   <brls:StorageFile>
-    *       <brls:Property name="wizard_shown" value="true" type="boolean"/>
-    *	
-    *	    <brls:Property name="username" value="h4ck3rm4n" type="string"/>
-    *	
-    *	    <brls:ListProperty name="favorites">
-    *		    <brls:Value value="borealis" />
-    *	    </brls:ListProperty>
-    *   </brls:StorageFile>
-    * 
-    * It gives a fatal error if the filename is not found (call the init function before these functions).
-    */
+     * Writes a value to the storage file.
+     * 
+     * An example would be the following: 
+     *
+     *   <brls:StorageFile>
+     *       <brls:Property name="wizard_shown" value="true" type="boolean"/>
+     *	
+     *	    <brls:Property name="username" value="h4ck3rm4n" type="string"/>
+     *	
+     *	    <brls:ListProperty name="favorites">
+     *		    <brls:Value value="borealis" />
+     *	    </brls:ListProperty>
+     *   </brls:StorageFile>
+     * 
+     * It gives a fatal error if the filename is not found (call the init function before these functions).
+     */
     bool writeToFile(StorageObject value, bool overwriteExisting = true)
     {   
             // Gets values from the StorageObject and configures the config_path variable
@@ -164,75 +165,71 @@ class BasicStorageFile
             XMLDocument doc;
             errorCode = doc.LoadFile(config_path.c_str());
 
-            if (errorCode == 0) // If doc.LoadFile succeded 
+            XMLElement *root = doc.RootElement(); // We determine the root element (null or an actual element)
+
+            if ((!root || errorCode == XML_ERROR_EMPTY_DOCUMENT) || (!root && errorCode == XML_ERROR_EMPTY_DOCUMENT)) // If root is null or LoadFile returned the XML_ERROR_EMPTY_DOCUMENT error or both (which means a new file)
             {
+                // New root element
+                XMLNode *pRoot = doc.NewElement("brls:StorageFile");
+                doc.InsertFirstChild(pRoot);
 
-                XMLElement *root = doc.RootElement(); // We determine the root element (null or an actual element)
+                // New child element
+                XMLElement *element = doc.NewElement("brls:Property");
 
-                if (!root) // If root is null (which means a new file)
-                {
-                    // New root element
-                    XMLNode *pRoot = doc.NewElement("brls:StorageFile");
-                    doc.InsertFirstChild(pRoot);
+                element->SetAttribute("name", name.c_str());
+                element->SetAttribute("value", objectFromValue);
+                element->SetAttribute("type", type.c_str());
+                pRoot->InsertFirstChild(element);
 
-                    // New child element
-                    XMLElement *element = doc.NewElement("brls:Property");
+                // We try to save the file
+                doc.SaveFile(config_path.c_str());
 
-                    element->SetAttribute("name", name.c_str());
-                    element->SetAttribute("value", objectFromValue);
-                    element->SetAttribute("type", type.c_str());
-                    pRoot->InsertFirstChild(element);
+                if (errorCode == 0) // If it succedded
+                    return true;
+                else { // Otherwise
+                    Logger::error("TinyXML2 could not save the file. Error code {}.", std::to_string(errorCode));
+                    return false;
+                }
 
-                    // We try to save the file
-                    doc.SaveFile(config_path.c_str());
+            } else if (errorCode != XML_ERROR_EMPTY_DOCUMENT) { // Otherwise if there is a root element or LoadFile didn't return an error
+                for (XMLElement *e = root->FirstChildElement(); e != NULL;
+                        e = e->NextSiblingElement()) {
 
-                    if (errorCode == 0) // If it succedded
-                        return true;
-                    else { // Otherwise
-                        Logger::error("TinyXML2 could not save the file. Error code {}.", std::to_string(errorCode));
-                        return false;
-                    }
+                        if (e == nullptr) {
+                            Logger::debug("nullptr???");
+                            break;
+                        }
 
-                } else { // Otherwise if there is a root element
-                    for (XMLElement *e = root->FirstChildElement(); e != NULL;
-                            e = e->NextSiblingElement()) {
-
-                            if (e == nullptr) {
-                                    Logger::debug("nullptr???");
-                                    break;
-                            }
-
-                            if (strcmp(e->Attribute("name"), name.c_str()) == 0 && overwriteExisting) {
-                                Logger::debug("Found another element with the same name as this new element. Overwrite Existing is enabled (by default).");
-                                root->DeleteChild(e);
-                                break;
-                            } else if (!overwriteExisting) {
-                                Logger::debug("Found another element with the same name as this new element. Overwrite Existing is disabled.");
-                                return false;
-                            }
-                    }
+                        if (strcmp(e->Attribute("name"), name.c_str()) == 0 && overwriteExisting) {
+                            Logger::debug("Found another element with the same name as this new element. Overwrite Existing is enabled (by default).");
+                            root->DeleteChild(e);
+                            break;
+                        } else if (!overwriteExisting) {
+                            Logger::debug("Found another element with the same name as this new element. Overwrite Existing is disabled.");
+                            return false;
+                        }
+                }
                     
 
-                    // New child element
-                    XMLElement *element = doc.NewElement("brls:Property");
+                // New child element
+                XMLElement *element = doc.NewElement("brls:Property");
 
-                    element->SetAttribute("name", name.c_str());
-                    element->SetAttribute("value", objectFromValue);
-                    element->SetAttribute("type", type.c_str());
-                    root->InsertFirstChild(element);
+                element->SetAttribute("name", name.c_str());
+                element->SetAttribute("value", objectFromValue);
+                element->SetAttribute("type", type.c_str());
+                root->InsertFirstChild(element);
 
-                    // We try to save the file
-                    doc.SaveFile(config_path.c_str());
+                // We try to save the file
+                doc.SaveFile(config_path.c_str());
 
-                    if (errorCode == 0) // If it succedded
-                        return true;
-                    else { // Otherwise
-                        Logger::error("TinyXML2 could not save the file. Error code {}.", std::to_string(errorCode));
-                        Logger::error("More details: {}", doc.ErrorStr());
-                        return false;
-                    }
+                if (errorCode == 0) // If it succedded
+                    return true;
+                else { // Otherwise
+                    Logger::error("TinyXML2 could not save the file. Error code {}.", std::to_string(errorCode));
+                    Logger::error("More details: {}", doc.ErrorStr());
+                    return false;
                 }
-            } else { // Otherwise
+            } else { // Else doc variable had other troubles loading the document
                 Logger::error("TinyXML2 could not open the file. Error code {}.", std::to_string(errorCode));
                 Logger::error("More details: {}", doc.ErrorStr());
                 return false;
@@ -240,10 +237,10 @@ class BasicStorageFile
     }
 
     /*
-    * In short, this function parses a certain XML element into a
-    * element for the allStorageObjects vector. The certain XML element
-    * is determined by its name attribute, since that attribute is like an id
-    */
+     * In short, this function parses a certain XML element into a
+     * element for the allStorageObjects vector. The certain XML element
+     * is determined by its name attribute, since that attribute is like an id
+     */
     bool parseXMLToVector(std::string name)
     {
             XMLError errorCode;
@@ -305,12 +302,12 @@ class BasicStorageFile
     }
 
     /*
-    * Reads a value from the config file, then returns a variable pointing to that value.
-    * 
-    * For example, if you store a variable with the data "EmreTech is awesome" into a storage file,
-    * This function will find that value and return it, so you can read/change the value throughout
-    * the program running.
-    */
+     * Reads a value from the config file, then returns a variable pointing to that value.
+     * 
+     * For example, if you store a variable with the data "EmreTech is awesome" into a storage file,
+     * This function will find that value and return it, so you can read/change the value throughout
+     * the program running.
+     */
     StorageObject readFromFile(std::string name)
     {
         bool result = parseXMLToVector(name);
@@ -329,16 +326,16 @@ class BasicStorageFile
 
             return allStorageObjects[numberElement]; // Return the StorageObject object from the std::vector
         } else {
-            StorageObject nullStorageObject;
+            StorageObject nullStorageObject{};
             nullStorageObject.setIsEmpty(true);
             return nullStorageObject;
         }
     }
 
     /*
-    * Allows you to check if the file is empty or not.
-    * Returns true if it's empty, false if it's not 
-    */
+     * Allows you to check if the file is empty or not.
+     * Returns true if it's empty, false if it's not 
+     */
     bool isFileEmpty() {
         XMLDocument doc;
         doc.LoadFile(config_path.c_str());
@@ -353,16 +350,16 @@ class BasicStorageFile
     }
 
     /*
-    * Creates a new StorageObject for the child class.
-    */
+     * Creates a new StorageObject for the child class.
+     */
     StorageObject createStorageObject(char *value, std::string name, std::string type)
     {
         return StorageObject(value, name, type); // Returns a new StorageObject
     }
 
     /*
-    * Creates a new blank StorageObject for the child class.
-    */
+     * Creates a new blank StorageObject for the child class.
+     */
     StorageObject createStorageObject()
     {
         return StorageObject(); // Returns a blank StorageObject
@@ -391,19 +388,21 @@ class StorageFile : public BasicStorageFile
     public:
 
     /*
-     * Saves any changes you made to a StorageObject to the XML file
-     **/
+     * Saves any changes you made to a StorageObject to the XML file. Returns a bool if it succeded or not
+     */
     bool save(StorageObject& obj) {
-        bool success = BRLS_STORAGE_FILE_WRITE_DATA(obj);
+        bool success; 
+        BRLS_STORAGE_FILE_WRITE_DATA(obj, success);
         return success;
     }
 
     /*
-     * Reads a certain element from the XML file and returns it to a StorageObject
-     **/
+     * Reads a certain element from the XML file and returns it to a StorageObject. Returns a bool if it succeded or not
+     */
     bool grab(StorageObject& obj, std::string name) {
         BRLS_STORAGE_FILE_READ_DATA(obj, name);
-        return true;
+        if (!obj.getIsEmpty()) return true;
+        else return false;
     }
 
 };
