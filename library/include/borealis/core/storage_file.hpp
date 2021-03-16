@@ -112,10 +112,19 @@ class BasicStorageFile
      * If you don't, tinyxml2 will look for file (.)/config/(appname here)/(filename here).xml.xml later on.
      */
     bool init(std::string filename) {
+        #ifndef __SWITCH__
+        config_folder = std::filesystem::current_path().string() + "/config/" + "brls/appname"_i18n + "/";
+        #else
+        config_folder = "/config/" + "brls/appname"_i18n + "/";
+        #endif
+
+        Logger::debug("{}", config_folder);
+
         if (!std::filesystem::exists(config_folder))
             std::filesystem::create_directory(config_folder);
         
         this->setConfigPath(filename);
+        Logger::debug("{}", filename);
 
         if (std::filesystem::exists(config_path)) {
             Logger::debug("File already exists. Quitting out of init function...");
@@ -265,8 +274,7 @@ class BasicStorageFile
                         Logger::debug("nullptr???");
                         break;
                     }
-
-                    if (e->Attribute("name") == name.c_str()) {
+                    if (std::strcmp(e->Attribute("name"), name.c_str()) == 0) {
                         element = e;
                     }
                 }
@@ -372,15 +380,9 @@ class BasicStorageFile
         config_path = config_folder + this->filename;
     }
 
-    #ifdef __SWITCH__ // If the client is running on a Switch, this approach is used
-    std::string config_folder = std::string("/config/") + "brls/appname"_i18n + "/";
-    #else // Otherwise, we assume that the client is running on a PC.
-    std::string config_folder = std::string("./config/") + "brls/appname"_i18n + "/";
-    #endif
+    std::string config_folder;
+    std::string config_path;
     std::string filename;
-
-    std::string config_path; // This is blank until Init function is called
-
 };
 
 class StorageFile : public BasicStorageFile 

@@ -14,6 +14,7 @@ demo_files = files(
 
     'demo/recycling_list_tab.cpp',
     'demo/components_tab.cpp',
+    'demo/storage_file_demo.cpp',
 )
 
 borealis_demo = executable(

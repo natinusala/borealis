@@ -34,6 +34,13 @@ bool StorageFileDemo::onWriteDataButtonPressed(brls::View *view) {
     const char *const_val = "Hello! I'm coming soon to the release of Borealis!";
     settingsObject.setValue((char*) const_val);
     settings->save(settingsObject);
+
+    settingsObject.setName("Boolean Test");
+    settingsObject.setType("bool");
+    settingsObject.setValue((char*) (true ? "true" : "false")); // Bool to char* code taken from https://stackoverflow.com/questions/29383/converting-bool-to-text-in-c/29798#29798
+    settings->save(settingsObject);
+
+    delete settings;
     return true;
 }
 
@@ -46,8 +53,20 @@ bool StorageFileDemo::onReadDataButtonPressed(brls::View *view) {
     else return false;
 
     auto valueFromXML = settingsObject.value();
+    std::cout << "First value from the XML File: " << valueFromXML << std::endl;
 
-    std::cout << "Value from the XML File: " << valueFromXML << std::endl;
+    settings->grab(burnerObject, "Boolean Test");
+
+    if (!burnerObject.getIsEmpty())
+        settingsObject = burnerObject;
+    else return false;
+
+    auto secondValueFromXML = settingsObject.value();
+    bool res = false;
+    if (std::strcmp(secondValueFromXML, "true") == 0) res = true; else if (std::strcmp(secondValueFromXML, "false") == 0) res = false;
+    std::cout << "Second value from the XML File (converted back to a bool): " << std::boolalpha << res << std::endl;
+    
+    delete settings;
     return true;
 }
 
