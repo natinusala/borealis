@@ -258,6 +258,7 @@ void Application::quit()
 
 void Application::navigate(FocusDirection direction)
 {
+    // Dismiss navigation if input type was changed
     if (Application::setInputType(InputType::GAMEPAD))
         return;
 
@@ -379,6 +380,7 @@ View* Application::getCurrentFocus()
 
 bool Application::handleAction(char button)
 {
+    // Dismiss if input type was changed
     if (button == BUTTON_A && setInputType(InputType::GAMEPAD))
         return false;
 

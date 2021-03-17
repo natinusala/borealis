@@ -213,6 +213,7 @@ class Application
 
     inline static View* currentFocus;
 
+    // Return true if input type was changed
     static bool setInputType(InputType type);
 
     inline static InputType inputType = InputType::GAMEPAD;

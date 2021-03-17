@@ -21,34 +21,31 @@ namespace brls
 
 Touch InputManager::computeTouchState(RawTouch currentTouch, Touch lastFrameState)
 {
-    Touch result = {};
-
     if (currentTouch.pressed)
     {
-        result.position = currentTouch.position;
+        lastFrameState.position = currentTouch.position;
         if (lastFrameState.phase == TouchPhase::START || lastFrameState.phase == TouchPhase::STAY)
         {
-            result.phase = TouchPhase::STAY;
+            lastFrameState.phase = TouchPhase::STAY;
         }
         else
         {
-            result.phase = TouchPhase::START;
+            lastFrameState.phase = TouchPhase::START;
         }
     }
     else
     {
-        result.position = lastFrameState.position;
         if (lastFrameState.phase == TouchPhase::END || lastFrameState.phase == TouchPhase::NONE)
         {
-            result.phase = TouchPhase::NONE;
+            lastFrameState.phase = TouchPhase::NONE;
         }
         else
         {
-            result.phase = TouchPhase::END;
+            lastFrameState.phase = TouchPhase::END;
         }
     }
 
-    return result;
+    return lastFrameState;
 }
 
 } // namespace brls
