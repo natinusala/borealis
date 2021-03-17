@@ -433,9 +433,17 @@ void Application::toggleFramerateDisplay()
     // To be implemented (call setDisplayFramerate)
 }
 
-void Application::setGlobalQuit(bool enabled) {
+ActionIdentifier Application::registerFPSToggleAction(Activity* activity)
+{
+    return activity->registerAction(
+        "FPS", BUTTON_BACK, [](View* view) { Application::toggleFramerateDisplay(); return true; }, true);
+}
+
+void Application::setGlobalQuit(bool enabled)
+{
     Application::globalQuitEnabled = enabled;
-    for (auto it = Application::activitiesStack.begin(); it != Application::activitiesStack.end(); ++it) {
+    for (auto it = Application::activitiesStack.begin(); it != Application::activitiesStack.end(); ++it)
+    {
         if (enabled)
             Application::gloablQuitIdentifier = (*it)->registerExitAction();
         else
@@ -443,12 +451,13 @@ void Application::setGlobalQuit(bool enabled) {
     }
 }
 
-void Application::setGlobalFPSToggle(bool enabled) {
+void Application::setGlobalFPSToggle(bool enabled)
+{
     Application::globalFPSToggleEnabled = enabled;
-    for (auto it = Application::activitiesStack.begin(); it != Application::activitiesStack.end(); ++it) {
+    for (auto it = Application::activitiesStack.begin(); it != Application::activitiesStack.end(); ++it)
+    {
         if (enabled)
-            Application::gloablFPSToggleIdentifier = (*it)->registerAction(
-                "FPS", BUTTON_BACK, [](View* view) { Application::toggleFramerateDisplay(); return true; }, true);
+            Application::gloablFPSToggleIdentifier = Application::registerFPSToggleAction(*it);
         else
             (*it)->unregisterAction(Application::gloablFPSToggleIdentifier);
     }
@@ -562,8 +571,7 @@ void Application::pushActivity(Activity* activity, TransitionAnimation animation
         Application::gloablQuitIdentifier = activity->registerExitAction();
 
     if (Application::globalFPSToggleEnabled)
-        Application::gloablFPSToggleIdentifier = activity->registerAction(
-            "FPS", BUTTON_BACK, [](View* view) { Application::toggleFramerateDisplay(); return true; }, true);
+        Application::gloablFPSToggleIdentifier = Application::registerFPSToggleAction(activity);
 
     // Fade out animation
     if (fadeOut)

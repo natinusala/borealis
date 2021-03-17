@@ -239,6 +239,8 @@ class Application
     static bool handleAction(char button);
 
     static void registerBuiltInXMLViews();
+
+    static ActionIdentifier registerFPSToggleAction(Activity* activity);
 };
 
 } // namespace brls
