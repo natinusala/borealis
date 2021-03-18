@@ -1034,14 +1034,14 @@ Rect View::getFrame()
 float View::getX()
 {
     if (this->hasParent())
-        return this->getParent()->getX() + YGNodeLayoutGetLeft(this->ygNode) + this->translation.x;
+        return this->getParent()->getX() + YGNodeLayoutGetLeft(this->ygNode) + this->translation.x + (isDetached() ? this->detachedOrigin.x : 0);
     return YGNodeLayoutGetLeft(this->ygNode) + this->translation.x;
 }
 
 float View::getY()
 {
     if (this->hasParent())
-        return this->getParent()->getY() + YGNodeLayoutGetTop(this->ygNode) + this->translation.y;
+        return this->getParent()->getY() + YGNodeLayoutGetTop(this->ygNode) + this->translation.y + (isDetached() ? this->detachedOrigin.y : 0);
     return YGNodeLayoutGetTop(this->ygNode) + this->translation.y;
 }
 

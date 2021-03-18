@@ -2,10 +2,12 @@
     width="auto"
     height="auto">
 
-    <brls:Rectangle
+    <brls:RecyclerFrame
+        id="recycler"
         width="auto"
         height="auto"
-        grow="1.0"
-        color="#0000FF" />
+        grow="1.0" >
+
+    </brls:RecyclerFrame>
 
 </brls:Box>

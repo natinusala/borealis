@@ -1,0 +1,27 @@
+<brls:Box
+    width="auto"
+    height="auto"
+    focusable="true" >
+
+    <brls:Rectangle
+        id="brls/sidebar/item_accent"
+        width="@style/brls/sidebar/item_accent_rect_width"
+        height="auto"
+        visibility="invisible"
+        color="@theme/brls/sidebar/active_item"
+        marginTop="@style/brls/sidebar/item_accent_margin_top_bottom"
+        marginBottom="@style/brls/sidebar/item_accent_margin_top_bottom"
+        marginLeft="@style/brls/sidebar/item_accent_margin_sides"
+        marginRight="@style/brls/sidebar/item_accent_margin_sides" />
+
+    <brls:Label
+        id="brls/sidebar/item_label"
+        width="auto"
+        height="auto"
+        grow="1.0"
+        fontSize="@style/brls/sidebar/item_font_size"
+        marginTop="@style/brls/sidebar/item_accent_margin_top_bottom"
+        marginBottom="@style/brls/sidebar/item_accent_margin_top_bottom"
+        marginRight="@style/brls/sidebar/item_accent_margin_sides" />
+
+</brls:Box>

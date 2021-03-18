@@ -36,6 +36,7 @@ borealis_files = files(
     'lib/views/applet_frame.cpp',
     'lib/views/tab_frame.cpp',
     'lib/views/rectangle.cpp',
+    'lib/views/recycler.cpp',
     'lib/views/sidebar.cpp',
     'lib/views/label.cpp',
     'lib/views/button.cpp',

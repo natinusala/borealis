@@ -33,6 +33,7 @@
 #include <borealis/views/rectangle.hpp>
 #include <borealis/views/sidebar.hpp>
 #include <borealis/views/tab_frame.hpp>
+#include <borealis/views/recycler.hpp>
 #include <stdexcept>
 #include <string>
 
@@ -809,6 +810,7 @@ void Application::registerBuiltInXMLViews()
     Application::registerXMLView("brls:Sidebar", Sidebar::create);
     Application::registerXMLView("brls:Header", Header::create);
     Application::registerXMLView("brls:ScrollingFrame", ScrollingFrame::create);
+    Application::registerXMLView("brls:RecyclerFrame", RecyclerFrame::create);
     Application::registerXMLView("brls:Image", Image::create);
     Application::registerXMLView("brls:Padding", Padding::create);
     Application::registerXMLView("brls:Button", Button::create);
