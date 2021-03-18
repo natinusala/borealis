@@ -31,9 +31,9 @@
 #include <borealis/views/header.hpp>
 #include <borealis/views/image.hpp>
 #include <borealis/views/rectangle.hpp>
+#include <borealis/views/recycler.hpp>
 #include <borealis/views/sidebar.hpp>
 #include <borealis/views/tab_frame.hpp>
-#include <borealis/views/recycler.hpp>
 #include <stdexcept>
 #include <string>
 

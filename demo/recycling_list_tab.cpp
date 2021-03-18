@@ -35,7 +35,7 @@ int DataSource::numberOfRows()
 
 brls::RecyclerCell* DataSource::cellForRow(brls::RecyclerFrame* recycler, int row)
 {
-    RecyclerCell* item = (RecyclerCell*) recycler->dequeueReusableCell("Cell");
+    RecyclerCell* item = (RecyclerCell*)recycler->dequeueReusableCell("Cell");
     item->label->setText("Item #" + std::to_string(row));
     if (row == 7)
         item->label->setText("Item # JM FKNKLmf knlwkenf jkN Fklmew kfnmL Fl enfklMEK MlKWNMF lkem KmLK NefnlkMElkf mlkwemf lkMLKFEm KLMlkf mLKMF lkMSElk fmLKFM lkesb fhhsk gmNLKmkS fe");
@@ -48,15 +48,15 @@ RecyclingListTab::RecyclingListTab()
 {
     // Inflate the tab from the XML file
     this->inflateFromXMLRes("xml/tabs/recycling_list.xml");
-    
-    recycler->registerCell("Cell", [](){ return RecyclerCell::create(); });
+
+    recycler->registerCell("Cell", []() { return RecyclerCell::create(); });
     recycler->setDataSource(new DataSource());
-    
-    recycler->addGestureRecognizer(new brls::TapGestureRecognizer([this](brls::TapGestureStatus status)
-    {
+
+    recycler->addGestureRecognizer(new brls::TapGestureRecognizer([this](brls::TapGestureStatus status) {
         this->recycler->reloadData();
         return false;
-    }, true));
+    },
+        true));
 }
 
 brls::View* RecyclingListTab::create()

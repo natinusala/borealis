@@ -60,12 +60,12 @@ void RecyclerFrame::setDataSource(RecyclerDataSource* source)
 void RecyclerFrame::reloadData()
 {
     auto children = this->contentBox->getChildren();
-    for(auto const& child: children)
+    for (auto const& child : children)
     {
-        queueReusableCell((RecyclerCell*) child);
+        queueReusableCell((RecyclerCell*)child);
         this->contentBox->removeView(child);
     }
-    
+
     if (dataSource)
     {
         cacheCellFrames();
@@ -80,7 +80,7 @@ void RecyclerFrame::reloadData()
     }
 }
 
-void RecyclerFrame::registerCell(std::string identifier, std::function<RecyclerCell *()> allocation)
+void RecyclerFrame::registerCell(std::string identifier, std::function<RecyclerCell*()> allocation)
 {
     queueMap.insert(std::make_pair(identifier, new std::vector<RecyclerCell*>()));
     registerMap.insert(std::make_pair(identifier, allocation));
@@ -89,20 +89,24 @@ void RecyclerFrame::registerCell(std::string identifier, std::function<RecyclerC
 RecyclerCell* RecyclerFrame::dequeueReusableCell(std::string identifier)
 {
     RecyclerCell* cell = nullptr;
-    auto it = queueMap.find(identifier);
-    
-    if (it != queueMap.end()) {
+    auto it            = queueMap.find(identifier);
+
+    if (it != queueMap.end())
+    {
         std::vector<RecyclerCell*>* vector = it->second;
-        if (!vector->empty()) {
+        if (!vector->empty())
+        {
             cell = vector->back();
             vector->pop_back();
-        } else {
-            cell = registerMap.at(identifier)();
+        }
+        else
+        {
+            cell             = registerMap.at(identifier)();
             cell->identifier = identifier;
             cell->detach();
         }
     }
-    
+
     return cell;
 }
 
@@ -120,9 +124,9 @@ void RecyclerFrame::cacheCellFrames()
         for (int i = 0; i < dataSource->numberOfRows(); i++)
         {
             RecyclerCell* cell = dataSource->cellForRow(this, i);
-            float a = this->getWidth();
+            float a            = this->getWidth();
             cell->setMaxWidth(a);
-            Rect frame = cell->getFrame();
+            Rect frame   = cell->getFrame();
             frame.origin = currentOrigin;
             cacheFramesData.push_back(frame);
             currentOrigin.y += frame.getHeight();
@@ -134,7 +138,7 @@ void RecyclerFrame::cacheCellFrames()
 
 bool RecyclerFrame::checkWidth()
 {
-    float width = getWidth();
+    float width           = getWidth();
     static float oldWidth = width;
     if (oldWidth != width && width != 0)
     {
@@ -144,7 +148,6 @@ bool RecyclerFrame::checkWidth()
     oldWidth = width;
     return false;
 }
-
 
 void RecyclerFrame::draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx)
 {

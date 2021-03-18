@@ -50,8 +50,8 @@
 #include <borealis/views/image.hpp>
 #include <borealis/views/label.hpp>
 #include <borealis/views/rectangle.hpp>
-#include <borealis/views/scrolling_frame.hpp>
 #include <borealis/views/recycler.hpp>
+#include <borealis/views/scrolling_frame.hpp>
 #include <borealis/views/sidebar.hpp>
 #include <borealis/views/tab_frame.hpp>
 

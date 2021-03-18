@@ -214,7 +214,7 @@ void Box::removeView(View* view)
     this->children.erase(this->children.begin() + index);
 
     view->willDisappear(true);
-//    delete view;
+    //    delete view;
 
     this->invalidate();
 }

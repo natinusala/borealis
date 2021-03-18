@@ -16,14 +16,13 @@
 
 #pragma once
 
-#include <map>
-#include <vector>
-#include <functional>
-
 #include <borealis/core/bind.hpp>
 #include <borealis/views/label.hpp>
 #include <borealis/views/rectangle.hpp>
 #include <borealis/views/scrolling_frame.hpp>
+#include <functional>
+#include <map>
+#include <vector>
 
 namespace brls
 {
@@ -38,7 +37,7 @@ class RecyclerCell : public Box
 class RecyclerFrame;
 class RecyclerDataSource
 {
-public:
+  public:
     virtual int numberOfRows() { return 0; }
     virtual RecyclerCell* cellForRow(RecyclerFrame* recycler, int row) { return nullptr; }
 };
@@ -47,26 +46,27 @@ class RecyclerFrame : public ScrollingFrame
 {
   public:
     RecyclerFrame();
-    
+
     void onLayout() override;
     void draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx) override;
     void setDataSource(RecyclerDataSource* source);
-    
+
     void reloadData();
     void registerCell(std::string identifier, std::function<RecyclerCell*(void)> allocation);
     RecyclerCell* dequeueReusableCell(std::string identifier);
 
     static View* create();
-private:
+
+  private:
     Box* contentBox;
     RecyclerDataSource* dataSource;
     std::vector<Rect> cacheFramesData;
     std::vector<RecyclerCell*> visibleCells;
     std::map<std::string, std::vector<RecyclerCell*>*> queueMap;
     std::map<std::string, std::function<RecyclerCell*(void)>> registerMap;
-    
+
     bool checkWidth();
-    
+
     void cacheCellFrames();
     void queueReusableCell(RecyclerCell* cell);
 };

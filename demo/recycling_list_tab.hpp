@@ -18,20 +18,22 @@
 
 #include <borealis.hpp>
 
-class RecyclerCell : public brls::RecyclerCell
+class RecyclerCell
+    : public brls::RecyclerCell
 {
   public:
     RecyclerCell();
-    
+
     BRLS_BIND(brls::Rectangle, accent, "brls/sidebar/item_accent");
     BRLS_BIND(brls::Label, label, "brls/sidebar/item_label");
-    
+
     static RecyclerCell* create();
 };
 
-class DataSource: public brls::RecyclerDataSource
+class DataSource
+    : public brls::RecyclerDataSource
 {
-public:
+  public:
     int numberOfRows() override;
     brls::RecyclerCell* cellForRow(brls::RecyclerFrame* recycler, int row) override;
 };
@@ -42,6 +44,7 @@ class RecyclingListTab : public brls::Box
     RecyclingListTab();
 
     static brls::View* create();
-private:
+
+  private:
     BRLS_BIND(brls::RecyclerFrame, recycler, "recycler");
 };
