@@ -66,16 +66,33 @@ void RecyclerFrame::reloadData()
         this->contentBox->removeView(child);
     }
 
+    visibleCells.clear();
+    visibleMin = UINT_MAX;
+    visibleMax = 0;
+
     if (dataSource)
     {
         cacheCellFrames();
+        Rect frame = getFrame();
         for (int i = 0; i < dataSource->numberOfRows(); i++)
         {
+            if (!cacheFramesData[i].offsetBy(frame.origin).collideWith(frame))
+                continue;
+
             RecyclerCell* cell = dataSource->cellForRow(this, i);
             cell->setMaxWidth(this->getWidth());
             auto frame = cacheFramesData.at(i);
             cell->setDetachedPosition(frame.getMinX(), frame.getMinY());
-            this->contentBox->addView(cell, i);
+            cell->indexPath = i;
+            this->contentBox->addView(cell);
+
+            visibleCells.insert(std::make_pair(i, cell));
+
+            if (i < visibleMin)
+                visibleMin = i;
+
+            if (i > visibleMax)
+                visibleMax = i;
         }
     }
 }
@@ -149,8 +166,63 @@ bool RecyclerFrame::checkWidth()
     return false;
 }
 
+void RecyclerFrame::cellRecycling()
+{
+    Rect frame        = getFrame();
+    Rect visibleFrame = getVisibleFrame();
+
+    while (visibleCells.find(visibleMin) != visibleCells.end() && !visibleCells[visibleMin]->getFrame().collideWith(visibleFrame))
+    {
+        RecyclerCell* cell = (RecyclerCell*)visibleCells[visibleMin];
+        queueReusableCell(cell);
+        this->contentBox->removeView(cell);
+        visibleCells.erase(cell->indexPath);
+        visibleMin++;
+    }
+
+    while (visibleCells.find(visibleMax) != visibleCells.end() && !visibleCells[visibleMax]->getFrame().collideWith(visibleFrame))
+    {
+        RecyclerCell* cell = (RecyclerCell*)visibleCells[visibleMax];
+        queueReusableCell(cell);
+        this->contentBox->removeView(cell);
+        visibleCells.erase(cell->indexPath);
+        visibleMax--;
+    }
+
+    while (visibleMin - 1 < cacheFramesData.size() && cacheFramesData[visibleMin - 1].offsetBy(frame.origin).collideWith(visibleFrame))
+    {
+        int index = visibleMin - 1;
+
+        RecyclerCell* cell = dataSource->cellForRow(this, index);
+        cell->setMaxWidth(this->getWidth());
+        auto frame = cacheFramesData.at(index);
+        cell->setDetachedPosition(frame.getMinX(), frame.getMinY());
+        cell->indexPath = index;
+        this->contentBox->addView(cell);
+
+        visibleCells.insert(std::make_pair(index, cell));
+        visibleMin = index;
+    }
+
+    while (visibleMax + 1 < cacheFramesData.size() && cacheFramesData[visibleMax + 1].offsetBy(frame.origin).collideWith(visibleFrame))
+    {
+        int index = visibleMax + 1;
+
+        RecyclerCell* cell = dataSource->cellForRow(this, index);
+        cell->setMaxWidth(this->getWidth());
+        auto frame = cacheFramesData.at(index);
+        cell->setDetachedPosition(frame.getMinX(), frame.getMinY());
+        cell->indexPath = index;
+        this->contentBox->addView(cell);
+
+        visibleCells.insert(std::make_pair(index, cell));
+        visibleMax = index;
+    }
+}
+
 void RecyclerFrame::draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx)
 {
+    cellRecycling();
     ScrollingFrame::draw(vg, x, y, width, height, style, ctx);
 }
 

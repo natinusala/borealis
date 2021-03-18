@@ -54,6 +54,8 @@ class ScrollingFrame : public Box
     void setPaddingBottom(float bottom) override;
     void setPaddingLeft(float left) override;
 
+    Rect getVisibleFrame();
+
     /**
      * Sets the content view of this scrolling box. There can only be one
      * content view per scrolling box at a time.

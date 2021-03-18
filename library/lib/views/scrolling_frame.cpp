@@ -294,6 +294,13 @@ bool ScrollingFrame::updateScrolling(bool animated)
     return true;
 }
 
+Rect ScrollingFrame::getVisibleFrame()
+{
+    Rect frame = getFrame();
+    frame.origin.y += this->scrollY * this->getContentHeight();
+    return frame;
+}
+
 #define NO_PADDING fatal("Padding is not supported by brls:ScrollingFrame, please set padding on the content view instead");
 
 void ScrollingFrame::setPadding(float top, float right, float bottom, float left)

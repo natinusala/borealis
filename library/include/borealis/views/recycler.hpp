@@ -30,6 +30,7 @@ namespace brls
 class RecyclerCell : public Box
 {
   public:
+    int indexPath;
     std::string identifier;
     static RecyclerCell* create();
 };
@@ -61,14 +62,17 @@ class RecyclerFrame : public ScrollingFrame
     Box* contentBox;
     RecyclerDataSource* dataSource;
     std::vector<Rect> cacheFramesData;
-    std::vector<RecyclerCell*> visibleCells;
+    std::map<int, RecyclerCell*> visibleCells;
     std::map<std::string, std::vector<RecyclerCell*>*> queueMap;
     std::map<std::string, std::function<RecyclerCell*(void)>> registerMap;
 
     bool checkWidth();
 
+    void cellRecycling();
     void cacheCellFrames();
     void queueReusableCell(RecyclerCell* cell);
+
+    uint visibleMin, visibleMax;
 };
 
 } // namespace brls

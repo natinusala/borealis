@@ -139,4 +139,14 @@ std::string Rect::describe()
     return "X: " + std::to_string((int)getMinX()) + ", Y: " + std::to_string((int)getMinY()) + ", W: " + std::to_string((int)getWidth()) + ", H: " + std::to_string((int)getHeight());
 }
 
+bool Rect::collideWith(const Rect& other) const
+{
+    return !((getMinX() > other.getMaxX() || getMaxX() < other.getMinX()) || (getMinY() > other.getMaxY() || getMaxY() < other.getMinY()));
+}
+
+Rect Rect::offsetBy(const Point& origin) const
+{
+    return Rect(this->origin + origin, this->size);
+}
+
 } // namespace brls

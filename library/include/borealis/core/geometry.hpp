@@ -97,11 +97,17 @@ struct Rect
 
     bool operator==(const Rect& other) const;
 
-    // Returns true if point is inside this Rect
+    // Returns true if point is inside this Rect.
     bool pointInside(Point point);
 
-    // Returns string with description of current Rect
+    // Returns string with description of current Rect.
     std::string describe();
+
+    // Returns true if two rects have shared area.
+    bool collideWith(const Rect& other) const;
+
+    // Returns Rect with offset by presented Point.
+    Rect offsetBy(const Point& origin) const;
 };
 
 } // namespace brls
