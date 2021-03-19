@@ -41,53 +41,15 @@ ScrollingFrame::ScrollingFrame()
         if (state.state == GestureState::START)
             startY = this->scrollY * contentHeight;
 
-        float newScroll   = (startY - (state.position.y - state.startPosition.y)) / contentHeight;
-        float bottomLimit = (contentHeight - this->getScrollingAreaHeight()) / contentHeight;
-
-        // Bottom boundary
-        if (newScroll > bottomLimit)
-            newScroll = bottomLimit + (newScroll - bottomLimit) / 5.0f;
-
-        // Top boundary
-        if (newScroll < 0.0f)
-            newScroll = newScroll / 5.0f;
+        float newScroll = (startY - (state.position.y - state.startPosition.y)) / contentHeight;
 
         // Start animation
         if (state.state != GestureState::END)
             startScrolling(false, newScroll);
         else
         {
-            if (this->scrollY < 0)
-            {
-                startScrolling(true, 0);
-                return;
-            }
-
-            float bottomLimit       = contentHeight - this->getScrollingAreaHeight();
-            float bottomLimitNormal = bottomLimit / contentHeight;
-
-            if (this->scrollY > bottomLimitNormal)
-            {
-                startScrolling(true, bottomLimitNormal);
-                return;
-            }
-
             float time   = state.acceleration.time.y * 1000.0f;
             float newPos = this->scrollY * contentHeight + state.acceleration.distance.y;
-
-            // Bottom boundary
-            if (newPos > bottomLimit)
-            {
-                time   = time * (1 - fabs(newPos - bottomLimit) / fabs(state.acceleration.distance.y));
-                newPos = bottomLimit;
-            }
-
-            // Top boundary
-            if (newPos < 0)
-            {
-                time   = time * (1 - fabs(newPos) / fabs(state.acceleration.distance.y));
-                newPos = 0;
-            }
 
             newScroll = newPos / contentHeight;
 
@@ -247,7 +209,21 @@ float ScrollingFrame::getContentHeight()
 void ScrollingFrame::scrollAnimationTick()
 {
     if (this->contentView)
-        this->contentView->setTranslationY(-(this->scrollY * this->getContentHeight()));
+    {
+        float contentHeight = this->getContentHeight();
+        float bottomLimit   = (contentHeight - this->getScrollingAreaHeight()) / contentHeight;
+
+        if (this->scrollY < 0)
+            this->scrollY = 0;
+
+        if (this->scrollY > bottomLimit)
+            this->scrollY = bottomLimit;
+
+        if (contentHeight <= getHeight())
+            this->scrollY = 0;
+
+        this->contentView->setTranslationY(-(this->scrollY * contentHeight));
+    }
 }
 
 void ScrollingFrame::onChildFocusGained(View* directChild, View* focusedView)
