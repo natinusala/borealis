@@ -1,7 +1,9 @@
 <brls:Box
     width="auto"
     height="auto"
-    focusable="true" >
+    focusable="true"
+    paddingTop="12.5"
+    paddingBottom="12.5">
 
     <brls:Rectangle
         id="brls/sidebar/item_accent"

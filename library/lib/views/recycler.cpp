@@ -15,10 +15,53 @@
 */
 
 #include <borealis/core/application.hpp>
+#include <borealis/core/touch/tap_gesture.hpp>
 #include <borealis/views/recycler.hpp>
 
 namespace brls
 {
+
+RecyclerCell::RecyclerCell()
+{
+    this->registerClickAction([this](View* view) {
+        RecyclerFrame* recycler = dynamic_cast<RecyclerFrame*>(getParent()->getParent());
+        if (recycler)
+            recycler->getDataSource()->didSelectRowAt(indexPath);
+        return true;
+    });
+
+    this->addGestureRecognizer(new TapGestureRecognizer([this](TapGestureStatus status) {
+        Application::giveFocus(this);
+        for (auto& action : getActions())
+        {
+            if (action.button != static_cast<enum ControllerButton>(BUTTON_A))
+                continue;
+
+            if (action.available)
+            {
+                this->playClickAnimation(status.state != GestureState::UNSURE);
+
+                switch (status.state)
+                {
+                    case GestureState::UNSURE:
+                        Application::getAudioPlayer()->play(SOUND_FOCUS_CHANGE);
+                        break;
+                    case GestureState::FAILED:
+                    case GestureState::INTERRUPTED:
+                        Application::getAudioPlayer()->play(SOUND_TOUCH_UNFOCUS);
+                        break;
+                    case GestureState::END:
+                        if (action.actionListener(this))
+                            Application::getAudioPlayer()->play(action.sound);
+                        break;
+                }
+                return false;
+            }
+        }
+        return true;
+    },
+        false));
+}
 
 RecyclerCell* RecyclerCell::create()
 {
@@ -87,15 +130,31 @@ RecyclerFrame::RecyclerFrame()
 
     // Create content box
     this->contentBox = new RecyclerContentBox();
-    this->contentBox->setPadding(100, 100, 100, 100);
     this->setContentView(this->contentBox);
+}
+
+RecyclerFrame::~RecyclerFrame()
+{
+    if (this->dataSource)
+        delete dataSource;
+
+    for (auto it : queueMap)
+        delete it.second;
 }
 
 void RecyclerFrame::setDataSource(RecyclerDataSource* source)
 {
+    if (this->dataSource)
+        delete this->dataSource;
+
     this->dataSource = source;
     if (checkWidth())
         reloadData();
+}
+
+RecyclerDataSource* RecyclerFrame::getDataSource() const
+{
+    return this->dataSource;
 }
 
 void RecyclerFrame::reloadData()
@@ -155,7 +214,9 @@ RecyclerCell* RecyclerFrame::dequeueReusableCell(std::string identifier)
         }
     }
 
-    cell->prepareForReuse();
+    if (cell)
+        cell->prepareForReuse();
+    
     return cell;
 }
 
@@ -174,7 +235,7 @@ void RecyclerFrame::cacheCellFrames()
     {
         for (int i = 0; i < dataSource->numberOfRows(); i++)
         {
-            float height = dataSource->cellHeightForRow(i);
+            float height = dataSource->heightForRow(i);
             if (height == -1)
                 height = estimatedRowHeight;
 
@@ -259,7 +320,7 @@ void RecyclerFrame::cellsRecyclingLoop()
 void RecyclerFrame::addCellAt(int index, int downSide)
 {
     RecyclerCell* cell = dataSource->cellForRow(this, index);
-    cell->setMaxWidth(renderedFrame.getWidth() - paddingLeft - paddingRight);
+    cell->setWidth(renderedFrame.getWidth() - paddingLeft - paddingRight);
     Point cellOrigin = Point(renderedFrame.getMinX() + paddingLeft, (downSide ? renderedFrame.getMaxY() : renderedFrame.getMinY() - cell->getHeight()) + paddingTop);
     cell->setDetachedPosition(cellOrigin.x, cellOrigin.y);
     cell->setIndexPath(index);
@@ -300,6 +361,7 @@ void RecyclerFrame::addCellAt(int index, int downSide)
 void RecyclerFrame::onLayout()
 {
     ScrollingFrame::onLayout();
+    this->contentBox->setWidth(this->getWidth());
     if (checkWidth())
         reloadData();
 }

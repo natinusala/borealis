@@ -30,7 +30,7 @@ RecyclerCell* RecyclerCell::create()
 
 int DataSource::numberOfRows()
 {
-    return 1000;
+    return 30;
 }
 
 brls::RecyclerCell* DataSource::cellForRow(brls::RecyclerFrame* recycler, int row)
@@ -38,8 +38,13 @@ brls::RecyclerCell* DataSource::cellForRow(brls::RecyclerFrame* recycler, int ro
     RecyclerCell* item = (RecyclerCell*)recycler->dequeueReusableCell("Cell");
     item->label->setText("Item #" + std::to_string(row));
     if (row == 7)
-        item->label->setText("Item # JM FKNKLmf knlwkenf jkN Fklmew kfnmL Fl enfklMEK MlKWNMF lkem KmLK NefnlkMElkf mlkwemf lkMLKFEm KLMlkf mLKMF lkMSElk fmLKFM lkesb fhhsk gmNLKmkS fe");
+        item->label->setText("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.");
     return item;
+}
+
+void DataSource::didSelectRowAt(int row)
+{
+    brls::Logger::info("Cell #" + std::to_string(row) + " selected.");
 }
 
 // RECYCLER VIEW
@@ -51,12 +56,6 @@ RecyclingListTab::RecyclingListTab()
 
     recycler->registerCell("Cell", []() { return RecyclerCell::create(); });
     recycler->setDataSource(new DataSource());
-
-    recycler->addGestureRecognizer(new brls::TapGestureRecognizer([this](brls::TapGestureStatus status) {
-        this->recycler->reloadData();
-        return false;
-    },
-        true));
 }
 
 brls::View* RecyclingListTab::create()

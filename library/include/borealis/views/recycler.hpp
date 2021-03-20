@@ -30,6 +30,8 @@ namespace brls
 class RecyclerCell : public Box
 {
   public:
+    RecyclerCell();
+
     /*
      * Cell's position inside recycler frame
      */
@@ -60,14 +62,26 @@ class RecyclerFrame;
 class RecyclerDataSource
 {
   public:
+    /*
+     * Tells the data source to return the number of rows in a table view.
+     */
     virtual int numberOfRows() { return 0; }
+
+    /*
+     * Asks the data source for a cell to insert in a particular location of the recycler frame.
+     */
     virtual RecyclerCell* cellForRow(RecyclerFrame* recycler, int row) { return nullptr; }
 
     /*
-     * Used to provide row height.
+     * Asks the data source for the height to use for a row in a specified location.
      * Return -1 to use autoscaling.
      */
-    virtual float cellHeightForRow(int row) { return -1; }
+    virtual float heightForRow(int row) { return -1; }
+
+    /*
+     * Tells the data source a row is selected.
+     */
+    virtual void didSelectRowAt(int row) { }
 };
 
 class RecyclerContentBox : public Box
@@ -82,6 +96,7 @@ class RecyclerFrame : public ScrollingFrame
 {
   public:
     RecyclerFrame();
+    ~RecyclerFrame();
 
     void draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx) override;
     void onLayout() override;
@@ -96,6 +111,11 @@ class RecyclerFrame : public ScrollingFrame
      * Set an object that acts as the data source of the recycler frame.
      */
     void setDataSource(RecyclerDataSource* source);
+
+    /*
+     * Get an object that acts as the data source of the recycler frame.
+     */
+    RecyclerDataSource* getDataSource() const;
 
     /*
      * Reloads the rows of the recycler frame.
