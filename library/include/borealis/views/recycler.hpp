@@ -78,7 +78,7 @@ class RecyclerFrame : public ScrollingFrame
     
     void addCellAt(int index, int downSide = true);
 
-    uint visibleMin, visibleMax;
+    uint32_t visibleMin, visibleMax;
 };
 
 } // namespace brls

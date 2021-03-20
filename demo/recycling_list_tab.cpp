@@ -30,7 +30,7 @@ RecyclerCell* RecyclerCell::create()
 
 int DataSource::numberOfRows()
 {
-    return 30;
+    return 1000;
 }
 
 brls::RecyclerCell* DataSource::cellForRow(brls::RecyclerFrame* recycler, int row)
