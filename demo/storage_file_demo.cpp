@@ -31,14 +31,21 @@ bool StorageFileDemo::onWriteDataButtonPressed(brls::View *view) {
     settingsObject.setName("Demo");
     settingsObject.setType("char*");
 
-    const char *const_val = "Hello! I'm coming soon to the release of Borealis!";
-    settingsObject.setValue((char*) const_val);
+    settingsObject.setValue((char*) "Hello! I'm coming soon to the release of Borealis!");
     settings->save(settingsObject);
 
     settingsObject.setName("Boolean Test");
     settingsObject.setType("bool");
     settingsObject.setValue((char*) (true ? "true" : "false")); // Bool to char* code taken from https://stackoverflow.com/questions/29383/converting-bool-to-text-in-c/29798#29798
     settings->save(settingsObject);
+
+    listSettingsObject.setName("List Demo");
+    listSettingsObject.setType("char*");
+    listSettingsObject.push_back((char*) "Hello!");
+    listSettingsObject.push_back((char*) "I'm coming to the release of");
+    listSettingsObject.push_back((char*) "Borealis!");
+
+    settings->save(listSettingsObject);
 
     delete settings;
     return true;
@@ -47,25 +54,28 @@ bool StorageFileDemo::onWriteDataButtonPressed(brls::View *view) {
 bool StorageFileDemo::onReadDataButtonPressed(brls::View *view) {
     SettingsFile *settings = new SettingsFile();
     settings->grab(burnerObject, "Demo");
-
     if (!burnerObject.getIsEmpty())
         settingsObject = burnerObject;
     else return false;
-
     auto valueFromXML = settingsObject.value();
-    std::cout << "First value from the XML File: " << valueFromXML << std::endl;
+    std::cout << "First value from the XML File: " << valueFromXML << '\n';
 
     settings->grab(burnerObject, "Boolean Test");
-
     if (!burnerObject.getIsEmpty())
         settingsObject = burnerObject;
     else return false;
-
     auto secondValueFromXML = settingsObject.value();
     bool res = false;
     if (std::strcmp(secondValueFromXML, "true") == 0) res = true; else if (std::strcmp(secondValueFromXML, "false") == 0) res = false;
-    std::cout << "Second value from the XML File (converted back to a bool): " << std::boolalpha << res << std::endl;
+    std::cout << "Second value from the XML File (converted back to a bool): " << std::boolalpha << res << '\n';
     
+    settings->grab(listBurnerObject, "List Demo");
+    if (!listBurnerObject.getIsEmpty())
+        listSettingsObject = listBurnerObject;
+    else return false;
+    auto thirdValueFromXML = listSettingsObject[2];
+    std::cout << "Last value from the list from the XML File: " << thirdValueFromXML << '\n';
+
     delete settings;
     return true;
 }
