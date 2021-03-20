@@ -69,6 +69,11 @@ void RecyclerFrame::reloadData()
     visibleCells.clear();
     visibleMin = UINT_MAX;
     visibleMax = 0;
+    
+    renderedFrame = Rect();
+    renderedFrame.size.width = getWidth();
+    
+    setScroll(0);
 
     if (dataSource)
     {
@@ -76,23 +81,9 @@ void RecyclerFrame::reloadData()
         Rect frame = getFrame();
         for (int i = 0; i < dataSource->numberOfRows(); i++)
         {
-            if (!cacheFramesData[i].offsetBy(frame.origin).collideWith(frame))
-                continue;
-
-            RecyclerCell* cell = dataSource->cellForRow(this, i);
-            cell->setMaxWidth(this->getWidth());
-            auto frame = cacheFramesData.at(i);
-            cell->setDetachedPosition(frame.getMinX(), frame.getMinY());
-            cell->indexPath = i;
-            this->contentBox->addView(cell);
-
-            visibleCells.insert(std::make_pair(i, cell));
-
-            if (i < visibleMin)
-                visibleMin = i;
-
-            if (i > visibleMax)
-                visibleMax = i;
+            addCellAt(i);
+            if (renderedFrame.getMaxY() > frame.getMaxY())
+                break;
         }
     }
 }
@@ -135,19 +126,19 @@ void RecyclerFrame::queueReusableCell(RecyclerCell* cell)
 void RecyclerFrame::cacheCellFrames()
 {
     cacheFramesData.clear();
+    Rect frame = getFrame();
     Point currentOrigin;
+    
     if (dataSource)
     {
         for (int i = 0; i < dataSource->numberOfRows(); i++)
         {
-            RecyclerCell* cell = dataSource->cellForRow(this, i);
-            float a            = this->getWidth();
-            cell->setMaxWidth(a);
-            Rect frame   = cell->getFrame();
-            frame.origin = currentOrigin;
-            cacheFramesData.push_back(frame);
-            currentOrigin.y += frame.getHeight();
-            queueReusableCell(cell);
+            float height = dataSource->cellHeightForRow(i);
+            if (height == -1)
+                height = estimatedCellHeight;
+            
+            cacheFramesData.push_back(Size(frame.getWidth(), height));
+            currentOrigin.y += height;
         }
         contentBox->setHeight(currentOrigin.y);
     }
@@ -170,53 +161,83 @@ void RecyclerFrame::cellRecycling()
 {
     Rect frame        = getFrame();
     Rect visibleFrame = getVisibleFrame();
+    visibleFrame.origin.y -= frame.origin.y;
 
-    while (visibleCells.find(visibleMin) != visibleCells.end() && !visibleCells[visibleMin]->getFrame().collideWith(visibleFrame))
+    while (true)
     {
-        RecyclerCell* cell = (RecyclerCell*)visibleCells[visibleMin];
-        queueReusableCell(cell);
-        this->contentBox->removeView(cell);
-        visibleCells.erase(cell->indexPath);
+        auto minCell = visibleCells.find(visibleMin);
+        if (minCell == visibleCells.end() || minCell->second->getDetachedPosition().y + minCell->second->getHeight() >= visibleFrame.getMinY())
+            break;
+         
+        queueReusableCell(minCell->second);
+        this->contentBox->removeView(minCell->second);
+        visibleCells.erase(minCell->second->indexPath);
+        
+        float cellHeight = minCell->second->getHeight();
+        renderedFrame.origin.y += cellHeight;
+        renderedFrame.size.height -= cellHeight;
+        
         visibleMin++;
     }
-
-    while (visibleCells.find(visibleMax) != visibleCells.end() && !visibleCells[visibleMax]->getFrame().collideWith(visibleFrame))
+    
+    while (true)
     {
-        RecyclerCell* cell = (RecyclerCell*)visibleCells[visibleMax];
-        queueReusableCell(cell);
-        this->contentBox->removeView(cell);
-        visibleCells.erase(cell->indexPath);
+        auto maxCell = visibleCells.find(visibleMax);
+        if (maxCell == visibleCells.end() || maxCell->second->getDetachedPosition().y <= visibleFrame.getMaxY())
+            break;
+         
+        queueReusableCell(maxCell->second);
+        this->contentBox->removeView(maxCell->second);
+        visibleCells.erase(maxCell->second->indexPath);
+        
+        float cellHeight = maxCell->second->getHeight();
+        renderedFrame.size.height -= cellHeight;
+        
         visibleMax--;
     }
-
-    while (visibleMin - 1 < cacheFramesData.size() && cacheFramesData[visibleMin - 1].offsetBy(frame.origin).collideWith(visibleFrame))
+    
+    while (visibleMin - 1 < cacheFramesData.size() && renderedFrame.getMinY() > visibleFrame.getMinY())
     {
-        int index = visibleMin - 1;
-
-        RecyclerCell* cell = dataSource->cellForRow(this, index);
-        cell->setMaxWidth(this->getWidth());
-        auto frame = cacheFramesData.at(index);
-        cell->setDetachedPosition(frame.getMinX(), frame.getMinY());
-        cell->indexPath = index;
-        this->contentBox->addView(cell);
-
-        visibleCells.insert(std::make_pair(index, cell));
-        visibleMin = index;
+        int i = visibleMin - 1;
+        addCellAt(i, false);
     }
-
-    while (visibleMax + 1 < cacheFramesData.size() && cacheFramesData[visibleMax + 1].offsetBy(frame.origin).collideWith(visibleFrame))
+    
+    while (visibleMax + 1 < cacheFramesData.size() && renderedFrame.getMaxY() < visibleFrame.getMaxY())
     {
-        int index = visibleMax + 1;
+        int i = visibleMax + 1;
+        addCellAt(i, true);
+    }
+}
 
-        RecyclerCell* cell = dataSource->cellForRow(this, index);
-        cell->setMaxWidth(this->getWidth());
-        auto frame = cacheFramesData.at(index);
-        cell->setDetachedPosition(frame.getMinX(), frame.getMinY());
-        cell->indexPath = index;
-        this->contentBox->addView(cell);
+void RecyclerFrame::addCellAt(int index, int downSide)
+{
+    RecyclerCell* cell = dataSource->cellForRow(this, index);
+    cell->setMaxWidth(renderedFrame.getWidth());
+    Point cellOrigin = Point(renderedFrame.getMinX(), downSide ? renderedFrame.getMaxY() : renderedFrame.getMinY() - cell->getHeight());
+    cell->setDetachedPosition(cellOrigin.x, cellOrigin.y);
+    cell->indexPath = index;
+    this->contentBox->addView(cell);
 
-        visibleCells.insert(std::make_pair(index, cell));
+    visibleCells.insert(std::make_pair(index, cell));
+
+    if (index < visibleMin)
+        visibleMin = index;
+
+    if (index > visibleMax)
         visibleMax = index;
+    
+    Rect cellFrame = cell->getFrame();
+    
+    if (!downSide)
+        renderedFrame.origin.y -= cellFrame.getHeight();
+    
+    renderedFrame.size.height += cellFrame.getHeight();
+    
+    if (cellFrame.getHeight() != cacheFramesData[index].height)
+    {
+        float delta = cellFrame.getHeight() - cacheFramesData[index].height;
+        contentBox->setHeight(contentBox->getHeight() + delta);
+        cacheFramesData[index].height = cellFrame.getHeight();
     }
 }
 

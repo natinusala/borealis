@@ -67,6 +67,13 @@ class ScrollingFrame : public Box
      * Default is NATURAL.
      */
     void setScrollingBehavior(ScrollingBehavior behavior);
+    
+    float getScroll() const
+    {
+        return scrollY;
+    }
+    
+    void setScroll(float value);
 
     static View* create();
 

@@ -41,6 +41,7 @@ class RecyclerDataSource
   public:
     virtual int numberOfRows() { return 0; }
     virtual RecyclerCell* cellForRow(RecyclerFrame* recycler, int row) { return nullptr; }
+    virtual float cellHeightForRow(int row) { return -1; }
 };
 
 class RecyclerFrame : public ScrollingFrame
@@ -55,13 +56,16 @@ class RecyclerFrame : public ScrollingFrame
     void reloadData();
     void registerCell(std::string identifier, std::function<RecyclerCell*(void)> allocation);
     RecyclerCell* dequeueReusableCell(std::string identifier);
+    
+    float estimatedCellHeight = 44;
 
     static View* create();
 
   private:
     Box* contentBox;
+    Rect renderedFrame;
     RecyclerDataSource* dataSource;
-    std::vector<Rect> cacheFramesData;
+    std::vector<Size> cacheFramesData;
     std::map<int, RecyclerCell*> visibleCells;
     std::map<std::string, std::vector<RecyclerCell*>*> queueMap;
     std::map<std::string, std::function<RecyclerCell*(void)>> registerMap;
@@ -71,6 +75,8 @@ class RecyclerFrame : public ScrollingFrame
     void cellRecycling();
     void cacheCellFrames();
     void queueReusableCell(RecyclerCell* cell);
+    
+    void addCellAt(int index, int downSide = true);
 
     uint visibleMin, visibleMax;
 };

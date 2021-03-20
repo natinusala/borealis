@@ -206,6 +206,12 @@ float ScrollingFrame::getContentHeight()
     return this->contentView->getHeight();
 }
 
+void ScrollingFrame::setScroll(float value)
+{
+    scrollY = value;
+    scrollAnimationTick();
+}
+
 void ScrollingFrame::scrollAnimationTick()
 {
     if (this->contentView)
