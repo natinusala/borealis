@@ -460,6 +460,11 @@ void Box::setAxis(Axis axis)
     this->invalidate();
 }
 
+Axis Box::getAxis() const
+{
+    return axis;
+}
+
 void Box::setDirection(Direction direction)
 {
     switch (direction)

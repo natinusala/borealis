@@ -971,7 +971,7 @@ class View
      * Sets the position of the view, if detached.
      */
     void setDetachedPosition(float x, float y);
-    
+
     /**
      * Gets detached position of the view.
      */

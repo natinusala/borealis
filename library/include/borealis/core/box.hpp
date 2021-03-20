@@ -158,6 +158,7 @@ class Box : public View
     void setDirection(Direction direction);
 
     void setAxis(Axis axis);
+    Axis getAxis() const;
 
     std::vector<View*>& getChildren();
 
