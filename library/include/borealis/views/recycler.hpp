@@ -48,23 +48,33 @@ class RecyclerFrame : public ScrollingFrame
 {
   public:
     RecyclerFrame();
-
-    void onLayout() override;
+    
     void draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx) override;
+    void onLayout() override;
+    void setPadding(float padding) override;
+    void setPadding(float top, float right, float bottom, float left) override;
+    void setPaddingTop(float top) override;
+    void setPaddingRight(float right) override;
+    void setPaddingBottom(float bottom) override;
+    void setPaddingLeft(float left) override;
+    
     void setDataSource(RecyclerDataSource* source);
 
     void reloadData();
     void registerCell(std::string identifier, std::function<RecyclerCell*(void)> allocation);
     RecyclerCell* dequeueReusableCell(std::string identifier);
     
+    // Used for initial recycler's frame calculation
     float estimatedCellHeight = 44;
 
     static View* create();
 
   private:
+    RecyclerDataSource* dataSource = nullptr;
+    
+    
     Box* contentBox;
     Rect renderedFrame;
-    RecyclerDataSource* dataSource;
     std::vector<Size> cacheFramesData;
     std::map<int, RecyclerCell*> visibleCells;
     std::map<std::string, std::vector<RecyclerCell*>*> queueMap;
@@ -79,6 +89,11 @@ class RecyclerFrame : public ScrollingFrame
     void addCellAt(int index, int downSide = true);
 
     uint32_t visibleMin, visibleMax;
+    
+    float paddingTop = 0;
+    float paddingRight = 0;
+    float paddingBottom = 0;
+    float paddingLeft = 0;
 };
 
 } // namespace brls
