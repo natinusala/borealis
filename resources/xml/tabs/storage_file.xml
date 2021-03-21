@@ -42,7 +42,7 @@
             width="auto"
             height="auto"
             textAlign="center"
-            fontSize="35"
+            fontSize="20"
             text="Check the file at (/path/to/borealis)/config/borealis_demo/settings.xml to see the changes."/>
 
     </brls:Box>

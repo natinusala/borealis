@@ -20,7 +20,6 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
-//#include <string.h>
 #include <string>
 #include <vector>
 #include <map>
@@ -246,10 +245,8 @@ class BasicStorageFile
      * 
      * An example would be the following: 
      *
-     *   <brls:StorageFile>
-     *      <brls:Property name="wizard_shown" value="true" type="bool"/>
-     *	    <brls:Property name="username" value="h4ck3rm4n" type="std::string"/>
-     *   </brls:StorageFile>
+     * <brls:Property name="wizard_shown" value="true" type="bool"/>
+     * <brls:Property name="username" value="h4ck3rm4n" type="std::string"/>
      * 
      * It gives a fatal error if the filename is not found (call the init function before these functions).
      */
@@ -540,7 +537,6 @@ class BasicStorageFile
                     ListStorageObject obj{};
                     obj.setName(name);
 
-                    const char *valueOfValue;
                     const char *valueOfType;
 
                     element->QueryStringAttribute("type", &valueOfType);
@@ -625,14 +621,9 @@ class BasicStorageFile
     bool isFileEmpty() {
         XMLDocument doc;
         doc.LoadFile(config_path.c_str());
-
         XMLElement *root = doc.RootElement();
-        if (!root) {
-            return true;
-        }
-        else {
-            return false;
-        } 
+        if (!root || doc.ErrorID() == XML_ERROR_EMPTY_DOCUMENT) return true;
+        else return false;
     }
 
     private:

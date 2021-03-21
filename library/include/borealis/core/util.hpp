@@ -1,5 +1,6 @@
 /*
     Copyright 2021 natinusala
+    Copyright 2021 EmreTech
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -18,6 +19,7 @@
 
 #include <borealis/core/logger.hpp>
 #include <stdexcept>
+#include <sstream>
 
 namespace brls
 {
@@ -26,5 +28,20 @@ namespace brls
  * Prints the given error message message and throws a std::logic_error.
  */
 [[ noreturn ]] void fatal(std::string message);
+
+struct ConversionUtils 
+{
+    template <typename T>
+    /*
+     * Converts any primitive type to a C-style string (char*)
+     */
+    char* toCString(const T &t);
+    
+    template <typename T>
+    /*
+     * Converts a C-style string (char*) to any primitive type
+     */
+    T fromCString(const char *&s);
+};
 
 } // namespace brls

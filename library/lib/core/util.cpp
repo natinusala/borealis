@@ -1,5 +1,6 @@
 /*
     Copyright 2021 natinusala
+    Copyright 2021 EmreTech
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -23,6 +24,24 @@ namespace brls
 {
     brls::Logger::error("Fatal error: {}", message);
     throw std::logic_error(message);
+}
+
+template <typename T>
+char* ConversionUtils::toCString(const T &t) {
+    std::ostringstream oss;
+    oss << t;
+
+    char *output = new char[sizeof(oss.str().c_str()) + 1];
+    std::strcpy(output, oss.str().c_str());
+    return output;
+}
+
+template <typename T>
+T ConversionUtils::fromCString(const char *&s) {
+    std::istringstream iss( (std::string(s)) );
+    T t;
+    iss >> t;
+    return t;
 }
 
 } // namespace brls
