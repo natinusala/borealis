@@ -36,7 +36,7 @@ bool StorageFileDemo::onWriteDataButtonPressed(brls::View *view) {
 
     settingsObject.setName("Boolean Test");
     settingsObject.setType("bool");
-    settingsObject.setValue((char*) (true ? "true" : "false")); // Bool to char* code taken from https://stackoverflow.com/questions/29383/converting-bool-to-text-in-c/29798#29798
+    settingsObject.setValue(brls::ConversionUtils::toCString<bool>(true));
     settings->save(settingsObject);
 
     listSettingsObject.setName("List Demo");
@@ -53,28 +53,25 @@ bool StorageFileDemo::onWriteDataButtonPressed(brls::View *view) {
 
 bool StorageFileDemo::onReadDataButtonPressed(brls::View *view) {
     SettingsFile *settings = new SettingsFile();
+
     settings->grab(burnerObject, "Demo");
     if (!burnerObject.getIsEmpty())
         settingsObject = burnerObject;
     else return false;
-    auto valueFromXML = settingsObject.value();
-    std::cout << "First value from the XML File: " << valueFromXML << '\n';
+    std::cout << "First value from the XML File: " << settingsObject.value() << '\n';
 
     settings->grab(burnerObject, "Boolean Test");
     if (!burnerObject.getIsEmpty())
         settingsObject = burnerObject;
     else return false;
-    auto secondValueFromXML = settingsObject.value();
-    bool res = false;
-    if (std::strcmp(secondValueFromXML, "true") == 0) res = true; else if (std::strcmp(secondValueFromXML, "false") == 0) res = false;
+    bool res = brls::ConversionUtils::fromCString<bool>(settingsObject.value());
     std::cout << "Second value from the XML File (converted back to a bool): " << std::boolalpha << res << '\n';
     
     settings->grab(listBurnerObject, "List Demo");
     if (!listBurnerObject.getIsEmpty())
         listSettingsObject = listBurnerObject;
     else return false;
-    auto thirdValueFromXML = listSettingsObject[2];
-    std::cout << "Last value from the list from the XML File: " << thirdValueFromXML << '\n';
+    std::cout << "Last value from the list from the XML File: " << listSettingsObject[2] << '\n';
 
     delete settings;
     return true;

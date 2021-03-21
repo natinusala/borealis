@@ -26,22 +26,4 @@ namespace brls
     throw std::logic_error(message);
 }
 
-template <typename T>
-char* ConversionUtils::toCString(const T &t) {
-    std::ostringstream oss;
-    oss << t;
-
-    char *output = new char[sizeof(oss.str().c_str()) + 1];
-    std::strcpy(output, oss.str().c_str());
-    return output;
-}
-
-template <typename T>
-T ConversionUtils::fromCString(const char *&s) {
-    std::istringstream iss( (std::string(s)) );
-    T t;
-    iss >> t;
-    return t;
-}
-
 } // namespace brls

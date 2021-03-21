@@ -35,13 +35,25 @@ struct ConversionUtils
     /*
      * Converts any primitive type to a C-style string (char*)
      */
-    char* toCString(const T &t);
+    inline static char* toCString(const T &t) {
+        std::ostringstream oss;
+        oss << t;
+
+        char *output = new char[sizeof(oss.str().c_str()) + 1];
+        std::strcpy(output, oss.str().c_str());
+        return output;
+    }
     
     template <typename T>
     /*
      * Converts a C-style string (char*) to any primitive type
      */
-    T fromCString(const char *&s);
+    inline static T fromCString(const char *s) {
+        std::istringstream iss( (std::string(s)) );
+        T t;
+        iss >> t;
+        return t;
+    }
 };
 
 } // namespace brls
