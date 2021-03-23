@@ -16,6 +16,9 @@
 
 #include <borealis/core/activity.hpp>
 #include <borealis/core/application.hpp>
+#include <borealis/core/i18n.hpp>
+
+using namespace brls::literals;
 
 namespace brls
 {
@@ -112,10 +115,26 @@ bool Activity::isHidden()
     return this->contentView->isHidden();
 }
 
-void Activity::registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden, enum Sound sound)
+ActionIdentifier Activity::registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden, enum Sound sound)
 {
     if (this->contentView)
-        this->contentView->registerAction(hintText, button, actionListener, hidden, sound);
+        return this->contentView->registerAction(hintText, button, actionListener, hidden, sound);
+
+    return ACTION_NONE;
+}
+
+void Activity::unregisterAction(ActionIdentifier identifier)
+{
+    if (this->contentView)
+        this->contentView->unregisterAction(identifier);
+}
+
+ActionIdentifier Activity::registerExitAction(enum ControllerButton button)
+{
+    if (this->contentView)
+        return this->contentView->registerAction("brls/hints/exit"_i18n, button, [](View* view) { Application::quit(); return true; });
+
+    return ACTION_NONE;
 }
 
 View* Activity::getDefaultFocus()

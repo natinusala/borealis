@@ -162,6 +162,16 @@ class Application
 
     inline static float windowScale;
 
+    /**
+     * Sets whether BUTTON_START will globally be used to close the application.
+     */
+    static void setGlobalQuit(bool enabled);
+
+    /**
+     * Sets whether BUTTON_BACK will globally be used to toggle an FPS display.
+     */
+    static void setGlobalFPSToggle(bool enabled);
+
     static GenericEvent* getGlobalFocusChangeEvent();
     static VoidEvent* getGlobalHintsUpdateEvent();
 
@@ -222,6 +232,11 @@ class Application
 
     inline static std::string commonFooter = "";
 
+    inline static bool globalQuitEnabled                     = false;
+    inline static ActionIdentifier gloablQuitIdentifier      = ACTION_NONE;
+    inline static bool globalFPSToggleEnabled                = false;
+    inline static ActionIdentifier gloablFPSToggleIdentifier = ACTION_NONE;
+
     inline static View* repetitionOldFocus = nullptr;
 
     inline static GenericEvent globalFocusChangeEvent;
@@ -245,6 +260,8 @@ class Application
     static bool handleAction(char button);
 
     static void registerBuiltInXMLViews();
+
+    static ActionIdentifier registerFPSToggleAction(Activity* activity);
 };
 
 } // namespace brls

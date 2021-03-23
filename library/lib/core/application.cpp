@@ -52,8 +52,6 @@ constexpr uint32_t ORIGINAL_WINDOW_HEIGHT = 720;
 #define BUTTON_REPEAT_DELAY 15
 #define BUTTON_REPEAT_CADENCY 5
 
-using namespace brls::literals;
-
 namespace brls
 {
 
@@ -494,6 +492,36 @@ void Application::toggleFramerateDisplay()
     // To be implemented (call setDisplayFramerate)
 }
 
+ActionIdentifier Application::registerFPSToggleAction(Activity* activity)
+{
+    return activity->registerAction(
+        "FPS", BUTTON_BACK, [](View* view) { Application::toggleFramerateDisplay(); return true; }, true);
+}
+
+void Application::setGlobalQuit(bool enabled)
+{
+    Application::globalQuitEnabled = enabled;
+    for (auto it = Application::activitiesStack.begin(); it != Application::activitiesStack.end(); ++it)
+    {
+        if (enabled)
+            Application::gloablQuitIdentifier = (*it)->registerExitAction();
+        else
+            (*it)->unregisterAction(Application::gloablQuitIdentifier);
+    }
+}
+
+void Application::setGlobalFPSToggle(bool enabled)
+{
+    Application::globalFPSToggleEnabled = enabled;
+    for (auto it = Application::activitiesStack.begin(); it != Application::activitiesStack.end(); ++it)
+    {
+        if (enabled)
+            Application::gloablFPSToggleIdentifier = Application::registerFPSToggleAction(*it);
+        else
+            (*it)->unregisterAction(Application::gloablFPSToggleIdentifier);
+    }
+}
+
 void Application::notify(std::string text)
 {
     // To be implemented
@@ -598,9 +626,11 @@ void Application::pushActivity(Activity* activity, TransitionAnimation animation
     bool fadeOut = last && !last->isTranslucent() && !activity->isTranslucent(); // play the fade out animation?
     bool wait    = animation == TransitionAnimation::FADE; // wait for the old activity animation to be done before showing the new one?
 
-    activity->registerAction("brls/hints/exit"_i18n, BUTTON_START, [](View* view) { Application::quit(); return true; });
-    activity->registerAction(
-        "FPS", BUTTON_BACK, [](View* view) { Application::toggleFramerateDisplay(); return true; }, true);
+    if (Application::globalQuitEnabled)
+        Application::gloablQuitIdentifier = activity->registerExitAction();
+
+    if (Application::globalFPSToggleEnabled)
+        Application::gloablFPSToggleIdentifier = Application::registerFPSToggleAction(activity);
 
     // Fade out animation
     if (fadeOut)
