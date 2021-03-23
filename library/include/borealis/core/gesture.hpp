@@ -39,8 +39,10 @@ enum class GestureState
 class GestureRecognizer
 {
   public:
+    virtual ~GestureRecognizer() { }
+
     // Main recognition loop, for internal usage only, should not be called anywhere, but Application
-    virtual GestureState recognitionLoop(Touch touch, View* view, bool* shouldPlayDefaultSound);
+    virtual GestureState recognitionLoop(TouchState touch, View* view, bool* shouldPlayDefaultSound);
 
     // Interrupt this recognizer
     // If onlyIfUnsureState == true recognizer will be interupted

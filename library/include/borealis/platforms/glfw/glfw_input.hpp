@@ -32,7 +32,7 @@ class GLFWInputManager : public InputManager
 
     void updateControllerState(ControllerState* state) override;
 
-    void updateTouchState(RawTouch* state) override;
+    void updateTouchState(RawTouchState* state) override;
 
   private:
     GLFWwindow* window;

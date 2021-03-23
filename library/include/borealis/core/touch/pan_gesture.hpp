@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <borealis/core/event.hpp>
 #include <borealis/core/gesture.hpp>
 
 namespace brls
@@ -44,7 +45,7 @@ struct PanGestureStatus
     PanAcceleration acceleration;
 };
 
-typedef std::function<void(PanGestureStatus)> PanGestureRespond;
+typedef Event<PanGestureStatus> PanGestureEvent;
 
 // Axis of pan recognition start conditions
 enum class PanAxis
@@ -63,8 +64,8 @@ enum class PanAxis
 class PanGestureRecognizer : public GestureRecognizer
 {
   public:
-    PanGestureRecognizer(PanGestureRespond respond, PanAxis axis);
-    GestureState recognitionLoop(Touch touch, View* view, bool* shouldPlayDefaultSound) override;
+    PanGestureRecognizer(PanGestureEvent::Callback respond, PanAxis axis);
+    GestureState recognitionLoop(TouchState touch, View* view, bool* shouldPlayDefaultSound) override;
 
     // Get pan gesture axis
     PanAxis getAxis() const { return this->axis; }
@@ -72,8 +73,11 @@ class PanGestureRecognizer : public GestureRecognizer
     // Get current state of recognizer
     PanGestureStatus getCurrentStatus();
 
+    // Get pan gesture event
+    PanGestureEvent getPanGestureEvent() const { return panEvent; }
+
   private:
-    PanGestureRespond respond;
+    PanGestureEvent panEvent;
     Point position;
     Point startPosition;
     Point delta;

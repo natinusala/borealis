@@ -163,15 +163,15 @@ bool Application::mainLoop()
 
     // Input
     ControllerState controllerState = {};
-    RawTouch rawTouch               = {};
+    RawTouchState rawTouch          = {};
 
     InputManager* inputManager = Application::platform->getInputManager();
     inputManager->updateTouchState(&rawTouch);
     inputManager->updateControllerState(&controllerState);
 
-    static Touch oldTouch;
-    Touch touchState = InputManager::computeTouchState(rawTouch, oldTouch);
-    oldTouch         = touchState;
+    static TouchState oldTouch;
+    TouchState touchState = InputManager::computeTouchState(rawTouch, oldTouch);
+    oldTouch              = touchState;
 
     // Touch controller events
     switch (touchState.phase)
@@ -181,9 +181,10 @@ bool Application::mainLoop()
             Application::setInputType(InputType::TOUCH);
 
             // Search for first responder, which will be the root of recognition tree
-            firstResponder = Application::activitiesStack[Application::activitiesStack.size() - 1]
-                                 ->getContentView()
-                                 ->hitTest(touchState.position);
+            if (Application::activitiesStack.size() > 0)
+                firstResponder = Application::activitiesStack[Application::activitiesStack.size() - 1]
+                                    ->getContentView()
+                                    ->hitTest(touchState.position);
             break;
         case TouchPhase::NONE:
             firstResponder = nullptr;
@@ -366,9 +367,7 @@ bool Application::setInputType(InputType type)
     Application::inputType = type;
 
     if (type == InputType::GAMEPAD)
-    {
         Application::currentFocus->onFocusGained();
-    }
 
     return true;
 }
@@ -405,7 +404,6 @@ bool Application::handleAction(char button)
 
             if (action.available)
             {
-
                 if (action.actionListener(hintParent))
                 {
                     if (button == BUTTON_A)

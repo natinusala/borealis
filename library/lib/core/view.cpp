@@ -110,7 +110,7 @@ void View::addGestureRecognizer(GestureRecognizer* recognizer)
     this->gestureRecognizers.push_back(recognizer);
 }
 
-bool View::gestureRecognizerRequest(Touch touch, View* firstResponder)
+bool View::gestureRecognizerRequest(TouchState touch, View* firstResponder)
 {
     bool shouldPlayDefaultSound = touch.phase == TouchPhase::START;
 

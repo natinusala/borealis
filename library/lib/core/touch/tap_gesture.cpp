@@ -25,7 +25,7 @@ TapGestureRecognizer::TapGestureRecognizer(TapGestureRespond respond, bool callb
 {
 }
 
-GestureState TapGestureRecognizer::recognitionLoop(Touch touch, View* view, bool* shouldPlayDefaultSound)
+GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view, bool* shouldPlayDefaultSound)
 {
     if (!enabled)
         return GestureState::FAILED;

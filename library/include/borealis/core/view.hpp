@@ -1061,7 +1061,7 @@ class View
      * that needs to play it's own click sound, 
      * so play default is allowed
      */
-    bool gestureRecognizerRequest(Touch touch, View* firstResponder);
+    bool gestureRecognizerRequest(TouchState touch, View* firstResponder);
 
     /**
       * Called each frame

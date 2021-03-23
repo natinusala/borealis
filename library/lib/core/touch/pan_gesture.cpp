@@ -24,13 +24,13 @@
 namespace brls
 {
 
-PanGestureRecognizer::PanGestureRecognizer(PanGestureRespond respond, PanAxis axis)
-    : respond(respond)
-    , axis(axis)
+PanGestureRecognizer::PanGestureRecognizer(PanGestureEvent::Callback respond, PanAxis axis)
+    : axis(axis)
 {
+    panEvent.subscribe(respond);
 }
 
-GestureState PanGestureRecognizer::recognitionLoop(Touch touch, View* view, bool* shouldPlayDefaultSound)
+GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view, bool* shouldPlayDefaultSound)
 {
     if (!enabled)
         return GestureState::FAILED;
@@ -41,8 +41,8 @@ GestureState PanGestureRecognizer::recognitionLoop(Touch touch, View* view, bool
     {
         if (this->state == GestureState::INTERRUPTED || this->state == GestureState::FAILED)
         {
-            if (respond && this->state != lastState)
-                this->respond(getCurrentStatus());
+            if (this->state != lastState)
+                this->panEvent.fire(getCurrentStatus());
 
             lastState = this->state;
             return this->state;
@@ -117,7 +117,7 @@ GestureState PanGestureRecognizer::recognitionLoop(Touch touch, View* view, bool
             {
                 PanGestureStatus state = getCurrentStatus();
                 state.acceleration     = acceleration;
-                this->respond(state);
+                this->panEvent.fire(state);
             }
 
             break;
