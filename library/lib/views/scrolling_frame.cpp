@@ -17,6 +17,7 @@
 
 #include <borealis/core/application.hpp>
 #include <borealis/core/touch/pan_gesture.hpp>
+#include <borealis/core/touch/tap_gesture.hpp>
 #include <borealis/core/util.hpp>
 #include <borealis/views/scrolling_frame.hpp>
 
@@ -60,6 +61,14 @@ ScrollingFrame::ScrollingFrame()
         }
     },
         PanAxis::VERTICAL));
+
+    // Stop scrolling on tap
+    addGestureRecognizer(new TapGestureRecognizer([this](brls::TapGestureStatus status) {
+        if (status.state == GestureState::UNSURE)
+            this->scrollY.stop();
+        return true;
+    },
+        false));
 }
 
 void ScrollingFrame::draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx)
