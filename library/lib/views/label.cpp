@@ -55,8 +55,8 @@ static YGSize labelMeasureFunc(YGNodeRef node, float width, YGMeasureMode widthM
     std::string fullText = label->getFullText();
 
     YGSize size = {
-        width : width,
-        height : height,
+        .width = width,
+        .height = height,
     };
 
     if (fullText == "")

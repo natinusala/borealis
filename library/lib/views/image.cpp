@@ -66,8 +66,8 @@ static YGSize imageMeasureFunc(YGNodeRef node, float width, YGMeasureMode widthM
     ImageScalingType scalingType = image->getScalingType();
 
     YGSize size = {
-        width : width,
-        height : height,
+        .width = width,
+        .height = height,
     };
 
     if (texture == 0)

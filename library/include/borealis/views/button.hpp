@@ -52,87 +52,87 @@ typedef struct ButtonStyle
 
 // primary action button (different background color than default, to catch the eye)
 inline const ButtonStyle BUTTONSTYLE_PRIMARY = {
-    shadowType : ShadowType::GENERIC,
-    hideHighlightBackground : true,
+    .shadowType = ShadowType::GENERIC,
+    .hideHighlightBackground = true,
 
-    highlightPadding : "brls/button/primary_highlight_padding",
-    borderThickness : "",
+    .highlightPadding = "brls/button/primary_highlight_padding",
+    .borderThickness = "",
 
-    enabledBackgroundColor : "brls/button/primary_enabled_background",
-    enabledLabelColor : "brls/button/primary_enabled_text",
-    enabledBorderColor : "",
+    .enabledBackgroundColor = "brls/button/primary_enabled_background",
+    .enabledLabelColor = "brls/button/primary_enabled_text",
+    .enabledBorderColor = "",
 
-    disabledBackgroundColor : "brls/button/primary_disabled_background",
-    disabledLabelColor : "brls/button/primary_disabled_text",
-    disabledBorderColor : "",
+    .disabledBackgroundColor = "brls/button/primary_disabled_background",
+    .disabledLabelColor = "brls/button/primary_disabled_text",
+    .disabledBorderColor = "",
 };
 
 // between primary and default - text color is different, background color is the same
 inline const ButtonStyle BUTTONSTYLE_HIGHLIGHT = {
-    shadowType : ShadowType::GENERIC,
-    hideHighlightBackground : true,
+    .shadowType = ShadowType::GENERIC,
+    .hideHighlightBackground = true,
 
-    highlightPadding : "",
-    borderThickness : "",
+    .highlightPadding = "",
+    .borderThickness = "",
 
-    enabledBackgroundColor : "brls/button/default_enabled_background",
-    enabledLabelColor : "brls/button/highlight_enabled_text",
-    enabledBorderColor : "",
+    .enabledBackgroundColor = "brls/button/default_enabled_background",
+    .enabledLabelColor = "brls/button/highlight_enabled_text",
+    .enabledBorderColor = "",
 
-    disabledBackgroundColor : "brls/button/default_disabled_background",
-    disabledLabelColor : "brls/button/highlight_disabled_text",
-    disabledBorderColor : "",
+    .disabledBackgroundColor = "brls/button/default_disabled_background",
+    .disabledLabelColor = "brls/button/highlight_disabled_text",
+    .disabledBorderColor = "",
 };
 
 // default, plain button
 inline const ButtonStyle BUTTONSTYLE_DEFAULT = {
-    shadowType : ShadowType::GENERIC,
-    hideHighlightBackground : true,
+    .shadowType = ShadowType::GENERIC,
+    .hideHighlightBackground = true,
 
-    highlightPadding : "",
-    borderThickness : "",
+    .highlightPadding = "",
+    .borderThickness = "",
 
-    enabledBackgroundColor : "brls/button/default_enabled_background",
-    enabledLabelColor : "brls/button/default_enabled_text",
-    enabledBorderColor : "",
+    .enabledBackgroundColor = "brls/button/default_enabled_background",
+    .enabledLabelColor = "brls/button/default_enabled_text",
+    .enabledBorderColor = "",
 
-    disabledBackgroundColor : "brls/button/default_disabled_background",
-    disabledLabelColor : "brls/button/default_disabled_text",
-    disabledBorderColor : "",
+    .disabledBackgroundColor = "brls/button/default_disabled_background",
+    .disabledLabelColor = "brls/button/default_disabled_text",
+    .disabledBorderColor = "",
 };
 
 // text and a border
 inline const ButtonStyle BUTTONSTYLE_BORDERED = {
-    shadowType : ShadowType::NONE,
-    hideHighlightBackground : false,
+    .shadowType = ShadowType::NONE,
+    .hideHighlightBackground = false,
 
-    highlightPadding : "",
-    borderThickness : "brls/button/border_thickness",
+    .highlightPadding = "",
+    .borderThickness = "brls/button/border_thickness",
 
-    enabledBackgroundColor : "",
-    enabledLabelColor : "brls/button/default_enabled_text",
-    enabledBorderColor : "brls/button/enabled_border_color",
+    .enabledBackgroundColor = "",
+    .enabledLabelColor = "brls/button/default_enabled_text",
+    .enabledBorderColor = "brls/button/enabled_border_color",
 
-    disabledBackgroundColor : "",
-    disabledLabelColor : "brls/button/default_disabled_text",
-    disabledBorderColor : "brls/button/disabled_border_color",
+    .disabledBackgroundColor = "",
+    .disabledLabelColor = "brls/button/default_disabled_text",
+    .disabledBorderColor = "brls/button/disabled_border_color",
 };
 
 // only text
 inline const ButtonStyle BUTTONSTYLE_BORDERLESS = {
-    shadowType : ShadowType::NONE,
-    hideHighlightBackground : false,
+    .shadowType = ShadowType::NONE,
+    .hideHighlightBackground = false,
 
-    highlightPadding : "",
-    borderThickness : "",
+    .highlightPadding = "",
+    .borderThickness = "",
 
-    enabledBackgroundColor : "",
-    enabledLabelColor : "brls/button/default_enabled_text",
-    enabledBorderColor : "",
+    .enabledBackgroundColor = "",
+    .enabledLabelColor = "brls/button/default_enabled_text",
+    .enabledBorderColor = "",
 
-    disabledBackgroundColor : "",
-    disabledLabelColor : "brls/button/default_disabled_text",
-    disabledBorderColor : "",
+    .disabledBackgroundColor = "",
+    .disabledLabelColor = "brls/button/default_disabled_text",
+    .disabledBorderColor = "",
 };
 
 enum class ButtonState
