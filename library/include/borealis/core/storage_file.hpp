@@ -181,9 +181,25 @@ class ListStorageObject
         return std::strcmp(elem, other) == 0;
     }
 
+    bool operator!=(const char* other)
+    {
+        auto elem = this->get_back();
+        return std::strcmp(elem, other) != 0;
+    }
+
     const size_t size()
     {
         return values.size();
+    }
+
+    std::vector<Value>::iterator begin()
+    {
+        return values.begin();
+    }
+
+    std::vector<Value>::iterator end()
+    {
+        return values.end();
     }
 
     void setName(std::string val)
@@ -725,6 +741,9 @@ class BasicStorageFile
     std::string filename;
 };
 
+// An easier way to use brls::BasicStorageFile. No confusing functions.
+// StorageFile is a child class to brls::BasicStorageFile, so you can use
+// all of those functions, here.
 class StorageFile : public BasicStorageFile
 {
   public:

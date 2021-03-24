@@ -71,7 +71,10 @@ bool StorageFileDemo::onReadDataButtonPressed(brls::View *view) {
     if (!listBurnerObject.getIsEmpty())
         listSettingsObject = listBurnerObject;
     else return false;
-    std::cout << "Last value from the list from the XML File: " << listSettingsObject[2] << '\n';
+    
+    for (auto& element : listSettingsObject) {
+        std::cout << "Element from List: " << element.val << '\n';
+    }
 
     delete settings;
     return true;
