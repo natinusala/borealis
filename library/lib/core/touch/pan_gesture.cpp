@@ -30,7 +30,7 @@ PanGestureRecognizer::PanGestureRecognizer(PanGestureEvent::Callback respond, Pa
     panEvent.subscribe(respond);
 }
 
-GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view, bool* shouldPlayDefaultSound)
+GestureState PanGestureRecognizer::recognitionLoop(TouchState touch, View* view, Sound* soundToPlay)
 {
     if (!enabled)
         return GestureState::FAILED;

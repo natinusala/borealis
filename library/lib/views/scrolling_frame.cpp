@@ -63,12 +63,10 @@ ScrollingFrame::ScrollingFrame()
         PanAxis::VERTICAL));
 
     // Stop scrolling on tap
-    addGestureRecognizer(new TapGestureRecognizer([this](brls::TapGestureStatus status) {
+    addGestureRecognizer(new TapGestureRecognizer([this](brls::TapGestureStatus status, Sound* soundToPlay) {
         if (status.state == GestureState::UNSURE)
             this->scrollY.stop();
-        return true;
-    },
-        false));
+    }));
 }
 
 void ScrollingFrame::draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx)

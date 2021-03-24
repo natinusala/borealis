@@ -65,7 +65,7 @@ class PanGestureRecognizer : public GestureRecognizer
 {
   public:
     PanGestureRecognizer(PanGestureEvent::Callback respond, PanAxis axis);
-    GestureState recognitionLoop(TouchState touch, View* view, bool* shouldPlayDefaultSound) override;
+    GestureState recognitionLoop(TouchState touch, View* view, Sound* soundToPlay) override;
 
     // Get pan gesture axis
     PanAxis getAxis() const { return this->axis; }

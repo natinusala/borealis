@@ -110,24 +110,28 @@ void View::addGestureRecognizer(GestureRecognizer* recognizer)
     this->gestureRecognizers.push_back(recognizer);
 }
 
-bool View::gestureRecognizerRequest(TouchState touch, View* firstResponder)
+Sound View::gestureRecognizerRequest(TouchState touch, View* firstResponder)
 {
-    bool shouldPlayDefaultSound = touch.phase == TouchPhase::START;
+    Sound soundToPlay = touch.phase == TouchPhase::START ? SOUND_TOUCH : SOUND_NONE;
 
     for (GestureRecognizer* recognizer : getGestureRecognizers())
     {
         if (!recognizer->isEnabled())
             continue;
 
-        GestureState state = recognizer->recognitionLoop(touch, this, &shouldPlayDefaultSound);
+        GestureState state = recognizer->recognitionLoop(touch, this, &soundToPlay);
         if (state == GestureState::START)
             firstResponder->interruptGestures(true);
     }
 
+    Sound parentSound = SOUND_NONE;
     if (parent)
-        shouldPlayDefaultSound &= parent->gestureRecognizerRequest(touch, firstResponder);
+        parentSound = parent->gestureRecognizerRequest(touch, firstResponder);
 
-    return shouldPlayDefaultSound;
+    if (soundToPlay == SOUND_NONE)
+        soundToPlay = parentSound;
+
+    return soundToPlay;
 }
 
 void View::frame(FrameContext* ctx)

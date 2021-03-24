@@ -21,12 +21,29 @@
 namespace brls
 {
 
+struct TapGestureConfig
+{
+    bool highlightOnSelect = true;
+    Sound unsureSound = SOUND_FOCUS_CHANGE;
+    Sound failedSound = SOUND_TOUCH_UNFOCUS;
+    Sound endSound = SOUND_CLICK;
+
+    TapGestureConfig() {}
+    TapGestureConfig(bool highlightOnSelect, Sound unsureSound, Sound failedSound,Sound endSound) 
+    {
+        this->highlightOnSelect = highlightOnSelect;
+        this->unsureSound = unsureSound;
+        this->failedSound = failedSound;
+        this->endSound = endSound;
+    }
+};
+
 struct TapGestureStatus
 {
     GestureState state; // Gesture state
     Point position; // Current position
 };
-typedef std::function<bool(TapGestureStatus)> TapGestureRespond;
+typedef std::function<void(TapGestureStatus, Sound*)> TapGestureRespond;
 
 // Tap recognizer
 // UNSURE: while touch moves inside of View bounds
@@ -37,8 +54,16 @@ typedef std::function<bool(TapGestureStatus)> TapGestureRespond;
 class TapGestureRecognizer : public GestureRecognizer
 {
   public:
-    TapGestureRecognizer(TapGestureRespond respond, bool callbackOnEndOnly = true);
-    GestureState recognitionLoop(TouchState touch, View* view, bool* shouldPlayDefaultSound) override;
+    // Simple ctor which uses View's primary action as response which will be called only on recognizer state END.
+    TapGestureRecognizer(View* view, TapGestureConfig config = TapGestureConfig());
+
+    // Simple ctor with custom response which will be called only on recognizer state END.
+    TapGestureRecognizer(View* view, std::function<void()> respond, TapGestureConfig config = TapGestureConfig());
+
+    // Complex ctor with fully controllable response.
+    TapGestureRecognizer(TapGestureRespond respond);
+    
+    GestureState recognitionLoop(TouchState touch, View* view, Sound* soundToPlay) override;
 
     // Get current state of recognizer
     TapGestureStatus getCurrentStatus();
@@ -46,7 +71,6 @@ class TapGestureRecognizer : public GestureRecognizer
   private:
     TapGestureRespond respond;
     Point position;
-    bool callbackOnEndOnly;
     GestureState lastState;
 };
 

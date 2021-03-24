@@ -181,8 +181,8 @@ bool Application::mainLoop()
             // Search for first responder, which will be the root of recognition tree
             if (Application::activitiesStack.size() > 0)
                 firstResponder = Application::activitiesStack[Application::activitiesStack.size() - 1]
-                                    ->getContentView()
-                                    ->hitTest(touchState.position);
+                                     ->getContentView()
+                                     ->hitTest(touchState.position);
             break;
         case TouchPhase::NONE:
             firstResponder = nullptr;
@@ -193,12 +193,14 @@ bool Application::mainLoop()
 
     if (firstResponder)
     {
-        if (firstResponder->gestureRecognizerRequest(touchState, firstResponder))
+        Sound sound = firstResponder->gestureRecognizerRequest(touchState, firstResponder);
+        float pitch = 1;
+        if (sound == SOUND_TOUCH)
         {
             // Play touch sound with random pitch
-            float pitch = (rand() % 10) / 10.0f + 1.0f;
-            Application::getAudioPlayer()->play(SOUND_TOUCH, pitch);
+            pitch = (rand() % 10) / 10.0f + 1.0f;
         }
+        Application::getAudioPlayer()->play(sound, pitch);
     }
 
     // Trigger controller events
