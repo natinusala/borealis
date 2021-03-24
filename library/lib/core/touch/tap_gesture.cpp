@@ -21,7 +21,7 @@ namespace brls
 
 TapGestureRecognizer::TapGestureRecognizer(View* view, TapGestureConfig config)
 {
-    this->respond = [view, config](TapGestureStatus status, Sound* soundToPlay) {
+    this->tapEvent.subscribe([view, config](TapGestureStatus status, Sound* soundToPlay) {
         Application::giveFocus(view);
         for (auto& action : view->getActions())
         {
@@ -49,12 +49,12 @@ TapGestureRecognizer::TapGestureRecognizer(View* view, TapGestureConfig config)
                 }
             }
         }
-    };
+    });
 }
 
 TapGestureRecognizer::TapGestureRecognizer(View* view, std::function<void()> respond, TapGestureConfig config)
 {
-    this->respond = [view, respond, config](TapGestureStatus status, Sound* soundToPlay) {
+    this->tapEvent.subscribe([view, respond, config](TapGestureStatus status, Sound* soundToPlay) {
         Application::giveFocus(view);
         if (config.highlightOnSelect)
             view->playClickAnimation(status.state != GestureState::UNSURE);
@@ -73,12 +73,12 @@ TapGestureRecognizer::TapGestureRecognizer(View* view, std::function<void()> res
                 respond();
                 break;
         }
-    };
+    });
 }
 
-TapGestureRecognizer::TapGestureRecognizer(TapGestureRespond respond)
-    : respond(respond)
+TapGestureRecognizer::TapGestureRecognizer(TapGestureEvent::Callback respond)
 {
+    tapEvent.subscribe(respond);
 }
 
 GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view, Sound* soundToPlay)
@@ -92,8 +92,8 @@ GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view,
     {
         if (this->state == GestureState::INTERRUPTED || this->state == GestureState::FAILED)
         {
-            if (respond && this->state != lastState)
-                this->respond(getCurrentStatus(), soundToPlay);
+            if (this->state != lastState)
+                this->tapEvent.fire(getCurrentStatus(), soundToPlay);
 
             lastState = this->state;
             return this->state;
@@ -105,9 +105,7 @@ GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view,
         case TouchPhase::START:
             this->state    = GestureState::UNSURE;
             this->position = touch.position;
-
-            if (respond)
-                this->respond(getCurrentStatus(), soundToPlay);
+            this->tapEvent.fire(getCurrentStatus(), soundToPlay);
             break;
         case TouchPhase::STAY:
             // Check if touch is out view's bounds
@@ -115,14 +113,12 @@ GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view,
             if (touch.position.x < view->getX() || touch.position.x > view->getX() + view->getWidth() || touch.position.y < view->getY() || touch.position.y > view->getY() + view->getHeight())
             {
                 this->state = GestureState::FAILED;
-                if (respond)
-                    this->respond(getCurrentStatus(), soundToPlay);
+                this->tapEvent.fire(getCurrentStatus(), soundToPlay);
             }
             break;
         case TouchPhase::END:
             this->state = GestureState::END;
-            if (respond)
-                this->respond(getCurrentStatus(), soundToPlay);
+            this->tapEvent.fire(getCurrentStatus(), soundToPlay);
             break;
         case TouchPhase::NONE:
             this->state = GestureState::FAILED;

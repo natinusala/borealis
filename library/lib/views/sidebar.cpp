@@ -73,7 +73,7 @@ SidebarItem::SidebarItem()
             return true;
         },
         false, SOUND_CLICK_SIDEBAR);
-        
+
     this->addGestureRecognizer(new TapGestureRecognizer([this](TapGestureStatus status, Sound* soundToPlay) {
         if (this->active)
             return;

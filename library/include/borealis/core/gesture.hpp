@@ -16,8 +16,8 @@
 
 #pragma once
 
-#include <borealis/core/input.hpp>
 #include <borealis/core/audio.hpp>
+#include <borealis/core/input.hpp>
 #include <functional>
 
 namespace brls

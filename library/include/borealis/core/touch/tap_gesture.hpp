@@ -24,17 +24,17 @@ namespace brls
 struct TapGestureConfig
 {
     bool highlightOnSelect = true;
-    Sound unsureSound = SOUND_FOCUS_CHANGE;
-    Sound failedSound = SOUND_TOUCH_UNFOCUS;
-    Sound endSound = SOUND_CLICK;
+    Sound unsureSound      = SOUND_FOCUS_CHANGE;
+    Sound failedSound      = SOUND_TOUCH_UNFOCUS;
+    Sound endSound         = SOUND_CLICK;
 
-    TapGestureConfig() {}
-    TapGestureConfig(bool highlightOnSelect, Sound unsureSound, Sound failedSound,Sound endSound) 
+    TapGestureConfig() { }
+    TapGestureConfig(bool highlightOnSelect, Sound unsureSound, Sound failedSound, Sound endSound)
     {
         this->highlightOnSelect = highlightOnSelect;
-        this->unsureSound = unsureSound;
-        this->failedSound = failedSound;
-        this->endSound = endSound;
+        this->unsureSound       = unsureSound;
+        this->failedSound       = failedSound;
+        this->endSound          = endSound;
     }
 };
 
@@ -43,7 +43,7 @@ struct TapGestureStatus
     GestureState state; // Gesture state
     Point position; // Current position
 };
-typedef std::function<void(TapGestureStatus, Sound*)> TapGestureRespond;
+typedef Event<TapGestureStatus, Sound*> TapGestureEvent;
 
 // Tap recognizer
 // UNSURE: while touch moves inside of View bounds
@@ -61,15 +61,18 @@ class TapGestureRecognizer : public GestureRecognizer
     TapGestureRecognizer(View* view, std::function<void()> respond, TapGestureConfig config = TapGestureConfig());
 
     // Complex ctor with fully controllable response.
-    TapGestureRecognizer(TapGestureRespond respond);
-    
+    TapGestureRecognizer(TapGestureEvent::Callback respond);
+
     GestureState recognitionLoop(TouchState touch, View* view, Sound* soundToPlay) override;
 
     // Get current state of recognizer
     TapGestureStatus getCurrentStatus();
 
+    // Get tap gesture event
+    TapGestureEvent getPanGestureEvent() const { return tapEvent; }
+
   private:
-    TapGestureRespond respond;
+    TapGestureEvent tapEvent;
     Point position;
     GestureState lastState;
 };
