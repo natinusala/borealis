@@ -52,87 +52,87 @@ typedef struct ButtonStyle
 
 // primary action button (different background color than default, to catch the eye)
 inline const ButtonStyle BUTTONSTYLE_PRIMARY = {
-    .shadowType = ShadowType::GENERIC,
+    .shadowType              = ShadowType::GENERIC,
     .hideHighlightBackground = true,
 
     .highlightPadding = "brls/button/primary_highlight_padding",
-    .borderThickness = "",
+    .borderThickness  = "",
 
     .enabledBackgroundColor = "brls/button/primary_enabled_background",
-    .enabledLabelColor = "brls/button/primary_enabled_text",
-    .enabledBorderColor = "",
+    .enabledLabelColor      = "brls/button/primary_enabled_text",
+    .enabledBorderColor     = "",
 
     .disabledBackgroundColor = "brls/button/primary_disabled_background",
-    .disabledLabelColor = "brls/button/primary_disabled_text",
-    .disabledBorderColor = "",
+    .disabledLabelColor      = "brls/button/primary_disabled_text",
+    .disabledBorderColor     = "",
 };
 
 // between primary and default - text color is different, background color is the same
 inline const ButtonStyle BUTTONSTYLE_HIGHLIGHT = {
-    .shadowType = ShadowType::GENERIC,
+    .shadowType              = ShadowType::GENERIC,
     .hideHighlightBackground = true,
 
     .highlightPadding = "",
-    .borderThickness = "",
+    .borderThickness  = "",
 
     .enabledBackgroundColor = "brls/button/default_enabled_background",
-    .enabledLabelColor = "brls/button/highlight_enabled_text",
-    .enabledBorderColor = "",
+    .enabledLabelColor      = "brls/button/highlight_enabled_text",
+    .enabledBorderColor     = "",
 
     .disabledBackgroundColor = "brls/button/default_disabled_background",
-    .disabledLabelColor = "brls/button/highlight_disabled_text",
-    .disabledBorderColor = "",
+    .disabledLabelColor      = "brls/button/highlight_disabled_text",
+    .disabledBorderColor     = "",
 };
 
 // default, plain button
 inline const ButtonStyle BUTTONSTYLE_DEFAULT = {
-    .shadowType = ShadowType::GENERIC,
+    .shadowType              = ShadowType::GENERIC,
     .hideHighlightBackground = true,
 
     .highlightPadding = "",
-    .borderThickness = "",
+    .borderThickness  = "",
 
     .enabledBackgroundColor = "brls/button/default_enabled_background",
-    .enabledLabelColor = "brls/button/default_enabled_text",
-    .enabledBorderColor = "",
+    .enabledLabelColor      = "brls/button/default_enabled_text",
+    .enabledBorderColor     = "",
 
     .disabledBackgroundColor = "brls/button/default_disabled_background",
-    .disabledLabelColor = "brls/button/default_disabled_text",
-    .disabledBorderColor = "",
+    .disabledLabelColor      = "brls/button/default_disabled_text",
+    .disabledBorderColor     = "",
 };
 
 // text and a border
 inline const ButtonStyle BUTTONSTYLE_BORDERED = {
-    .shadowType = ShadowType::NONE,
+    .shadowType              = ShadowType::NONE,
     .hideHighlightBackground = false,
 
     .highlightPadding = "",
-    .borderThickness = "brls/button/border_thickness",
+    .borderThickness  = "brls/button/border_thickness",
 
     .enabledBackgroundColor = "",
-    .enabledLabelColor = "brls/button/default_enabled_text",
-    .enabledBorderColor = "brls/button/enabled_border_color",
+    .enabledLabelColor      = "brls/button/default_enabled_text",
+    .enabledBorderColor     = "brls/button/enabled_border_color",
 
     .disabledBackgroundColor = "",
-    .disabledLabelColor = "brls/button/default_disabled_text",
-    .disabledBorderColor = "brls/button/disabled_border_color",
+    .disabledLabelColor      = "brls/button/default_disabled_text",
+    .disabledBorderColor     = "brls/button/disabled_border_color",
 };
 
 // only text
 inline const ButtonStyle BUTTONSTYLE_BORDERLESS = {
-    .shadowType = ShadowType::NONE,
+    .shadowType              = ShadowType::NONE,
     .hideHighlightBackground = false,
 
     .highlightPadding = "",
-    .borderThickness = "",
+    .borderThickness  = "",
 
     .enabledBackgroundColor = "",
-    .enabledLabelColor = "brls/button/default_enabled_text",
-    .enabledBorderColor = "",
+    .enabledLabelColor      = "brls/button/default_enabled_text",
+    .enabledBorderColor     = "",
 
     .disabledBackgroundColor = "",
-    .disabledLabelColor = "brls/button/default_disabled_text",
-    .disabledBorderColor = "",
+    .disabledLabelColor      = "brls/button/default_disabled_text",
+    .disabledBorderColor     = "",
 };
 
 enum class ButtonState
