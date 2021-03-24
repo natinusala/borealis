@@ -56,6 +56,13 @@ enum class GestureState
 * 
 * If gesture does not apply to recognizer's pattern, change its state to FAILED. 
 * It could also be used as a placerholder when recognizer is not in use.
+* 
+* Use touch argument to get current state of touch.
+*
+* View argument contains the view to which this recognizer is attached.
+* 
+* Use soundToPlay pointer to set sound which will be played in current frame.
+* Leave it empty or use SOUND_NONE to not play any sound.
 */
 class GestureRecognizer
 {
