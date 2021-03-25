@@ -263,7 +263,7 @@ class BasicStorageFile
 #endif
 
         if (!std::filesystem::exists(config_folder))
-            std::filesystem::create_directory(config_folder);
+            std::filesystem::create_directories(config_folder);
 
         this->setConfigPath(filename);
 
@@ -326,9 +326,9 @@ class BasicStorageFile
             pRoot->InsertFirstChild(element);
 
             // We try to save the file
-            doc.SaveFile(config_path.c_str());
+            errorCode = doc.SaveFile(config_path.c_str());
 
-            if (errorCode == 0) // If it succedded
+            if (errorCode == 0 && errorCode != XML_ERROR_EMPTY_DOCUMENT) // If it succedded
                 return true;
             else
             { // Otherwise
@@ -370,9 +370,9 @@ class BasicStorageFile
             root->InsertFirstChild(element);
 
             // We try to save the file
-            doc.SaveFile(config_path.c_str());
+            errorCode = doc.SaveFile(config_path.c_str());
 
-            if (errorCode == 0) // If it succedded
+            if (errorCode == 0 && errorCode != XML_ERROR_EMPTY_DOCUMENT) // If it succedded
                 return true;
             else
             { // Otherwise
@@ -431,9 +431,9 @@ class BasicStorageFile
             pRoot->InsertFirstChild(element);
 
             // We try to save the file
-            doc.SaveFile(config_path.c_str());
+            errorCode = doc.SaveFile(config_path.c_str());
 
-            if (errorCode == 0) // If it succedded
+            if (errorCode == 0 && errorCode != XML_ERROR_EMPTY_DOCUMENT) // If it succedded
                 return true;
             else
             { // Otherwise
@@ -482,9 +482,9 @@ class BasicStorageFile
             root->InsertFirstChild(element);
 
             // We try to save the file
-            doc.SaveFile(config_path.c_str());
+            errorCode = doc.SaveFile(config_path.c_str());
 
-            if (errorCode == 0) // If it succedded
+            if (errorCode == 0 && errorCode != XML_ERROR_EMPTY_DOCUMENT) // If it succedded
                 return true;
             else
             { // Otherwise
@@ -789,6 +789,50 @@ class StorageFile : public BasicStorageFile
             return true;
         else
             return false;
+    }
+
+    /*
+     * Shortcut for the save function. Doesn't return anything.
+     * Cannot be used with a StorageFile pointer.
+     */
+    void operator<<(StorageObject& obj)
+    {
+        bool success;
+        BRLS_STORAGE_FILE_WRITE_DATA(obj, success);
+    }
+
+    /*
+     * Shortcut for the save function. Doesn't return anything.
+     * Cannot be used with a StorageFile pointer.
+     */
+    void operator<<(ListStorageObject& obj)
+    {
+        bool success;
+        BRLS_STORAGE_FILE_WRITE_LIST_DATA(obj, success);
+    }
+
+    /*
+     * Shortcut for the grab function. Doesn't return anything.
+     * Set the name of the object you are looking for inside of the brls::StorageObject
+     * For example, obj.setName("objToLookFor");
+     * Cannot be used with a StorageFile pointer.
+     */
+    void operator>>(StorageObject& obj)
+    {
+        std::string nameToFind = obj.name();
+        BRLS_STORAGE_FILE_READ_DATA(obj, nameToFind);
+    }
+
+    /*
+     * Shortcut for the grab function. Doesn't return anything.
+     * Set the name of the object you are looking for inside of the brls::ListStorageObject
+     * For example, obj.setName("objToLookFor");
+     * Cannot be used with a StorageFile pointer.
+     */
+    void operator>>(ListStorageObject& obj)
+    {
+        std::string nameToFind = obj.name();
+        BRLS_STORAGE_FILE_READ_LIST_DATA(obj, nameToFind);
     }
 };
 

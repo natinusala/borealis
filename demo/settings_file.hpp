@@ -15,10 +15,11 @@
 */
 #pragma once
 
-#include <string>
-#include <iostream>
 #include <borealis.hpp>
 
-class SettingsFile : public brls::StorageFile {
+struct SettingsFile : public brls::StorageFile {
     BRLS_STORAGE_FILE_INIT("settings");
+
+    BRLS_BLANK_STORAGE_OBJECT(containedSettingsObject);
+    BRLS_BLANK_LIST_STORAGE_OBJECT(containedListSettingsObject);
 };

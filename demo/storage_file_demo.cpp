@@ -28,55 +28,64 @@ StorageFileDemo::StorageFileDemo() {
 
 bool StorageFileDemo::onWriteDataButtonPressed(brls::View *view) {
     SettingsFile *settings = new SettingsFile();
+
+    brls::StorageObject settingsObject = settings->containedSettingsObject;
+    brls::ListStorageObject listSettingsObject = settings->containedListSettingsObject;
+
     settingsObject.setName("Demo");
     settingsObject.setType("char*");
-
     settingsObject.setValue((char*) "Hello! I'm coming soon to the release of Borealis!");
-    settings->save(settingsObject);
+    (*settings) << settingsObject;
+
+    settings->containedSettingsObject = settingsObject;
 
     settingsObject.setName("Boolean Test");
     settingsObject.setType("bool");
     settingsObject.setValue(brls::ConversionUtils::toCString<bool>(true));
-    settings->save(settingsObject);
+    (*settings) << settingsObject;
+
+    settings->containedSettingsObject = settingsObject;
 
     listSettingsObject.setName("List Demo");
     listSettingsObject.setType("char*");
     listSettingsObject.push_back((char*) "Hello!");
     listSettingsObject.push_back((char*) "I'm coming to the release of");
     listSettingsObject.push_back((char*) "Borealis!");
+    (*settings) << listSettingsObject;
 
-    settings->save(listSettingsObject);
+    settings->containedListSettingsObject = listSettingsObject;
 
-    delete settings;
     return true;
 }
 
 bool StorageFileDemo::onReadDataButtonPressed(brls::View *view) {
     SettingsFile *settings = new SettingsFile();
 
-    settings->grab(burnerObject, "Demo");
+    burnerObject.setName("Demo");
+    (*settings) >> burnerObject;
     if (!burnerObject.getIsEmpty())
-        settingsObject = burnerObject;
+        settings->containedSettingsObject = burnerObject;
     else return false;
-    std::cout << "First value from the XML File: " << settingsObject.value() << '\n';
+    std::cout << "First value from the XML File: " << settings->containedSettingsObject.value() << '\n';
 
-    settings->grab(burnerObject, "Boolean Test");
+    burnerObject.setName("Boolean Test");
+    (*settings) >> burnerObject;
     if (!burnerObject.getIsEmpty())
-        settingsObject = burnerObject;
+        settings->containedSettingsObject = burnerObject;
     else return false;
-    bool res = brls::ConversionUtils::fromCString<bool>(settingsObject.value());
+    bool res = brls::ConversionUtils::fromCString<bool>(settings->containedSettingsObject.value());
     std::cout << "Second value from the XML File (converted back to a bool): " << std::boolalpha << res << '\n';
     
-    settings->grab(listBurnerObject, "List Demo");
+    listBurnerObject.setName("List Demo");
+    (*settings) >> listBurnerObject;
     if (!listBurnerObject.getIsEmpty())
-        listSettingsObject = listBurnerObject;
+        settings->containedListSettingsObject = listBurnerObject;
     else return false;
     
-    for (auto& element : listSettingsObject) {
+    for (auto& element : settings->containedListSettingsObject) {
         std::cout << "Element from List: " << element.val << '\n';
     }
 
-    delete settings;
     return true;
 }
 
