@@ -81,37 +81,7 @@ Button::Button()
 
     this->applyStyle();
 
-    this->addGestureRecognizer(new TapGestureRecognizer([this](TapGestureStatus status) {
-        Application::giveFocus(this);
-        for (auto& action : getActions())
-        {
-            if (action.button != static_cast<enum ControllerButton>(BUTTON_A))
-                continue;
-
-            if (action.available)
-            {
-                this->playClickAnimation(status.state != GestureState::UNSURE);
-
-                switch (status.state)
-                {
-                    case GestureState::UNSURE:
-                        Application::getAudioPlayer()->play(SOUND_FOCUS_CHANGE);
-                        break;
-                    case GestureState::FAILED:
-                    case GestureState::INTERRUPTED:
-                        Application::getAudioPlayer()->play(SOUND_TOUCH_UNFOCUS);
-                        break;
-                    case GestureState::END:
-                        if (action.actionListener(this))
-                            Application::getAudioPlayer()->play(action.sound);
-                        break;
-                }
-                return false;
-            }
-        }
-        return true;
-    },
-        false));
+    this->addGestureRecognizer(new TapGestureRecognizer(this));
 }
 
 void Button::applyStyle()

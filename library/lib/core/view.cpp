@@ -110,24 +110,28 @@ void View::addGestureRecognizer(GestureRecognizer* recognizer)
     this->gestureRecognizers.push_back(recognizer);
 }
 
-bool View::gestureRecognizerRequest(Touch touch, View* firstResponder)
+Sound View::gestureRecognizerRequest(TouchState touch, View* firstResponder)
 {
-    bool shouldPlayDefaultSound = touch.phase == TouchPhase::START;
+    Sound soundToPlay = touch.phase == TouchPhase::START ? SOUND_TOUCH : SOUND_NONE;
 
     for (GestureRecognizer* recognizer : getGestureRecognizers())
     {
         if (!recognizer->isEnabled())
             continue;
 
-        GestureState state = recognizer->recognitionLoop(touch, this, &shouldPlayDefaultSound);
+        GestureState state = recognizer->recognitionLoop(touch, this, &soundToPlay);
         if (state == GestureState::START)
             firstResponder->interruptGestures(true);
     }
 
+    Sound parentSound = SOUND_NONE;
     if (parent)
-        shouldPlayDefaultSound &= parent->gestureRecognizerRequest(touch, firstResponder);
+        parentSound = parent->gestureRecognizerRequest(touch, firstResponder);
 
-    return shouldPlayDefaultSound;
+    if (soundToPlay == SOUND_NONE)
+        soundToPlay = parentSound;
+
+    return soundToPlay;
 }
 
 void View::frame(FrameContext* ctx)
@@ -650,12 +654,25 @@ void View::drawBackground(NVGcontext* vg, FrameContext* ctx, Style style)
     }
 }
 
-void View::registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden, enum Sound sound)
+ActionIdentifier View::registerAction(std::string hintText, enum ControllerButton button, ActionListener actionListener, bool hidden, enum Sound sound)
 {
+    ActionIdentifier nextIdentifier = (this->actions.size() == 0) ? 1 : this->actions.back().identifier + 1;
+
     if (auto it = std::find(this->actions.begin(), this->actions.end(), button); it != this->actions.end())
-        *it = { button, hintText, true, hidden, sound, actionListener };
+        *it = { button, nextIdentifier, hintText, true, hidden, sound, actionListener };
     else
-        this->actions.push_back({ button, hintText, true, hidden, sound, actionListener });
+        this->actions.push_back({ button, nextIdentifier, hintText, true, hidden, sound, actionListener });
+
+    return nextIdentifier;
+}
+
+void View::unregisterAction(ActionIdentifier identifier)
+{
+    auto is_matched_action = [identifier](Action action) {
+        return action.identifier == identifier;
+    };
+    if (auto it = std::find_if(this->actions.begin(), this->actions.end(), is_matched_action); it != this->actions.end())
+        this->actions.erase(it);
 }
 
 void View::registerClickAction(ActionListener actionListener)

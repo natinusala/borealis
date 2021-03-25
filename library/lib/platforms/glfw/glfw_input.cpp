@@ -112,7 +112,7 @@ void GLFWInputManager::updateControllerState(ControllerState* state)
     }
 }
 
-void GLFWInputManager::updateTouchState(RawTouch* state)
+void GLFWInputManager::updateTouchState(RawTouchState* state)
 {
     // Get touchscreen state
     double x, y;

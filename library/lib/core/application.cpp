@@ -53,8 +53,6 @@ constexpr uint32_t ORIGINAL_WINDOW_HEIGHT = 720;
 #define BUTTON_REPEAT_DELAY 15
 #define BUTTON_REPEAT_CADENCY 5
 
-using namespace brls::literals;
-
 namespace brls
 {
 
@@ -164,15 +162,15 @@ bool Application::mainLoop()
 
     // Input
     ControllerState controllerState = {};
-    RawTouch rawTouch               = {};
+    RawTouchState rawTouch          = {};
 
     InputManager* inputManager = Application::platform->getInputManager();
     inputManager->updateTouchState(&rawTouch);
     inputManager->updateControllerState(&controllerState);
 
-    static Touch oldTouch;
-    Touch touchState = InputManager::computeTouchState(rawTouch, oldTouch);
-    oldTouch         = touchState;
+    static TouchState oldTouch;
+    TouchState touchState = InputManager::computeTouchState(rawTouch, oldTouch);
+    oldTouch              = touchState;
 
     // Touch controller events
     switch (touchState.phase)
@@ -182,9 +180,10 @@ bool Application::mainLoop()
             Application::setInputType(InputType::TOUCH);
 
             // Search for first responder, which will be the root of recognition tree
-            firstResponder = Application::activitiesStack[Application::activitiesStack.size() - 1]
-                                 ->getContentView()
-                                 ->hitTest(touchState.position);
+            if (Application::activitiesStack.size() > 0)
+                firstResponder = Application::activitiesStack[Application::activitiesStack.size() - 1]
+                                     ->getContentView()
+                                     ->hitTest(touchState.position);
             break;
         case TouchPhase::NONE:
             firstResponder = nullptr;
@@ -195,12 +194,14 @@ bool Application::mainLoop()
 
     if (firstResponder)
     {
-        if (firstResponder->gestureRecognizerRequest(touchState, firstResponder))
+        Sound sound = firstResponder->gestureRecognizerRequest(touchState, firstResponder);
+        float pitch = 1;
+        if (sound == SOUND_TOUCH)
         {
             // Play touch sound with random pitch
-            float pitch = (rand() % 10) / 10.0f + 1.0f;
-            Application::getAudioPlayer()->play(SOUND_TOUCH, pitch);
+            pitch = (rand() % 10) / 10.0f + 1.0f;
         }
+        Application::getAudioPlayer()->play(sound, pitch);
     }
 
     // Trigger controller events
@@ -367,9 +368,7 @@ bool Application::setInputType(InputType type)
     Application::inputType = type;
 
     if (type == InputType::GAMEPAD)
-    {
         Application::currentFocus->onFocusGained();
-    }
 
     return true;
 }
@@ -406,7 +405,6 @@ bool Application::handleAction(char button)
 
             if (action.available)
             {
-
                 if (action.actionListener(hintParent))
                 {
                     if (button == BUTTON_A)
@@ -495,6 +493,36 @@ void Application::setDisplayFramerate(bool enabled)
 void Application::toggleFramerateDisplay()
 {
     // To be implemented (call setDisplayFramerate)
+}
+
+ActionIdentifier Application::registerFPSToggleAction(Activity* activity)
+{
+    return activity->registerAction(
+        "FPS", BUTTON_BACK, [](View* view) { Application::toggleFramerateDisplay(); return true; }, true);
+}
+
+void Application::setGlobalQuit(bool enabled)
+{
+    Application::globalQuitEnabled = enabled;
+    for (auto it = Application::activitiesStack.begin(); it != Application::activitiesStack.end(); ++it)
+    {
+        if (enabled)
+            Application::gloablQuitIdentifier = (*it)->registerExitAction();
+        else
+            (*it)->unregisterAction(Application::gloablQuitIdentifier);
+    }
+}
+
+void Application::setGlobalFPSToggle(bool enabled)
+{
+    Application::globalFPSToggleEnabled = enabled;
+    for (auto it = Application::activitiesStack.begin(); it != Application::activitiesStack.end(); ++it)
+    {
+        if (enabled)
+            Application::gloablFPSToggleIdentifier = Application::registerFPSToggleAction(*it);
+        else
+            (*it)->unregisterAction(Application::gloablFPSToggleIdentifier);
+    }
 }
 
 void Application::notify(std::string text)
@@ -601,9 +629,11 @@ void Application::pushActivity(Activity* activity, TransitionAnimation animation
     bool fadeOut = last && !last->isTranslucent() && !activity->isTranslucent(); // play the fade out animation?
     bool wait    = animation == TransitionAnimation::FADE; // wait for the old activity animation to be done before showing the new one?
 
-    activity->registerAction("brls/hints/exit"_i18n, BUTTON_START, [](View* view) { Application::quit(); return true; });
-    activity->registerAction(
-        "FPS", BUTTON_BACK, [](View* view) { Application::toggleFramerateDisplay(); return true; }, true);
+    if (Application::globalQuitEnabled)
+        Application::gloablQuitIdentifier = activity->registerExitAction();
+
+    if (Application::globalFPSToggleEnabled)
+        Application::gloablFPSToggleIdentifier = Application::registerFPSToggleAction(activity);
 
     // Fade out animation
     if (fadeOut)

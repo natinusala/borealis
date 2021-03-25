@@ -19,13 +19,69 @@
 namespace brls
 {
 
-TapGestureRecognizer::TapGestureRecognizer(TapGestureRespond respond, bool callbackOnEndOnly)
-    : respond(respond)
-    , callbackOnEndOnly(callbackOnEndOnly)
+TapGestureRecognizer::TapGestureRecognizer(View* view, TapGestureConfig config)
 {
+    this->tapEvent.subscribe([view, config](TapGestureStatus status, Sound* soundToPlay) {
+        Application::giveFocus(view);
+        for (auto& action : view->getActions())
+        {
+            if (action.button != static_cast<enum ControllerButton>(BUTTON_A))
+                continue;
+
+            if (action.available)
+            {
+                if (config.highlightOnSelect)
+                    view->playClickAnimation(status.state != GestureState::UNSURE);
+
+                switch (status.state)
+                {
+                    case GestureState::UNSURE:
+                        *soundToPlay = config.unsureSound;
+                        break;
+                    case GestureState::FAILED:
+                    case GestureState::INTERRUPTED:
+                        *soundToPlay = config.failedSound;
+                        break;
+                    case GestureState::END:
+                        if (action.actionListener(view))
+                            *soundToPlay = action.sound;
+                        break;
+                }
+            }
+        }
+    });
 }
 
-GestureState TapGestureRecognizer::recognitionLoop(Touch touch, View* view, bool* shouldPlayDefaultSound)
+TapGestureRecognizer::TapGestureRecognizer(View* view, std::function<void()> respond, TapGestureConfig config)
+{
+    this->tapEvent.subscribe([view, respond, config](TapGestureStatus status, Sound* soundToPlay) {
+        Application::giveFocus(view);
+        if (config.highlightOnSelect)
+            view->playClickAnimation(status.state != GestureState::UNSURE);
+
+        switch (status.state)
+        {
+            case GestureState::UNSURE:
+                *soundToPlay = config.unsureSound;
+                break;
+            case GestureState::FAILED:
+            case GestureState::INTERRUPTED:
+                *soundToPlay = config.failedSound;
+                break;
+            case GestureState::END:
+                *soundToPlay = config.endSound;
+                respond();
+                break;
+        }
+    });
+}
+
+TapGestureRecognizer::TapGestureRecognizer(TapGestureEvent::Callback respond)
+{
+    tapEvent.subscribe(respond);
+}
+
+GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view, Sound* soundToPlay)
 {
     if (!enabled)
         return GestureState::FAILED;
@@ -36,8 +92,8 @@ GestureState TapGestureRecognizer::recognitionLoop(Touch touch, View* view, bool
     {
         if (this->state == GestureState::INTERRUPTED || this->state == GestureState::FAILED)
         {
-            if (respond && !this->callbackOnEndOnly && this->state != lastState)
-                this->respond(getCurrentStatus());
+            if (this->state != lastState)
+                this->tapEvent.fire(getCurrentStatus(), soundToPlay);
 
             lastState = this->state;
             return this->state;
@@ -49,9 +105,7 @@ GestureState TapGestureRecognizer::recognitionLoop(Touch touch, View* view, bool
         case TouchPhase::START:
             this->state    = GestureState::UNSURE;
             this->position = touch.position;
-
-            if (respond && !this->callbackOnEndOnly)
-                *shouldPlayDefaultSound &= this->respond(getCurrentStatus());
+            this->tapEvent.fire(getCurrentStatus(), soundToPlay);
             break;
         case TouchPhase::STAY:
             // Check if touch is out view's bounds
@@ -59,14 +113,12 @@ GestureState TapGestureRecognizer::recognitionLoop(Touch touch, View* view, bool
             if (touch.position.x < view->getX() || touch.position.x > view->getX() + view->getWidth() || touch.position.y < view->getY() || touch.position.y > view->getY() + view->getHeight())
             {
                 this->state = GestureState::FAILED;
-                if (respond && !this->callbackOnEndOnly)
-                    this->respond(getCurrentStatus());
+                this->tapEvent.fire(getCurrentStatus(), soundToPlay);
             }
             break;
         case TouchPhase::END:
             this->state = GestureState::END;
-            if (respond)
-                this->respond(getCurrentStatus());
+            this->tapEvent.fire(getCurrentStatus(), soundToPlay);
             break;
         case TouchPhase::NONE:
             this->state = GestureState::FAILED;

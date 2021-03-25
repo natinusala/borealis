@@ -74,30 +74,27 @@ SidebarItem::SidebarItem()
         },
         false, SOUND_CLICK_SIDEBAR);
 
-    this->addGestureRecognizer(new TapGestureRecognizer([this](TapGestureStatus status) {
+    this->addGestureRecognizer(new TapGestureRecognizer([this](TapGestureStatus status, Sound* soundToPlay) {
         if (this->active)
-            return true;
+            return;
 
         this->playClickAnimation(status.state != GestureState::UNSURE);
 
         switch (status.state)
         {
             case GestureState::UNSURE:
-                Application::getAudioPlayer()->play(SOUND_FOCUS_SIDEBAR);
+                *soundToPlay = SOUND_FOCUS_SIDEBAR;
                 break;
             case GestureState::FAILED:
             case GestureState::INTERRUPTED:
-                Application::getAudioPlayer()->play(SOUND_TOUCH_UNFOCUS);
+                *soundToPlay = SOUND_TOUCH_UNFOCUS;
                 break;
             case GestureState::END:
-                Application::getAudioPlayer()->play(SOUND_CLICK_SIDEBAR);
+                *soundToPlay = SOUND_CLICK_SIDEBAR;
                 Application::giveFocus(this);
                 break;
         }
-
-        return false;
-    },
-        false));
+    }));
 }
 
 void SidebarItem::setActive(bool active)

@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <String>
+#include <string>
 
 namespace brls
 {

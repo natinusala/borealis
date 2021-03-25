@@ -66,7 +66,7 @@ void SwitchInputManager::updateControllerState(ControllerState* state)
     }
 }
 
-void SwitchInputManager::updateTouchState(RawTouch* state)
+void SwitchInputManager::updateTouchState(RawTouchState* state)
 {
     // Get touchscreen state
     static HidTouchScreenState hidState = { 0 };
