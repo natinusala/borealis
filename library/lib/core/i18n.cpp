@@ -26,8 +26,24 @@ namespace brls
 
 typedef std::unordered_map<std::string, std::string> locales;
 
+const char *internalXML = 
+    "<brls:i18nDoc>"
+    "   <brls:List name=\"hints\">"
+    "       <brls:String name=\"ok\">OK</brls:String>"
+    "       <brls:String name=\"back\">Back</brls:String>"
+    "       <brls:String name=\"exit\">Exit</brls:String>"
+    "   </brls:List>"
+    "   <brls:List name=\"crash_frame\">"
+    "       <brls:String name=\"button\">OK</brls:String>"
+    "   </brls:List>"
+    "   <brls:List name=\"thumbnail_sidebar\">"
+    "       <brls:String name=\"save\">Save</brls:String>"
+    "   </brls:List>"
+    "</brls:i18nDoc>";
+
 static locales xmlDefaultLocale;
 static locales xmlCurrentLocale;
+static locales xmlInternalText;
 
 void getTextFromListElement(tinyxml2::XMLElement *root, std::string existing_path, locales &target)
 {
@@ -86,7 +102,6 @@ static void loadLocale(std::string locale, locales &target)
         tinyxml2::XMLElement *root = doc.RootElement();
         
         // Iterate over all XML elements in the file
-        // TODO: if a "list" element is found, loop through that instead
         for (tinyxml2::XMLElement *e = root->FirstChildElement(); e != NULL; e = e->NextSiblingElement()) 
         {
             std::string path = name.substr(0, name.find(".")) + std::string("/") + e->Attribute("name");
@@ -103,8 +118,39 @@ static void loadLocale(std::string locale, locales &target)
     }
 }
 
+static void loadInternal()
+{
+    tinyxml2::XMLDocument doc;
+    tinyxml2::XMLError error = doc.Parse(internalXML);
+
+    if (error != tinyxml2::XML_SUCCESS)
+    {
+        Logger::error("Cannot load internal XML: error code {}", std::to_string(error));
+        Logger::error("More details: {}", doc.ErrorStr());
+        return;
+    }
+
+    tinyxml2::XMLElement *root = doc.RootElement();
+        
+    // Iterate over all XML elements in the file
+    for (tinyxml2::XMLElement *e = root->FirstChildElement(); e != NULL; e = e->NextSiblingElement()) 
+    {
+        std::string path = std::string("brls/") + e->Attribute("name");
+
+        if (std::strcmp(e->Name(), "brls:List") == 0)
+            getTextFromListElement(e, path, xmlInternalText);
+            
+        else if (std::strcmp(e->Name(), "brls:String") == 0)
+        {
+            tinyxml2::XMLText *textFromElem = e->FirstChild()->ToText();
+            xmlInternalText[path] = textFromElem->Value();
+        }
+    }
+}
+
 void loadTranslations()
 {
+    loadInternal();
     loadLocale(LOCALE_DEFAULT, xmlDefaultLocale);
 
     std::string currentLocaleName = Application::getLocale();
@@ -141,6 +187,18 @@ namespace internal
         // Fallback to returning the string name
         return stringName;
     }
+
+    std::string getInternalRawStr(std::string stringName)
+    {
+        for (auto& [path, value] : xmlInternalText)
+        {
+            if (stringName == path)
+                return value;
+        }
+
+        // Fallback to returning the string name
+        return stringName;
+    }
 } // namespace internal
 
 inline namespace literals
@@ -150,6 +208,10 @@ inline namespace literals
         return internal::getRawStr(std::string(str, len));
     }
 
+    std::string operator"" _internal(const char* str, size_t len)
+    {
+        return internal::getInternalRawStr(std::string(str, len));
+    } 
 } // namespace literals
 
 } // namespace brls

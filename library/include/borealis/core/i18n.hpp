@@ -48,6 +48,7 @@ const std::string LOCALE_DEFAULT = LOCALE_EN_US;
 namespace internal
 {
     std::string getRawStr(std::string stringName);
+    std::string getInternalRawStr(std::string stringName);
 } // namespace internal
 
 /**
@@ -84,5 +85,12 @@ inline namespace literals
      * Shortcut to brls::getStr(stringName)
      */
     std::string operator"" _i18n(const char* str, size_t len);
+
+    /**
+     * Returns the internal translation for the given string, without
+     * injecting any parameters
+     * Shortcut to brls::internal::getInternalRawStr(stringName)
+     */
+    std::string operator"" _internal(const char* str, size_t len);
 } // namespace literals
 } // namespace brls
