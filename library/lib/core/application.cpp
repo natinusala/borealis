@@ -99,7 +99,7 @@ void Application::createWindow(std::string windowTitle)
 
     // Init static variables
     Application::currentFocus = nullptr;
-    Application::title        = title;
+    Application::title        = windowTitle;
 
     // Init yoga
     YGConfig* defaultConfig       = YGConfigGetDefault();
