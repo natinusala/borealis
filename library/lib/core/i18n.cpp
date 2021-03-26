@@ -18,23 +18,33 @@
 #include <borealis/core/assets.hpp>
 #include <borealis/core/i18n.hpp>
 #include <filesystem>
-#include <fstream>
-#include <nlohmann/json.hpp>
-#include <string>
+#include <tinyxml2/tinyxml2.h>
+#include <unordered_map>
 
 namespace brls
 {
 
-static nlohmann::json defaultLocale = {};
-static nlohmann::json currentLocale = {};
+typedef std::unordered_map<std::string, std::string> locales;
 
-static bool endsWith(const std::string& str, const std::string& suffix)
+static locales xmlDefaultLocale;
+static locales xmlCurrentLocale;
+
+void getTextFromListElement(tinyxml2::XMLElement *root, std::string existing_path, locales &target)
 {
-    // if I wanted to write my own endsWith I would have made borealis in PHP
-    return str.size() >= suffix.size() && 0 == str.compare(str.size() - suffix.size(), suffix.size(), suffix);
+    if (!root) {
+        Logger::debug("nullptr???");
+        return;
+    }
+
+    for (tinyxml2::XMLElement *e2 = root->FirstChildElement(); e2 != NULL; e2 = e2->NextSiblingElement())
+    {
+        std::string path = existing_path + std::string("/") + e2->Attribute("name");
+        tinyxml2::XMLText *textFromElem = e2->FirstChild()->ToText();
+        target[path] = textFromElem->Value(); 
+    }
 }
 
-static void loadLocale(std::string locale, nlohmann::json* target)
+static void loadLocale(std::string locale, locales &target)
 {
     std::string localePath = BRLS_ASSET("i18n/" + locale);
 
@@ -49,80 +59,83 @@ static void loadLocale(std::string locale, nlohmann::json* target)
         return;
     }
 
-    // Iterate over all JSON files in the directory
+    // Iterate over all XML files in the directory
     for (const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator(localePath))
     {
         if (entry.is_directory())
             continue;
 
         std::string name = entry.path().filename().string();
+        std::string extension = entry.path().filename().extension().string();
 
-        if (!endsWith(name, ".json"))
+        if (!(extension == ".xml"))
             continue;
 
         std::string path = entry.path().string();
 
-        nlohmann::json strings;
+        tinyxml2::XMLDocument doc; 
+        tinyxml2::XMLError error = doc.LoadFile(path.c_str());
 
-        std::ifstream jsonStream;
-        jsonStream.open(path);
-
-        try
+        if (error != tinyxml2::XML_SUCCESS) 
         {
-            jsonStream >> strings;
-        }
-        catch (const std::exception& e)
-        {
-            Logger::error("Error while loading \"{}\": {}", path, e.what());
+            Logger::error("Cannot load file {} found in locale {}: error code {}", entry.path().filename().string(), locale, std::to_string(error));
+            Logger::error("More details: {}", doc.ErrorStr());
+            return;
         }
 
-        jsonStream.close();
+        tinyxml2::XMLElement *root = doc.RootElement();
+        
+        // Iterate over all XML elements in the file
+        // TODO: if a "list" element is found, loop through that instead
+        for (tinyxml2::XMLElement *e = root->FirstChildElement(); e != NULL; e = e->NextSiblingElement()) 
+        {
+            std::string path = name.substr(0, name.find(".")) + std::string("/") + e->Attribute("name");
 
-        (*target)[name.substr(0, name.length() - 5)] = strings;
+            if (std::strcmp(e->Name(), "brls:List") == 0)
+                getTextFromListElement(e, path, target);
+            
+            else if (std::strcmp(e->Name(), "brls:String") == 0)
+            {
+                tinyxml2::XMLText *textFromElem = e->FirstChild()->ToText();
+                target[path] = textFromElem->Value();
+            }
+        }
     }
 }
 
 void loadTranslations()
 {
-    loadLocale(LOCALE_DEFAULT, &defaultLocale);
+    loadLocale(LOCALE_DEFAULT, xmlDefaultLocale);
 
     std::string currentLocaleName = Application::getLocale();
     if (currentLocaleName != LOCALE_DEFAULT)
-        loadLocale(currentLocaleName, &currentLocale);
+        loadLocale(currentLocaleName, xmlCurrentLocale);
 }
 
 namespace internal
 {
     std::string getRawStr(std::string stringName)
     {
-        nlohmann::json::json_pointer pointer;
-
-        try
-        {
-            pointer = nlohmann::json::json_pointer("/" + stringName);
-        }
-        catch (const std::exception& e)
-        {
-            Logger::error("Error while getting string \"{}\": {}", stringName, e.what());
-            return stringName;
-        }
-
+        std::string currentLocaleName = Application::getLocale();
+        
         // First look for translated string in current locale
-        try
+        if (currentLocaleName != LOCALE_DEFAULT)
         {
-            return currentLocale[pointer].get<std::string>();
-        }
-        catch (...)
-        {
+            for (auto& [path, value] : xmlCurrentLocale)
+            {
+                if (stringName == path)
+                    return value;
+            }
         }
 
         // Then look for default locale
-        try
+        else if (currentLocaleName == LOCALE_DEFAULT)
         {
-            return defaultLocale[pointer].get<std::string>();
-        }
-        catch (...)
-        {
+            for (auto& [path, value] : xmlDefaultLocale)
+            {
+                if (stringName == path)
+                    return value;
+            }
         }
 
         // Fallback to returning the string name
