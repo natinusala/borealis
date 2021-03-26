@@ -44,6 +44,8 @@ int main(int argc, char* argv[])
     // We recommend to use INFO for real apps
     brls::Logger::setLogLevel(brls::LogLevel::DEBUG);
 
+    brls::Application::usei18n(false);
+
     // Init the app and i18n
     if (!brls::Application::init())
     {

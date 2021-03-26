@@ -51,6 +51,8 @@ namespace internal
     std::string getInternalRawStr(std::string stringName);
 } // namespace internal
 
+void loadInternal();
+
 /**
  * Returns the translation for the given string,
  * after injecting format parameters (if any)

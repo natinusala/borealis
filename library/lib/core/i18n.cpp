@@ -45,7 +45,7 @@ static locales xmlDefaultLocale;
 static locales xmlCurrentLocale;
 static locales xmlInternalText;
 
-void getTextFromListElement(tinyxml2::XMLElement *root, std::string existing_path, locales &target)
+void getTextFromElements(tinyxml2::XMLElement *root, std::string existing_path, locales &target)
 {
     if (!root) {
         Logger::debug("nullptr???");
@@ -55,8 +55,13 @@ void getTextFromListElement(tinyxml2::XMLElement *root, std::string existing_pat
     for (tinyxml2::XMLElement *e2 = root->FirstChildElement(); e2 != NULL; e2 = e2->NextSiblingElement())
     {
         std::string path = existing_path + std::string("/") + e2->Attribute("name");
-        tinyxml2::XMLText *textFromElem = e2->FirstChild()->ToText();
-        target[path] = textFromElem->Value(); 
+        if (std::strcmp(e2->Name(), "brls:List") == 0) 
+            getTextFromElements(e2, path, target);
+        else if (std::strcmp(e2->Name(), "brls:String") == 0)
+        {
+            tinyxml2::XMLText *textFromElem = e2->FirstChild()->ToText();
+            target[path] = textFromElem->Value();
+        } 
     }
 }
 
@@ -100,25 +105,19 @@ static void loadLocale(std::string locale, locales &target)
         }
 
         tinyxml2::XMLElement *root = doc.RootElement();
+        if (std::strcmp(root->Name(), "brls:i18nDoc") != 0)
+        {
+            Logger::error("Could not find root element with name \"brls:i18nDoc\".");
+            return;
+        }
         
         // Iterate over all XML elements in the file
-        for (tinyxml2::XMLElement *e = root->FirstChildElement(); e != NULL; e = e->NextSiblingElement()) 
-        {
-            std::string path = name.substr(0, name.find(".")) + std::string("/") + e->Attribute("name");
-
-            if (std::strcmp(e->Name(), "brls:List") == 0)
-                getTextFromListElement(e, path, target);
-            
-            else if (std::strcmp(e->Name(), "brls:String") == 0)
-            {
-                tinyxml2::XMLText *textFromElem = e->FirstChild()->ToText();
-                target[path] = textFromElem->Value();
-            }
-        }
+        std::string path_2 = name.substr(0, name.find("."));
+        getTextFromElements(root, path_2, target);
     }
 }
 
-static void loadInternal()
+void loadInternal()
 {
     tinyxml2::XMLDocument doc;
     tinyxml2::XMLError error = doc.Parse(internalXML);
@@ -133,19 +132,7 @@ static void loadInternal()
     tinyxml2::XMLElement *root = doc.RootElement();
         
     // Iterate over all XML elements in the file
-    for (tinyxml2::XMLElement *e = root->FirstChildElement(); e != NULL; e = e->NextSiblingElement()) 
-    {
-        std::string path = std::string("brls/") + e->Attribute("name");
-
-        if (std::strcmp(e->Name(), "brls:List") == 0)
-            getTextFromListElement(e, path, xmlInternalText);
-            
-        else if (std::strcmp(e->Name(), "brls:String") == 0)
-        {
-            tinyxml2::XMLText *textFromElem = e->FirstChild()->ToText();
-            xmlInternalText[path] = textFromElem->Value();
-        }
-    }
+    getTextFromElements(root, "brls", xmlInternalText);
 }
 
 void loadTranslations()

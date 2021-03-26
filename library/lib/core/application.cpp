@@ -54,6 +54,11 @@ constexpr uint32_t ORIGINAL_WINDOW_HEIGHT = 720;
 namespace brls
 {
 
+void Application::usei18n(bool val)
+{
+    Application::usingi18n = val;
+}
+
 bool Application::init()
 {
     // Init platform
@@ -68,7 +73,12 @@ bool Application::init()
     Logger::info("Using platform {}", platform->getName());
 
     // Init i18n
-    loadTranslations();
+    if (Application::usingi18n)
+        loadTranslations();
+    else {
+        Application::getLocale() = LOCALE_DEFAULT; // TODO: Find an alternative to change the locale?
+        loadInternal(); // Load internal translations (required for built-in views)
+    }
 
     Application::inited = true;
     return true;
@@ -99,7 +109,7 @@ void Application::createWindow(std::string windowTitle)
 
     // Init static variables
     Application::currentFocus = nullptr;
-    Application::title        = title;
+    Application::title        = windowTitle;
 
     // Init yoga
     YGConfig* defaultConfig       = YGConfigGetDefault();

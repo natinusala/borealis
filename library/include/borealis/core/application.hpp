@@ -42,6 +42,13 @@ class Application
 {
   public:
     /**
+     * Sets if the borealis application should use i18n or not.
+     * If called, you must call it before init().
+     * Is automatically set to true.
+     */
+    static void usei18n(bool val);
+
+    /**
      * Inits the borealis application.
      * Returns true if it succeeded, false otherwise.
      */
@@ -191,6 +198,7 @@ class Application
     static std::string getLocale();
 
   private:
+    inline static bool usingi18n     = true;
     inline static bool inited        = false;
     inline static bool quitRequested = false;
 

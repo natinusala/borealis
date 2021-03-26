@@ -634,7 +634,7 @@ void View::unregisterAction(ActionIdentifier identifier)
 
 void View::registerClickAction(ActionListener actionListener)
 {
-    this->registerAction("brls/hints/ok"_i18n, BUTTON_A, actionListener, false, SOUND_CLICK);
+    this->registerAction("brls/hints/ok"_internal, BUTTON_A, actionListener, false, SOUND_CLICK);
 }
 
 void View::updateActionHint(enum ControllerButton button, std::string hintText)
