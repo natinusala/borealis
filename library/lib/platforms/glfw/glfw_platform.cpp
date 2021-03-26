@@ -41,7 +41,9 @@ GLFWPlatform::GLFWPlatform()
 
     // Split the default encoding and change the _ to - in locale (taken from my own testing on macOS Big Sur 11.0.1)
     this->locale = this->locale.substr(0, this->locale.find('.'));
-    for (char& c : this->locale) if (c == '_') c = '-';
+    for (char& c : this->locale)
+        if (c == '_')
+            c = '-';
 
     // Init glfw
     glfwSetErrorCallback(glfwErrorCallback);
