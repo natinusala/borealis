@@ -51,7 +51,7 @@ const std::string headerXML = R"xml(
             fontSize="@style/brls/header/font_size"
             textColor="@theme/brls/header/subtitle"
             visibility="gone"
-            textAlign="right" />
+            horizontalAlign="right" />
 
     </brls:Box>
 )xml";

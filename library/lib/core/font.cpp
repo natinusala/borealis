@@ -40,7 +40,7 @@ bool FontLoader::loadFontFromFile(std::string fontName, std::string filePath)
         return true;
     }
 
-    Logger::error("{} font couldn't be located (searched at \"{}\")", fontName, filePath);
+    Logger::error("\"{}\" font couldn't be located (searched at \"{}\")", fontName, filePath);
     return false;
 }
 

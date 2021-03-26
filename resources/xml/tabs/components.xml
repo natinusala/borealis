@@ -23,7 +23,6 @@
                     marginBottom="10px" />
 
                 <!-- Buttons -->
-                <!-- TODO: image button somewhere -->
                 <brls:Header
                     width="auto"
                     height="auto"
@@ -119,19 +118,19 @@
                         width="30%"
                         height="auto"
                         text="@i18n/demo/components/label_left"
-                        textAlign="left" />
+                        horizontalAlign="left" />
 
                     <brls:Label
                         width="30%"
                         height="auto"
                         text="@i18n/demo/components/label_center"
-                        textAlign="center" />
+                        horizontalAlign="center" />
 
                     <brls:Label
                         width="30%"
                         height="auto"
                         text="@i18n/demo/components/label_right"
-                        textAlign="right" />
+                        horizontalAlign="right" />
 
                 </brls:Box>
 
@@ -156,7 +155,7 @@
                         height="auto"
                         imageWidth="76px"
                         imageHeight="76px"
-                        image="@res/icon/tiles.png"
+                        image="@res/img/tiles.png"
                         caption="@i18n/demo/components/images_downscaled" />
 
                     <CaptionedImage
@@ -165,7 +164,7 @@
                         height="auto"
                         imageWidth="auto"
                         imageHeight="auto"
-                        image="@res/icon/tiles.png"
+                        image="@res/img/tiles.png"
                         caption="@i18n/demo/components/images_original" />
 
                     <CaptionedImage
@@ -175,7 +174,7 @@
                         imageWidth="170px"
                         imageHeight="170px"
                         maxWidth="170px"
-                        image="@res/icon/tiles.png"
+                        image="@res/img/tiles.png"
                         caption="@i18n/demo/components/images_upscaled"
                         focusDown="image_cropped" />
 
@@ -193,7 +192,7 @@
                         height="auto"
                         imageWidth="400px"
                         imageHeight="75px"
-                        image="@res/icon/tiles.png"
+                        image="@res/img/tiles.png"
                         scalingType="stretch"
                         caption="@i18n/demo/components/images_stretched" />
 
@@ -203,7 +202,7 @@
                         height="auto"
                         imageWidth="auto"
                         imageHeight="75px"
-                        image="@res/icon/tiles.png"
+                        image="@res/img/tiles.png"
                         scalingType="crop"
                         caption="@i18n/demo/components/images_cropped"
                         focusUp="image_upscaled" />

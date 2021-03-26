@@ -215,17 +215,26 @@ Label::Label()
     });
 
     BRLS_REGISTER_ENUM_XML_ATTRIBUTE(
-        "textAlign", TextAlign, this->setTextAlign,
+        "horizontalAlign", HorizontalAlign, this->setHorizontalAlign,
         {
-            { "left", TextAlign::LEFT },
-            { "center", TextAlign::CENTER },
-            { "right", TextAlign::RIGHT },
+            { "left", HorizontalAlign::LEFT },
+            { "center", HorizontalAlign::CENTER },
+            { "right", HorizontalAlign::RIGHT },
+        });
+
+    BRLS_REGISTER_ENUM_XML_ATTRIBUTE(
+        "verticalAlign", VerticalAlign, this->setVerticalAlign,
+        {
+            { "baseline", VerticalAlign::BASELINE },
+            { "top", VerticalAlign::TOP },
+            { "center", VerticalAlign::CENTER },
+            { "bottom", VerticalAlign::BOTTOM },
         });
 }
 
 void Label::setAnimated(bool animated)
 {
-    if (animated == this->animated || this->isWrapping || this->align != TextAlign::LEFT)
+    if (animated == this->animated || this->isWrapping || this->horizontalAlign != HorizontalAlign::LEFT)
         return;
 
     this->animated = animated;
@@ -238,9 +247,14 @@ void Label::setAutoAnimate(bool autoAnimate)
     this->autoAnimate = autoAnimate;
 }
 
-void Label::setTextAlign(TextAlign align)
+void Label::setHorizontalAlign(HorizontalAlign align)
 {
-    this->align = align;
+    this->horizontalAlign = align;
+}
+
+void Label::setVerticalAlign(VerticalAlign align)
+{
+    this->verticalAlign = align;
 }
 
 void Label::onFocusGained()
@@ -334,16 +348,32 @@ static std::string trim(const std::string& str)
     return result;
 }
 
-enum NVGalign Label::getNVGHorizontalAlign()
+enum NVGalign Label::getNVGVerticalAlign()
 {
-    switch (this->align)
+    switch (this->verticalAlign)
     {
         default:
-        case TextAlign::LEFT:
+        case VerticalAlign::BASELINE:
+            return NVG_ALIGN_BASELINE;
+        case VerticalAlign::TOP:
+            return NVG_ALIGN_TOP;
+        case VerticalAlign::CENTER:
+            return NVG_ALIGN_MIDDLE;
+        case VerticalAlign::BOTTOM:
+            return NVG_ALIGN_BOTTOM;
+    }
+}
+
+enum NVGalign Label::getNVGHorizontalAlign()
+{
+    switch (this->horizontalAlign)
+    {
+        default:
+        case HorizontalAlign::LEFT:
             return NVG_ALIGN_LEFT;
-        case TextAlign::CENTER:
+        case HorizontalAlign::CENTER:
             return NVG_ALIGN_CENTER;
-        case TextAlign::RIGHT:
+        case HorizontalAlign::RIGHT:
             return NVG_ALIGN_RIGHT;
     }
 }
@@ -354,9 +384,10 @@ void Label::draw(NVGcontext* vg, float x, float y, float width, float height, St
         return;
 
     enum NVGalign horizAlign = this->getNVGHorizontalAlign();
+    enum NVGalign vertAlign  = this->getNVGVerticalAlign();
 
     nvgFontSize(vg, this->fontSize);
-    nvgTextAlign(vg, horizAlign | NVG_ALIGN_MIDDLE);
+    nvgTextAlign(vg, horizAlign | vertAlign);
     nvgFontFaceId(vg, this->font);
     nvgTextLineHeight(vg, this->lineHeight);
     nvgFillColor(vg, a(this->textColor));
@@ -387,13 +418,19 @@ void Label::draw(NVGcontext* vg, float x, float y, float width, float height, St
     else
     {
         float textX = x;
+        float textY = y;
 
         if (horizAlign == NVG_ALIGN_CENTER)
             textX += width / 2;
         else if (horizAlign == NVG_ALIGN_RIGHT)
             textX += width;
 
-        nvgText(vg, textX, y + height / 2.0f, this->truncatedText.c_str(), nullptr);
+        if (vertAlign == NVG_ALIGN_MIDDLE || vertAlign == NVG_ALIGN_BASELINE)
+            textY += height / 2.0f;
+        else if (vertAlign == NVG_ALIGN_BOTTOM)
+            textY += height;
+
+        nvgText(vg, textX, textY, this->truncatedText.c_str(), nullptr);
     }
 }
 

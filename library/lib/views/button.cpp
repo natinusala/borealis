@@ -43,7 +43,7 @@ const std::string buttonXML = R"xml(
         width="auto"
         height="auto"
         fontSize="@style/brls/button/text_size"
-        textAlign="center" />
+        horizontalAlign="center" />
 
     </brls:Box>
 )xml";
@@ -59,7 +59,7 @@ Button::Button()
     this->forwardXMLAttribute("lineHeight", this->label);
     this->forwardXMLAttribute("animated", this->label);
     this->forwardXMLAttribute("autoAnimate", this->label);
-    this->forwardXMLAttribute("textAlign", this->label);
+    this->forwardXMLAttribute("textHorizontalAlign", this->label, "horizontalAlign");
 
     BRLS_REGISTER_ENUM_XML_ATTRIBUTE(
         "style", const ButtonStyle*, this->setStyle,
