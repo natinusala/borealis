@@ -43,6 +43,7 @@ class GLFWPlatform : public Platform
     FontLoader* getFontLoader() override;
 
   private:
+    std::string locale;
     NullAudioPlayer* audioPlayer   = nullptr;
     GLFWVideoContext* videoContext = nullptr;
     GLFWInputManager* inputManager = nullptr;
