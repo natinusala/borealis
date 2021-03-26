@@ -19,7 +19,7 @@
 namespace brls
 {
 
-[[ noreturn ]] void fatal(std::string message)
+[[noreturn]] void fatal(std::string message)
 {
     brls::Logger::error("Fatal error: {}", message);
     throw std::logic_error(message);

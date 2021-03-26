@@ -27,7 +27,7 @@ namespace brls
 /**
  * Prints the given error message message and throws a std::logic_error.
  */
-[[ noreturn ]] void fatal(std::string message);
+[[noreturn]] void fatal(std::string message);
 
 struct ConversionUtils 
 {
