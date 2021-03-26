@@ -20,16 +20,18 @@
 #pragma once
 
 #include <borealis.hpp>
-#include <string>
 #include <iostream>
+#include <string>
+
 #include "settings_file.hpp"
 
-struct StorageFileDemo : public brls::Box {
+struct StorageFileDemo : public brls::Box
+{
     StorageFileDemo();
 
-    static brls::View *create();
+    static brls::View* create();
 
-    private:
+  private:
     bool onWriteDataButtonPressed(brls::View* view);
     bool onReadDataButtonPressed(brls::View* view);
 

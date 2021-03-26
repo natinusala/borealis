@@ -17,7 +17,8 @@
 
 #include <borealis.hpp>
 
-struct SettingsFile : public brls::StorageFile {
+struct SettingsFile : public brls::StorageFile
+{
     BRLS_STORAGE_FILE_INIT("settings");
 
     BRLS_BLANK_STORAGE_OBJECT(containedSettingsObject);

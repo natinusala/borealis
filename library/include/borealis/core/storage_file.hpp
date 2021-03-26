@@ -53,7 +53,7 @@ namespace brls
 // In the XML File
 struct StorageObject
 {
-    StorageObject() { }
+    StorageObject() {}
     StorageObject(char* val, std::string name, std::string type);
 
     void setValue(char* newValue);
@@ -83,7 +83,7 @@ struct ListStorageObject
         char* val;
     }; // POD Struct (Plain Old Data-type)
 
-    ListStorageObject() { }
+    ListStorageObject() {}
     ListStorageObject(std::string name, char* value, std::string type);
 
     void push_back(char* newVal);

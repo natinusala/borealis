@@ -18,8 +18,8 @@
 #pragma once
 
 #include <borealis/core/logger.hpp>
-#include <stdexcept>
 #include <sstream>
+#include <stdexcept>
 
 namespace brls
 {
@@ -29,27 +29,29 @@ namespace brls
  */
 [[noreturn]] void fatal(std::string message);
 
-struct ConversionUtils 
+struct ConversionUtils
 {
     template <typename T>
     /*
      * Converts any primitive type to a C-style string (char*)
      */
-    inline static char* toCString(const T &t) {
+    inline static char* toCString(const T& t)
+    {
         std::ostringstream oss;
         oss << t;
 
-        char *output = new char[sizeof(oss.str().c_str()) + 1];
+        char* output = new char[sizeof(oss.str().c_str()) + 1];
         std::strcpy(output, oss.str().c_str());
         return output;
     }
-    
+
     template <typename T>
     /*
      * Converts a C-style string (char*) to any primitive type
      */
-    inline static T fromCString(const char *s) {
-        std::istringstream iss( (std::string(s)) );
+    inline static T fromCString(const char* s)
+    {
+        std::istringstream iss((std::string(s)));
         T t;
         iss >> t;
         return t;

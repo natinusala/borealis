@@ -19,22 +19,24 @@
 
 #include "storage_file_demo.hpp"
 
-StorageFileDemo::StorageFileDemo() {
+StorageFileDemo::StorageFileDemo()
+{
     this->inflateFromXMLRes("xml/tabs/storage_file.xml");
 
     BRLS_REGISTER_CLICK_BY_ID("writeData", this->onWriteDataButtonPressed);
     BRLS_REGISTER_CLICK_BY_ID("readData", this->onReadDataButtonPressed);
 }
 
-bool StorageFileDemo::onWriteDataButtonPressed(brls::View *view) {
-    SettingsFile *settings = new SettingsFile();
+bool StorageFileDemo::onWriteDataButtonPressed(brls::View* view)
+{
+    SettingsFile* settings = new SettingsFile();
 
-    brls::StorageObject settingsObject = settings->containedSettingsObject;
+    brls::StorageObject settingsObject         = settings->containedSettingsObject;
     brls::ListStorageObject listSettingsObject = settings->containedListSettingsObject;
 
     settingsObject.setName("Demo");
     settingsObject.setType("char*");
-    settingsObject.setValue((char*) "Hello! I'm coming soon to the release of Borealis!");
+    settingsObject.setValue((char*)"Hello! I'm coming soon to the release of Borealis!");
     (*settings) << settingsObject;
 
     settings->containedSettingsObject = settingsObject;
@@ -48,9 +50,9 @@ bool StorageFileDemo::onWriteDataButtonPressed(brls::View *view) {
 
     listSettingsObject.setName("List Demo");
     listSettingsObject.setType("char*");
-    listSettingsObject.push_back((char*) "Hello!");
-    listSettingsObject.push_back((char*) "I'm coming to the release of");
-    listSettingsObject.push_back((char*) "Borealis!");
+    listSettingsObject.push_back((char*)"Hello!");
+    listSettingsObject.push_back((char*)"I'm coming to the release of");
+    listSettingsObject.push_back((char*)"Borealis!");
     (*settings) << listSettingsObject;
 
     settings->containedListSettingsObject = listSettingsObject;
@@ -58,37 +60,43 @@ bool StorageFileDemo::onWriteDataButtonPressed(brls::View *view) {
     return true;
 }
 
-bool StorageFileDemo::onReadDataButtonPressed(brls::View *view) {
-    SettingsFile *settings = new SettingsFile();
+bool StorageFileDemo::onReadDataButtonPressed(brls::View* view)
+{
+    SettingsFile* settings = new SettingsFile();
 
     burnerObject.setName("Demo");
     (*settings) >> burnerObject;
     if (!burnerObject.getIsEmpty())
         settings->containedSettingsObject = burnerObject;
-    else return false;
+    else
+        return false;
     std::cout << "First value from the XML File: " << settings->containedSettingsObject.value() << '\n';
 
     burnerObject.setName("Boolean Test");
     (*settings) >> burnerObject;
     if (!burnerObject.getIsEmpty())
         settings->containedSettingsObject = burnerObject;
-    else return false;
+    else
+        return false;
     bool res = brls::ConversionUtils::fromCString<bool>(settings->containedSettingsObject.value());
     std::cout << "Second value from the XML File (converted back to a bool): " << std::boolalpha << res << '\n';
-    
+
     listBurnerObject.setName("List Demo");
     (*settings) >> listBurnerObject;
     if (!listBurnerObject.getIsEmpty())
         settings->containedListSettingsObject = listBurnerObject;
-    else return false;
-    
-    for (auto& element : settings->containedListSettingsObject) {
+    else
+        return false;
+
+    for (auto& element : settings->containedListSettingsObject)
+    {
         std::cout << "Element from List: " << element.val << '\n';
     }
 
     return true;
 }
 
-brls::View* StorageFileDemo::create() {
+brls::View* StorageFileDemo::create()
+{
     return new StorageFileDemo();
 }
