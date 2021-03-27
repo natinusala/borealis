@@ -75,7 +75,7 @@ std::string getStr(std::string stringName, Args&&... args)
 }
 
 /**
- * Loads all translations of the current system locale + default locale
+ * Loads all translations of the current system locale + default locale + internal translations
  * Must be called before trying to get a translation!
  */
 void loadTranslations();

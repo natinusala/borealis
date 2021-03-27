@@ -25,6 +25,7 @@
 #include <borealis/core/input.hpp>
 #include <borealis/core/util.hpp>
 #include <borealis/core/view.hpp>
+#include <borealis/core/assets.hpp>
 
 using namespace brls::literals;
 
@@ -1517,7 +1518,7 @@ bool View::isXMLAttributeValid(std::string attributeName)
 
 View* View::createFromXMLResource(std::string name)
 {
-    return View::createFromXMLFile(std::string(BRLS_RESOURCES) + "xml/" + name);
+    return View::createFromXMLFile(BRLS_ASSET("xml/" + name));
 }
 
 View* View::createFromXMLString(std::string xml)

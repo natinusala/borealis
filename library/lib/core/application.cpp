@@ -75,12 +75,12 @@ bool Application::init()
     // Init i18n
     if (Application::usingi18n)
     {
-        Logger::info("i18n opt-out has been disabled. Initing i18n...");
+        Logger::info("i18n has been enabled. Initing translations...");
         loadTranslations();
     }
     else
     {
-        Logger::info("i18n opt-out has been enabled. Initing i18n internals...");
+        Logger::info("i18n has been disabled. Initing only internal translations...");
         Application::getLocale() = LOCALE_DEFAULT; // TODO: Find an alternative to change the locale?
         loadInternal(); // Load internal translations (required for built-in views)
     }
