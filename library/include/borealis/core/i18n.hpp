@@ -20,6 +20,7 @@
 #include <fmt/core.h>
 
 #include <borealis/core/logger.hpp>
+#include <vector>
 #include <string>
 
 namespace brls

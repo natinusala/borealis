@@ -68,9 +68,6 @@ int main(int argc, char* argv[])
     // Create and push the main activity to the stack
     brls::Application::pushActivity(new MainActivity());
 
-    brls::Logger::debug("Locale: {}", brls::Application::getLocale());
-    brls::Logger::debug("Ok: {}", "brls/hints/ok"_internal);
-
     // Run the app
     while (brls::Application::mainLoop())
         ;

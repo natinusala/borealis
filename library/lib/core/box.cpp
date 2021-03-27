@@ -19,6 +19,7 @@
 #include <borealis/core/application.hpp>
 #include <borealis/core/box.hpp>
 #include <borealis/core/util.hpp>
+#include <borealis/core/assets.hpp>
 #include <cmath>
 
 namespace brls
@@ -390,7 +391,7 @@ void Box::inflateFromXMLString(std::string xml)
 
 void Box::inflateFromXMLRes(std::string name)
 {
-    return Box::inflateFromXMLFile(std::string(BRLS_RESOURCES) + name);
+    return Box::inflateFromXMLFile(BRLS_ASSET(name));
 }
 
 void Box::inflateFromXMLFile(std::string path)

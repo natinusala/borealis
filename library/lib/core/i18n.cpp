@@ -50,6 +50,8 @@ static locales xmlInternalText; // For internal text
 
 void getTextFromElements(tinyxml2::XMLElement* root, std::string existing_path, locales& target)
 {
+    std::vector<std::string> warnings;
+
     if (!root)
     { // Checks if root is nullptr
         Logger::error("Detected a possible empty XML file. Root element provided is nullptr."); // If it is, return an error message and return
@@ -68,7 +70,44 @@ void getTextFromElements(tinyxml2::XMLElement* root, std::string existing_path, 
         }
         else // Otherwise, if the element is unknown,
         {
-            Logger::error("Found unknown element in i18n file. Element name is {}. Continuing...", e2->Name()); // we give an error message and continue looping
+            warnings.push_back(std::string("Found unknown element in i18n file. Element name is ") + e2->Name() + ". Continuing..."); // we give an error message and continue looping
+            continue;
+        }
+    }
+
+    if (!warnings.empty())
+    {
+        for (const auto& e : warnings)
+            Logger::warning("{}", e);
+    }
+}
+
+void i18nChecker(std::vector<std::string>& warnings)
+{
+    std::string path = BRLS_ASSET("i18n");
+
+    for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(path)) {
+        if (entry.is_directory())
+            continue;
+
+        if (!(entry.path().filename().extension().string() == ".xml")) {
+            warnings.push_back(std::string("Detected a stray file. File ") + entry.path().filename().string() + " without extension .xml found.");
+            continue;
+        }
+
+        std::string current_path = entry.path().string();
+
+        tinyxml2::XMLDocument doc; 
+        tinyxml2::XMLError error = doc.LoadFile(current_path.c_str());
+
+        if (error == tinyxml2::XML_ERROR_EMPTY_DOCUMENT) {
+            warnings.push_back(std::string("Detected a stray XML file ") + entry.path().filename().string() + ". Empty XML document found.");
+            continue;
+        }
+        
+        tinyxml2::XMLElement* root = doc.RootElement();
+        if (std::strcmp(root->Name(), "brls:i18nDoc") != 0) {
+            warnings.push_back(std::string("Detected a stray XML file. Root element with name \"") + root->Name() + "\" found.");
             continue;
         }
     }
@@ -76,6 +115,10 @@ void getTextFromElements(tinyxml2::XMLElement* root, std::string existing_path, 
 
 static void loadLocale(std::string locale, locales& target)
 {
+    std::vector<std::string> warnings;
+
+    i18nChecker(warnings);
+
     std::string localePath = BRLS_ASSET("i18n/" + locale);
 
     if (!std::filesystem::exists(localePath)) // If the localePath above doesn't exist,
@@ -99,10 +142,7 @@ static void loadLocale(std::string locale, locales& target)
         std::string extension = entry.path().filename().extension().string();
 
         if (!(extension == ".xml")) // If the entry's extension does not equal .xml, we continue.
-        {
-            Logger::error("Detected a possible stray file. File without extension .xml found.");
             continue;
-        }
 
         std::string path = entry.path().string();
 
@@ -114,19 +154,22 @@ static void loadLocale(std::string locale, locales& target)
         {
             Logger::error("Cannot load file {} found in locale {}: error code {}", entry.path().filename().string(), locale, std::to_string(error)); // we give an error message and return.
             Logger::error("More details: {}", doc.ErrorStr());
-            return;
+            continue;
         }
 
         tinyxml2::XMLElement* root = doc.RootElement(); // We grab the root element
         if (std::strcmp(root->Name(), "brls:i18nDoc") != 0) // and check if the root element name equals brls:i18nDoc.
-        {
-            Logger::error("Detected a possible stray XML file. Root element with name \"brls:i18nDoc\" not found."); // If not, we give an error message and continue.
-            continue;
-        }
+            continue;  
 
         // Iterate over all XML elements in the file
         std::string path_2 = name.substr(0, name.find("."));
         getTextFromElements(root, path_2, target);
+    }
+
+    if (!warnings.empty())
+    {
+        for (const auto& e : warnings)
+            Logger::warning("{}", e);
     }
 }
 

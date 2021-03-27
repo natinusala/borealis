@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include <string>
 #include <filesystem>
+#include <string>
 
 #ifndef BRLS_RESOURCES
 #error BRLS_RESOURCES define missing
@@ -27,11 +27,11 @@
 
 namespace brls
 {
-    inline static std::string BRLS_ASSET(std::string _str)
-    {
-        _str = std::string(BRLS_RESOURCES) + _str;
-        std::filesystem::path tmp_out_path{ _str };
-        tmp_out_path.make_preferred();
-        return tmp_out_path.string();
-    }
+inline static std::string BRLS_ASSET(std::string _str)
+{
+    _str = std::string(BRLS_RESOURCES) + _str;
+    std::filesystem::path tmp_out_path { _str };
+    tmp_out_path.make_preferred();
+    return tmp_out_path.string();
+}
 } // namespace brls

@@ -20,12 +20,12 @@
 #include <algorithm>
 #include <borealis/core/animation.hpp>
 #include <borealis/core/application.hpp>
+#include <borealis/core/assets.hpp>
 #include <borealis/core/box.hpp>
 #include <borealis/core/i18n.hpp>
 #include <borealis/core/input.hpp>
 #include <borealis/core/util.hpp>
 #include <borealis/core/view.hpp>
-#include <borealis/core/assets.hpp>
 
 using namespace brls::literals;
 
