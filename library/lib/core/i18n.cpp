@@ -82,32 +82,69 @@ void getTextFromElements(tinyxml2::XMLElement* root, std::string existing_path, 
     }
 }
 
+bool is_valid_locale_directory(const std::filesystem::directory_entry& entry)
+{
+    std::string localeFolder = entry.path().string();
+    localeFolder             = localeFolder.substr(localeFolder.rfind(pathSeperator) + 1);
+
+    if (localeFolder != "i18n")
+    {
+        for (const auto& e : LOCALE_LIST)
+            if (e == localeFolder)
+                return true;
+    }
+    else
+        return true;
+
+    return false;
+}
+
 void i18nChecker(std::vector<std::string>& warnings)
 {
     std::string path = BRLS_ASSET("i18n");
 
-    for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(path)) {
-        if (entry.is_directory())
-            continue;
+    if (!std::filesystem::exists(path))
+    {
+        Logger::error("Detected an invalid i18n setup. Directory {} doesn't exist.", path);
+        return;
+    }
 
-        if (!(entry.path().filename().extension().string() == ".xml")) {
-            warnings.push_back(std::string("Detected a stray file. File ") + entry.path().filename().string() + " without extension .xml found.");
+    if (!std::filesystem::is_directory(path))
+    {
+        Logger::error("Detected an invalid i18n setup. {} isn't a directory.", path);
+        return;
+    }
+
+    for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(path))
+    {
+        if (entry.is_directory())
+        {
+            if (!is_valid_locale_directory(entry))
+                warnings.push_back("Detected a stray directory. Directory " + entry.path().string() + " does not match any locales");
+            continue;
+        }
+
+        if (!(entry.path().filename().extension().string() == ".xml"))
+        {
+            warnings.push_back(std::string("Detected a stray file. File ") + entry.path().string() + " without extension .xml found.");
             continue;
         }
 
         std::string current_path = entry.path().string();
 
-        tinyxml2::XMLDocument doc; 
+        tinyxml2::XMLDocument doc;
         tinyxml2::XMLError error = doc.LoadFile(current_path.c_str());
 
-        if (error == tinyxml2::XML_ERROR_EMPTY_DOCUMENT) {
-            warnings.push_back(std::string("Detected a stray XML file ") + entry.path().filename().string() + ". Empty XML document found.");
+        if (error == tinyxml2::XML_ERROR_EMPTY_DOCUMENT)
+        {
+            warnings.push_back(std::string("Detected a stray XML file ") + current_path + ". Empty XML document found.");
             continue;
         }
-        
+
         tinyxml2::XMLElement* root = doc.RootElement();
-        if (std::strcmp(root->Name(), "brls:i18nDoc") != 0) {
-            warnings.push_back(std::string("Detected a stray XML file. Root element with name \"") + root->Name() + "\" found.");
+        if (std::strcmp(root->Name(), "brls:i18nDoc") != 0)
+        {
+            warnings.push_back(std::string("Detected a stray XML file. Root element with name \"") + root->Name() + std::string("\" found in file ") + current_path + ".");
             continue;
         }
     }
@@ -115,10 +152,6 @@ void i18nChecker(std::vector<std::string>& warnings)
 
 static void loadLocale(std::string locale, locales& target)
 {
-    std::vector<std::string> warnings;
-
-    i18nChecker(warnings);
-
     std::string localePath = BRLS_ASSET("i18n/" + locale);
 
     if (!std::filesystem::exists(localePath)) // If the localePath above doesn't exist,
@@ -159,17 +192,11 @@ static void loadLocale(std::string locale, locales& target)
 
         tinyxml2::XMLElement* root = doc.RootElement(); // We grab the root element
         if (std::strcmp(root->Name(), "brls:i18nDoc") != 0) // and check if the root element name equals brls:i18nDoc.
-            continue;  
+            continue;
 
         // Iterate over all XML elements in the file
         std::string path_2 = name.substr(0, name.find("."));
         getTextFromElements(root, path_2, target);
-    }
-
-    if (!warnings.empty())
-    {
-        for (const auto& e : warnings)
-            Logger::warning("{}", e);
     }
 }
 

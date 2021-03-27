@@ -76,6 +76,17 @@ bool Application::init()
     if (Application::usingi18n)
     {
         Logger::info("i18n has been enabled. Initing translations...");
+
+        std::vector<std::string> warnings;
+        i18nChecker(warnings);
+        if (!warnings.empty())
+        {
+            for (const auto& e : warnings)
+                Logger::warning("{}", e);
+
+            warnings.shrink_to_fit();
+        }
+
         loadTranslations();
     }
     else

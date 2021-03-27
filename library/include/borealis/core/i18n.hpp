@@ -20,8 +20,8 @@
 #include <fmt/core.h>
 
 #include <borealis/core/logger.hpp>
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace brls
 {
@@ -47,11 +47,30 @@ const std::string LOCALE_ES_419  = "es-419";
 
 const std::string LOCALE_DEFAULT = LOCALE_EN_US;
 
+const std::vector<const std::string> LOCALE_LIST = {
+    LOCALE_JA, LOCALE_EN_US, LOCALE_EN_GB, LOCALE_FR, LOCALE_FR_CA,
+    LOCALE_DE, LOCALE_IT, LOCALE_ES, LOCALE_ZH_CN, LOCALE_ZH_HANS, LOCALE_ZH_HANT, LOCALE_ZH_TW,
+    LOCALE_Ko, LOCALE_NL, LOCALE_PT, LOCALE_PT_BR, LOCALE_RU, LOCALE_ES_419
+};
+
+const char pathSeperator = // To check if a directory in the i18n folder is valid
+#ifdef _WIN32
+    '\\';
+#else
+    '/';
+#endif
+
 namespace internal
 {
     std::string getRawStr(std::string stringName);
     std::string getInternalRawStr(std::string stringName);
 } // namespace internal
+
+/**
+ * Checks the i18n folder for stray directories, files, and
+ * XML files.
+ */
+void i18nChecker(std::vector<std::string>& warnings);
 
 void loadInternal();
 
