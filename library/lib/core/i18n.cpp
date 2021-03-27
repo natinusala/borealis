@@ -52,7 +52,7 @@ void getTextFromElements(tinyxml2::XMLElement* root, std::string existing_path, 
 {
     if (!root)
     { // Checks if root is nullptr
-        Logger::error("Root provided is nullptr."); // If it is, return an error message and return
+        Logger::error("Detected a possible empty XML file. Root element provided is nullptr."); // If it is, return an error message and return
         return;
     }
 
@@ -99,7 +99,10 @@ static void loadLocale(std::string locale, locales& target)
         std::string extension = entry.path().filename().extension().string();
 
         if (!(extension == ".xml")) // If the entry's extension does not equal .xml, we continue.
+        {
+            Logger::error("Detected a possible stray file. File without extension .xml found.");
             continue;
+        }
 
         std::string path = entry.path().string();
 
@@ -117,7 +120,7 @@ static void loadLocale(std::string locale, locales& target)
         tinyxml2::XMLElement* root = doc.RootElement(); // We grab the root element
         if (std::strcmp(root->Name(), "brls:i18nDoc") != 0) // and check if the root element name equals brls:i18nDoc.
         {
-            Logger::error("Could not find root element with name \"brls:i18nDoc\"."); // If not, we give an error message and continue.
+            Logger::error("Detected a possible stray XML file. Root element with name \"brls:i18nDoc\" not found."); // If not, we give an error message and continue.
             continue;
         }
 
