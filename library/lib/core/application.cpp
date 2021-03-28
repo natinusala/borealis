@@ -191,6 +191,18 @@ bool Application::mainLoop()
             break;
     }
 
+    if (!firstResponder && (touchState.scroll.x != 0 || touchState.scroll.y != 0))
+    {
+        Logger::debug("Touched at X: " + std::to_string(touchState.position.x) + ", Y: " + std::to_string(touchState.position.y));
+        Application::setInputType(InputType::TOUCH);
+
+        // Search for first responder, which will be the root of recognition tree
+        if (Application::activitiesStack.size() > 0)
+            firstResponder = Application::activitiesStack[Application::activitiesStack.size() - 1]
+                                 ->getContentView()
+                                 ->hitTest(touchState.position);
+    }
+
     if (firstResponder)
     {
         Sound sound = firstResponder->gestureRecognizerRequest(touchState, firstResponder);

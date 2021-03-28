@@ -89,6 +89,7 @@ struct RawTouchState
 {
     bool pressed;
     Point position;
+    Point scroll;
 };
 
 // Contains touch data filled with it's current phase
@@ -96,6 +97,7 @@ struct TouchState
 {
     TouchPhase phase;
     Point position;
+    Point scroll;
 };
 
 // Interface responsible for reporting input state to the application - button presses,

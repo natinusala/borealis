@@ -39,6 +39,7 @@ struct PanGestureStatus
     Point position; // Current position
     Point startPosition; // Start X position
     Point delta; // Difference between current and previous positions by X
+    bool deltaOnly = false; // If true, current state will contain delta values ONLY
 
     // Acceleration info, NOT NULL ONLY from
     // gesture callback and when current state is END
