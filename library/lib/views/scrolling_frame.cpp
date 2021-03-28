@@ -16,7 +16,7 @@
 */
 
 #include <borealis/core/application.hpp>
-#include <borealis/core/touch/pan_gesture.hpp>
+#include <borealis/core/touch/scroll_gesture.hpp>
 #include <borealis/core/touch/tap_gesture.hpp>
 #include <borealis/core/util.hpp>
 #include <borealis/views/scrolling_frame.hpp>
@@ -35,8 +35,15 @@ ScrollingFrame::ScrollingFrame()
 
     this->setMaximumAllowedXMLElements(1);
 
-    addGestureRecognizer(new PanGestureRecognizer([this](PanGestureStatus state) {
+    addGestureRecognizer(new ScrollGestureRecognizer([this](PanGestureStatus state) {
         float contentHeight = this->getContentHeight();
+
+        if (state.deltaOnly)
+        {
+            float newScroll = (this->scrollY * contentHeight - (state.delta.y)) / contentHeight;
+            startScrolling(false, newScroll);
+            return;
+        }
 
         static float startY;
         if (state.state == GestureState::START)

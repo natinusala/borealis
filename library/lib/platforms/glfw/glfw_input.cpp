@@ -80,10 +80,18 @@ static void glfwJoystickCallback(int jid, int event)
     }
 }
 
+void GLFWInputManager::scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    GLFWInputManager* self = (GLFWInputManager*)Application::getPlatform()->getInputManager();
+    self->scrollOffset.x += xoffset * 10;
+    self->scrollOffset.y += yoffset * 10;
+}
+
 GLFWInputManager::GLFWInputManager(GLFWwindow* window)
     : window(window)
 {
     glfwSetJoystickCallback(glfwJoystickCallback);
+    glfwSetScrollCallback(window, scrollCallback);
 
     if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
     {
@@ -112,20 +120,26 @@ void GLFWInputManager::updateControllerState(ControllerState* state)
     }
 }
 
+bool sameSign(int a, int b)
+{
+    if (a == 0 || b == 0)
+        return true;
+    return (a >= 0) ^ (b < 0);
+}
+
 void GLFWInputManager::updateTouchState(RawTouchState* state)
 {
     // Get touchscreen state
     double x, y;
     glfwGetCursorPos(this->window, &x, &y);
 
-    state->pressed = false;
-    int clickState = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
-    if (clickState == GLFW_PRESS)
-    {
-        state->pressed    = true;
-        state->position.x = x / Application::windowScale;
-        state->position.y = y / Application::windowScale;
-    }
+    state->pressed    = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+    state->position.x = x / Application::windowScale;
+    state->position.y = y / Application::windowScale;
+    state->scroll     = scrollOffset;
+
+    scrollOffset.x = 0;
+    scrollOffset.y = 0;
 }
 
 };

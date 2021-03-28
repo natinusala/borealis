@@ -38,6 +38,9 @@ struct Point
     Point operator/(const float& a) const;
     Point operator*(const float& a) const;
     bool operator==(const Point& other) const;
+    bool operator!=(const Point& other) const;
+    void operator+=(const Point& a);
+    void operator-=(const Point& a);
 };
 
 // A structure that contains width and height values.

@@ -56,6 +56,23 @@ bool Point::operator==(const Point& other) const
     return x == other.x && y == other.y;
 }
 
+bool Point::operator!=(const Point& other) const
+{
+    return x != other.x || y != other.y;
+}
+
+void Point::operator+=(const Point& a)
+{
+    this->x += a.x;
+    this->y += a.y;
+}
+
+void Point::operator-=(const Point& a)
+{
+    this->x -= a.x;
+    this->y -= a.y;
+}
+
 // Size
 Size::Size()
     : Size(0.0f, 0.0f)

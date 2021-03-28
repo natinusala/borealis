@@ -24,6 +24,7 @@ borealis_files = files(
     'lib/core/gesture.cpp',
     'lib/core/touch/tap_gesture.cpp',
     'lib/core/touch/pan_gesture.cpp',
+    'lib/core/touch/scroll_gesture.cpp',
 
     'lib/platforms/glfw/glfw_platform.cpp',
     'lib/platforms/glfw/glfw_video.cpp',
@@ -77,4 +78,4 @@ borealis_include = include_directories(
 )
 
 borealis_dependencies = [ dep_glfw3, dep_glm, ]
-borealis_cpp_args = [ '-DYG_ENABLE_EVENTS', '-D__GLFW__', ]
+borealis_cpp_args = [ '-DNO_TOUCH_SCROLLING=true', '-DYG_ENABLE_EVENTS', '-D__GLFW__', ]

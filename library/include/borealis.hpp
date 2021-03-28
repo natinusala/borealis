@@ -57,4 +57,5 @@
 
 // Gestures
 #include <borealis/core/touch/pan_gesture.hpp>
+#include <borealis/core/touch/scroll_gesture.hpp>
 #include <borealis/core/touch/tap_gesture.hpp>

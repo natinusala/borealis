@@ -37,6 +37,12 @@ TouchState InputManager::computeTouchState(RawTouchState currentTouch, TouchStat
             lastFrameState.phase = TouchPhase::END;
     }
 
+    if (currentTouch.scroll.x != 0 || currentTouch.scroll.y != 0)
+    {
+        lastFrameState.position = currentTouch.position;
+    }
+    lastFrameState.scroll = currentTouch.scroll;
+
     return lastFrameState;
 }
 
