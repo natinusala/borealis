@@ -77,14 +77,14 @@ bool Application::init()
     {
         Logger::info("i18n has been enabled. Initing translations...");
 
-        std::vector<std::string> warnings;
-        i18nChecker(warnings);
+        std::vector<std::string> warnings = i18nChecker();
+
         if (!warnings.empty())
         {
             for (const auto& e : warnings)
                 Logger::warning("{}", e);
 
-            warnings.shrink_to_fit();
+            warnings.shrink_to_fit(); // Releases the memory allocated by warnings (since it's only for the init function)
         }
 
         loadTranslations();

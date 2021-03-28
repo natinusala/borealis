@@ -99,20 +99,22 @@ bool is_valid_locale_directory(const std::filesystem::directory_entry& entry)
     return false;
 }
 
-void i18nChecker(std::vector<std::string>& warnings)
+std::vector<std::string> i18nChecker()
 {
+    std::vector<std::string> warnings;
+
     std::string path = BRLS_ASSET("i18n");
 
     if (!std::filesystem::exists(path))
     {
         Logger::error("Detected an invalid i18n setup. Directory {} doesn't exist.", path);
-        return;
+        return warnings;
     }
 
     if (!std::filesystem::is_directory(path))
     {
         Logger::error("Detected an invalid i18n setup. {} isn't a directory.", path);
-        return;
+        return warnings;
     }
 
     for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(path))
@@ -148,6 +150,8 @@ void i18nChecker(std::vector<std::string>& warnings)
             continue;
         }
     }
+    
+    return warnings;
 }
 
 static void loadLocale(std::string locale, locales& target)
