@@ -83,7 +83,7 @@ TapGestureRecognizer::TapGestureRecognizer(TapGestureEvent::Callback respond)
 
 GestureState TapGestureRecognizer::recognitionLoop(TouchState touch, View* view, Sound* soundToPlay)
 {
-    if (!enabled)
+    if (!enabled || touch.phase == TouchPhase::NONE)
         return GestureState::FAILED;
 
     // If not first touch frame and state is
