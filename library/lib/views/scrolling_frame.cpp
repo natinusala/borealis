@@ -36,20 +36,21 @@ ScrollingFrame::ScrollingFrame()
     this->setMaximumAllowedXMLElements(1);
 
     addGestureRecognizer(new ScrollGestureRecognizer([this](PanGestureStatus state) {
-        float contentHeight = this->getContentHeight();
-
+        if (state.state == GestureState::FAILED)
+            return;
+        
         if (state.deltaOnly)
         {
-            float newScroll = (this->scrollY * contentHeight - (state.delta.y)) / contentHeight;
+            float newScroll = this->contentOffsetY - state.delta.y;
             startScrolling(false, newScroll);
             return;
         }
 
         static float startY;
         if (state.state == GestureState::START)
-            startY = this->scrollY * contentHeight;
+            startY = this->contentOffsetY;
 
-        float newScroll = (startY - (state.position.y - state.startPosition.y)) / contentHeight;
+        float newScroll = startY - (state.position.y - state.startPosition.y);
 
         // Start animation
         if (state.state != GestureState::END)
@@ -57,11 +58,11 @@ ScrollingFrame::ScrollingFrame()
         else
         {
             float time   = state.acceleration.time.y * 1000.0f;
-            float newPos = this->scrollY * contentHeight + state.acceleration.distance.y;
+            float newPos = this->contentOffsetY + state.acceleration.distance.y;
 
-            newScroll = newPos / contentHeight;
+            newScroll = newPos;
 
-            if (newScroll == this->scrollY || time < 100)
+            if (newScroll == this->contentOffsetY || time < 100)
                 return;
 
             animateScrolling(newScroll, time);
@@ -72,7 +73,7 @@ ScrollingFrame::ScrollingFrame()
     // Stop scrolling on tap
     addGestureRecognizer(new TapGestureRecognizer([this](brls::TapGestureStatus status, Sound* soundToPlay) {
         if (status.state == GestureState::UNSURE)
-            this->scrollY.stop();
+            this->contentOffsetY.stop();
     }));
 }
 
@@ -173,7 +174,7 @@ void ScrollingFrame::prebakeScrolling()
 
 void ScrollingFrame::startScrolling(bool animated, float newScroll)
 {
-    if (newScroll == this->scrollY)
+    if (newScroll == this->contentOffsetY)
         return;
 
     if (animated)
@@ -183,8 +184,8 @@ void ScrollingFrame::startScrolling(bool animated, float newScroll)
     }
     else
     {
-        this->scrollY.stop();
-        this->scrollY = newScroll;
+        this->contentOffsetY.stop();
+        this->contentOffsetY = newScroll;
         this->scrollAnimationTick();
         this->invalidate();
     }
@@ -192,17 +193,17 @@ void ScrollingFrame::startScrolling(bool animated, float newScroll)
 
 void ScrollingFrame::animateScrolling(float newScroll, float time)
 {
-    this->scrollY.stop();
+    this->contentOffsetY.stop();
 
-    this->scrollY.reset();
+    this->contentOffsetY.reset();
 
-    this->scrollY.addStep(newScroll, time, EasingFunction::quadraticOut);
+    this->contentOffsetY.addStep(newScroll, time, EasingFunction::quadraticOut);
 
-    this->scrollY.setTickCallback([this] {
+    this->contentOffsetY.setTickCallback([this] {
         this->scrollAnimationTick();
     });
 
-    this->scrollY.start();
+    this->contentOffsetY.start();
 
     this->invalidate();
 }
@@ -220,10 +221,9 @@ float ScrollingFrame::getContentHeight()
     return this->contentView->getHeight();
 }
 
-void ScrollingFrame::setScroll(float value)
+void ScrollingFrame::setContentOffsetY(float value, bool animated)
 {
-    scrollY = value;
-    scrollAnimationTick();
+    startScrolling(animated, value);
 }
 
 void ScrollingFrame::scrollAnimationTick()
@@ -231,18 +231,18 @@ void ScrollingFrame::scrollAnimationTick()
     if (this->contentView)
     {
         float contentHeight = this->getContentHeight();
-        float bottomLimit   = (contentHeight - this->getScrollingAreaHeight()) / contentHeight;
+        float bottomLimit   = contentHeight - this->getScrollingAreaHeight();
 
-        if (this->scrollY < 0)
-            this->scrollY = 0;
+        if (this->contentOffsetY < 0)
+            this->contentOffsetY = 0;
 
-        if (this->scrollY > bottomLimit)
-            this->scrollY = bottomLimit;
+        if (this->contentOffsetY > bottomLimit)
+            this->contentOffsetY = bottomLimit;
 
         if (contentHeight <= getHeight())
-            this->scrollY = 0;
+            this->contentOffsetY = 0;
 
-        this->contentView->setTranslationY(-(this->scrollY * contentHeight));
+        this->contentView->setTranslationY(-this->contentOffsetY);
     }
 }
 
@@ -271,7 +271,7 @@ bool ScrollingFrame::updateScrolling(bool animated)
 
     View* focusedView                  = Application::getCurrentFocus();
     int currentSelectionMiddleOnScreen = focusedView->getY() + focusedView->getHeight() / 2;
-    float newScroll                    = -(this->scrollY * contentHeight) - (currentSelectionMiddleOnScreen - this->middleY);
+    float newScroll                    = -this->contentOffsetY - (currentSelectionMiddleOnScreen - this->middleY);
 
     // Bottom boundary
     if (this->getScrollingAreaTopBoundary() + newScroll + contentHeight < this->bottomY)
@@ -293,7 +293,7 @@ bool ScrollingFrame::updateScrolling(bool animated)
 Rect ScrollingFrame::getVisibleFrame()
 {
     Rect frame = getFrame();
-    frame.origin.y += this->scrollY * this->getContentHeight();
+    frame.origin.y += this->contentOffsetY;
     return frame;
 }
 

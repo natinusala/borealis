@@ -68,12 +68,18 @@ class ScrollingFrame : public Box
      */
     void setScrollingBehavior(ScrollingBehavior behavior);
 
-    float getScroll() const
+    /**
+     * The point at which the origin of the content view is offset from the origin of the scroll view.
+     */
+    float getContentOffsetY() const
     {
-        return scrollY;
+        return contentOffsetY;
     }
 
-    void setScroll(float value);
+    /**
+     * Sets the offset from the content view’s origin that corresponds to the receiver’s origin.
+     */
+    void setContentOffsetY(float value, bool animated);
 
     static View* create();
 
@@ -86,7 +92,7 @@ class ScrollingFrame : public Box
     float middleY = 0; // y + height/2
     float bottomY = 0; // y + height
 
-    Animatable scrollY = 0.0f; // from 0.0f to 1.0f, in % of content view height
+    Animatable contentOffsetY = 0.0f;
 
     void prebakeScrolling();
     bool updateScrolling(bool animated);

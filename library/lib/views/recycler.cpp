@@ -142,7 +142,7 @@ void RecyclerFrame::reloadData()
     renderedFrame            = Rect();
     renderedFrame.size.width = getWidth();
 
-    setScroll(0);
+    setContentOffsetY(0, false);
 
     if (dataSource)
     {
