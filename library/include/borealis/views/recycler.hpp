@@ -32,16 +32,17 @@ struct IndexPath
     int section;
     int row;
     int item;
-    
+
     IndexPath()
         : IndexPath(0, 0, 0)
-    { }
-    
+    {
+    }
+
     IndexPath(int section, int row, int item)
     {
         this->section = section;
-        this->row = row;
-        this->item = item;
+        this->row     = row;
+        this->item    = item;
     }
 };
 
@@ -84,7 +85,7 @@ class RecyclerDataSource
      * Asks the data source to return the number of sections in the recycler frame.
      */
     virtual int numberOfSections(RecyclerFrame* recycler) { return 1; }
-    
+
     /*
      * Tells the data source to return the number of rows in a recycler frame.
      */

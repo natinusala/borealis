@@ -35,7 +35,7 @@ typedef std::unordered_map<std::string, int> FontStash;
 class FontLoader
 {
   public:
-    virtual ~FontLoader() {}
+    virtual ~FontLoader() { }
     /**
      * Called once on init to load every font in the font stash.
      *

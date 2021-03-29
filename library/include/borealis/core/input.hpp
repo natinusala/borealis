@@ -105,7 +105,7 @@ struct TouchState
 class InputManager
 {
   public:
-    virtual ~InputManager() {}
+    virtual ~InputManager() { }
 
     /**
      * Called once every frame to fill the given ControllerState struct with the controller state.

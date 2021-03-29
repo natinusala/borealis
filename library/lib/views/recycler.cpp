@@ -147,7 +147,7 @@ void RecyclerFrame::reloadData()
     if (dataSource)
     {
         cacheCellFrames();
-        Rect frame = getFrame();
+        Rect frame  = getFrame();
         int counter = 0;
         for (int section = 0; section < dataSource->numberOfSections(this); section++)
         {
@@ -213,7 +213,7 @@ void RecyclerFrame::cacheCellFrames()
             for (int row = 0; row < dataSource->numberOfRows(this, section); row++)
             {
                 cacheIndexPathData.push_back(IndexPath(section, row, row));
-                
+
                 float height = dataSource->heightForRow(this, IndexPath(section, row, row));
                 if (height == -1)
                     height = estimatedRowHeight;
@@ -304,14 +304,14 @@ void RecyclerFrame::cellsRecyclingLoop()
 void RecyclerFrame::addCellAt(int index, int downSide)
 {
     IndexPath indexPath = cacheIndexPathData[index];
-    RecyclerCell* cell = dataSource->cellForRow(this, indexPath);
+    RecyclerCell* cell  = dataSource->cellForRow(this, indexPath);
     cell->setWidth(renderedFrame.getWidth() - paddingLeft - paddingRight);
     Point cellOrigin = Point(renderedFrame.getMinX() + paddingLeft, (downSide ? renderedFrame.getMaxY() : renderedFrame.getMinY() - cell->getHeight()) + paddingTop);
     cell->setDetachedPosition(cellOrigin.x, cellOrigin.y);
     cell->setIndexPath(indexPath);
 
     this->contentBox->getChildren().insert(this->contentBox->getChildren().end(), cell);
-    
+
     // Allocate and set parent userdata
     size_t* userdata = (size_t*)malloc(sizeof(size_t));
     *userdata        = index;
