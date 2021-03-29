@@ -71,7 +71,7 @@ namespace internal
  * XML files (ones that aren't i18n XML Files). Returns a vector containing
  * all the warnings.
  */
-std::vector<std::string> i18nChecker();
+std::vector<std::string>& i18nChecker();
 
 void loadInternal();
 

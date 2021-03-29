@@ -50,8 +50,6 @@ static locales xmlInternalText; // For internal text
 
 void getTextFromElements(tinyxml2::XMLElement* root, std::string existing_path, locales& target)
 {
-    std::vector<std::string> warnings;
-
     if (!root)
     { // Checks if root is nullptr
         Logger::error("Detected a possible empty XML file. Root element provided is nullptr."); // If it is, return an error message and return
@@ -70,15 +68,10 @@ void getTextFromElements(tinyxml2::XMLElement* root, std::string existing_path, 
         }
         else // Otherwise, if the element is unknown,
         {
-            warnings.push_back(std::string("Found unknown element in i18n file. Element name is ") + e2->Name() + ". Continuing..."); // we give an error message and continue looping
+            // we give an error message and continue looping
+            Logger::warning("Found unknown element in i18n file. Element name is {}. Continuing...", e2->Name());
             continue;
-        }
-    }
-
-    if (!warnings.empty())
-    {
-        for (const auto& e : warnings)
-            Logger::warning("{}", e);
+        } // TODO: Find out why invalid elements with text give a segementation fault
     }
 }
 
@@ -99,9 +92,9 @@ bool is_valid_locale_directory(const std::filesystem::directory_entry& entry)
     return false;
 }
 
-std::vector<std::string> i18nChecker()
+std::vector<std::string>& i18nChecker()
 {
-    std::vector<std::string> warnings;
+    static std::vector<std::string> warnings;
 
     std::string path = BRLS_ASSET("i18n");
 
@@ -116,6 +109,12 @@ std::vector<std::string> i18nChecker()
         Logger::error("Detected an invalid i18n setup. {} isn't a directory.", path);
         return warnings;
     }
+
+    if (!std::filesystem::exists(BRLS_ASSET("i18n/en-US")))
+        warnings.push_back("Detected no default locale directory. Directory " + BRLS_ASSET("i18n/en-US") + " doesn't exist.");
+    
+    if (!std::filesystem::is_directory(BRLS_ASSET("i18n/en-US")))
+        warnings.push_back("Detected no default locale directory. Found file " + BRLS_ASSET("i18n/en-US") + " instead.");
 
     for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(path))
     {
@@ -220,7 +219,7 @@ void loadInternal()
     tinyxml2::XMLElement* root = doc.RootElement(); // We grab the root element (no need for the brls:i18nDoc check)
 
     // Iterate over all XML elements in the file
-    getTextFromElements(root, "brls", xmlInternalText);
+    getTextFromElements(root, "brls", xmlDefaultLocale);
 }
 
 void loadTranslations()
@@ -271,7 +270,7 @@ namespace internal
     std::string getInternalRawStr(std::string stringName)
     {
         // Looks through Internal text (its locale is en-US)
-        for (auto& [path, value] : xmlInternalText)
+        for (auto& [path, value] : xmlDefaultLocale)
         {
             if (stringName == path)
                 return value;

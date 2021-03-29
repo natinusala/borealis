@@ -92,7 +92,7 @@ bool Application::init()
     else
     {
         Logger::info("i18n has been disabled. Initing only internal translations...");
-        Application::getLocale() = LOCALE_DEFAULT; // TODO: Find an alternative to change the locale?
+        Application::getLocale() = LOCALE_DEFAULT;
         loadInternal(); // Load internal translations (required for built-in views)
     }
 
