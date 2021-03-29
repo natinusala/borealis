@@ -36,9 +36,6 @@ ScrollingFrame::ScrollingFrame()
     this->setMaximumAllowedXMLElements(1);
 
     addGestureRecognizer(new ScrollGestureRecognizer([this](PanGestureStatus state) {
-        if (state.state == GestureState::FAILED)
-            return;
-        
         if (state.deltaOnly)
         {
             float newScroll = this->contentOffsetY - state.delta.y;

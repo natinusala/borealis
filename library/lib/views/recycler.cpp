@@ -26,7 +26,7 @@ RecyclerCell::RecyclerCell()
     this->registerClickAction([this](View* view) {
         RecyclerFrame* recycler = dynamic_cast<RecyclerFrame*>(getParent()->getParent());
         if (recycler)
-            recycler->getDataSource()->didSelectRowAt(indexPath);
+            recycler->getDataSource()->didSelectRowAt(recycler, indexPath);
         return true;
     });
 
@@ -148,11 +148,15 @@ void RecyclerFrame::reloadData()
     {
         cacheCellFrames();
         Rect frame = getFrame();
-        for (int i = 0; i < dataSource->numberOfRows(); i++)
+        int counter = 0;
+        for (int section = 0; section < dataSource->numberOfSections(this); section++)
         {
-            addCellAt(i, true);
-            if (renderedFrame.getMaxY() > frame.getMaxY())
-                break;
+            for (int row = 0; row < dataSource->numberOfRows(this, section); row++)
+            {
+                addCellAt(counter++, true);
+                if (renderedFrame.getMaxY() > frame.getMaxY())
+                    break;
+            }
         }
     }
 }
@@ -198,19 +202,25 @@ void RecyclerFrame::queueReusableCell(RecyclerCell* cell)
 void RecyclerFrame::cacheCellFrames()
 {
     cacheFramesData.clear();
+    cacheIndexPathData.clear();
     Rect frame = getFrame();
     Point currentOrigin;
 
     if (dataSource)
     {
-        for (int i = 0; i < dataSource->numberOfRows(); i++)
+        for (int section = 0; section < dataSource->numberOfSections(this); section++)
         {
-            float height = dataSource->heightForRow(i);
-            if (height == -1)
-                height = estimatedRowHeight;
+            for (int row = 0; row < dataSource->numberOfRows(this, section); row++)
+            {
+                cacheIndexPathData.push_back(IndexPath(section, row, row));
+                
+                float height = dataSource->heightForRow(this, IndexPath(section, row, row));
+                if (height == -1)
+                    height = estimatedRowHeight;
 
-            cacheFramesData.push_back(Size(frame.getWidth(), height));
-            currentOrigin.y += height;
+                cacheFramesData.push_back(Size(frame.getWidth(), height));
+                currentOrigin.y += height;
+            }
         }
         contentBox->setHeight(currentOrigin.y + paddingTop + paddingBottom);
     }
@@ -293,14 +303,15 @@ void RecyclerFrame::cellsRecyclingLoop()
 
 void RecyclerFrame::addCellAt(int index, int downSide)
 {
-    RecyclerCell* cell = dataSource->cellForRow(this, index);
+    IndexPath indexPath = cacheIndexPathData[index];
+    RecyclerCell* cell = dataSource->cellForRow(this, indexPath);
     cell->setWidth(renderedFrame.getWidth() - paddingLeft - paddingRight);
     Point cellOrigin = Point(renderedFrame.getMinX() + paddingLeft, (downSide ? renderedFrame.getMaxY() : renderedFrame.getMinY() - cell->getHeight()) + paddingTop);
     cell->setDetachedPosition(cellOrigin.x, cellOrigin.y);
-    cell->setIndexPath(index);
+    cell->setIndexPath(indexPath);
 
     this->contentBox->getChildren().insert(this->contentBox->getChildren().end(), cell);
-
+    
     // Allocate and set parent userdata
     size_t* userdata = (size_t*)malloc(sizeof(size_t));
     *userdata        = index;

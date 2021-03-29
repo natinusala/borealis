@@ -34,9 +34,10 @@ class DataSource
     : public brls::RecyclerDataSource
 {
   public:
-    int numberOfRows() override;
-    brls::RecyclerCell* cellForRow(brls::RecyclerFrame* recycler, int row) override;
-    void didSelectRowAt(int row) override;
+    int numberOfSections(brls::RecyclerFrame* recycler) override;
+    int numberOfRows(brls::RecyclerFrame* recycler, int section) override;
+    brls::RecyclerCell* cellForRow(brls::RecyclerFrame* recycler, brls::IndexPath index) override;
+    void didSelectRowAt(brls::RecyclerFrame* recycler, brls::IndexPath index) override;
 };
 
 class RecyclingListTab : public brls::Box

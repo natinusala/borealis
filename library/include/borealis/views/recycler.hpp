@@ -27,6 +27,24 @@
 namespace brls
 {
 
+struct IndexPath
+{
+    int section;
+    int row;
+    int item;
+    
+    IndexPath()
+        : IndexPath(0, 0, 0)
+    { }
+    
+    IndexPath(int section, int row, int item)
+    {
+        this->section = section;
+        this->row = row;
+        this->item = item;
+    }
+};
+
 class RecyclerCell : public Box
 {
   public:
@@ -35,12 +53,12 @@ class RecyclerCell : public Box
     /*
      * Cell's position inside recycler frame
      */
-    int getIndexPath() const { return indexPath; }
+    IndexPath getIndexPath() const { return indexPath; }
 
     /*
      * DO NOT USE! FOR INTERNAL USAGE ONLY!
      */
-    void setIndexPath(int value) { indexPath = value; }
+    void setIndexPath(IndexPath value) { indexPath = value; }
 
     /*
      * A string used to identify a cell that is reusable.
@@ -55,7 +73,7 @@ class RecyclerCell : public Box
     static RecyclerCell* create();
 
   private:
-    int indexPath;
+    IndexPath indexPath;
 };
 
 class RecyclerFrame;
@@ -63,25 +81,30 @@ class RecyclerDataSource
 {
   public:
     /*
-     * Tells the data source to return the number of rows in a table view.
+     * Asks the data source to return the number of sections in the recycler frame.
      */
-    virtual int numberOfRows() { return 0; }
+    virtual int numberOfSections(RecyclerFrame* recycler) { return 1; }
+    
+    /*
+     * Tells the data source to return the number of rows in a recycler frame.
+     */
+    virtual int numberOfRows(RecyclerFrame* recycler, int section) { return 0; }
 
     /*
      * Asks the data source for a cell to insert in a particular location of the recycler frame.
      */
-    virtual RecyclerCell* cellForRow(RecyclerFrame* recycler, int row) { return nullptr; }
+    virtual RecyclerCell* cellForRow(RecyclerFrame* recycler, IndexPath index) { return nullptr; }
 
     /*
      * Asks the data source for the height to use for a row in a specified location.
      * Return -1 to use autoscaling.
      */
-    virtual float heightForRow(int row) { return -1; }
+    virtual float heightForRow(RecyclerFrame* recycler, IndexPath index) { return -1; }
 
     /*
      * Tells the data source a row is selected.
      */
-    virtual void didSelectRowAt(int row) { }
+    virtual void didSelectRowAt(RecyclerFrame* recycler, IndexPath index) { }
 };
 
 class RecyclerContentBox : public Box
@@ -153,6 +176,7 @@ class RecyclerFrame : public ScrollingFrame
     Box* contentBox;
     Rect renderedFrame;
     std::vector<Size> cacheFramesData;
+    std::vector<IndexPath> cacheIndexPathData;
     std::map<std::string, std::vector<RecyclerCell*>*> queueMap;
     std::map<std::string, std::function<RecyclerCell*(void)>> allocationMap;
 
