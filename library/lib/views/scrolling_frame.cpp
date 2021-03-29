@@ -36,6 +36,9 @@ ScrollingFrame::ScrollingFrame()
     this->setMaximumAllowedXMLElements(1);
 
     addGestureRecognizer(new ScrollGestureRecognizer([this](PanGestureStatus state) {
+        if (state.state == GestureState::FAILED)
+            return;
+
         float contentHeight = this->getContentHeight();
 
         if (state.deltaOnly)
