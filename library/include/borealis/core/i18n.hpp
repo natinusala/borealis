@@ -47,7 +47,7 @@ const std::string LOCALE_ES_419  = "es-419";
 
 const std::string LOCALE_DEFAULT = LOCALE_EN_US;
 
-const std::vector<const std::string> LOCALE_LIST = { // Vector to compare all compatiable locales with a value to see if it's valid
+const std::vector<std::string> LOCALE_LIST = { // Vector to compare all compatiable locales with a value to see if it's valid
     LOCALE_JA, LOCALE_EN_US, LOCALE_EN_GB, LOCALE_FR, LOCALE_FR_CA,
     LOCALE_DE, LOCALE_IT, LOCALE_ES, LOCALE_ZH_CN, LOCALE_ZH_HANS, LOCALE_ZH_HANT, LOCALE_ZH_TW,
     LOCALE_Ko, LOCALE_NL, LOCALE_PT, LOCALE_PT_BR, LOCALE_RU, LOCALE_ES_419
