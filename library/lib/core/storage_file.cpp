@@ -15,6 +15,7 @@
 */
 
 #include <borealis/core/storage_file.hpp>
+#include <borealis/core/application.hpp>
 
 namespace brls
 {
@@ -189,11 +190,11 @@ bool ListStorageObject::getIsEmpty()
 
 bool BasicStorageFile::init(std::string filename)
 {
-#ifndef __SWITCH__
-    config_folder = std::filesystem::current_path().string() + "/config/" + "brls/appname"_i18n + "/";
-#else
-    config_folder = "/config/" + "brls/appname"_i18n + "/";
-#endif
+    if (Application::getPlatform()->getName() == "GLFW")
+        config_folder = std::filesystem::current_path().string() + "/config/" + "brls/appname"_i18n + "/";
+    else
+        config_folder = "/config/" + "brls/appname"_i18n + "/";
+
 
     if (!std::filesystem::exists(config_folder))
         std::filesystem::create_directories(config_folder);
