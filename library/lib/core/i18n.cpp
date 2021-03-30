@@ -102,8 +102,7 @@ std::vector<std::string>& i18nChecker()
         Logger::error("Detected an invalid i18n setup. Directory {} doesn't exist.", path);
         return warnings;
     }
-
-    if (!std::filesystem::is_directory(path))
+    else if (!std::filesystem::is_directory(path))
     {
         Logger::error("Detected an invalid i18n setup. {} isn't a directory.", path);
         return warnings;
@@ -111,8 +110,7 @@ std::vector<std::string>& i18nChecker()
 
     if (!std::filesystem::exists(BRLS_ASSET("i18n/en-US")))
         warnings.push_back("Detected no default locale directory. Directory " + BRLS_ASSET("i18n/en-US") + " doesn't exist.");
-    
-    if (!std::filesystem::is_directory(BRLS_ASSET("i18n/en-US")))
+    else if (!std::filesystem::is_directory(BRLS_ASSET("i18n/en-US")))
         warnings.push_back("Detected no default locale directory. Found file " + BRLS_ASSET("i18n/en-US") + " instead.");
 
     for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(path))
@@ -252,7 +250,7 @@ namespace internal
             }
         }
 
-        // Then look for default locale
+        // Then look for default locale or internal translation (is contained in default locale by default)
         else if (currentLocaleName == LOCALE_DEFAULT || internal)
         {
             for (auto& [path, value] : xmlDefaultLocale)
