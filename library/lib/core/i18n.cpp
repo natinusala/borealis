@@ -46,7 +46,6 @@ const std::string internalXML = R"xml(
 
 static locales xmlDefaultLocale; // For default locale (en-US)
 static locales xmlCurrentLocale; // For current locale found by platform
-static locales xmlInternalText; // For internal text
 
 void getTextFromElements(tinyxml2::XMLElement* root, std::string existing_path, locales& target)
 {
@@ -239,7 +238,7 @@ void loadTranslations()
 
 namespace internal
 {
-    std::string getRawStr(std::string stringName)
+    std::string getRawStr(std::string stringName, bool internal)
     {
         std::string currentLocaleName = Application::getLocale();
 
@@ -254,26 +253,13 @@ namespace internal
         }
 
         // Then look for default locale
-        else if (currentLocaleName == LOCALE_DEFAULT)
+        else if (currentLocaleName == LOCALE_DEFAULT || internal)
         {
             for (auto& [path, value] : xmlDefaultLocale)
             {
                 if (stringName == path)
                     return value;
             }
-        }
-
-        // Fallback to returning the string name
-        return stringName;
-    }
-
-    std::string getInternalRawStr(std::string stringName)
-    {
-        // Looks through Internal text (its locale is en-US)
-        for (auto& [path, value] : xmlDefaultLocale)
-        {
-            if (stringName == path)
-                return value;
         }
 
         // Fallback to returning the string name
@@ -290,7 +276,7 @@ inline namespace literals
 
     std::string operator"" _internal(const char* str, size_t len)
     {
-        return internal::getInternalRawStr(std::string(str, len));
+        return internal::getRawStr(std::string(str, len), true);
     }
 } // namespace literals
 

@@ -62,8 +62,7 @@ const char pathSeperator = // To check if a directory in the i18n folder is vali
 
 namespace internal
 {
-    std::string getRawStr(std::string stringName);
-    std::string getInternalRawStr(std::string stringName);
+    std::string getRawStr(std::string stringName, bool internal = false);
 } // namespace internal
 
 /**
@@ -113,7 +112,7 @@ inline namespace literals
     /**
      * Returns the internal translation for the given string, without
      * injecting any parameters
-     * Shortcut to brls::internal::getInternalRawStr(stringName)
+     * Shortcut to brls::internal::getRawStr(stringName, true)
      */
     std::string operator"" _internal(const char* str, size_t len);
 } // namespace literals
