@@ -7,7 +7,7 @@ Makefile.in
 .libs
 .deps
 stamp-h1
-folly-config.h
+filelist.txt
 _configs.sed
 aclocal.m4
 autom4te.cache
