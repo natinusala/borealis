@@ -223,8 +223,10 @@ bool BasicStorageFile::writeToFile(StorageObject& value, bool overwriteExisting)
     std::string type            = value.type();
     std::string name            = value.name();
 
-    if (!std::filesystem::exists(config_path))
+    if (!std::filesystem::exists(config_path)) {
         Logger::error("File not found. Make sure to call the init function before this.");
+        return false;
+    }
 
     // Defines an errorCode variable
     XMLError errorCode;
@@ -570,6 +572,13 @@ bool BasicStorageFile::parseXMLToListMap(std::string name)
 
 StorageObject BasicStorageFile::readFromFile(std::string name)
 {
+    if (!std::filesystem::exists(config_path)) {
+        Logger::error("File not found. Make sure to call the init function before this.");
+        StorageObject nullStorageObject {};
+        nullStorageObject.setIsEmpty(true);
+        return nullStorageObject;
+    }
+
     bool result = this->parseXMLToMap(name);
 
     if (result)
@@ -597,6 +606,13 @@ StorageObject BasicStorageFile::readFromFile(std::string name)
 
 ListStorageObject BasicStorageFile::readListFromFile(std::string name)
 {
+    if (!std::filesystem::exists(config_path)) {
+        Logger::error("File not found. Make sure to call the init function before this.");
+        ListStorageObject nullStorageObject {};
+        nullStorageObject.setIsEmpty(true);
+        return nullStorageObject;
+    }
+
     bool result = this->parseXMLToListMap(name);
 
     if (result)
