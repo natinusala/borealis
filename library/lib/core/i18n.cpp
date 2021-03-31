@@ -21,12 +21,21 @@
 #include <borealis/core/assets.hpp>
 #include <borealis/core/i18n.hpp>
 #include <filesystem>
+
+#ifdef __SWITCH__
 #include <unordered_map>
+#else
+#include <folly/container/F14Map.h>
+#endif
 
 namespace brls
 {
 
+#ifdef __SWITCH__
 typedef std::unordered_map<std::string, std::string> locales;
+#else
+typedef folly::F14FastMap<std::string, std::string> locales;
+#endif
 
 // For Internal text
 const std::string internalXML = R"xml(
