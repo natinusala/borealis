@@ -155,7 +155,7 @@ std::vector<std::string>& i18nChecker()
             continue;
         }
     }
-    
+
     return warnings;
 }
 

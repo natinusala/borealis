@@ -52,7 +52,6 @@ GLFWPlatform::GLFWPlatform()
     this->fontLoader  = new GLFWFontLoader();
     this->audioPlayer = new NullAudioPlayer();
 
-
     // Get platform's locale (taken from a comment here: https://stackoverflow.com/questions/32931458/getting-the-system-language-in-c-or-c/32931505#32931505)
     setlocale(LC_ALL, "");
     this->locale = std::string(setlocale(LC_ALL, NULL));
@@ -72,10 +71,10 @@ GLFWPlatform::GLFWPlatform()
             is_usable_locale = true;
             break;
         }
-        
 
-    if (!is_usable_locale) { // If it is not, we use the default locale instead
-        Logger::warning("Detected incompatible locale. Using default locale (en-US)...");
+    if (!is_usable_locale)
+    { // If it is not, we use the default locale instead
+        Logger::warning("Detected incompatible locale {}. Using default locale (en-US)...", this->locale);
         this->locale = LOCALE_DEFAULT;
     }
 }
