@@ -281,8 +281,8 @@ bool ScrollingFrame::updateScrolling(bool animated)
     if (newScroll > 0.0f)
         newScroll = 0.0f;
 
-    // Apply 0.0f -> 1.0f scale
-    newScroll = abs(newScroll) / contentHeight;
+    // Apply scale
+    newScroll = abs(newScroll);
 
     //Start animation
     this->startScrolling(animated, newScroll);
