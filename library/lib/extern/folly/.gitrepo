@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/facebook/folly.git
+	branch = master
+	commit = 09cc63cb905efe1c9b9873ad2899dd2853f5437a
+	parent = 04b6b372468a28640ef2611aa8b2f05be5f74499
+	method = merge
+	cmdver = 0.4.3
