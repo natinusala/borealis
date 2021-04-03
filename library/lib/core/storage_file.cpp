@@ -190,10 +190,11 @@ bool ListStorageObject::getIsEmpty()
 
 bool BasicStorageFile::init(std::string filename)
 {
-    if (Application::getPlatform()->getName() == "GLFW")
+    #ifndef __SWITCH__
         config_folder = std::filesystem::current_path().string() + "/config/" + "brls/appname"_i18n + "/";
-    else
+    #else
         config_folder = "/config/" + "brls/appname"_i18n + "/";
+    #endif
 
 
     if (!std::filesystem::exists(config_folder))
