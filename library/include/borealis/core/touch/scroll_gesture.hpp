@@ -30,6 +30,8 @@ namespace brls
  * 
  * If mouse translation used, the only available state is MOVE.
  * Also PanGestureStatus will be returned with delta values ONLY.
+ * 
+ * TODO: Reimplement scroll events when mouse input will be separated from touch
  */
 class ScrollGestureRecognizer : public PanGestureRecognizer
 {
@@ -38,4 +40,4 @@ class ScrollGestureRecognizer : public PanGestureRecognizer
     GestureState recognitionLoop(TouchState touch, View* view, Sound* soundToPlay) override;
 };
 
-};
+} // namespace brls
