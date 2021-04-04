@@ -18,6 +18,11 @@
 
 #include <borealis.hpp>
 
+class RecyclerHeader
+    : public brls::RecyclerHeader
+{
+};
+
 class RecyclerCell
     : public brls::RecyclerCell
 {
@@ -37,7 +42,8 @@ class DataSource
     int numberOfSections(brls::RecyclerFrame* recycler) override;
     int numberOfRows(brls::RecyclerFrame* recycler, int section) override;
     brls::RecyclerCell* cellForRow(brls::RecyclerFrame* recycler, brls::IndexPath index) override;
-    void didSelectRowAt(brls::RecyclerFrame* recycler, brls::IndexPath index) override;
+    void didSelectRowAt(brls::RecyclerFrame* recycler, brls::IndexPath indexPath) override;
+    std::string titleForHeader(brls::RecyclerFrame* recycler, int section) override;
 };
 
 class RecyclingListTab : public brls::Box

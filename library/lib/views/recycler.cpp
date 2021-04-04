@@ -23,6 +23,7 @@ namespace brls
 
 RecyclerCell::RecyclerCell()
 {
+    this->setLineBottom(1);
     this->registerClickAction([this](View* view) {
         RecyclerFrame* recycler = dynamic_cast<RecyclerFrame*>(getParent()->getParent());
         if (recycler)
@@ -38,17 +39,63 @@ RecyclerCell* RecyclerCell::create()
     return new RecyclerCell();
 }
 
-RecyclerContentBox::RecyclerContentBox()
-    : Box(Axis::COLUMN)
+RecyclerHeader::RecyclerHeader()
+{
+    this->header = new Header();
+    this->addView(header);
+    header->setGrow(1);
+
+    this->setActionAvailable(ControllerButton::BUTTON_A, false);
+}
+
+void RecyclerHeader::setTitle(std::string title)
+{
+    this->header->setTitle(title);
+}
+
+void RecyclerHeader::setSubtitle(std::string subtitle)
+{
+    this->header->setSubtitle(subtitle);
+}
+
+RecyclerHeader* RecyclerHeader::create()
+{
+    return new RecyclerHeader();
+}
+
+RecyclerCell* RecyclerDataSource::cellForHeader(RecyclerFrame* recycler, int section)
+{
+    RecyclerHeader* header = (RecyclerHeader*) recycler->dequeueReusableCell("brls::Header");
+    std::string title = this->titleForHeader(recycler, section);
+    header->setTitle(title);
+    header->setVisibility(title.empty() ? Visibility::GONE : Visibility::VISIBLE);
+    header->setHeight(title.empty() ? 0 : View::AUTO);
+    return header;
+}
+
+float RecyclerDataSource::heightForHeader(RecyclerFrame* recycler, int section)
+{
+    if (section == 0)
+        return 0;
+    return 44;
+}
+
+RecyclerContentBox::RecyclerContentBox(RecyclerFrame* recycler)
+    : Box(Axis::COLUMN), recycler(recycler)
 {
 }
 
 View* RecyclerContentBox::getNextFocus(FocusDirection direction, View* currentView)
 {
+    return this->recycler->getNextCellFocus(direction, currentView);
+}
+
+View* RecyclerFrame::getNextCellFocus(FocusDirection direction, View* currentView)
+{
     void* parentUserData = currentView->getParentUserData();
 
     // Return nullptr immediately if focus direction mismatches the box axis (clang-format refuses to split it in multiple lines...)
-    if ((this->getAxis() == Axis::ROW && direction != FocusDirection::LEFT && direction != FocusDirection::RIGHT) || (this->getAxis() == Axis::COLUMN && direction != FocusDirection::UP && direction != FocusDirection::DOWN))
+    if ((this->contentBox->getAxis() == Axis::ROW && direction != FocusDirection::LEFT && direction != FocusDirection::RIGHT) || (this->contentBox->getAxis() == Axis::COLUMN && direction != FocusDirection::UP && direction != FocusDirection::DOWN))
     {
         return nullptr;
     }
@@ -56,7 +103,7 @@ View* RecyclerContentBox::getNextFocus(FocusDirection direction, View* currentVi
     // Traverse the children
     size_t offset = 1; // which way we are going in the children list
 
-    if ((this->getAxis() == Axis::ROW && direction == FocusDirection::LEFT) || (this->getAxis() == Axis::COLUMN && direction == FocusDirection::UP))
+    if ((this->contentBox->getAxis() == Axis::ROW && direction == FocusDirection::LEFT) || (this->contentBox->getAxis() == Axis::COLUMN && direction == FocusDirection::UP))
     {
         offset = -1;
     }
@@ -64,10 +111,17 @@ View* RecyclerContentBox::getNextFocus(FocusDirection direction, View* currentVi
     size_t currentFocusIndex = *((size_t*)parentUserData) + offset;
     View* currentFocus       = nullptr;
 
-    for (auto it : getChildren())
+    while (!currentFocus && currentFocusIndex >= 0 && currentFocusIndex < this->cacheIndexPathData.size())
     {
-        if (*((size_t*)it->getParentUserData()) == currentFocusIndex)
-            currentFocus = it->getDefaultFocus();
+        for (auto it : this->contentBox->getChildren())
+        {
+            if (*((size_t*)it->getParentUserData()) == currentFocusIndex)
+            {
+                currentFocus = it->getDefaultFocus();
+                break;
+            }
+        }
+        currentFocusIndex += offset;
     }
 
     return currentFocus;
@@ -75,6 +129,8 @@ View* RecyclerContentBox::getNextFocus(FocusDirection direction, View* currentVi
 
 RecyclerFrame::RecyclerFrame()
 {
+    registerCell("brls::Header", []() { return RecyclerHeader::create(); });
+
     // Padding
     this->registerFloatXMLAttribute("paddingTop", [this](float value) {
         this->setPaddingTop(value);
@@ -99,7 +155,7 @@ RecyclerFrame::RecyclerFrame()
     this->setScrollingBehavior(ScrollingBehavior::CENTERED);
 
     // Create content box
-    this->contentBox = new RecyclerContentBox();
+    this->contentBox = new RecyclerContentBox(this);
     this->setContentView(this->contentBox);
 }
 
@@ -151,7 +207,7 @@ void RecyclerFrame::reloadData()
         int counter = 0;
         for (int section = 0; section < dataSource->numberOfSections(this); section++)
         {
-            for (int row = 0; row < dataSource->numberOfRows(this, section); row++)
+            for (int row = -1; row < dataSource->numberOfRows(this, section); row++)
             {
                 addCellAt(counter++, true);
                 if (renderedFrame.getMaxY() > frame.getMaxY())
@@ -210,11 +266,14 @@ void RecyclerFrame::cacheCellFrames()
     {
         for (int section = 0; section < dataSource->numberOfSections(this); section++)
         {
-            for (int row = 0; row < dataSource->numberOfRows(this, section); row++)
+            for (int row = -1; row < dataSource->numberOfRows(this, section); row++)
             {
                 cacheIndexPathData.push_back(IndexPath(section, row, row));
 
-                float height = dataSource->heightForRow(this, IndexPath(section, row, row));
+                float height = row == -1 ? 
+                    dataSource->heightForHeader(this, section) : 
+                    dataSource->heightForRow(this, IndexPath(section, row, row));
+
                 if (height == -1)
                     height = estimatedRowHeight;
 
@@ -304,9 +363,19 @@ void RecyclerFrame::cellsRecyclingLoop()
 void RecyclerFrame::addCellAt(int index, int downSide)
 {
     IndexPath indexPath = cacheIndexPathData[index];
-    RecyclerCell* cell  = dataSource->cellForRow(this, indexPath);
+
+    RecyclerCell* cell;
+    if (indexPath.row == -1)
+        cell = dataSource->cellForHeader(this, indexPath.section);
+    else
+        cell = dataSource->cellForRow(this, indexPath);
+
     cell->setWidth(renderedFrame.getWidth() - paddingLeft - paddingRight);
-    Point cellOrigin = Point(renderedFrame.getMinX() + paddingLeft, (downSide ? renderedFrame.getMaxY() : renderedFrame.getMinY() - cell->getHeight()) + paddingTop);
+    Point cellOrigin = Point(renderedFrame.getMinX() + paddingLeft, 
+        (downSide ? 
+            renderedFrame.getMaxY() : 
+            renderedFrame.getMinY() - cell->getHeight()) + paddingTop);
+            
     cell->setDetachedPosition(cellOrigin.x, cellOrigin.y);
     cell->setIndexPath(indexPath);
 

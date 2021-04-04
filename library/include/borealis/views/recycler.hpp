@@ -20,6 +20,7 @@
 #include <borealis/views/label.hpp>
 #include <borealis/views/rectangle.hpp>
 #include <borealis/views/scrolling_frame.hpp>
+#include <borealis/views/header.hpp>
 #include <functional>
 #include <map>
 #include <vector>
@@ -77,6 +78,21 @@ class RecyclerCell : public Box
     IndexPath indexPath;
 };
 
+class RecyclerHeader
+    : public RecyclerCell
+{
+  public:
+    RecyclerHeader();
+
+    void setTitle(std::string text);
+    void setSubtitle(std::string text);
+
+    static RecyclerHeader* create();
+
+  private:
+    Header* header;
+};
+
 class RecyclerFrame;
 class RecyclerDataSource
 {
@@ -95,12 +111,28 @@ class RecyclerDataSource
      * Asks the data source for a cell to insert in a particular location of the recycler frame.
      */
     virtual RecyclerCell* cellForRow(RecyclerFrame* recycler, IndexPath index) { return nullptr; }
+    
+    /*
+     * Asks the data source for a cell to display in the header of the specified section of the recycler frame.
+     */
+    virtual RecyclerCell* cellForHeader(RecyclerFrame* recycler, int section);
 
     /*
      * Asks the data source for the height to use for a row in a specified location.
      * Return -1 to use autoscaling.
      */
     virtual float heightForRow(RecyclerFrame* recycler, IndexPath index) { return -1; }
+    
+    /*
+     * Asks the data source for the height to use for the header of a particular section.
+     * Return -1 to use autoscaling.
+     */
+    virtual float heightForHeader(RecyclerFrame* recycler, int section);
+
+    /*
+     * Asks the data source for the title of the header of the specified section of the recycler frame.
+     */
+    virtual std::string titleForHeader(RecyclerFrame* recycler, int section) { return ""; }
 
     /*
      * Tells the data source a row is selected.
@@ -111,8 +143,10 @@ class RecyclerDataSource
 class RecyclerContentBox : public Box
 {
   public:
-    RecyclerContentBox();
+    RecyclerContentBox(RecyclerFrame* recycler);
     View* getNextFocus(FocusDirection direction, View* currentView) override;
+  private:
+    RecyclerFrame* recycler;
 };
 
 // Custom Box for propper recycling navigation
@@ -122,6 +156,7 @@ class RecyclerFrame : public ScrollingFrame
     RecyclerFrame();
     ~RecyclerFrame();
 
+    View* getNextCellFocus(FocusDirection direction, View* currentView);
     void draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx) override;
     void onLayout() override;
     void setPadding(float padding) override;
