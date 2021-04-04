@@ -77,4 +77,4 @@ class TapGestureRecognizer : public GestureRecognizer
     GestureState lastState;
 };
 
-};
+} // namespace brls

@@ -87,4 +87,4 @@ class PanGestureRecognizer : public GestureRecognizer
     GestureState lastState;
 };
 
-};
+} // namespace brls

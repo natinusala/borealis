@@ -36,7 +36,6 @@ class SwitchInputManager : public InputManager
 
   private:
     PadState padState;
-    TouchState oldTouch;
 };
 
 } // namespace brls

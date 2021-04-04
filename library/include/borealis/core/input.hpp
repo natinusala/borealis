@@ -84,7 +84,7 @@ enum class TouchPhase
     NONE,
 };
 
-// Contains raw touch data
+// Contains raw touch data, filled in by platform driver
 struct RawTouchState
 {
     bool pressed;
@@ -92,7 +92,7 @@ struct RawTouchState
     Point scroll;
 };
 
-// Contains touch data filled with it's current phase
+// Contains touch data automatically filled with current phase by the library
 struct TouchState
 {
     TouchPhase phase;

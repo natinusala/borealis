@@ -1073,9 +1073,7 @@ class View
     /**
      * Called each frame when touch is registered.
      * 
-     * @return false if there is no recognizer 
-     * that needs to play it's own click sound, 
-     * so play default is allowed
+     * @returns sound to play invoked by touch recognizers.
      */
     Sound gestureRecognizerRequest(TouchState touch, View* firstResponder);
 

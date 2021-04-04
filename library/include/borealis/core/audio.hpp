@@ -31,7 +31,7 @@ enum Sound
     SOUND_HONK, // honk
     SOUND_CLICK_SIDEBAR, // played when a sidebar item is clicked
     SOUND_TOUCH_UNFOCUS, // played when touch focus has been interrupted
-    SOUND_TOUCH, // played when touch not requires it's own click sound
+    SOUND_TOUCH, // played when touch doesn't require it's own click sound
 
     _SOUND_MAX, // not an actual sound, just used to count of many sounds there are
 };
