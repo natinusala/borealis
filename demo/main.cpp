@@ -65,6 +65,11 @@ int main(int argc, char* argv[])
     brls::getLightTheme().addColor("captioned_image/caption", nvgRGB(2, 176, 183));
     brls::getDarkTheme().addColor("captioned_image/caption", nvgRGB(51, 186, 227));
 
+    // Add custom values to the style
+    brls::getStyle().addMetric("about/padding_top_bottom", 50);
+    brls::getStyle().addMetric("about/padding_sides", 75);
+    brls::getStyle().addMetric("about/description_margin", 50);
+
     // Create and push the main activity to the stack
     brls::Application::pushActivity(new MainActivity());
 

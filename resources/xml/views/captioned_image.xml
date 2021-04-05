@@ -15,7 +15,7 @@
         id="label"
         width="auto"
         height="auto"
-        textAlign="center"
+        horizontalAlign="center"
         textColor="@theme/captioned_image/caption" />
 
 </brls:Box>
