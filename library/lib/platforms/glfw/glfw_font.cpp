@@ -32,7 +32,7 @@ void GLFWFontLoader::loadFonts()
 {
     // Regular
     // Try to use user-provided font first, fallback to Inter
-    if (access(USER_REGULAR_PATH, F_OK) != -1)
+    if (access(USER_REGULAR_PATH.c_str(), F_OK) != -1)
         this->loadFontFromFile(FONT_REGULAR, USER_REGULAR_PATH);
     else
         this->loadFontFromFile(FONT_REGULAR, INTER_FONT_PATH);

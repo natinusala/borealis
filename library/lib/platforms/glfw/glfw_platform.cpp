@@ -17,6 +17,7 @@
 #include <borealis/core/i18n.hpp>
 #include <borealis/core/logger.hpp>
 #include <borealis/platforms/glfw/glfw_platform.hpp>
+#include <locale>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -50,6 +51,32 @@ GLFWPlatform::GLFWPlatform()
     // Platform impls
     this->fontLoader  = new GLFWFontLoader();
     this->audioPlayer = new NullAudioPlayer();
+
+    // Get platform's locale (taken from a comment here: https://stackoverflow.com/questions/32931458/getting-the-system-language-in-c-or-c/32931505#32931505)
+    setlocale(LC_ALL, "");
+    this->locale = std::string(setlocale(LC_ALL, NULL));
+
+    // Split the default encoding and change the _ to - in locale (taken from my own testing on macOS Big Sur 11.0.1)
+    this->locale = this->locale.substr(0, this->locale.find('.'));
+    for (char& c : this->locale)
+        if (c == '_')
+            c = '-';
+
+    // We check if the extracted locale is usuable
+    bool is_usable_locale = false;
+
+    for (const auto& e : LOCALE_LIST) // Loop through all elements in the LOCALE_LIST
+        if (e == this->locale)
+        {
+            is_usable_locale = true;
+            break;
+        }
+
+    if (!is_usable_locale)
+    { // If it is not, we use the default locale instead
+        Logger::warning("Detected incompatible locale {}. Using default locale (en-US)...", this->locale);
+        this->locale = LOCALE_DEFAULT;
+    }
 }
 
 void GLFWPlatform::createWindow(std::string windowTitle, uint32_t windowWidth, uint32_t windowHeight)
@@ -110,7 +137,7 @@ ThemeVariant GLFWPlatform::getThemeVariant()
 
 std::string GLFWPlatform::getLocale()
 {
-    return LOCALE_DEFAULT;
+    return this->locale;
 }
 
 GLFWPlatform::~GLFWPlatform()

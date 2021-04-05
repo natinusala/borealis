@@ -54,6 +54,11 @@ constexpr uint32_t ORIGINAL_WINDOW_HEIGHT = 720;
 namespace brls
 {
 
+void Application::usei18n(bool val)
+{
+    Application::usingi18n = val;
+}
+
 bool Application::init()
 {
     // Init platform
@@ -68,7 +73,28 @@ bool Application::init()
     Logger::info("Using platform {}", platform->getName());
 
     // Init i18n
-    loadTranslations();
+    if (Application::usingi18n)
+    {
+        Logger::info("i18n has been enabled. Initing translations...");
+
+        std::vector<std::string> warnings = i18nChecker();
+
+        if (!warnings.empty())
+        {
+            for (const auto& e : warnings)
+                Logger::warning("{}", e);
+
+            warnings.shrink_to_fit(); // Releases the memory allocated by warnings (since it's only for the init function)
+        }
+
+        loadTranslations();
+    }
+    else
+    {
+        Logger::info("i18n has been disabled. Initing only internal translations...");
+        Application::getLocale() = LOCALE_DEFAULT;
+        loadInternal(); // Load internal translations (required for built-in views)
+    }
 
     Application::inited = true;
     return true;

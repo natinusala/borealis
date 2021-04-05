@@ -20,6 +20,7 @@
 #include <algorithm>
 #include <borealis/core/animation.hpp>
 #include <borealis/core/application.hpp>
+#include <borealis/core/assets.hpp>
 #include <borealis/core/box.hpp>
 #include <borealis/core/i18n.hpp>
 #include <borealis/core/input.hpp>
@@ -634,7 +635,7 @@ void View::unregisterAction(ActionIdentifier identifier)
 
 void View::registerClickAction(ActionListener actionListener)
 {
-    this->registerAction("brls/hints/ok"_i18n, BUTTON_A, actionListener, false, SOUND_CLICK);
+    this->registerAction("brls/hints/ok"_internal, BUTTON_A, actionListener, false, SOUND_CLICK);
 }
 
 void View::updateActionHint(enum ControllerButton button, std::string hintText)
@@ -1517,7 +1518,7 @@ bool View::isXMLAttributeValid(std::string attributeName)
 
 View* View::createFromXMLResource(std::string name)
 {
-    return View::createFromXMLFile(std::string(BRLS_RESOURCES) + "xml/" + name);
+    return View::createFromXMLFile(BRLS_ASSET("xml/" + name));
 }
 
 View* View::createFromXMLString(std::string xml)
