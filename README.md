@@ -1,8 +1,9 @@
+![borealis logo](https://github.com/natinusala/borealis/blob/main/resources/img/borealis_96.png?raw=true)
 # borealis
 
 Controller and TV oriented UI library for PC and Nintendo Switch (libnx).
 
-WIP - See the Projects tab to follow the journey towards a stable version!
+⚠️ Warning: the project is a WIP - See the Projects tab to follow the journey towards a stable version!
 
 The code for the old version is available in the `legacy` branch.
 
