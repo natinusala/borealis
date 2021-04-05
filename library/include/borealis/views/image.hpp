@@ -36,6 +36,13 @@ enum class ImageScalingType
     CROP,
 };
 
+// This dictates what interpolation to use when down / up scaling the image
+enum class ImageInterpolation
+{
+    LINEAR,
+    NEAREST
+};
+
 // Alignment of the image inside the view for FIT and CROP scaling types
 enum class ImageAlignment
 {
@@ -59,6 +66,18 @@ class Image : public View
 
     void draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx) override;
     void onLayout() override;
+
+    /**
+     * Sets the interpolation method for the image. Default is LINEAR.
+     *
+     * As the interpolation is set when the texture is created, and since we don't
+     * want to always store the image buffer in the view, this only takes effect
+     * after (re) loading the image using the setImage* methods.
+     *
+     * If you are using the interpolation XML attribute, you have to set it before the
+     * actual image attribute.
+     */
+    void setInterpolation(ImageInterpolation interpolation);
 
     /**
      * Sets the image from the given resource name.
@@ -101,14 +120,16 @@ class Image : public View
     static View* create();
 
   private:
-    ImageScalingType scalingType = ImageScalingType::FIT;
-    ImageAlignment align         = ImageAlignment::CENTER;
+    ImageScalingType scalingType     = ImageScalingType::FIT;
+    ImageAlignment align             = ImageAlignment::CENTER;
+    ImageInterpolation interpolation = ImageInterpolation::LINEAR;
 
     int texture = 0;
 
     NVGpaint paint;
 
     void invalidateImageBounds();
+    int getImageFlags();
 
     float originalImageWidth  = 0;
     float originalImageHeight = 0;

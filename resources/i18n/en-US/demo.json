@@ -36,5 +36,13 @@
         "images_upscaled": "Upscaled",
         "images_stretched": "Stretched",
         "images_cropped": "Cropped"
+    },
+
+    "about": {
+        "title": "borealis",
+        "description": "A hardware accelerated, controller and TV oriented UI library for PC and Nintendo Switch (libnx).",
+        "github": "Find it on github.com/natinusala/borealis",
+        "licence": "Licensed under Apache 2.0",
+        "logo_credit": "Logo by @MeganRoshelle"
     }
 }

@@ -41,7 +41,7 @@ TARGET		:=	borealis_demo
 BUILD		:=	build.nx
 SOURCES		:=	demo
 DATA		:=	data
-ICON		:=	resources/icon/borealis.jpg
+ICON		:=	resources/img/demo_icon.jpg
 INCLUDES	:=	demo
 
 APP_TITLE	:=	borealis demo
