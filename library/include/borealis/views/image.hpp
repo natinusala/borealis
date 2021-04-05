@@ -96,6 +96,11 @@ class Image : public View
     void setImageFromFile(std::string path);
 
     /**
+     * Sets the image from raw data
+     */
+    void setImageFromMem(unsigned char* data, int size);
+
+    /**
      * Sets the scaling type for this image.
      *
      * Default is FIT.
