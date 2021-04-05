@@ -4,7 +4,6 @@
     <brls:String name="title">Borealis Demo App</brls:String>
 
     <brls:List name="tabs"> 
-    
         <brls:String name="components">Basic components</brls:String>
         <brls:String name="layout">Layout and alignment</brls:String>
         <brls:String name="recycling">Recycling lists</brls:String>
@@ -14,13 +13,11 @@
         <brls:String name="misc_components">Misc. components</brls:String>
         <brls:String name="misc_tools">Misc. dev tools</brls:String>
         <brls:String name="about">About borealis</brls:String>
-
     </brls:List>
 
     <brls:String name="welcome">Welcome to the borealis demo! Feel free to explore and discover what the library can do.</brls:String>
 
     <brls:List name="components">
-
         <brls:String name="buttons_header">Buttons</brls:String>
         <brls:String name="button_primary">Primary button</brls:String>
         <brls:String name="button_highlight">Highlight button</brls:String>
@@ -41,7 +38,14 @@
         <brls:String name="images_upscaled">Upscaled</brls:String>
         <brls:String name="images_stretched">Stretched</brls:String>
         <brls:String name="images_cropped">Cropped</brls:String>
+    </brls:List>
 
+    <brls:List name="about">
+        <brls:String name="title">borealis</brls:String>
+        <brls:String name="description">A hardware accelerated, controller and TV oriented UI library for PC and Nintendo Switch (libnx).</brls:String>
+        <brls:String name="github">Find it on github.com/natinusala/borealis</brls:String>
+        <brls:String name="licence">Licensed under Apache 2.0</brls:String>
+        <brls:String name="logo_credit">Logo by @MeganRoshelle</brls:String>
     </brls:List>
 
 </brls:i18nDoc>
