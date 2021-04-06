@@ -1,6 +1,7 @@
 /*
     Copyright 2019-2021 natinusala
     Copyright 2019 p-sam
+    Copyright 2021 XITRIX
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -35,6 +36,13 @@
 
 namespace brls
 {
+
+// Input types for entire app
+enum class InputType
+{
+    GAMEPAD, // Gamepad or keyboard
+    TOUCH, // Touch screen
+};
 
 typedef std::function<View*(void)> XMLViewCreator;
 
@@ -190,6 +198,14 @@ class Application
      */
     static std::string getLocale();
 
+    /**
+     * Returns the current input type.
+     */
+    inline static InputType getInputType()
+    {
+        return inputType;
+    }
+
   private:
     inline static bool inited        = false;
     inline static bool quitRequested = false;
@@ -206,6 +222,11 @@ class Application
     inline static unsigned windowWidth, windowHeight;
 
     inline static View* currentFocus;
+
+    // Return true if input type was changed
+    static bool setInputType(InputType type);
+
+    inline static InputType inputType = InputType::GAMEPAD;
 
     inline static unsigned blockInputsTokens = 0; // any value > 0 means inputs are blocked
 

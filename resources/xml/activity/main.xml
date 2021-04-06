@@ -7,6 +7,10 @@
     <brls:Tab label="@i18n/demo/tabs/components" >
         <ComponentsTab />
     </brls:Tab>
+    
+    <brls:Tab label="@i18n/demo/tabs/scroll" >
+        <brls:View xml="@res/xml/tabs/scroll_test.xml" />
+    </brls:Tab>
 
     <!-- Static tab linking to another XML -->
     <brls:Tab label="@i18n/demo/tabs/layout" >

@@ -1,6 +1,7 @@
 /*
     Copyright 2019-2021 natinusala
     Copyright 2019 p-sam
+    Copyright 2021 XITRIX
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -95,6 +96,44 @@ NVGpaint View::a(NVGpaint paint)
     return newPaint;
 }
 
+void View::interruptGestures(bool onlyIfUnsureState)
+{
+    for (GestureRecognizer* recognizer : getGestureRecognizers())
+        recognizer->interrupt(onlyIfUnsureState);
+
+    if (parent)
+        parent->interruptGestures(onlyIfUnsureState);
+}
+
+void View::addGestureRecognizer(GestureRecognizer* recognizer)
+{
+    this->gestureRecognizers.push_back(recognizer);
+}
+
+Sound View::gestureRecognizerRequest(TouchState touch, View* firstResponder)
+{
+    Sound soundToPlay = touch.phase == TouchPhase::START ? SOUND_TOUCH : SOUND_NONE;
+
+    for (GestureRecognizer* recognizer : getGestureRecognizers())
+    {
+        if (!recognizer->isEnabled())
+            continue;
+
+        GestureState state = recognizer->recognitionLoop(touch, this, &soundToPlay);
+        if (state == GestureState::START)
+            firstResponder->interruptGestures(true);
+    }
+
+    Sound parentSound = SOUND_NONE;
+    if (parent)
+        parentSound = parent->gestureRecognizerRequest(touch, firstResponder);
+
+    if (soundToPlay == SOUND_NONE)
+        soundToPlay = parentSound;
+
+    return soundToPlay;
+}
+
 void View::frame(FrameContext* ctx)
 {
     if (this->visibility != Visibility::VISIBLE)
@@ -109,10 +148,11 @@ void View::frame(FrameContext* ctx)
     if (this->themeOverride)
         ctx->theme = *themeOverride;
 
-    float x      = this->getX();
-    float y      = this->getY();
-    float width  = this->getWidth();
-    float height = this->getHeight();
+    Rect frame   = getFrame();
+    float x      = frame.getMinX();
+    float y      = frame.getMinY();
+    float width  = frame.getWidth();
+    float height = frame.getHeight();
 
     if (this->alpha > 0.0f && this->collapseState != 0.0f)
     {
@@ -120,12 +160,12 @@ void View::frame(FrameContext* ctx)
         this->drawBackground(ctx->vg, ctx, style);
 
         // Draw shadow
-        if (this->shadowType != ShadowType::NONE && this->showShadow)
-            this->drawShadow(ctx->vg, ctx, style, x, y, width, height);
+        if (this->shadowType != ShadowType::NONE && (this->showShadow || Application::getInputType() == InputType::TOUCH))
+            this->drawShadow(ctx->vg, ctx, style, frame);
 
         // Draw border
         if (this->borderThickness > 0.0f)
-            this->drawBorder(ctx->vg, ctx, style, x, y, width, height);
+            this->drawBorder(ctx->vg, ctx, style, frame);
 
         // Draw highlight background
         if (this->highlightAlpha > 0.0f && !this->hideHighlightBackground)
@@ -133,7 +173,7 @@ void View::frame(FrameContext* ctx)
 
         // Draw click animation
         if (this->clickAlpha > 0.0f)
-            this->drawClickAnimation(ctx->vg, ctx, x, y, width, height);
+            this->drawClickAnimation(ctx->vg, ctx, frame);
 
         // Collapse clipping
         if (this->collapseState < 1.0f)
@@ -150,9 +190,9 @@ void View::frame(FrameContext* ctx)
             this->drawHighlight(ctx->vg, ctx->theme, this->highlightAlpha, style, false);
 
         if (this->wireframeEnabled)
-            this->drawWireframe(ctx, x, y, width, height);
+            this->drawWireframe(ctx, frame);
 
-        this->drawLine(ctx, x, y, width, height);
+        this->drawLine(ctx, frame);
 
         //Reset clipping
         if (this->collapseState < 1.0f)
@@ -185,7 +225,7 @@ void View::playClickAnimation(bool reverse)
         reverse ? EasingFunction::quadraticOut : EasingFunction::quadraticIn);
 
     this->clickAlpha.setEndCallback([this, reverse](bool finished) {
-        if (reverse)
+        if (reverse || Application::getInputType() == InputType::TOUCH)
             return;
 
         this->playClickAnimation(true);
@@ -194,7 +234,7 @@ void View::playClickAnimation(bool reverse)
     this->clickAlpha.start();
 }
 
-void View::drawClickAnimation(NVGcontext* vg, FrameContext* ctx, float x, float y, float width, float height)
+void View::drawClickAnimation(NVGcontext* vg, FrameContext* ctx, Rect frame)
 {
     Theme theme    = ctx->theme;
     NVGcolor color = theme["brls/click_pulse"];
@@ -205,14 +245,14 @@ void View::drawClickAnimation(NVGcontext* vg, FrameContext* ctx, float x, float 
     nvgBeginPath(vg);
 
     if (this->cornerRadius > 0.0f)
-        nvgRoundedRect(vg, x, y, width, height, this->cornerRadius);
+        nvgRoundedRect(vg, frame.getMinX(), frame.getMinY(), frame.getWidth(), frame.getHeight(), this->cornerRadius);
     else
-        nvgRect(vg, x, y, width, height);
+        nvgRect(ctx->vg, frame.getMinX(), frame.getMinY(), frame.getWidth(), frame.getHeight());
 
     nvgFill(vg);
 }
 
-void View::drawLine(FrameContext* ctx, float x, float y, float width, float height)
+void View::drawLine(FrameContext* ctx, Rect frame)
 {
     // Don't setup and draw empty nvg path if there is no line to draw
     if (this->lineTop <= 0 && this->lineRight <= 0 && this->lineBottom <= 0 && this->lineLeft <= 0)
@@ -222,28 +262,28 @@ void View::drawLine(FrameContext* ctx, float x, float y, float width, float heig
     nvgFillColor(ctx->vg, a(this->lineColor));
 
     if (this->lineTop > 0)
-        nvgRect(ctx->vg, x, y, width, this->lineTop);
+        nvgRect(ctx->vg, frame.getMinX(), frame.getMinY(), frame.size.width, this->lineTop);
 
     if (this->lineRight > 0)
-        nvgRect(ctx->vg, x + width, y, this->lineRight, height);
+        nvgRect(ctx->vg, frame.getMaxX(), frame.getMinY(), this->lineRight, frame.size.height);
 
     if (this->lineBottom > 0)
-        nvgRect(ctx->vg, x, y + height - this->lineBottom, width, this->lineBottom);
+        nvgRect(ctx->vg, frame.getMinX(), frame.getMaxY() - this->lineBottom, frame.size.width, this->lineBottom);
 
     if (this->lineLeft > 0)
-        nvgRect(ctx->vg, x - this->lineLeft, y, this->lineLeft, height);
+        nvgRect(ctx->vg, frame.getMinX() - this->lineLeft, frame.getMinY(), this->lineLeft, frame.size.height);
 
     nvgFill(ctx->vg);
 }
 
-void View::drawWireframe(FrameContext* ctx, float x, float y, float width, float height)
+void View::drawWireframe(FrameContext* ctx, Rect frame)
 {
     nvgStrokeWidth(ctx->vg, 1);
 
     // Outline
     nvgBeginPath(ctx->vg);
     nvgStrokeColor(ctx->vg, nvgRGB(0, 0, 255));
-    nvgRect(ctx->vg, x, y, width, height);
+    nvgRect(ctx->vg, frame.getMinX(), frame.getMinY(), frame.getWidth(), frame.getHeight());
     nvgStroke(ctx->vg);
 
     if (this->hasParent())
@@ -252,13 +292,13 @@ void View::drawWireframe(FrameContext* ctx, float x, float y, float width, float
         nvgFillColor(ctx->vg, nvgRGB(0, 0, 255));
 
         nvgBeginPath(ctx->vg);
-        nvgMoveTo(ctx->vg, x, y);
-        nvgLineTo(ctx->vg, x + width, y + height);
+        nvgMoveTo(ctx->vg, frame.getMinX(), frame.getMinY());
+        nvgLineTo(ctx->vg, frame.getMaxX(), frame.getMaxY());
         nvgFill(ctx->vg);
 
         nvgBeginPath(ctx->vg);
-        nvgMoveTo(ctx->vg, x + width, y);
-        nvgLineTo(ctx->vg, x, y + height);
+        nvgMoveTo(ctx->vg, frame.getMaxX(), frame.getMinY());
+        nvgLineTo(ctx->vg, frame.getMinX(), frame.getMaxY());
         nvgFill(ctx->vg);
     }
 
@@ -273,19 +313,19 @@ void View::drawWireframe(FrameContext* ctx, float x, float y, float width, float
 
     // Top
     if (paddingTop > 0)
-        nvgRect(ctx->vg, x, y, width, paddingTop);
+        nvgRect(ctx->vg, frame.getMinX(), frame.getMinY(), frame.getWidth(), paddingTop);
 
     // Right
     if (paddingRight > 0)
-        nvgRect(ctx->vg, x + width - paddingRight, y, paddingRight, height);
+        nvgRect(ctx->vg, frame.getMaxX() - paddingRight, frame.getMinY(), paddingRight, frame.getHeight());
 
     // Bottom
     if (paddingBottom > 0)
-        nvgRect(ctx->vg, x, y + height - paddingBottom, width, paddingBottom);
+        nvgRect(ctx->vg, frame.getMinX(), frame.getMaxY() - paddingBottom, frame.getWidth(), paddingBottom);
 
     // Left
     if (paddingLeft > 0)
-        nvgRect(ctx->vg, x, y, paddingLeft, height);
+        nvgRect(ctx->vg, frame.getMinX(), frame.getMinY(), paddingLeft, frame.getHeight());
 
     nvgStroke(ctx->vg);
 
@@ -300,33 +340,33 @@ void View::drawWireframe(FrameContext* ctx, float x, float y, float width, float
 
     // Top
     if (marginTop > 0)
-        nvgRect(ctx->vg, x - marginLeft, y - marginTop, width + marginLeft + marginRight, marginTop);
+        nvgRect(ctx->vg, frame.getMinX() - marginLeft, frame.getMinY() - marginTop, frame.getWidth() + marginLeft + marginRight, marginTop);
 
     // Right
     if (marginRight > 0)
-        nvgRect(ctx->vg, x + width, y - marginTop, marginRight, height + marginTop + marginBottom);
+        nvgRect(ctx->vg, frame.getMaxX(), frame.getMinY() - marginTop, marginRight, frame.getHeight() + marginTop + marginBottom);
 
     // Bottom
     if (marginBottom > 0)
-        nvgRect(ctx->vg, x - marginLeft, y + height, width + marginLeft + marginRight, marginBottom);
+        nvgRect(ctx->vg, frame.getMinX() - marginLeft, frame.getMaxY(), frame.getWidth() + marginLeft + marginRight, marginBottom);
 
     // Left
     if (marginLeft > 0)
-        nvgRect(ctx->vg, x - marginLeft, y - marginTop, marginLeft, height + marginTop + marginBottom);
+        nvgRect(ctx->vg, frame.getMinX() - marginLeft, frame.getMinY() - marginTop, marginLeft, frame.getHeight() + marginTop + marginBottom);
 
     nvgStroke(ctx->vg);
 }
 
-void View::drawBorder(NVGcontext* vg, FrameContext* ctx, Style style, float x, float y, float width, float height)
+void View::drawBorder(NVGcontext* vg, FrameContext* ctx, Style style, Rect frame)
 {
     nvgBeginPath(vg);
     nvgStrokeColor(vg, this->borderColor);
     nvgStrokeWidth(vg, this->borderThickness);
-    nvgRoundedRect(vg, x, y, width, height, this->cornerRadius);
+    nvgRoundedRect(vg, frame.getMinX(), frame.getMinY(), frame.getWidth(), frame.getHeight(), this->cornerRadius);
     nvgStroke(vg);
 }
 
-void View::drawShadow(NVGcontext* vg, FrameContext* ctx, Style style, float x, float y, float width, float height)
+void View::drawShadow(NVGcontext* vg, FrameContext* ctx, Style style, Rect frame)
 {
     float shadowWidth   = 0.0f;
     float shadowFeather = 0.0f;
@@ -349,19 +389,19 @@ void View::drawShadow(NVGcontext* vg, FrameContext* ctx, Style style, float x, f
 
     NVGpaint shadowPaint = nvgBoxGradient(
         vg,
-        x, y + shadowWidth,
-        width, height,
+        frame.getMinX(), frame.getMinY() + shadowWidth,
+        frame.getWidth(), frame.getHeight(),
         this->cornerRadius * 2, shadowFeather,
         RGBA(0, 0, 0, shadowOpacity * alpha), TRANSPARENT);
 
     nvgBeginPath(vg);
     nvgRect(
         vg,
-        x - shadowOffset,
-        y - shadowOffset,
-        width + shadowOffset * 2,
-        height + shadowOffset * 3);
-    nvgRoundedRect(vg, x, y, width, height, this->cornerRadius);
+        frame.getMinX() - shadowOffset,
+        frame.getMinY() - shadowOffset,
+        frame.getWidth() + shadowOffset * 2,
+        frame.getHeight() + shadowOffset * 3);
+    nvgRoundedRect(vg, frame.getMinX(), frame.getMinY(), frame.getWidth(), frame.getHeight(), this->cornerRadius);
     nvgPathWinding(vg, NVG_HOLE);
     nvgFillPaint(vg, shadowPaint);
     nvgFill(vg);
@@ -425,6 +465,9 @@ void View::setAlpha(float alpha)
 
 void View::drawHighlight(NVGcontext* vg, Theme theme, float alpha, Style style, bool background)
 {
+    if (Application::getInputType() == InputType::TOUCH)
+        return;
+
     nvgSave(vg);
     nvgResetScissor(vg);
 
@@ -1000,24 +1043,23 @@ void View::invalidate()
         YGNodeCalculateLayout(this->ygNode, YGUndefined, YGUndefined, YGDirectionLTR);
 }
 
+Rect View::getFrame()
+{
+    return Rect(getX(), getY(), getWidth(), getHeight());
+}
+
 float View::getX()
 {
-    if (this->detached)
-        return this->detachedOriginX + this->translationX;
-    else if (this->hasParent())
-        return this->getParent()->getX() + YGNodeLayoutGetLeft(this->ygNode) + this->translationX;
-    else
-        return YGNodeLayoutGetLeft(this->ygNode) + this->translationX;
+    if (this->hasParent())
+        return this->getParent()->getX() + YGNodeLayoutGetLeft(this->ygNode) + this->translation.x;
+    return YGNodeLayoutGetLeft(this->ygNode) + this->translation.x;
 }
 
 float View::getY()
 {
-    if (this->detached)
-        return this->detachedOriginY + this->translationY;
-    else if (this->hasParent())
-        return this->getParent()->getY() + YGNodeLayoutGetTop(this->ygNode) + this->translationY;
-    else
-        return YGNodeLayoutGetTop(this->ygNode) + this->translationY;
+    if (this->hasParent())
+        return this->getParent()->getY() + YGNodeLayoutGetTop(this->ygNode) + this->translation.y;
+    return YGNodeLayoutGetTop(this->ygNode) + this->translation.y;
 }
 
 float View::getHeight(bool includeCollapse)
@@ -1037,8 +1079,8 @@ void View::detach()
 
 void View::setDetachedPosition(float x, float y)
 {
-    this->detachedOriginX = x;
-    this->detachedOriginY = y;
+    this->detachedOrigin.x = x;
+    this->detachedOrigin.y = y;
 }
 
 bool View::isDetached()
@@ -1250,6 +1292,9 @@ View::~View()
 
     for (tinyxml2::XMLDocument* document : this->boundDocuments)
         delete document;
+
+    for (GestureRecognizer* recognizer : this->gestureRecognizers)
+        delete recognizer;
 }
 
 std::string View::getStringXMLAttributeValue(std::string value)
@@ -1889,12 +1934,12 @@ void View::registerCommonAttributes()
 
 void View::setTranslationY(float translationY)
 {
-    this->translationY = translationY;
+    this->translation.y = translationY;
 }
 
 void View::setTranslationX(float translationX)
 {
-    this->translationX = translationX;
+    this->translation.x = translationX;
 }
 
 void View::setVisibility(Visibility visibility)
@@ -2013,6 +2058,24 @@ View* View::getDefaultFocus()
 {
     if (this->isFocusable())
         return this;
+
+    return nullptr;
+}
+
+View* View::hitTest(Point point)
+{
+    // Check if can focus ourself first
+    if (!this->isFocusable())
+        return nullptr;
+
+    Rect frame = getFrame();
+    Logger::debug(describe() + ": --- " + frame.describe());
+
+    if (frame.pointInside(point))
+    {
+        Logger::debug(describe() + ": OK");
+        return this;
+    }
 
     return nullptr;
 }

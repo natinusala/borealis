@@ -156,4 +156,30 @@ void plsrPlayerFree(PLSR_PlayerSoundId id) {
 	free(sound);
 }
 
+PLSR_RC plsrPlayerSetPitch(PLSR_PlayerSoundId id, float pitch) {
+	if(id == PLSR_PLAYER_INVALID_SOUND) {
+		return _LOCAL_RC_MAKE(BadInput);
+	}
+
+	PLSR_PlayerSound* sound = (PLSR_PlayerSound*)id;
+	for(unsigned int i = 0; i < sound->channelCount; i++) {
+		audrvVoiceSetPitch(&g_instance->driver, sound->channels[i].voiceId, pitch);
+	}
+
+	return PLSR_RC_OK;
+}
+
+PLSR_RC plsrPlayerSetVolume(PLSR_PlayerSoundId id, float volume) {
+	if(id == PLSR_PLAYER_INVALID_SOUND) {
+		return _LOCAL_RC_MAKE(BadInput);
+	}
+
+	PLSR_PlayerSound* sound = (PLSR_PlayerSound*)id;
+	for(unsigned int i = 0; i < sound->channelCount; i++) {
+		audrvVoiceSetVolume(&g_instance->driver, sound->channels[i].voiceId, volume);
+	}
+
+	return PLSR_RC_OK;
+}
+
 #endif

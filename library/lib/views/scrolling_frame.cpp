@@ -1,5 +1,6 @@
 /*
     Copyright 2020-2021 natinusala
+    Copyright 2021 XITRIX
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -15,6 +16,8 @@
 */
 
 #include <borealis/core/application.hpp>
+#include <borealis/core/touch/scroll_gesture.hpp>
+#include <borealis/core/touch/tap_gesture.hpp>
 #include <borealis/core/util.hpp>
 #include <borealis/views/scrolling_frame.hpp>
 
@@ -31,6 +34,49 @@ ScrollingFrame::ScrollingFrame()
         });
 
     this->setMaximumAllowedXMLElements(1);
+
+    addGestureRecognizer(new ScrollGestureRecognizer([this](PanGestureStatus state) {
+        if (state.state == GestureState::FAILED)
+            return;
+
+        float contentHeight = this->getContentHeight();
+
+        if (state.deltaOnly)
+        {
+            float newScroll = (this->scrollY * contentHeight - (state.delta.y)) / contentHeight;
+            startScrolling(false, newScroll);
+            return;
+        }
+
+        static float startY;
+        if (state.state == GestureState::START)
+            startY = this->scrollY * contentHeight;
+
+        float newScroll = (startY - (state.position.y - state.startPosition.y)) / contentHeight;
+
+        // Start animation
+        if (state.state != GestureState::END)
+            startScrolling(false, newScroll);
+        else
+        {
+            float time   = state.acceleration.time.y * 1000.0f;
+            float newPos = this->scrollY * contentHeight + state.acceleration.distance.y;
+
+            newScroll = newPos / contentHeight;
+
+            if (newScroll == this->scrollY || time < 100)
+                return;
+
+            animateScrolling(newScroll, time);
+        }
+    },
+        PanAxis::VERTICAL));
+
+    // Stop scrolling on tap
+    addGestureRecognizer(new TapGestureRecognizer([this](brls::TapGestureStatus status, Sound* soundToPlay) {
+        if (status.state == GestureState::UNSURE)
+            this->scrollY.stop();
+    }));
 }
 
 void ScrollingFrame::draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx)
@@ -135,26 +181,33 @@ void ScrollingFrame::startScrolling(bool animated, float newScroll)
     if (newScroll == this->scrollY)
         return;
 
-    this->scrollY.stop();
-
     if (animated)
     {
         Style style = Application::getStyle();
-
-        this->scrollY.reset();
-
-        this->scrollY.addStep(newScroll, style["brls/animations/highlight"], EasingFunction::quadraticOut);
-
-        this->scrollY.setTickCallback([this] {
-            this->scrollAnimationTick();
-        });
-
-        this->scrollY.start();
+        animateScrolling(newScroll, style["brls/animations/highlight"]);
     }
     else
     {
+        this->scrollY.stop();
         this->scrollY = newScroll;
+        this->scrollAnimationTick();
+        this->invalidate();
     }
+}
+
+void ScrollingFrame::animateScrolling(float newScroll, float time)
+{
+    this->scrollY.stop();
+
+    this->scrollY.reset();
+
+    this->scrollY.addStep(newScroll, time, EasingFunction::quadraticOut);
+
+    this->scrollY.setTickCallback([this] {
+        this->scrollAnimationTick();
+    });
+
+    this->scrollY.start();
 
     this->invalidate();
 }
@@ -175,7 +228,21 @@ float ScrollingFrame::getContentHeight()
 void ScrollingFrame::scrollAnimationTick()
 {
     if (this->contentView)
-        this->contentView->setTranslationY(-(this->scrollY * this->getContentHeight()));
+    {
+        float contentHeight = this->getContentHeight();
+        float bottomLimit   = (contentHeight - this->getScrollingAreaHeight()) / contentHeight;
+
+        if (this->scrollY < 0)
+            this->scrollY = 0;
+
+        if (this->scrollY > bottomLimit)
+            this->scrollY = bottomLimit;
+
+        if (contentHeight <= getHeight())
+            this->scrollY = 0;
+
+        this->contentView->setTranslationY(-(this->scrollY * contentHeight));
+    }
 }
 
 void ScrollingFrame::onChildFocusGained(View* directChild, View* focusedView)
@@ -183,7 +250,8 @@ void ScrollingFrame::onChildFocusGained(View* directChild, View* focusedView)
     this->childFocused = true;
 
     // Start scrolling
-    this->updateScrolling(true);
+    if (Application::getInputType() != InputType::TOUCH)
+        this->updateScrolling(true);
 
     Box::onChildFocusGained(directChild, focusedView);
 }

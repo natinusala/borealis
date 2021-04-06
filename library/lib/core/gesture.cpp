@@ -1,6 +1,5 @@
 /*
-    Copyright 2021 natinusala
-    Copyright (C) 2021  XITRIX
+    Copyright 2021 XITRIX
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -15,27 +14,22 @@
     limitations under the License.
 */
 
-#pragma once
-
-#include <switch.h>
-
-#include <borealis/core/input.hpp>
+#include <borealis/core/gesture.hpp>
 
 namespace brls
 {
 
-// InputManager that uses the hid sysmodule to get inputs
-class SwitchInputManager : public InputManager
+GestureState GestureRecognizer::recognitionLoop(TouchState touch, View* view, Sound* soundToPlay)
 {
-  public:
-    SwitchInputManager();
+    return GestureState::FAILED;
+}
 
-    void updateControllerState(ControllerState* state);
+void GestureRecognizer::interrupt(bool onlyIfUnsureState)
+{
+    if (onlyIfUnsureState && this->state != GestureState::UNSURE)
+        return;
 
-    void updateTouchState(RawTouchState* state);
+    this->state = GestureState::INTERRUPTED;
+}
 
-  private:
-    PadState padState;
-};
-
-} // namespace brls
+}

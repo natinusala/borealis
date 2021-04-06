@@ -14,6 +14,7 @@
     limitations under the License.
 */
 
+#include <borealis/core/application.hpp>
 #include <borealis/platforms/switch/switch_input.hpp>
 
 namespace brls
@@ -62,6 +63,23 @@ void SwitchInputManager::updateControllerState(ControllerState* state)
     {
         uint64_t switchKey = SWITCH_BUTTONS_MAPPING[i];
         state->buttons[i]  = keysDown & switchKey;
+    }
+}
+
+void SwitchInputManager::updateTouchState(RawTouchState* state)
+{
+    // Get touchscreen state
+    static HidTouchScreenState hidState = { 0 };
+
+    state->pressed = false;
+    if (hidGetTouchScreenStates(&hidState, 1))
+    {
+        if (hidState.count > 0)
+        {
+            state->pressed    = true;
+            state->position.x = hidState.touches[0].x / Application::windowScale;
+            state->position.y = hidState.touches[0].y / Application::windowScale;
+        }
     }
 }
 

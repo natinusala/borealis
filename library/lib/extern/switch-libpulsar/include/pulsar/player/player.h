@@ -81,3 +81,9 @@ PLSR_RC plsrPlayerStop(PLSR_PlayerSoundId id);
 
 /// Free ressources used by a loaded sound
 void plsrPlayerFree(PLSR_PlayerSoundId id);
+
+/// Set sound pitch factor (effective next time it's played)
+PLSR_RC plsrPlayerSetPitch(PLSR_PlayerSoundId id, float pitch);
+
+/// Set sound volume factor (effective next time it's played)
+PLSR_RC plsrPlayerSetVolume(PLSR_PlayerSoundId id, float volume);

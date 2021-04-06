@@ -65,6 +65,7 @@ class Box : public View
 
     void draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx) override;
     View* getDefaultFocus() override;
+    View* hitTest(Point point) override;
     View* getNextFocus(FocusDirection direction, View* currentView) override;
     void willAppear(bool resetState) override;
     void willDisappear(bool resetState) override;

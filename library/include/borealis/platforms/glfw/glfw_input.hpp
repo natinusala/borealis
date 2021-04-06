@@ -32,7 +32,11 @@ class GLFWInputManager : public InputManager
 
     void updateControllerState(ControllerState* state) override;
 
+    void updateTouchState(RawTouchState* state) override;
+
   private:
+    Point scrollOffset;
+    static void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
     GLFWwindow* window;
 };
 

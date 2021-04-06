@@ -27,6 +27,8 @@
 #include <borealis/core/animation.hpp>
 #include <borealis/core/event.hpp>
 #include <borealis/core/frame_context.hpp>
+#include <borealis/core/geometry.hpp>
+#include <borealis/core/gesture.hpp>
 #include <borealis/core/util.hpp>
 #include <functional>
 #include <memory>
@@ -161,12 +163,12 @@ class View
     ViewBackground background = ViewBackground::NONE;
 
     void drawBackground(NVGcontext* vg, FrameContext* ctx, Style style);
-    void drawShadow(NVGcontext* vg, FrameContext* ctx, Style style, float x, float y, float width, float height);
-    void drawBorder(NVGcontext* vg, FrameContext* ctx, Style style, float x, float y, float width, float height);
+    void drawShadow(NVGcontext* vg, FrameContext* ctx, Style style, Rect frame);
+    void drawBorder(NVGcontext* vg, FrameContext* ctx, Style style, Rect frame);
     void drawHighlight(NVGcontext* vg, Theme theme, float alpha, Style style, bool background);
-    void drawClickAnimation(NVGcontext* vg, FrameContext* ctx, float x, float y, float width, float height);
-    void drawWireframe(FrameContext* ctx, float x, float y, float width, float height);
-    void drawLine(FrameContext* ctx, float x, float y, float width, float height);
+    void drawClickAnimation(NVGcontext* vg, FrameContext* ctx, Rect frame);
+    void drawWireframe(FrameContext* ctx, Rect frame);
+    void drawLine(FrameContext* ctx, Rect frame);
 
     Animatable highlightAlpha   = 0.0f;
     float highlightPadding      = 0.0f;
@@ -191,16 +193,15 @@ class View
 
     bool hideHighlightBackground = false;
 
-    bool detached         = false;
-    float detachedOriginX = 0.0f;
-    float detachedOriginY = 0.0f;
+    bool detached = false;
+    Point detachedOrigin;
 
-    float translationX = 0.0f;
-    float translationY = 0.0f;
+    Point translation;
 
     bool wireframeEnabled = false;
 
     std::vector<Action> actions;
+    std::vector<GestureRecognizer*> gestureRecognizers;
 
     /**
      * Parent user data, typically the index of the view
@@ -302,6 +303,7 @@ class View
 
     void shakeHighlight(FocusDirection direction);
 
+    Rect getFrame();
     float getX();
     float getY();
     float getWidth();
@@ -1041,6 +1043,33 @@ class View
     }
 
     /**
+     * Get the vector of all gesture recognizers attached to that view.
+     */
+    const std::vector<GestureRecognizer*>& getGestureRecognizers()
+    {
+        return this->gestureRecognizers;
+    }
+
+    /**
+     * Interrupt every recognizer on this view.
+     * If onlyIfUnsureState == true, only recognizers with
+     * current state UNSURE will be interupted
+     */
+    void interruptGestures(bool onlyIfUnsureState);
+
+    /**
+     * Add new gesture recognizer on this view.
+     */
+    void addGestureRecognizer(GestureRecognizer* recognizer);
+
+    /**
+     * Called each frame when touch is registered.
+     * 
+     * @returns sound to play invoked by touch recognizers.
+     */
+    Sound gestureRecognizerRequest(TouchState touch, View* firstResponder);
+
+    /**
       * Called each frame
       * Do not override it to draw your view,
       * override draw() instead
@@ -1154,6 +1183,15 @@ class View
      *    3. give focus to the result, if it exists
      */
     virtual View* getDefaultFocus();
+
+    /**
+     * Returns the view to focus with the corresponding screen coordinates in the view or its children,
+     * or nullptr if it hasn't been found.
+     *
+     * Research is done recursively by traversing the tree starting from this view.
+     * This view's parents are not traversed.
+     */
+    virtual View* hitTest(Point point);
 
     /**
      * Returns the next view to focus given the requested direction
