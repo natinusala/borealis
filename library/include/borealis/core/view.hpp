@@ -1316,6 +1316,8 @@ class View
      */
     void setWireframeEnabled(bool wireframe);
 
+    bool isWireframeEnabled();
+
     /**
      * Resolves the value of the given XML attribute string.
      * Applies i18n if the value is an "@i18n/" string, returns the

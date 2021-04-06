@@ -24,11 +24,19 @@
 namespace brls
 {
 
-enum class TextAlign
+enum class HorizontalAlign
 {
     LEFT,
     CENTER,
     RIGHT,
+};
+
+enum class VerticalAlign
+{
+  BASELINE,
+  TOP,
+  CENTER,
+  BOTTOM,
 };
 
 // Some text. The Label will automatically grow as much as possible.
@@ -60,8 +68,21 @@ class Label : public View
      * Sets the alignment of the text inside
      * the view. Will not move the view, only
      * the text inside.
+     *
+     * Default is CENTER.
      */
-    void setTextAlign(TextAlign align);
+    void setHorizontalAlign(HorizontalAlign align);
+
+    /**
+     * Sets the alignment of the text inside
+     * the view. Will not move the view, only
+     * the text inside.
+     *
+     * Only applies to single-line labels.
+     *
+     * Default is CENTER.
+     */
+    void setVerticalAlign(VerticalAlign align);
 
     void setFontSize(float value);
     void setLineHeight(float value);
@@ -138,9 +159,11 @@ class Label : public View
     void startScrollTimer();
     void onScrollTimerFinished();
 
-    TextAlign align = TextAlign::LEFT;
+    HorizontalAlign horizontalAlign = HorizontalAlign::LEFT;
+    VerticalAlign verticalAlign     = VerticalAlign::CENTER;
 
     enum NVGalign getNVGHorizontalAlign();
+    enum NVGalign getNVGVerticalAlign();
 };
 
 } // namespace brls

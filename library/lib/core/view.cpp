@@ -2090,4 +2090,9 @@ void View::setWireframeEnabled(bool wireframe)
     this->wireframeEnabled = wireframe;
 }
 
+bool View::isWireframeEnabled()
+{
+    return this->wireframeEnabled;
+}
+
 } // namespace brls

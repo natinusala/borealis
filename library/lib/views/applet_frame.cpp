@@ -107,6 +107,8 @@ AppletFrame::AppletFrame()
     this->registerFilePathXMLAttribute("icon", [this](std::string value) {
         this->setIconFromFile(value);
     });
+
+    this->forwardXMLAttribute("iconInterpolation", this->icon, "interpolation");
 }
 
 void AppletFrame::setIconFromRes(std::string name)

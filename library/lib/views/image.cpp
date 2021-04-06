@@ -29,7 +29,7 @@ static float measureWidth(YGNodeRef node, float width, YGMeasureMode widthMode, 
         return originalWidth;
     else if (widthMode == YGMeasureModeAtMost)
         if (type == ImageScalingType::FIT)
-            return width;
+            return originalWidth;
         else
             return std::min(width, originalWidth);
     else if (widthMode == YGMeasureModeExactly)
@@ -46,7 +46,7 @@ static float measureHeight(YGNodeRef node, float width, YGMeasureMode widthMode,
         return originalHeight;
     else if (heightMode == YGMeasureModeAtMost)
         if (type == ImageScalingType::FIT)
-            return height;
+            return originalHeight;
         else
             return std::min(height, originalHeight);
     else if (heightMode == YGMeasureModeExactly)
@@ -81,11 +81,10 @@ static YGSize imageMeasureFunc(YGNodeRef node, float width, YGMeasureMode widthM
     // Fit scaling mode: scale the view according to image ratio
     else if (scalingType == ImageScalingType::FIT && ntz(height) > 0)
     {
-        float viewAspectRatio  = ntz(width) / ntz(height);
         float imageAspectRatio = originalWidth / originalHeight;
 
         // Grow height as much as possible then deduce width
-        if (viewAspectRatio < imageAspectRatio)
+        if (heightMode != YGMeasureModeUndefined)
         {
             size.height = measureHeight(node, width, widthMode, height, heightMode, originalHeight, scalingType);
             size.width  = measureWidth(node, width, widthMode, height, heightMode, size.height * imageAspectRatio, scalingType);
@@ -127,6 +126,13 @@ Image::Image()
             { "bottom", ImageAlignment::BOTTOM },
             { "left", ImageAlignment::LEFT },
             { "center", ImageAlignment::CENTER },
+        });
+
+    BRLS_REGISTER_ENUM_XML_ATTRIBUTE(
+        "interpolation", ImageInterpolation, this->setInterpolation,
+        {
+            { "linear", ImageInterpolation::LINEAR },
+            { "nearest", ImageInterpolation::NEAREST },
         });
 
     this->registerFilePathXMLAttribute("image", [this](std::string value) {
@@ -238,6 +244,19 @@ void Image::setImageFromRes(std::string name)
     this->setImageFromFile(std::string(BRLS_RESOURCES) + name);
 }
 
+void Image::setInterpolation(ImageInterpolation interpolation)
+{
+    this->interpolation = interpolation;
+}
+
+int Image::getImageFlags()
+{
+    if (this->interpolation == ImageInterpolation::NEAREST)
+        return NVG_IMAGE_NEAREST;
+
+    return 0;
+}
+
 void Image::setImageFromFile(std::string path)
 {
     NVGcontext* vg = Application::getNVGContext();
@@ -247,7 +266,8 @@ void Image::setImageFromFile(std::string path)
         nvgDeleteImage(vg, this->texture);
 
     // Load the new texture
-    this->texture = nvgCreateImage(vg, path.c_str(), 0);
+    int flags     = this->getImageFlags();
+    this->texture = nvgCreateImage(vg, path.c_str(), flags);
 
     if (this->texture == 0)
         fatal("Cannot load image from file \"" + path + "\"");
