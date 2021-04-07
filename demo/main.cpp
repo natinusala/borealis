@@ -30,6 +30,7 @@
 #include "components_tab.hpp"
 #include "main_activity.hpp"
 #include "recycling_list_tab.hpp"
+#include "storage_file_demo.hpp"
 
 using namespace brls::literals; // for _i18n
 
@@ -60,6 +61,7 @@ int main(int argc, char* argv[])
     brls::Application::registerXMLView("CaptionedImage", CaptionedImage::create);
     brls::Application::registerXMLView("RecyclingListTab", RecyclingListTab::create);
     brls::Application::registerXMLView("ComponentsTab", ComponentsTab::create);
+    brls::Application::registerXMLView("StorageFileDemo", StorageFileDemo::create);
 
     // Add custom values to the theme
     brls::getLightTheme().addColor("captioned_image/caption", nvgRGB(2, 176, 183));

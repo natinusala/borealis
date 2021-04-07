@@ -33,11 +33,13 @@
 #include <borealis/core/input.hpp>
 #include <borealis/core/logger.hpp>
 #include <borealis/core/platform.hpp>
+#include <borealis/core/storage_file.hpp>
 #include <borealis/core/style.hpp>
 #include <borealis/core/task.hpp>
 #include <borealis/core/theme.hpp>
 #include <borealis/core/time.hpp>
 #include <borealis/core/timer.hpp>
+#include <borealis/core/util.hpp>
 #include <borealis/core/video.hpp>
 #include <borealis/core/view.hpp>
 

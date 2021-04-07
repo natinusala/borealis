@@ -9,6 +9,7 @@ borealis_files = files(
     'lib/core/style.cpp',
     'lib/core/activity.cpp',
     'lib/core/platform.cpp',
+    'lib/core/storage_file.cpp',
     'lib/core/font.cpp',
     'lib/core/util.cpp',
     'lib/core/time.cpp',

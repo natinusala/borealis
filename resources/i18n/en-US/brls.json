@@ -1,4 +1,6 @@
 {
+    "appname": "borealis_demo",
+
     "hints": {
         "ok": "OK",
         "back": "Back",
