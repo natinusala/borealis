@@ -19,6 +19,7 @@
 #include <borealis/core/application.hpp>
 #include <borealis/core/util.hpp>
 #include <borealis/views/image.hpp>
+#include <sstream>
 
 namespace brls
 {
@@ -278,6 +279,34 @@ void Image::setImageFromFile(std::string path)
     this->originalImageHeight = (float)height;
 
     this->invalidate();
+}
+
+void Image::setImageFromMemory(unsigned char* data, int numData)
+{
+    NVGcontext* vg = Application::getNVGContext();
+
+    // Free the old texture if necessary
+    if (this->texture != 0)
+        nvgDeleteImage(vg, this->texture);
+
+    // Load the new texture
+    int flags     = this->getImageFlags();
+    this->texture = nvgCreateImageMem(vg, flags, data, numData);
+ 
+    if (this->texture == 0)
+    {    
+        std::stringstream addr;
+        addr << (void*)data;
+
+        fatal("Cannot load image from memory (" + std::to_string(numData) + " bytes at 0x" + addr.str() + ")");
+    }
+
+    int width, height;
+    nvgImageSize(vg, this->texture, &width, &height);
+    this->originalImageWidth  = (float)width;
+    this->originalImageHeight = (float)height;
+
+    this->invalidate();   
 }
 
 void Image::setScalingType(ImageScalingType scalingType)
