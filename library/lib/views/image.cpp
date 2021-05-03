@@ -19,7 +19,6 @@
 #include <borealis/core/application.hpp>
 #include <borealis/core/util.hpp>
 #include <borealis/views/image.hpp>
-#include <sstream>
 
 namespace brls
 {
@@ -294,12 +293,7 @@ void Image::setImageFromMemory(unsigned char* data, int numData)
     this->texture = nvgCreateImageMem(vg, flags, data, numData);
  
     if (this->texture == 0)
-    {    
-        std::stringstream addr;
-        addr << (void*)data;
-
-        fatal("Cannot load image from memory (" + std::to_string(numData) + " bytes at 0x" + addr.str() + ")");
-    }
+        fatal("Cannot load image from memory (" + std::to_string(numData) + " bytes)");
 
     int width, height;
     nvgImageSize(vg, this->texture, &width, &height);
