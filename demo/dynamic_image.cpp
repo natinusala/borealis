@@ -59,7 +59,7 @@ bool DynamicImage::onImageClicked(brls::View* view)
     }
 
     // Display the image
-    this->image->setImageFromMemory(imageData, width, height);
+    this->image->setImageFromRawData(imageData, width, height);
 
     // Free the image buffer
     free(imageData);

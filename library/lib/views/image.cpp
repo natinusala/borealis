@@ -280,7 +280,30 @@ void Image::setImageFromFile(std::string path)
     this->invalidate();
 }
 
-void Image::setImageFromMemory(const unsigned char* data, int width, int height)
+void Image::setImageFromMemory(unsigned char* data, int numData)
+{
+    NVGcontext* vg = Application::getNVGContext();
+
+    // Free the old texture if necessary
+    if (this->texture != 0)
+        nvgDeleteImage(vg, this->texture);
+
+    // Load the new texture
+    int flags     = this->getImageFlags();
+    this->texture = nvgCreateImageMem(vg, flags, data, numData);
+
+    if (this->texture == 0)
+        fatal("Cannot load image from memory");
+
+    int width, height;
+    nvgImageSize(vg, this->texture, &width, &height);
+    this->originalImageWidth  = (float)width;
+    this->originalImageHeight = (float)height;
+
+    this->invalidate();   
+}
+
+void Image::setImageFromRawData(const unsigned char* data, int width, int height)
 {
     NVGcontext* vg = Application::getNVGContext();
 
