@@ -280,7 +280,7 @@ void Image::setImageFromFile(std::string path)
     this->invalidate();
 }
 
-void Image::setImageFromMemory(unsigned char* data, int numData)
+void Image::setImageFromMemory(const unsigned char* data, int width, int height)
 {
     NVGcontext* vg = Application::getNVGContext();
 
@@ -290,13 +290,14 @@ void Image::setImageFromMemory(unsigned char* data, int numData)
 
     // Load the new texture
     int flags     = this->getImageFlags();
-    this->texture = nvgCreateImageMem(vg, flags, data, numData);
- 
-    if (this->texture == 0)
-        fatal("Cannot load image from memory (" + std::to_string(numData) + " bytes)");
+    this->texture = nvgCreateImageRGBA(vg, width, height, flags, data);
 
-    int width, height;
-    nvgImageSize(vg, this->texture, &width, &height);
+    if (this->texture == 0)
+    {
+        brls::Logger::error("Cannot load image from memory (" + std::to_string(width) + "x" + std::to_string(height) + ")");
+        return;
+    }
+
     this->originalImageWidth  = (float)width;
     this->originalImageHeight = (float)height;
 

@@ -209,6 +209,21 @@
 
                 </brls:Box>
 
+                <brls:Box
+                    width="auto"
+                    height="auto"
+                    axis="row"
+                    alignItems="center"
+                    justifyContent="spaceEvenly">
+
+                    <DynamicImage
+                        width="auto"
+                        height="auto"
+                        imageWidth="256px"
+                        imageHeight="256px" />
+
+                </brls:Box>
+
         </brls:Box>
 
     </brls:ScrollingFrame>
