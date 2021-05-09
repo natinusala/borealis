@@ -46,7 +46,7 @@ class ScrollingFrame : public Box
     void onChildFocusLost(View* directChild, View* focusedView) override;
     void willAppear(bool resetState) override;
     void addView(View* view) override;
-    void removeView(View* view) override;
+    void removeView(View* view, bool free = true) override;
     void onLayout() override;
     void setPadding(float top, float right, float bottom, float left) override;
     void setPaddingTop(float top) override;

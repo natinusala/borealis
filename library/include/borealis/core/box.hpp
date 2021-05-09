@@ -93,7 +93,7 @@ class Box : public View
     /**
      * Removes the given view from the Box. It will be freed.
      */
-    virtual void removeView(View* view);
+    virtual void removeView(View* view, bool free = true);
 
     /**
      * Sets the padding of the view, aka the internal space to give

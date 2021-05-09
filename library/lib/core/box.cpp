@@ -184,7 +184,7 @@ void Box::addView(View* view, size_t position)
     view->willAppear();
 }
 
-void Box::removeView(View* view)
+void Box::removeView(View* view, bool free)
 {
     if (!view)
         return;
@@ -214,7 +214,9 @@ void Box::removeView(View* view)
     this->children.erase(this->children.begin() + index);
 
     view->willDisappear(true);
-    //    delete view;
+    
+    if (free)
+        delete view;
 
     this->invalidate();
 }

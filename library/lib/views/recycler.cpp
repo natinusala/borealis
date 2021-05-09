@@ -189,7 +189,7 @@ void RecyclerFrame::reloadData()
     for (auto const& child : children)
     {
         queueReusableCell((RecyclerCell*)child);
-        this->contentBox->removeView(child);
+        this->contentBox->removeView(child, false);
     }
 
     visibleMin = UINT_MAX;
@@ -319,7 +319,7 @@ void RecyclerFrame::cellsRecyclingLoop()
         renderedFrame.size.height -= cellHeight;
 
         queueReusableCell(minCell);
-        this->contentBox->removeView(minCell);
+        this->contentBox->removeView(minCell, false);
 
         Logger::debug("Cell #" + std::to_string(visibleMin) + " - destroyed");
 
@@ -340,7 +340,7 @@ void RecyclerFrame::cellsRecyclingLoop()
         renderedFrame.size.height -= cellHeight;
 
         queueReusableCell(maxCell);
-        this->contentBox->removeView(maxCell);
+        this->contentBox->removeView(maxCell, false);
 
         Logger::debug("Cell #" + std::to_string(visibleMax) + " - destroyed");
 
