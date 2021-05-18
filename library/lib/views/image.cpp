@@ -303,7 +303,7 @@ void Image::setImageFromMemory(unsigned char* data, int numData)
     this->invalidate();   
 }
 
-void Image::setImageFromRawData(const unsigned char* data, int width, int height)
+void Image::setImageFromRGBA(const unsigned char* data, int width, int height)
 {
     NVGcontext* vg = Application::getNVGContext();
 
@@ -317,7 +317,7 @@ void Image::setImageFromRawData(const unsigned char* data, int width, int height
 
     if (this->texture == 0)
     {
-        brls::Logger::error("Cannot load image from memory (" + std::to_string(width) + "x" + std::to_string(height) + ")");
+        brls::Logger::error("Cannot create image from RGBA data (" + std::to_string(width) + "x" + std::to_string(height) + ")");
         return;
     }
 

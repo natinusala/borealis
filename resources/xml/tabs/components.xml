@@ -216,7 +216,7 @@
                     alignItems="center"
                     justifyContent="spaceEvenly">
 
-                    <DynamicImage
+                    <RandomRGBAImage
                         width="auto"
                         height="auto"
                         imageWidth="256px"

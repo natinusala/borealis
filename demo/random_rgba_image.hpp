@@ -1,7 +1,5 @@
 /*
-    Copyright 2019 WerWolv
-    Copyright 2019 p-sam
-    Copyright 2020-2021 natinusala
+    Copyright 2021 Jonathan Verbeek
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -20,10 +18,10 @@
 
 #include <borealis.hpp>
 
-class DynamicImage : public brls::Box
+class RandomRGBAImage : public brls::Box
 {
   public:
-    DynamicImage();
+    RandomRGBAImage();
 
     static brls::View* create();
 
@@ -31,4 +29,6 @@ class DynamicImage : public brls::Box
     BRLS_BIND(brls::Image, image, "image");
 
     bool onImageClicked(brls::View* View);
+    
+    void generateRandomImage();
 };

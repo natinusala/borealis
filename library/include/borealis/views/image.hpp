@@ -105,12 +105,12 @@ class Image : public View
     void setImageFromMemory(unsigned char* data, int numData);
 
     /**
-     * Sets the image from a memory buffer. The data should be a
-     * raw four-channel (RGBA) pixel array of the size width*height*4.
+     * Sets the image from a memory buffer. The data should be following the
+     * R8G8B8A8 pixel format.
      * 
      * See the example implementation dynamic_image in the demo.
      */
-    void setImageFromRawData(const unsigned char* data, int width, int height);
+    void setImageFromRGBA(const unsigned char* data, int width, int height);
 
     /**
      * Sets the scaling type for this image.

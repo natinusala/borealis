@@ -15,6 +15,6 @@
         width="auto"
         height="auto"
         horizontalAlign="center"
-        text="Click the image!" />
+        text="@i18n/demo/components/random_rgba_image" />
 
 </brls:Box>

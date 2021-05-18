@@ -1,7 +1,5 @@
 /*
-    Copyright 2019 WerWolv
-    Copyright 2019 p-sam
-    Copyright 2020-2021 natinusala
+    Copyright 2021 Jonathan Verbeek
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -16,12 +14,12 @@
     limitations under the License.
 */
 
-#include "dynamic_image.hpp"
+#include "random_rgba_image.hpp"
 
-DynamicImage::DynamicImage()
+RandomRGBAImage::RandomRGBAImage()
 {
     // Load the XML file and inflate ourself with its content
-    this->inflateFromXMLRes("xml/views/dynamic_image.xml");
+    this->inflateFromXMLRes("xml/views/random_rgba_image.xml");
 
     // Forward Image XML attributes
     this->forwardXMLAttribute("scalingType", this->image);
@@ -37,38 +35,54 @@ DynamicImage::DynamicImage()
     BRLS_REGISTER_CLICK_BY_ID("image", this->onImageClicked);
 }
 
-bool DynamicImage::onImageClicked(brls::View* view)
+bool RandomRGBAImage::onImageClicked(brls::View* view)
+{
+    // Generate a new image
+    this->generateRandomImage();
+
+    return true;
+}
+
+unsigned char interp(unsigned char src, unsigned char dst, float alpha)
+{
+    return src * (1.0 - alpha) + dst * alpha;
+}
+
+void RandomRGBAImage::generateRandomImage()
 {
     // Retrieve the image size
     int height = this->image->getHeight();
     int width = this->image->getWidth();
 
-    // Generate the pixel data for a new image
-    size_t bufferSize = height * width * 4; // 4 bytes per pixel (RGBA)
+    // Allocate the RGBA image buffer
+    size_t bufferSize = height * width * 4; // 4 bytes per pixel (RGBA8888)
     unsigned char* imageData = (unsigned char*)calloc(1, bufferSize);
+
+    // Randomly generate two colors for a gradient
+    unsigned char color1[3] = { std::rand() % 255, std::rand() % 255, std::rand() % 255};
+    unsigned char color2[3] = { std::rand() % 255, std::rand() % 255, std::rand() % 255};
 
     for (int y = 0; y < height; y++)
     {
         for (int x = 0; x < width; x++)
         {
-            memset(&imageData[(y * width + x) * 4 + 3], (unsigned char)255, sizeof(unsigned char));                         // Alpha
-            memset(&imageData[(y * width + x) * 4 + 2], (unsigned char)((y+x)*255/(height+width)), sizeof(unsigned char));  // Blue
-            memset(&imageData[(y * width + x) * 4 + 1], (unsigned char)(x*255/width), sizeof(unsigned char));               // Green
-            memset(&imageData[(y * width + x) * 4 + 0], (unsigned char)(y*255/height), sizeof(unsigned char));              // Red
+            // Set the pixel data
+            memset(&imageData[(y * width + x) * 4 + 3], (unsigned char)255, sizeof(unsigned char)); // Alpha
+            memset(&imageData[(y * width + x) * 4 + 2], (unsigned char)interp(color1[2], color2[2], (float)x/(float)width), sizeof(unsigned char)); // Blue
+            memset(&imageData[(y * width + x) * 4 + 1], (unsigned char)interp(color1[1], color2[1], (float)x/(float)width), sizeof(unsigned char)); // Green
+            memset(&imageData[(y * width + x) * 4 + 0], (unsigned char)interp(color1[0], color2[0], (float)x/(float)width), sizeof(unsigned char)); // Red
         }
     }
 
     // Display the image
-    this->image->setImageFromRawData(imageData, width, height);
+    this->image->setImageFromRGBA(imageData, width, height);
 
     // Free the image buffer
     free(imageData);
-
-    return true;
 }
 
-brls::View* DynamicImage::create()
+brls::View* RandomRGBAImage::create()
 {
     // Called by the XML engine to create a new DynamicImage
-    return new DynamicImage();
+    return new RandomRGBAImage();
 }
