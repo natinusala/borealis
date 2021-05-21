@@ -62,8 +62,16 @@ void RandomRGBAImage::generateRandomImage()
     unsigned char* imageData = (unsigned char*)calloc(1, bufferSize);
 
     // Randomly generate two colors for a gradient
-    unsigned char color1[3] = { std::rand() % 255, std::rand() % 255, std::rand() % 255};
-    unsigned char color2[3] = { std::rand() % 255, std::rand() % 255, std::rand() % 255};
+    unsigned char color1[3] = { 
+        static_cast<unsigned char>(std::rand() % 255), 
+        static_cast<unsigned char>(std::rand() % 255), 
+        static_cast<unsigned char>(std::rand() % 255)
+    };
+    unsigned char color2[3] = { 
+        static_cast<unsigned char>(std::rand() % 255), 
+        static_cast<unsigned char>(std::rand() % 255), 
+        static_cast<unsigned char>(std::rand() % 255)
+    };
 
     for (int y = 0; y < height; y++)
     {
