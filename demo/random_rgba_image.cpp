@@ -33,6 +33,9 @@ RandomRGBAImage::RandomRGBAImage()
 
     // Register a click action for this button
     BRLS_REGISTER_CLICK_BY_ID("image", this->onImageClicked);
+
+    // Generate a new image
+    this->generateRandomImage();
 }
 
 bool RandomRGBAImage::onImageClicked(brls::View* view)
@@ -50,9 +53,9 @@ unsigned char interp(unsigned char src, unsigned char dst, float alpha)
 
 void RandomRGBAImage::generateRandomImage()
 {
-    // Retrieve the image size
-    int height = this->image->getHeight();
-    int width = this->image->getWidth();
+    // Size of the image to generate
+    int height = 256;
+    int width = 256;
 
     // Allocate the RGBA image buffer
     size_t bufferSize = height * width * 4; // 4 bytes per pixel (RGBA8888)
