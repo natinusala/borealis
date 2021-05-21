@@ -30,6 +30,8 @@ enum Sound
     SOUND_CLICK_ERROR, // played when the user clicks a disabled button / a view focused with no click action
     SOUND_HONK, // honk
     SOUND_CLICK_SIDEBAR, // played when a sidebar item is clicked
+    SOUND_TOUCH_UNFOCUS, // played when touch focus has been interrupted
+    SOUND_TOUCH, // played when touch doesn't require it's own click sound
 
     _SOUND_MAX, // not an actual sound, just used to count of many sounds there are
 };
@@ -57,7 +59,7 @@ class AudioPlayer
      *
      * Returns a boolean indicating if the sound has been played or not.
      */
-    virtual bool play(enum Sound sound) = 0;
+    virtual bool play(enum Sound sound, float pitch = 1) = 0;
 };
 
 // An AudioPlayer that does nothing
@@ -69,7 +71,7 @@ class NullAudioPlayer : public AudioPlayer
         return false;
     }
 
-    bool play(enum Sound sound) override
+    bool play(enum Sound sound, float pitch) override
     {
         return false;
     }

@@ -3,6 +3,7 @@
 
     "tabs": {
         "components": "Basic components",
+        "scroll": "Scroll test",
         "layout": "Layout and alignment",
         "recycling": "Recycling lists",
         "popups": "Popups, notifications and dialogs",

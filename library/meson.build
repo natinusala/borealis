@@ -3,12 +3,14 @@ dep_glm   = dependency('glm', version : '>=0.9.8')
 
 borealis_files = files(
     'lib/core/logger.cpp',
+    'lib/core/input.cpp',
     'lib/core/application.cpp',
     'lib/core/i18n.cpp',
     'lib/core/theme.cpp',
     'lib/core/style.cpp',
     'lib/core/activity.cpp',
     'lib/core/platform.cpp',
+    'lib/core/geometry.cpp',
     'lib/core/font.cpp',
     'lib/core/util.cpp',
     'lib/core/time.cpp',
@@ -18,6 +20,11 @@ borealis_files = files(
     'lib/core/view.cpp',
     'lib/core/box.cpp',
     'lib/core/bind.cpp',
+
+    'lib/core/gesture.cpp',
+    'lib/core/touch/tap_gesture.cpp',
+    'lib/core/touch/pan_gesture.cpp',
+    'lib/core/touch/scroll_gesture.cpp',
 
     'lib/platforms/glfw/glfw_platform.cpp',
     'lib/platforms/glfw/glfw_video.cpp',
@@ -30,6 +37,7 @@ borealis_files = files(
     'lib/views/applet_frame.cpp',
     'lib/views/tab_frame.cpp',
     'lib/views/rectangle.cpp',
+    'lib/views/recycler.cpp',
     'lib/views/sidebar.cpp',
     'lib/views/label.cpp',
     'lib/views/button.cpp',
@@ -70,4 +78,4 @@ borealis_include = include_directories(
 )
 
 borealis_dependencies = [ dep_glfw3, dep_glm, ]
-borealis_cpp_args = [ '-DYG_ENABLE_EVENTS', '-D__GLFW__', ]
+borealis_cpp_args = [ '-DNO_TOUCH_SCROLLING=true', '-DYG_ENABLE_EVENTS', '-D__GLFW__', ]

@@ -29,7 +29,7 @@ class Rectangle : public View
   public:
     Rectangle(NVGcolor color);
     Rectangle();
-    ~Rectangle() {}
+    ~Rectangle() { }
 
     void draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx) override;
 

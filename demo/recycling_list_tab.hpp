@@ -18,10 +18,41 @@
 
 #include <borealis.hpp>
 
+class RecyclerHeader
+    : public brls::RecyclerHeader
+{
+};
+
+class RecyclerCell
+    : public brls::RecyclerCell
+{
+  public:
+    RecyclerCell();
+
+    BRLS_BIND(brls::Rectangle, accent, "brls/sidebar/item_accent");
+    BRLS_BIND(brls::Label, label, "brls/sidebar/item_label");
+
+    static RecyclerCell* create();
+};
+
+class DataSource
+    : public brls::RecyclerDataSource
+{
+  public:
+    int numberOfSections(brls::RecyclerFrame* recycler) override;
+    int numberOfRows(brls::RecyclerFrame* recycler, int section) override;
+    brls::RecyclerCell* cellForRow(brls::RecyclerFrame* recycler, brls::IndexPath index) override;
+    void didSelectRowAt(brls::RecyclerFrame* recycler, brls::IndexPath indexPath) override;
+    std::string titleForHeader(brls::RecyclerFrame* recycler, int section) override;
+};
+
 class RecyclingListTab : public brls::Box
 {
   public:
     RecyclingListTab();
 
     static brls::View* create();
+
+  private:
+    BRLS_BIND(brls::RecyclerFrame, recycler, "recycler");
 };

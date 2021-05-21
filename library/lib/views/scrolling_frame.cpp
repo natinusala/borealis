@@ -1,5 +1,6 @@
 /*
     Copyright 2020-2021 natinusala
+    Copyright 2021 XITRIX
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -15,6 +16,8 @@
 */
 
 #include <borealis/core/application.hpp>
+#include <borealis/core/touch/scroll_gesture.hpp>
+#include <borealis/core/touch/tap_gesture.hpp>
 #include <borealis/core/util.hpp>
 #include <borealis/views/scrolling_frame.hpp>
 
@@ -31,6 +34,47 @@ ScrollingFrame::ScrollingFrame()
         });
 
     this->setMaximumAllowedXMLElements(1);
+
+    addGestureRecognizer(new ScrollGestureRecognizer([this](PanGestureStatus state) {
+        if (state.state == GestureState::FAILED)
+            return;
+
+        if (state.deltaOnly)
+        {
+            float newScroll = this->contentOffsetY - state.delta.y;
+            startScrolling(false, newScroll);
+            return;
+        }
+
+        static float startY;
+        if (state.state == GestureState::START)
+            startY = this->contentOffsetY;
+
+        float newScroll = startY - (state.position.y - state.startPosition.y);
+
+        // Start animation
+        if (state.state != GestureState::END)
+            startScrolling(false, newScroll);
+        else
+        {
+            float time   = state.acceleration.time.y * 1000.0f;
+            float newPos = this->contentOffsetY + state.acceleration.distance.y;
+
+            newScroll = newPos;
+
+            if (newScroll == this->contentOffsetY || time < 100)
+                return;
+
+            animateScrolling(newScroll, time);
+        }
+    },
+        PanAxis::VERTICAL));
+
+    // Stop scrolling on tap
+    addGestureRecognizer(new TapGestureRecognizer([this](brls::TapGestureStatus status, Sound* soundToPlay) {
+        if (status.state == GestureState::UNSURE)
+            this->contentOffsetY.stop();
+    }));
 }
 
 void ScrollingFrame::draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx)
@@ -57,7 +101,7 @@ void ScrollingFrame::addView(View* view)
     this->setContentView(view);
 }
 
-void ScrollingFrame::removeView(View* view)
+void ScrollingFrame::removeView(View* view, bool free)
 {
     this->setContentView(nullptr);
 }
@@ -79,7 +123,6 @@ void ScrollingFrame::setContentView(View* view)
     view->detach();
     view->setCulled(false);
     view->setMaxWidth(this->getWidth());
-    view->setDetachedPosition(this->getX(), this->getY());
 
     Box::addView(view); // will invalidate the scrolling box, hence calling onLayout and invalidating the contentView
 }
@@ -89,7 +132,6 @@ void ScrollingFrame::onLayout()
     if (this->contentView)
     {
         this->contentView->setMaxWidth(this->getWidth());
-        this->contentView->setDetachedPosition(this->getX(), this->getY());
         this->contentView->invalidate();
     }
 }
@@ -132,29 +174,36 @@ void ScrollingFrame::prebakeScrolling()
 
 void ScrollingFrame::startScrolling(bool animated, float newScroll)
 {
-    if (newScroll == this->scrollY)
+    if (newScroll == this->contentOffsetY)
         return;
-
-    this->scrollY.stop();
 
     if (animated)
     {
         Style style = Application::getStyle();
-
-        this->scrollY.reset();
-
-        this->scrollY.addStep(newScroll, style["brls/animations/highlight"], EasingFunction::quadraticOut);
-
-        this->scrollY.setTickCallback([this] {
-            this->scrollAnimationTick();
-        });
-
-        this->scrollY.start();
+        animateScrolling(newScroll, style["brls/animations/highlight"]);
     }
     else
     {
-        this->scrollY = newScroll;
+        this->contentOffsetY.stop();
+        this->contentOffsetY = newScroll;
+        this->scrollAnimationTick();
+        this->invalidate();
     }
+}
+
+void ScrollingFrame::animateScrolling(float newScroll, float time)
+{
+    this->contentOffsetY.stop();
+
+    this->contentOffsetY.reset();
+
+    this->contentOffsetY.addStep(newScroll, time, EasingFunction::quadraticOut);
+
+    this->contentOffsetY.setTickCallback([this] {
+        this->scrollAnimationTick();
+    });
+
+    this->contentOffsetY.start();
 
     this->invalidate();
 }
@@ -172,10 +221,29 @@ float ScrollingFrame::getContentHeight()
     return this->contentView->getHeight();
 }
 
+void ScrollingFrame::setContentOffsetY(float value, bool animated)
+{
+    startScrolling(animated, value);
+}
+
 void ScrollingFrame::scrollAnimationTick()
 {
     if (this->contentView)
-        this->contentView->setTranslationY(-(this->scrollY * this->getContentHeight()));
+    {
+        float contentHeight = this->getContentHeight();
+        float bottomLimit   = contentHeight - this->getScrollingAreaHeight();
+
+        if (this->contentOffsetY < 0)
+            this->contentOffsetY = 0;
+
+        if (this->contentOffsetY > bottomLimit)
+            this->contentOffsetY = bottomLimit;
+
+        if (contentHeight <= getHeight())
+            this->contentOffsetY = 0;
+
+        this->contentView->setTranslationY(-this->contentOffsetY);
+    }
 }
 
 void ScrollingFrame::onChildFocusGained(View* directChild, View* focusedView)
@@ -183,7 +251,8 @@ void ScrollingFrame::onChildFocusGained(View* directChild, View* focusedView)
     this->childFocused = true;
 
     // Start scrolling
-    this->updateScrolling(true);
+    if (Application::getInputType() != InputType::TOUCH)
+        this->updateScrolling(true);
 
     Box::onChildFocusGained(directChild, focusedView);
 }
@@ -202,7 +271,7 @@ bool ScrollingFrame::updateScrolling(bool animated)
 
     View* focusedView                  = Application::getCurrentFocus();
     int currentSelectionMiddleOnScreen = focusedView->getY() + focusedView->getHeight() / 2;
-    float newScroll                    = -(this->scrollY * contentHeight) - (currentSelectionMiddleOnScreen - this->middleY);
+    float newScroll                    = -this->contentOffsetY - (currentSelectionMiddleOnScreen - this->middleY);
 
     // Bottom boundary
     if (this->getScrollingAreaTopBoundary() + newScroll + contentHeight < this->bottomY)
@@ -212,13 +281,20 @@ bool ScrollingFrame::updateScrolling(bool animated)
     if (newScroll > 0.0f)
         newScroll = 0.0f;
 
-    // Apply 0.0f -> 1.0f scale
-    newScroll = abs(newScroll) / contentHeight;
+    // Apply scale
+    newScroll = abs(newScroll);
 
     //Start animation
     this->startScrolling(animated, newScroll);
 
     return true;
+}
+
+Rect ScrollingFrame::getVisibleFrame()
+{
+    Rect frame = getFrame();
+    frame.origin.y += this->contentOffsetY;
+    return frame;
 }
 
 #define NO_PADDING fatal("Padding is not supported by brls:ScrollingFrame, please set padding on the content view instead");

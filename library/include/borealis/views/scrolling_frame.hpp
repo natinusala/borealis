@@ -46,13 +46,15 @@ class ScrollingFrame : public Box
     void onChildFocusLost(View* directChild, View* focusedView) override;
     void willAppear(bool resetState) override;
     void addView(View* view) override;
-    void removeView(View* view) override;
+    void removeView(View* view, bool free = true) override;
     void onLayout() override;
     void setPadding(float top, float right, float bottom, float left) override;
     void setPaddingTop(float top) override;
     void setPaddingRight(float right) override;
     void setPaddingBottom(float bottom) override;
     void setPaddingLeft(float left) override;
+
+    Rect getVisibleFrame();
 
     /**
      * Sets the content view of this scrolling box. There can only be one
@@ -66,6 +68,19 @@ class ScrollingFrame : public Box
      */
     void setScrollingBehavior(ScrollingBehavior behavior);
 
+    /**
+     * The point at which the origin of the content view is offset from the origin of the scroll view.
+     */
+    float getContentOffsetY() const
+    {
+        return contentOffsetY;
+    }
+
+    /**
+     * Sets the offset from the content view’s origin that corresponds to the receiver’s origin.
+     */
+    void setContentOffsetY(float value, bool animated);
+
     static View* create();
 
   private:
@@ -77,11 +92,12 @@ class ScrollingFrame : public Box
     float middleY = 0; // y + height/2
     float bottomY = 0; // y + height
 
-    Animatable scrollY = 0.0f; // from 0.0f to 1.0f, in % of content view height
+    Animatable contentOffsetY = 0.0f;
 
     void prebakeScrolling();
     bool updateScrolling(bool animated);
     void startScrolling(bool animated, float newScroll);
+    void animateScrolling(float newScroll, float time);
     void scrollAnimationTick();
 
     float getScrollingAreaTopBoundary();

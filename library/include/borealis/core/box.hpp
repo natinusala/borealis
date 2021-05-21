@@ -65,6 +65,7 @@ class Box : public View
 
     void draw(NVGcontext* vg, float x, float y, float width, float height, Style style, FrameContext* ctx) override;
     View* getDefaultFocus() override;
+    View* hitTest(Point point) override;
     View* getNextFocus(FocusDirection direction, View* currentView) override;
     void willAppear(bool resetState) override;
     void willDisappear(bool resetState) override;
@@ -92,7 +93,7 @@ class Box : public View
     /**
      * Removes the given view from the Box. It will be freed.
      */
-    virtual void removeView(View* view);
+    virtual void removeView(View* view, bool free = true);
 
     /**
      * Sets the padding of the view, aka the internal space to give
@@ -157,6 +158,7 @@ class Box : public View
     void setDirection(Direction direction);
 
     void setAxis(Axis axis);
+    Axis getAxis() const;
 
     std::vector<View*>& getChildren();
 

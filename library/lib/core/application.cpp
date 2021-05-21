@@ -2,6 +2,7 @@
     Copyright 2019-2020 natinusala
     Copyright 2019 p-sam
     Copyright 2020 WerWolv
+    Copyright 2021 XITRIX
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -30,6 +31,7 @@
 #include <borealis/views/header.hpp>
 #include <borealis/views/image.hpp>
 #include <borealis/views/rectangle.hpp>
+#include <borealis/views/recycler.hpp>
 #include <borealis/views/sidebar.hpp>
 #include <borealis/views/tab_frame.hpp>
 #include <stdexcept>
@@ -149,6 +151,7 @@ void Application::createWindow(std::string windowTitle)
 bool Application::mainLoop()
 {
     static ControllerState oldControllerState = {};
+    static View* firstResponder;
 
     // Main loop callback
     if (!Application::platform->mainLoopIteration() || Application::quitRequested)
@@ -159,9 +162,59 @@ bool Application::mainLoop()
 
     // Input
     ControllerState controllerState = {};
+    RawTouchState rawTouch          = {};
 
     InputManager* inputManager = Application::platform->getInputManager();
+    inputManager->updateTouchState(&rawTouch);
     inputManager->updateControllerState(&controllerState);
+
+    static TouchState oldTouch;
+    TouchState touchState = InputManager::computeTouchState(rawTouch, oldTouch);
+    oldTouch              = touchState;
+
+    // Touch controller events
+    switch (touchState.phase)
+    {
+        case TouchPhase::START:
+            Logger::debug("Touched at X: " + std::to_string(touchState.position.x) + ", Y: " + std::to_string(touchState.position.y));
+            Application::setInputType(InputType::TOUCH);
+
+            // Search for first responder, which will be the root of recognition tree
+            if (Application::activitiesStack.size() > 0)
+                firstResponder = Application::activitiesStack[Application::activitiesStack.size() - 1]
+                                     ->getContentView()
+                                     ->hitTest(touchState.position);
+            break;
+        case TouchPhase::NONE:
+            firstResponder = nullptr;
+            break;
+        default:
+            break;
+    }
+
+    if (!firstResponder && (touchState.scroll.x != 0 || touchState.scroll.y != 0))
+    {
+        Logger::debug("Touched at X: " + std::to_string(touchState.position.x) + ", Y: " + std::to_string(touchState.position.y));
+        Application::setInputType(InputType::TOUCH);
+
+        // Search for first responder, which will be the root of recognition tree
+        if (Application::activitiesStack.size() > 0)
+            firstResponder = Application::activitiesStack[Application::activitiesStack.size() - 1]
+                                 ->getContentView()
+                                 ->hitTest(touchState.position);
+    }
+
+    if (firstResponder)
+    {
+        Sound sound = firstResponder->gestureRecognizerRequest(touchState, firstResponder);
+        float pitch = 1;
+        if (sound == SOUND_TOUCH)
+        {
+            // Play touch sound with random pitch
+            pitch = (rand() % 10) / 10.0f + 1.0f;
+        }
+        Application::getAudioPlayer()->play(sound, pitch);
+    }
 
     // Trigger controller events
     bool anyButtonPressed           = false;
@@ -219,6 +272,10 @@ void Application::quit()
 
 void Application::navigate(FocusDirection direction)
 {
+    // Dismiss navigation if input type was changed
+    if (Application::setInputType(InputType::GAMEPAD))
+        return;
+
     View* currentFocus = Application::currentFocus;
 
     // Do nothing if there is no current focus
@@ -315,6 +372,19 @@ void Application::onControllerButtonPressed(enum ControllerButton button, bool r
     }
 }
 
+bool Application::setInputType(InputType type)
+{
+    if (type == Application::inputType)
+        return false;
+
+    Application::inputType = type;
+
+    if (type == InputType::GAMEPAD)
+        Application::currentFocus->onFocusGained();
+
+    return true;
+}
+
 View* Application::getCurrentFocus()
 {
     return Application::currentFocus;
@@ -322,6 +392,10 @@ View* Application::getCurrentFocus()
 
 bool Application::handleAction(char button)
 {
+    // Dismiss if input type was changed
+    if (button == BUTTON_A && setInputType(InputType::GAMEPAD))
+        return false;
+
     if (Application::activitiesStack.empty())
         return false;
 
@@ -778,6 +852,7 @@ void Application::registerBuiltInXMLViews()
     Application::registerXMLView("brls:Sidebar", Sidebar::create);
     Application::registerXMLView("brls:Header", Header::create);
     Application::registerXMLView("brls:ScrollingFrame", ScrollingFrame::create);
+    Application::registerXMLView("brls:RecyclerFrame", RecyclerFrame::create);
     Application::registerXMLView("brls:Image", Image::create);
     Application::registerXMLView("brls:Padding", Padding::create);
     Application::registerXMLView("brls:Button", Button::create);

@@ -184,7 +184,7 @@ void Box::addView(View* view, size_t position)
     view->willAppear();
 }
 
-void Box::removeView(View* view)
+void Box::removeView(View* view, bool free)
 {
     if (!view)
         return;
@@ -209,11 +209,14 @@ void Box::removeView(View* view)
         return;
 
     // Remove it
-    YGNodeRemoveChild(this->ygNode, view->getYGNode());
+    if (!view->isDetached())
+        YGNodeRemoveChild(this->ygNode, view->getYGNode());
     this->children.erase(this->children.begin() + index);
 
     view->willDisappear(true);
-    delete view;
+    
+    if (free)
+        delete view;
 
     this->invalidate();
 }
@@ -311,6 +314,27 @@ View* Box::getDefaultFocus()
 
         if (newFocus)
             return newFocus;
+    }
+
+    return nullptr;
+}
+
+View* Box::hitTest(Point point)
+{
+    // Check if touch fits in view frame
+    if (this->getFrame().pointInside(point))
+    {
+        Logger::debug(describe() + ": --- X: " + std::to_string((int)getX()) + ", Y: " + std::to_string((int)getY()) + ", W: " + std::to_string((int)getWidth()) + ", H: " + std::to_string((int)getHeight()));
+        for (View* child : this->children)
+        {
+            View* result = child->hitTest(point);
+
+            if (result)
+                return result;
+        }
+
+        Logger::debug(describe() + ": OK");
+        return this;
     }
 
     return nullptr;
@@ -436,6 +460,11 @@ void Box::setAxis(Axis axis)
     YGNodeStyleSetFlexDirection(this->ygNode, getYGFlexDirection(axis));
     this->axis = axis;
     this->invalidate();
+}
+
+Axis Box::getAxis() const
+{
+    return axis;
 }
 
 void Box::setDirection(Direction direction)

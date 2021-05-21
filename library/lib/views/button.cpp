@@ -18,6 +18,7 @@
 #include <math.h>
 
 #include <borealis/core/application.hpp>
+#include <borealis/core/touch/tap_gesture.hpp>
 #include <borealis/views/button.hpp>
 
 namespace brls
@@ -79,6 +80,8 @@ Button::Button()
         });
 
     this->applyStyle();
+
+    this->addGestureRecognizer(new TapGestureRecognizer(this));
 }
 
 void Button::applyStyle()

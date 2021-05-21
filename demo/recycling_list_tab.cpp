@@ -16,10 +16,59 @@
 
 #include "recycling_list_tab.hpp"
 
+RecyclerCell::RecyclerCell()
+{
+    this->inflateFromXMLRes("xml/cells/cell.xml");
+}
+
+RecyclerCell* RecyclerCell::create()
+{
+    return new RecyclerCell();
+}
+
+// DATA SOURCE
+
+int DataSource::numberOfSections(brls::RecyclerFrame* recycler)
+{
+    return 3;
+}
+
+int DataSource::numberOfRows(brls::RecyclerFrame* recycler, int section)
+{
+    return 10;
+}
+    
+std::string DataSource::titleForHeader(brls::RecyclerFrame* recycler, int section) 
+{
+    if (section == 0)
+        return "";
+    return "Section #" + std::to_string(section+1);
+}
+
+brls::RecyclerCell* DataSource::cellForRow(brls::RecyclerFrame* recycler, brls::IndexPath indexPath)
+{
+    RecyclerCell* item = (RecyclerCell*)recycler->dequeueReusableCell("Cell");
+    item->label->setText("Item Section: " + std::to_string(indexPath.section) + ", Row: " + std::to_string(indexPath.row));
+    if (indexPath.row == 7)
+        item->label->setText("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.");
+    return item;
+}
+
+void DataSource::didSelectRowAt(brls::RecyclerFrame* recycler, brls::IndexPath index)
+{
+    brls::Logger::info("Item Index(" + std::to_string(index.section) + ":" + std::to_string(index.row) + ") selected.");
+}
+
+// RECYCLER VIEW
+
 RecyclingListTab::RecyclingListTab()
 {
     // Inflate the tab from the XML file
     this->inflateFromXMLRes("xml/tabs/recycling_list.xml");
+
+    recycler->registerCell("Header", []() { return RecyclerHeader::create(); });
+    recycler->registerCell("Cell", []() { return RecyclerCell::create(); });
+    recycler->setDataSource(new DataSource());
 }
 
 brls::View* RecyclingListTab::create()

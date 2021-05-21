@@ -18,6 +18,7 @@
 
 #include <borealis/core/application.hpp>
 #include <borealis/core/i18n.hpp>
+#include <borealis/core/touch/tap_gesture.hpp>
 #include <borealis/views/sidebar.hpp>
 
 using namespace brls::literals;
@@ -72,6 +73,28 @@ SidebarItem::SidebarItem()
             return true;
         },
         false, SOUND_CLICK_SIDEBAR);
+
+    this->addGestureRecognizer(new TapGestureRecognizer([this](TapGestureStatus status, Sound* soundToPlay) {
+        if (this->active)
+            return;
+
+        this->playClickAnimation(status.state != GestureState::UNSURE);
+
+        switch (status.state)
+        {
+            case GestureState::UNSURE:
+                *soundToPlay = SOUND_FOCUS_SIDEBAR;
+                break;
+            case GestureState::FAILED:
+            case GestureState::INTERRUPTED:
+                *soundToPlay = SOUND_TOUCH_UNFOCUS;
+                break;
+            case GestureState::END:
+                *soundToPlay = SOUND_CLICK_SIDEBAR;
+                Application::giveFocus(this);
+                break;
+        }
+    }));
 }
 
 void SidebarItem::setActive(bool active)
