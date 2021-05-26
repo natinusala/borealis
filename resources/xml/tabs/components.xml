@@ -185,7 +185,8 @@
                     height="auto"
                     axis="row"
                     alignItems="center"
-                    justifyContent="spaceEvenly">
+                    justifyContent="spaceEvenly"
+                    marginBottom="30px" >
 
                     <CaptionedImage
                         width="auto"
@@ -214,13 +215,14 @@
                     height="auto"
                     axis="row"
                     alignItems="center"
-                    justifyContent="spaceEvenly">
+                    justifyContent="spaceEvenly" >
 
                     <RandomRGBAImage
                         width="auto"
                         height="auto"
-                        imageWidth="256px"
-                        imageHeight="256px" />
+                        imageWidth="400px"
+                        imageHeight="75px"
+                        scalingType="stretch" />
 
                 </brls:Box>
 
