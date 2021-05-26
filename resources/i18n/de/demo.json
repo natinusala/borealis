@@ -1,0 +1,50 @@
+{
+    "title": "Borealis Demo App",
+
+    "tabs": {
+        "components": "Standardkomponenten",
+        "layout": "Layout und Ausrichtung",
+        "recycling": "Recycling-Listen",
+        "popups": "Popups, Benachrichtigungen und Dialoge",
+        "hos_layout": "Horizon-Layouts",
+        "misc_layouts": "Versch. Layouts",
+        "misc_components": "Versch. Komponenten",
+        "misc_tools": "Versch. Dev-Tools",
+        "about": "Über borealis"
+    },
+
+    "welcome": "Willkommen zur borealis-Demo! Probier' ruhig etwas herum und entdecke, was diese Bibliothek kann!",
+
+    "components": {
+        "buttons_header": "Buttons",
+        "button_primary": "Primärer Button",
+        "button_highlight": "\uE13C Hervorgehobener Button",
+        "button_wrapping": "Standard-Button mit Textumbruch",
+        "button_bordered": "Umrandeter Button",
+        "button_borderless": "Button ohne Rand",
+
+        "labels_header": "Beschriftungen",
+        "regular_label": "Dies ist ein Label. Standardmäßig mit Zeilenumbruch und automatischer Vergrößerung, sollte genug vertikaler Platz dafür sein. Ansonsten wird der Text verkürzt, wie z.B. die Tabs in der Seitenleiste.",
+        "label_left": "Dieses Label ist linksbündig",
+        "label_center": "Dieses Label ist mittig ausgerichtet",
+        "label_right": "Dieses Label ist rechtsbündig",
+
+        "images_header_title": "Bilder",
+        "images_header_subtitle": "Fokussiere die Bilder um dessen Skalierungsmethode zu sehen",
+        "images_downscaled": "Herunterskaliert",
+        "images_original": "Original",
+        "images_upscaled": "Hochskaliert",
+        "images_stretched": "Gestreckt",
+        "images_cropped": "Zugeschnitten",
+
+        "random_rgba_image": "Zufällig generiertes RGBA-Bild (Klicken zur Regeneration)"
+    },
+
+    "about": {
+        "title": "borealis",
+        "description": "Eine hardwarebeschleunigte, Controller- und TV-orientierte UI-Bibliothek für PC und Nintendo Switch (libnx).",
+        "github": "Mehr hier: github.com/natinusala/borealis",
+        "licence": "Lizenziert unter Apache 2.0",
+        "logo_credit": "Logo von @MeganRoshelle"
+    }
+}
