@@ -11,6 +11,7 @@ demo_files = files(
     'demo/main_activity.cpp',
 
     'demo/captioned_image.cpp',
+    'demo/random_rgba_image.cpp',
 
     'demo/recycling_list_tab.cpp',
     'demo/components_tab.cpp',

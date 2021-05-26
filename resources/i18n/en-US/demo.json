@@ -35,7 +35,9 @@
         "images_original": "Original",
         "images_upscaled": "Upscaled",
         "images_stretched": "Stretched",
-        "images_cropped": "Cropped"
+        "images_cropped": "Cropped",
+
+        "random_rgba_image": "Randomly generated RGBA (click to refresh)"
     },
 
     "about": {
