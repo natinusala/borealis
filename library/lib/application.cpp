@@ -60,6 +60,11 @@ constexpr uint32_t WINDOW_HEIGHT = 720;
 #define BUTTON_REPEAT_DELAY 15
 #define BUTTON_REPEAT_CADENCY 5
 
+#define AXIS_DEADZONE 0.4
+#define AXIS_IS_IN_DEADZONE(x) ((x) > -AXIS_DEADZONE && (x) < AXIS_DEADZONE)
+#define AXIS_TO_BUTTON(x, y) (((x) == GLFW_GAMEPAD_AXIS_LEFT_X || (x) == GLFW_GAMEPAD_AXIS_RIGHT_X) ? ((y) < 0.0 ? GLFW_GAMEPAD_BUTTON_DPAD_LEFT : GLFW_GAMEPAD_BUTTON_DPAD_RIGHT) : \
+                             (((x) == GLFW_GAMEPAD_AXIS_LEFT_Y || (x) == GLFW_GAMEPAD_AXIS_RIGHT_Y) ? ((y) < 0.0 ? GLFW_GAMEPAD_BUTTON_DPAD_UP : GLFW_GAMEPAD_BUTTON_DPAD_DOWN) : 0))
+
 // glfw code from the glfw hybrid app by fincs
 // https://github.com/fincs/hybrid_app
 
@@ -378,7 +383,6 @@ bool Application::mainLoop()
     }
 
     // Trigger gamepad events
-    // TODO: Translate axis events to dpad events here
 
     bool anyButtonPressed               = false;
     bool repeating                      = false;
@@ -397,6 +401,38 @@ bool Application::mainLoop()
         }
 
         if (Application::gamepad.buttons[i] != Application::oldGamepad.buttons[i])
+            buttonPressTime = repeatingButtonTimer = 0;
+    }
+
+    // Translate axis events to dpad events
+    for (int i = GLFW_GAMEPAD_AXIS_LEFT_X; i <= GLFW_GAMEPAD_AXIS_RIGHT_Y; i++)
+    {
+        int btn = 0;
+        float axis = Application::gamepad.axes[i];
+        bool axis_pressed = !AXIS_IS_IN_DEADZONE(axis);
+
+        int old_btn = 0;
+        float old_axis = Application::oldGamepad.axes[i];
+        bool old_axis_pressed = !AXIS_IS_IN_DEADZONE(old_axis);
+
+        // Do not proceed if there has been no movement along this axis
+        if (axis == 0.0 && old_axis == 0.0)
+            continue;
+
+        // Translate axes to buttons
+        btn = AXIS_TO_BUTTON(i, axis);
+        old_btn = AXIS_TO_BUTTON(i, old_axis);
+
+        if (axis_pressed)
+        {
+            anyButtonPressed = true;
+            repeating        = (repeatingButtonTimer > BUTTON_REPEAT_DELAY && repeatingButtonTimer % BUTTON_REPEAT_CADENCY == 0);
+
+            if (!old_axis_pressed || old_btn != btn || repeating)
+                Application::onGamepadButtonPressed(btn, repeating);
+        }
+
+        if (axis_pressed != old_axis_pressed || (axis_pressed && btn != old_btn))
             buttonPressTime = repeatingButtonTimer = 0;
     }
 
