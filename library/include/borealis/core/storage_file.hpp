@@ -34,13 +34,7 @@ namespace brls
 {
 
 // Macros (more will be added once the whole Storage system is simpilified)
-#define BRLS_STORAGE_FILE_INIT(filename) bool initSuccess = this->init(filename)
-
-#define BRLS_STORAGE_FILE_WRITE_DATA(obj, variableBool) variableBool = this->writeToFile(obj)
-#define BRLS_STORAGE_FILE_READ_DATA(obj, name) obj = this->readFromFile(name)
-
-#define BRLS_STORAGE_FILE_WRITE_LIST_DATA(obj, variableBool) variableBool = this->writeListToFile(obj)
-#define BRLS_STORAGE_FILE_READ_LIST_DATA(obj, name) obj = this->readListFromFile(name)
+#define BRLS_STORAGE_FILE_INIT(filename, appname) bool initSuccess = this->init(filename, appname)
 
 #define BRLS_STORAGE_OBJECT(variableName, value, name, type) brls::StorageObject variableName = brls::StorageObject(value, name, type)
 #define BRLS_BLANK_STORAGE_OBJECT(variableName) brls::StorageObject variableName = brls::StorageObject()
@@ -122,13 +116,15 @@ class BasicStorageFile
     std::map<std::string, StorageObject> allStorageObjectsMap; // Main map where all Storage Objects are stored
     std::map<std::string, ListStorageObject> allListStorageObjectsMap; // Main map where all List Storage Objects are stored
 
+    StorageObject *currentStorageObject = nullptr;
+    ListStorageObject *currentListStorageObject = nullptr;
+
   public:
     /*
      * Inits the config folder if it doesn't exist and creates a file.
      * Remember to not include the .xml part in the filename argument, it's already added.
-     * If you don't, tinyxml2 will look for file (.)/config/(appname here)/(filename here).xml.xml later on.
      */
-    bool init(std::string filename);
+    bool init(std::string filename, std::string appname);
 
     /*
      * Writes a value to the storage file.
@@ -153,14 +149,14 @@ class BasicStorageFile
      * element for the allStorageObjects Map. The certain XML element
      * is determined by its name attribute, since that attribute is like an id
      */
-    bool parseXMLToMap(std::string name);
+    bool parseXMLToObject(std::string name);
 
     /*
      * In short, this function parses a certain XML element into a
      * element for the allStorageObjects Map. The certain XML element
      * is determined by its name attribute, since that attribute is like an id
      */
-    bool parseXMLToListMap(std::string name);
+    bool parseXMLToListObject(std::string name);
 
     /*
      * Reads a value from the config file, then returns a variable pointing to that value.
@@ -215,30 +211,6 @@ struct StorageFile : public BasicStorageFile
      * Reads a certain element from the XML file and returns it to a StorageObject. Returns a bool if it succeded or not
      */
     bool grab(ListStorageObject& obj, std::string name);
-
-    /*
-     * Shortcut for the save function. Returns a bool if it succeded.
-     */
-    bool operator<<(StorageObject& obj);
-
-    /*
-     * Shortcut for the save function. Returns a bool if it succeded.
-     */
-    bool operator<<(ListStorageObject& obj);
-
-    /*
-     * Shortcut for the grab function. Returns a bool if it succeded.
-     * Set the name of the object you are looking for inside of the brls::StorageObject
-     * For example, obj.setName("objToLookFor");
-     */
-    bool operator>>(StorageObject& obj);
-
-    /*
-     * Shortcut for the grab function. Returns a bool if it succeded.
-     * Set the name of the object you are looking for inside of the brls::ListStorageObject
-     * For example, obj.setName("objToLookFor");
-     */
-    bool operator>>(ListStorageObject& obj);
 };
 
 } // namespace brls

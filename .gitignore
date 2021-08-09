@@ -1,7 +1,7 @@
 .*/
 build/
 build.nx/
-config/
+resources/config/
 *~
 *.bak
 *.nro

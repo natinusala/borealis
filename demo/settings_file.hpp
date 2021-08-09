@@ -19,7 +19,7 @@
 
 struct SettingsFile : public brls::StorageFile
 {
-    BRLS_STORAGE_FILE_INIT("settings");
+    BRLS_STORAGE_FILE_INIT("settings", "borealis_demo");
 
     BRLS_BLANK_STORAGE_OBJECT(containedSettingsObject);
     BRLS_BLANK_LIST_STORAGE_OBJECT(containedListSettingsObject);

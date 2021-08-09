@@ -16,6 +16,7 @@
 
 #include <borealis/core/storage_file.hpp>
 #include <borealis/core/application.hpp>
+#include <borealis/core/assets.hpp>
 
 namespace brls
 {
@@ -188,13 +189,19 @@ bool ListStorageObject::getIsEmpty()
 // BasicStorageFile //
 //////////////////////
 
-bool BasicStorageFile::init(std::string filename)
+bool BasicStorageFile::init(std::string filename, std::string appname)
 {
+    /*
     #ifndef __SWITCH__
-        config_folder = std::filesystem::current_path().string() + "/config/" + "brls/appname"_i18n + "/";
+        config_folder = std::filesystem::current_path().string() + "/config/" + appname + "/";
     #else
-        config_folder = "/config/" + "brls/appname"_i18n + "/";
+        config_folder = "/config/" + appname + "/";
     #endif
+    */
+    if (brls::Application::getPlatform()->getName() == "GLFW")
+        config_folder = BRLS_ASSET("config/") + appname + "/";
+    else
+        config_folder = "/config" + appname + "/";
 
 
     if (!std::filesystem::exists(config_folder))
@@ -210,11 +217,17 @@ bool BasicStorageFile::init(std::string filename)
 
     std::fstream file;
     file.open(config_path, std::ios::out | std::ios::app);
-    file.close();
-
-    Logger::debug("Successfully made file at {}!", config_path);
-
-    return true;
+    if (file.good())
+    {
+        file.close();
+        Logger::debug("Successfully made file at {}!", config_path);
+        return true;
+    }
+    else
+    {
+        Logger::error("Failed to init storage file {}.", filename);
+        return false;
+    }
 }
 
 bool BasicStorageFile::writeToFile(StorageObject& value, bool overwriteExisting)
@@ -275,7 +288,7 @@ bool BasicStorageFile::writeToFile(StorageObject& value, bool overwriteExisting)
                 break;
             }
 
-            if (strcmp(e->Attribute("name"), name.c_str()) == 0 && overwriteExisting)
+            if (std::strcmp(e->Attribute("name"), name.c_str()) == 0 && overwriteExisting)
             {
                 Logger::debug("Found another element with the same name as this new element. Overwrite Existing is enabled (by default).");
                 root->DeleteChild(e);
@@ -378,7 +391,7 @@ bool BasicStorageFile::writeListToFile(ListStorageObject& obj, bool overwriteExi
                 break;
             }
 
-            if (strcmp(e->Attribute("name"), name.c_str()) == 0 && overwriteExisting)
+            if (std::strcmp(e->Attribute("name"), name.c_str()) == 0 && overwriteExisting)
             {
                 Logger::debug("Found another element with the same name as this new element. Overwrite Existing is enabled (by default).");
                 root->DeleteChild(e);
@@ -424,14 +437,18 @@ bool BasicStorageFile::writeListToFile(ListStorageObject& obj, bool overwriteExi
     }
 }
 
-bool BasicStorageFile::parseXMLToMap(std::string name)
+bool BasicStorageFile::parseXMLToObject(std::string name)
 {
+    /*
     if (!allStorageObjectsMap.empty())
     {
         Logger::debug("allStorageObjectsMap is already used, cleaning up...");
         allStorageObjectsMap.clear();
     }
-
+    */
+    if (currentStorageObject)
+        delete currentStorageObject;
+    
     XMLError errorCode;
     XMLDocument doc;
     errorCode = doc.LoadFile(config_path.c_str());
@@ -446,41 +463,36 @@ bool BasicStorageFile::parseXMLToMap(std::string name)
             return false;
         }
 
-        XMLElement* element = root->FirstChildElement();
+        XMLElement* element = nullptr;
 
-        for (XMLElement* e = root->FirstChildElement(); e != NULL;
-             e             = e->NextSiblingElement())
+        for (XMLElement* e = root->FirstChildElement("brls:Property"); e != NULL;
+             e             = e->NextSiblingElement("brls:Property"))
         {
 
-            if (e == nullptr)
-            {
-                Logger::debug("nullptr???");
+            if (!e)
                 break;
-            }
+            
             if (std::strcmp(e->Attribute("name"), name.c_str()) == 0)
             {
                 element = e;
+                break;
             }
         }
 
-        if (element != nullptr)
+        if (element)
         {
-            const char* valueOfValue;
-            const char* valueOfType;
+            const char* value;
+            const char* type;
 
-            element->QueryStringAttribute("value", &valueOfValue);
-            element->QueryStringAttribute("type", &valueOfType);
+            element->QueryStringAttribute("value", &value);
+            element->QueryStringAttribute("type", &type);
 
-            StorageObject obj {};
+            currentStorageObject = new StorageObject();
 
-            obj.setName(name);
-            obj.setType(std::string(valueOfType));
+            currentStorageObject->setName(name);
+            currentStorageObject->setType(std::string(type));
+            currentStorageObject->setValue(const_cast<char*>(value));
 
-            char* val = new char[sizeof(valueOfValue) + 1];
-            std::strcpy(val, valueOfValue);
-            obj.setValue(val);
-
-            allStorageObjectsMap[name] = obj;
             return true;
         }
         else
@@ -497,13 +509,17 @@ bool BasicStorageFile::parseXMLToMap(std::string name)
     }
 }
 
-bool BasicStorageFile::parseXMLToListMap(std::string name)
+bool BasicStorageFile::parseXMLToListObject(std::string name)
 {
+    /*
     if (!allListStorageObjectsMap.empty())
     {
         Logger::debug("allListStorageObjectsMap is already used, cleaning up...");
         allListStorageObjectsMap.clear();
     }
+    */
+    if (currentListStorageObject)
+        delete currentListStorageObject;
 
     XMLError errorCode;
     XMLDocument doc;
@@ -519,42 +535,39 @@ bool BasicStorageFile::parseXMLToListMap(std::string name)
             return false;
         }
 
-        XMLElement* element = root->FirstChildElement("brls:ListProperty");
+        XMLElement* element = nullptr;
 
         for (XMLElement* e = root->FirstChildElement("brls:ListProperty"); e != NULL;
              e             = e->NextSiblingElement("brls:ListProperty"))
         {
 
-            if (e == nullptr)
-            {
-                Logger::debug("nullptr???");
+            if (!e)
                 break;
-            }
+            
             if (std::strcmp(e->Attribute("name"), name.c_str()) == 0)
             {
                 element = e;
+                break;
             }
         }
 
-        if (element != nullptr)
+        if (element)
         {
-            ListStorageObject obj {};
-            obj.setName(name);
+            const char* type;
+            element->QueryStringAttribute("type", &type);
 
-            const char* valueOfType;
-
-            element->QueryStringAttribute("type", &valueOfType);
-            obj.setType(std::string(valueOfType));
+            currentListStorageObject = new ListStorageObject();
+            currentListStorageObject->setName(name);
+            currentListStorageObject->setType(std::string(type));
 
             for (XMLElement* e = element->FirstChildElement("brls:Value"); e != NULL;
                  e             = e->NextSiblingElement("brls:Value"))
             {
-                char* currentAttributeElem = new char[100];
-                e->QueryStringAttribute("value", (const char**)&currentAttributeElem);
-                obj.push_back(currentAttributeElem);
+                const char* currentAttributeElem;
+                e->QueryStringAttribute("value", &currentAttributeElem);
+                currentListStorageObject->push_back(const_cast<char*>(currentAttributeElem));
             }
 
-            allListStorageObjectsMap[name] = obj;
             return true;
         }
         else
@@ -575,68 +588,36 @@ StorageObject BasicStorageFile::readFromFile(std::string name)
 {
     if (!std::filesystem::exists(config_path)) {
         Logger::error("File not found. Make sure to call the init function before this.");
-        StorageObject nullStorageObject {};
+        StorageObject nullStorageObject;
         nullStorageObject.setIsEmpty(true);
         return nullStorageObject;
     }
 
-    bool result = this->parseXMLToMap(name);
-
+    bool result = this->parseXMLToObject(name);
     if (result)
-    {
-        StorageObject obj;
-
-        for (const auto& x : allStorageObjectsMap)
-        {
-            if (x.first == name)
-            {
-                obj = x.second;
-                break;
-            }
-        }
-
-        return obj;
-    }
-    else
-    {
-        StorageObject nullStorageObject {};
-        nullStorageObject.setIsEmpty(true);
-        return nullStorageObject;
-    }
+        return *currentStorageObject;
+    
+    StorageObject nullStorageObject;
+    nullStorageObject.setIsEmpty(true);
+    return nullStorageObject;
 }
 
 ListStorageObject BasicStorageFile::readListFromFile(std::string name)
 {
     if (!std::filesystem::exists(config_path)) {
         Logger::error("File not found. Make sure to call the init function before this.");
-        ListStorageObject nullStorageObject {};
+        ListStorageObject nullStorageObject;
         nullStorageObject.setIsEmpty(true);
         return nullStorageObject;
     }
 
-    bool result = this->parseXMLToListMap(name);
-
+    bool result = this->parseXMLToListObject(name);
     if (result)
-    {
-        ListStorageObject obj;
-
-        for (const auto& x : allListStorageObjectsMap)
-        {
-            if (x.first == name)
-            {
-                obj = x.second;
-                break;
-            }
-        }
-
-        return obj;
-    }
-    else
-    {
-        ListStorageObject nullStorageObject {};
-        nullStorageObject.setIsEmpty(true);
-        return nullStorageObject;
-    }
+        return *currentListStorageObject;
+    
+    ListStorageObject nullStorageObject;
+    nullStorageObject.setIsEmpty(true);
+    return nullStorageObject;
 }
 
 bool BasicStorageFile::isFileEmpty()
@@ -656,60 +637,24 @@ bool BasicStorageFile::isFileEmpty()
 
 bool StorageFile::save(StorageObject& obj)
 {
-    bool success;
-    BRLS_STORAGE_FILE_WRITE_DATA(obj, success);
-    return success;
+    return this->writeToFile(obj);
 }
 
 bool StorageFile::save(ListStorageObject& obj)
 {
-    bool success;
-    BRLS_STORAGE_FILE_WRITE_LIST_DATA(obj, success);
-    return success;
+    return this->writeListToFile(obj);
 }
 
 bool StorageFile::grab(StorageObject& obj, std::string name)
 {
-    BRLS_STORAGE_FILE_READ_DATA(obj, name);
-    if (!obj.getIsEmpty())
-        return true;
-    return false;
+    obj = this->readFromFile(name);
+    return !obj.getIsEmpty();
 }
 
 bool StorageFile::grab(ListStorageObject& obj, std::string name)
 {
-    BRLS_STORAGE_FILE_READ_LIST_DATA(obj, name);
-    if (!obj.getIsEmpty())
-        return true;
-    return false;
-}
-
-bool StorageFile::operator<<(StorageObject& obj)
-{
-    if (this->save(obj))
-        return true;
-    return false;
-}
-
-bool StorageFile::operator<<(ListStorageObject& obj)
-{
-    if (this->save(obj))
-        return true;
-    return false;
-}
-
-bool StorageFile::operator>>(StorageObject& obj)
-{
-    if (this->grab(obj, obj.name()))
-        return true;
-    return false;
-}
-
-bool StorageFile::operator>>(ListStorageObject& obj)
-{
-    if (this->grab(obj, obj.name()))
-        return true;
-    return false;
+    obj = this->readListFromFile(name);
+    return !obj.getIsEmpty();
 }
 
 } // namespace brls
