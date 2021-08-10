@@ -35,6 +35,5 @@ struct StorageFileDemo : public brls::Box
     bool onWriteDataButtonPressed(brls::View* view);
     bool onReadDataButtonPressed(brls::View* view);
 
-    BRLS_BLANK_STORAGE_OBJECT(burnerObject);
-    BRLS_BLANK_LIST_STORAGE_OBJECT(listBurnerObject);
+    SettingsFile *settings = new SettingsFile();
 };

@@ -18,199 +18,276 @@
 
 #include <tinyxml2/tinyxml2.h>
 
-#include <borealis/core/i18n.hpp>
+#include <borealis/core/util.hpp>
 #include <borealis/core/logger.hpp>
 #include <filesystem>
 #include <fstream>
-#include <iostream>
-#include <map>
 #include <string>
-#include <vector>
-
-using namespace brls::literals;
-using namespace tinyxml2;
 
 namespace brls
 {
 
-// Macros (more will be added once the whole Storage system is simpilified)
-#define BRLS_STORAGE_FILE_INIT(filename, appname) bool initSuccess = this->init(filename, appname)
+#define BRLS_STORAGE_FILE_INIT(classname, filename, appname) classname() {this->init(filename, appname);}
 
-#define BRLS_STORAGE_OBJECT(variableName, value, name, type) brls::StorageObject variableName = brls::StorageObject(value, name, type)
-#define BRLS_BLANK_STORAGE_OBJECT(variableName) brls::StorageObject variableName = brls::StorageObject()
-#define BRLS_LIST_STORAGE_OBJECT(variableName, value, name, type) brls::ListStorageObject variableName = brls::ListStorageObject(name, value, type)
-#define BRLS_BLANK_LIST_STORAGE_OBJECT(variableName) brls::ListStorageObject variableName = brls::ListStorageObject()
+#define BRLS_STORAGE_INT(var, name) brls::IntStorageObject var = brls::IntStorageObject(name, this)
+#define BRLS_STORAGE_FLOAT(var, name) brls::FloatStorageObject var = brls::FloatStorageObject(name, this)
+#define BRLS_STORAGE_BOOL(var, name) brls::BoolStorageObject var = brls::BoolStorageObject(name, this)
+#define BRLS_STORAGE_STRING(var, name) brls::StringStorageObject var = brls::StringStorageObject(name, this)
 
-// This is a StorageObject, which is a data type of a value stored onto the XML file.
-// They have two variables they hold onto throughout their lifetime: the value and name.
-// They also have an std::string of their type, since the value will be stored as a char *
-// In the XML File
-struct StorageObject
+struct StorageFile;
+
+/**
+ * A superclass for all StorageObject types.
+ */
+template <typename T>
+class StorageObject
 {
-    StorageObject() {}
-    StorageObject(char* val, std::string name, std::string type);
+    T value;
+    std::string name;
+    StorageFile *parent = nullptr;
 
-    void setValue(char* newValue);
-    char* value();
-    void setName(std::string val);
-    std::string name();
-    void setType(std::string newType);
-    std::string type();
-    void setIsEmpty(bool newVal);
-    bool getIsEmpty();
+    public:
 
-  private:
-    char* valueSet;
-    std::string nameInXML;
-    std::string typeOfValue;
+    StorageObject(std::string name, StorageFile *newParent);
+    virtual ~StorageObject() {};
 
-    bool isEmpty = false;
-};
+    void setValue(T val);
+    T getValue();
+    void setName(std::string name);
+    std::string getName();
 
-// This is a ListStorageObject, which is similar to a normal StorageObject, but a whole lot different.
-// Instead of only holding one value at a time, ListStorageObjects hold any amount of values.
-// These lists contain Values, which are normal StorageObjects that only hold a value. No names or type is stored.
-struct ListStorageObject
-{
-    struct Value
+    void setParent(StorageFile *newParent)
     {
-        char* val;
-    }; // POD Struct (Plain Old Data-type)
+        if (parent)
+            parent = nullptr;
 
-    ListStorageObject() {}
-    ListStorageObject(std::string name, char* value, std::string type);
+        parent = newParent;
+    }
 
-    void push_back(char* newVal);
-    void push_front(char* newVal);
-    void insert(size_t index, char* newVal);
-    char* get_front();
-    char* get_back();
-    char* get(size_t index);
-    char* operator[](size_t index);
-    bool operator==(const char* other);
-    bool operator!=(const char* other);
-    const size_t size();
-    std::vector<Value>::iterator begin();
-    std::vector<Value>::iterator end();
+    StorageFile* getParent()
+    {
+        return parent;
+    }
 
-    void setName(std::string val);
-    std::string name();
-    void setType(std::string newType);
-    std::string type();
-    void setIsEmpty(bool newVal);
-    bool getIsEmpty();
+    void save();
 
-  private:
-    std::vector<Value> values;
-    std::string nameInXML;
-    std::string typeOfValue;
-
-    bool isEmpty = false;
+    virtual std::string getTypeName() = 0;
 };
 
-// The StorageFile class allows you to create, write, or read from files for anything
-// For example, you can use it for a config or track when a user last used the app.
-class BasicStorageFile
+template <typename T>
+StorageObject<T>::StorageObject(std::string name, StorageFile *newParent)
 {
+    setName(name);
+    setParent(newParent);
+}
 
-    std::map<std::string, StorageObject> allStorageObjectsMap; // Main map where all Storage Objects are stored
-    std::map<std::string, ListStorageObject> allListStorageObjectsMap; // Main map where all List Storage Objects are stored
+template <typename T>
+void StorageObject<T>::setValue(T val)
+{
+    value = val;
+}
 
-    StorageObject *currentStorageObject = nullptr;
-    ListStorageObject *currentListStorageObject = nullptr;
+template <typename T>
+T StorageObject<T>::getValue()
+{
+    return value;
+}
 
-  public:
-    /*
-     * Inits the config folder if it doesn't exist and creates a file.
-     * Remember to not include the .xml part in the filename argument, it's already added.
+template <typename T>
+void StorageObject<T>::setName(std::string name)
+{
+    this->name = name;
+}
+
+template <typename T>
+std::string StorageObject<T>::getName()
+{
+    return name;
+}
+
+struct IntStorageObject : public StorageObject<int>
+{
+    using StorageObject<int>::StorageObject;
+    std::string getTypeName() override;
+};
+
+struct FloatStorageObject : public StorageObject<float>
+{
+    using StorageObject<float>::StorageObject;
+    std::string getTypeName() override;
+};
+
+struct BoolStorageObject : public StorageObject<bool>
+{
+    using StorageObject<bool>::StorageObject;
+    std::string getTypeName() override;
+};
+
+struct StringStorageObject : public StorageObject<std::string>
+{
+    using StorageObject<std::string>::StorageObject;
+    std::string getTypeName() override;
+};
+
+struct StorageFile
+{
+     bool inited = false;
+
+    /**
+     * Initalizes the Storage File. Required in order to use
+     * the Storage File.
      */
     bool init(std::string filename, std::string appname);
 
-    /*
-     * Writes a value to the storage file.
-     * 
-     * An example would be the following: 
-     *
-     * <brls:Property name="wizard_shown" value="true" type="bool"/>
-     * <brls:Property name="username" value="h4ck3rm4n" type="std::string"/>
-     * 
-     * It gives a fatal error if the filename is not found (call the init function before these functions).
+    /**
+     * Writes a storage object to the storage file.
+     * Usually this is called by a storage object when the save function is called.
      */
-    bool writeToFile(StorageObject& value, bool overwriteExisting = true);
+    template <typename T>
+    bool writeToFile(StorageObject<T> &object);
+    template <typename T>
+    bool readFromFile(std::string name, StorageObject<T> &object);
 
-    /*
-     * Writes a whole list to the XML File.
-     * Similar to writeToFile.
-     */
-    bool writeListToFile(ListStorageObject& obj, bool overwriteExisting = true);
-
-    /*
-     * In short, this function parses a certain XML element into a
-     * element for the allStorageObjects Map. The certain XML element
-     * is determined by its name attribute, since that attribute is like an id
-     */
-    bool parseXMLToObject(std::string name);
-
-    /*
-     * In short, this function parses a certain XML element into a
-     * element for the allStorageObjects Map. The certain XML element
-     * is determined by its name attribute, since that attribute is like an id
-     */
-    bool parseXMLToListObject(std::string name);
-
-    /*
-     * Reads a value from the config file, then returns a variable pointing to that value.
-     * 
-     * For example, if you store a variable with the data "EmreTech is awesome" into a storage file,
-     * This function will find that value and return it, so you can read/change the value throughout
-     * the program running.
-     */
-    StorageObject readFromFile(std::string name);
-
-    ListStorageObject readListFromFile(std::string name);
-
-    /*
-     * Allows you to check if the file is empty or not.
-     * Returns true if it's empty, false if it's not 
-     */
-    bool isFileEmpty();
-
-  private:
-    void setConfigPath(std::string filename)
-    {
-        this->filename = filename + ".xml";
-        config_path    = config_folder + this->filename;
-    }
-
-    std::string config_folder;
+    private:
     std::string config_path;
     std::string filename;
 };
 
-// An easier way to use brls::BasicStorageFile. No confusing functions.
-// StorageFile is a child class to brls::BasicStorageFile, so you can use
-// all of those functions, here.
-struct StorageFile : public BasicStorageFile
+template <typename T>
+bool StorageFile::writeToFile(StorageObject<T> &object)
 {
-    /*
-     * Saves any changes you made to a StorageObject to the XML file. Returns a bool if it succeded or not
-     */
-    bool save(StorageObject& obj);
+    const char *value = ConversionUtils::toCString(object.getValue());
+    std::string name = object.getName();
 
-    /*
-     * Saves any changes you made to a StorageObject to the XML file. Returns a bool if it succeded or not
-     */
-    bool save(ListStorageObject& obj);
+    if (!inited)
+    {
+        Logger::error("StorageFile with the filename {} has not been initalized yet.", this->filename);
+        return false;
+    }
 
-    /*
-     * Reads a certain element from the XML file and returns it to a StorageObject. Returns a bool if it succeded or not
-     */
-    bool grab(StorageObject& obj, std::string name);
+    tinyxml2::XMLDocument doc;
+    tinyxml2::XMLError errorCode = doc.LoadFile(config_path.c_str());
 
-    /*
-     * Reads a certain element from the XML file and returns it to a StorageObject. Returns a bool if it succeded or not
-     */
-    bool grab(ListStorageObject& obj, std::string name);
-};
+    tinyxml2::XMLElement *root = doc.RootElement();
+    if (!root || errorCode == tinyxml2::XML_ERROR_EMPTY_DOCUMENT)
+    {
+        tinyxml2::XMLNode *pRoot = doc.NewElement("brls:StorageFile");
+        doc.InsertFirstChild(pRoot);
+
+        tinyxml2::XMLElement *element = doc.NewElement(("brls:" + object.getTypeName() + "Property").c_str());
+
+        element->SetAttribute("name", name.c_str());
+        element->SetAttribute("value", value);
+        pRoot->InsertEndChild(element);
+
+        errorCode = doc.SaveFile(config_path.c_str());
+
+        if (errorCode == tinyxml2::XML_SUCCESS || errorCode == tinyxml2::XML_ERROR_EMPTY_DOCUMENT)
+            return true;
+        else
+        {
+            Logger::error("TinyXML2 could not save the file. Error code {}.", std::to_string(errorCode));
+            Logger::error("More details: {}", doc.ErrorStr());
+            return false;
+        }
+    }
+    else if (errorCode == tinyxml2::XML_SUCCESS)
+    {
+        for (tinyxml2::XMLElement *e = root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+        {
+            if (std::strcmp(e->Attribute("name"), name.c_str()) == 0)
+            {
+                root->DeleteChild(e);
+                break;
+            }
+        }
+
+        tinyxml2::XMLElement *element = doc.NewElement(("brls:" + object.getTypeName() + "Property").c_str());
+
+        element->SetAttribute("name", name.c_str());
+        element->SetAttribute("value", value);
+        root->InsertEndChild(element);
+
+        errorCode = doc.SaveFile(config_path.c_str());
+
+        if (errorCode == tinyxml2::XML_SUCCESS || errorCode == tinyxml2::XML_ERROR_EMPTY_DOCUMENT)
+            return true;
+        else
+        {
+            Logger::error("TinyXML2 could not save the file. Error code {}.", std::to_string(errorCode));
+            Logger::error("More details: {}", doc.ErrorStr());
+            return false;
+        }
+    }
+    
+    Logger::error("TinyXML2 could not open the file. Error code {}.", std::to_string(errorCode));
+    Logger::error("More details: {}", doc.ErrorStr());
+    return false;
+}
+
+template <typename T>
+bool StorageFile::readFromFile(std::string name, StorageObject<T> &object)
+{
+    if (!inited)
+    {
+        Logger::error("StorageFile with the filename {} has not been initalized yet.", this->filename);
+        return false;
+    }
+
+    tinyxml2::XMLDocument doc;
+    tinyxml2::XMLError errorCode = doc.LoadFile(config_path.c_str());
+
+    if (errorCode == tinyxml2::XML_SUCCESS)
+    {
+        tinyxml2::XMLElement *root = doc.RootElement();
+        if (root == nullptr)
+        {
+            Logger::error("StorageFile: NULL root element. This means the XML file is blank (hasn't been written to yet), or the XML file is broken.");
+            return false;
+        }
+
+        tinyxml2::XMLElement *element = nullptr;
+        for (tinyxml2::XMLElement *e = root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+        {
+            if (!e)
+                break;
+
+            if (std::strcmp(e->Attribute("name"), name.c_str()) == 0)
+            {
+                element = e;
+                break;
+            }
+        }
+
+        if (element)
+        {
+            const char *value;
+            element->QueryStringAttribute("value", &value);
+
+            object.setName(name);
+            object.setValue(ConversionUtils::fromCString<T>(value));
+
+            return true;
+        }
+        else
+        {
+            Logger::error("StorageFile: Could not find property with the name {}.", name);
+            return false;
+        }
+    }
+    
+    Logger::error("TinyXML2 could not open the file. Error code {}.", std::to_string(errorCode));
+    Logger::error("More details: {}", doc.ErrorStr());
+    return false;
+}
+
+template <typename T>
+void StorageObject<T>::save()
+{
+    if (parent)
+    {
+        parent->writeToFile(*this);
+    }
+}
 
 } // namespace brls

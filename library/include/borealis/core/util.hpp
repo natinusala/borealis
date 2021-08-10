@@ -30,30 +30,30 @@ namespace brls
 [[noreturn]] void fatal(std::string message);
 
 struct ConversionUtils
-{
-    template <typename T>
+{ 
     /*
      * Converts any primitive type to a C-style string (char*)
      */
+    template <typename T>
     inline static char* toCString(const T& t)
     {
         std::ostringstream oss;
-        oss << t;
+        oss << std::boolalpha << t;
 
         char* output = new char[sizeof(oss.str().c_str()) + 1];
         std::strcpy(output, oss.str().c_str());
         return output;
     }
 
-    template <typename T>
     /*
      * Converts a C-style string (char*) to any primitive type
      */
+    template <typename T>
     inline static T fromCString(const char* s)
     {
         std::istringstream iss((std::string(s)));
         T t;
-        iss >> t;
+        iss >> std::boolalpha >> t;
         return t;
     }
 };
