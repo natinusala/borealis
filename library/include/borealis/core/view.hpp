@@ -25,6 +25,7 @@
 
 #include <borealis/core/actions.hpp>
 #include <borealis/core/animation.hpp>
+#include <borealis/core/describe.hpp>
 #include <borealis/core/event.hpp>
 #include <borealis/core/frame_context.hpp>
 #include <borealis/core/util.hpp>
@@ -155,7 +156,7 @@ float ntz(float value);
 //
 // willAppear and willDisappear can be called zero or multiple times
 // before deletion (in case of a TabLayout for instance)
-class View
+class View : public Describable
 {
   private:
     ViewBackground background = ViewBackground::NONE;
@@ -1020,7 +1021,7 @@ class View
         return (status == 0) ? res.get() : name;
     }
 
-    std::string describe() const
+    std::string describe() const override
     {
         std::string classString = this->getClassString();
 
