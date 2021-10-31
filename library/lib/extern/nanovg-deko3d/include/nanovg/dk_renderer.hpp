@@ -3,6 +3,7 @@
 #include <deko3d.hpp>
 #include <map>
 #include <memory>
+#include <optional>
 #include <vector>
 
 #include "framework/CDescriptorSet.h"
