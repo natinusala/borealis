@@ -23,10 +23,7 @@
 
 #include <borealis/core/video.hpp>
 #include <deko3d.hpp>
-// clang-format off
-#include <optional>
 #include <nanovg/dk_renderer.hpp>
-// clang-format on
 
 typedef Event _LibNXEvent; // "Event" alone clashes with brls::Event
 
