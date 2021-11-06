@@ -35,5 +35,7 @@ struct StorageFileDemo : public brls::Box
     bool onWriteDataButtonPressed(brls::View* view);
     bool onReadDataButtonPressed(brls::View* view);
 
+    BRLS_BIND(brls::Label, verboseText, "verboseText");
+
     SettingsFile *settings = new SettingsFile();
 };

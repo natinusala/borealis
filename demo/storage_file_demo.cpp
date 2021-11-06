@@ -29,33 +29,50 @@ StorageFileDemo::StorageFileDemo()
 
 bool StorageFileDemo::onWriteDataButtonPressed(brls::View* view)
 {
+    // Clear data in ListStorageObjects to ensure we aren't writting multiple items into the file
+    settings->favoriteWords.getVector().clear();
+    settings->coolNumbers.getVector().clear();
+
+    // Set values
     settings->boolTest = true;
     settings->username = "EmreTech";
     settings->favoriteWords.pushValue("Hello");
     settings->favoriteWords.pushValue("Watermelon");
 
+    for (int i = 1; i < 11; i++)
+        settings->coolNumbers.pushValue(i);
+
+    // Save
     settings->boolTest.save();
     settings->username.save();
     settings->favoriteWords.save();
+    settings->coolNumbers.save();
+
+    verboseText->setText("Sucessfully written data to the Storage File.");
 
     return true;
 }
 
 bool StorageFileDemo::onReadDataButtonPressed(brls::View* view)
 {
-    settings->favoriteWords.getVector().clear();
-
+    // Read data from the file
     settings->readFromFile("boolTest", settings->boolTest);
     settings->readFromFile("username", settings->username);
     settings->readFromFile("favoriteWords", settings->favoriteWords);
+    settings->readFromFile("coolNumbers", settings->coolNumbers);
 
+    // Print out the values to the user
     brls::Logger::info("Read from file: boolTest: {}", settings->boolTest.getValue());
     brls::Logger::info("Read from file: username: {}", settings->username.getValue());
 
-    brls::Logger::debug("favoriteWords size: {}", settings->favoriteWords.size());
     for (size_t i{0}; i < settings->favoriteWords.size(); i++)
-        brls::Logger::info("Read from file: favoriteWords: {}", settings->favoriteWords.getValue(i));
-   
+        brls::Logger::info("Read from file: favoriteWords index #{}: {}", i, settings->favoriteWords.getValue(i));
+
+    for (size_t i{0}; i < settings->coolNumbers.size(); i++)
+        brls::Logger::info("Read from file: coolNumbers index #{}: {}", i, settings->coolNumbers.getValue(i));
+    
+    verboseText->setText("Please read the console log for the read data.");
+
     return true;
 }
 

@@ -73,7 +73,7 @@ bool StorageFile::init(std::string filename, std::string appname)
     if (brls::Application::getPlatform()->getName() == "GLFW")
         folder = "./config/" + appname + "/";
     else
-        folder = "/config" + appname + "/";
+        folder = "/config/" + appname + "/";
 
     if (!std::filesystem::exists(folder))
         std::filesystem::create_directories(folder);

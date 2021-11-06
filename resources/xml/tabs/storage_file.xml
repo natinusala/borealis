@@ -38,6 +38,13 @@
 
         </brls:Box>
 
+        <brls:Label
+            id="verboseText"
+            width="auto"
+            height="auto"
+            text=""
+            marginTop="50px" />
+
     </brls:Box>
 
 </brls:Box>

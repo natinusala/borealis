@@ -20,7 +20,7 @@
     <brls:Separator />
 
     <!-- For testing of Storage File (might be removed before merge) -->
-    <brls:Tab label="Storage File demo">
+    <brls:Tab label="Storage File">
         <StorageFileDemo />
     </brls:Tab>
 

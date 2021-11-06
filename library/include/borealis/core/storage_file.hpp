@@ -424,7 +424,7 @@ bool StorageFile::writeToFile(ListStorageObject<T> &object)
     }
     else if (errorCode == tinyxml2::XML_SUCCESS)
     {
-        for (tinyxml2::XMLElement *e = root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+        for (tinyxml2::XMLElement *e = root->FirstChildElement(("brls:" + object.getTypeName() + "ListProperty").c_str()); e != NULL; e = e->NextSiblingElement(("brls:" + object.getTypeName() + "ListProperty").c_str()))
         {
             if (std::strcmp(e->Attribute("name"), name.c_str()) == 0)
             {
@@ -528,6 +528,8 @@ bool StorageFile::readFromFile(std::string name, ListStorageObject<T> &object)
         return false;
     }
 
+    object.getVector().clear();
+
     tinyxml2::XMLDocument doc;
     tinyxml2::XMLError errorCode = doc.LoadFile(config_path.c_str());
 
@@ -559,7 +561,6 @@ bool StorageFile::readFromFile(std::string name, ListStorageObject<T> &object)
            {
                const char *attributeEle;
                e->QueryStringAttribute("value", &attributeEle);
-               brls::Logger::debug("Value: {}", attributeEle);
                object.pushValue(brls::ConversionUtils::fromCString<T>(attributeEle));
            }
             object.setName(name);
