@@ -29,13 +29,14 @@ StorageFileDemo::StorageFileDemo()
 
 bool StorageFileDemo::onWriteDataButtonPressed(brls::View* view)
 {
-    bool value = true;
-    settings->boolTest.setValue(value);
-    std::string username = "EmreTech";
-    settings->username.setValue(username);
+    settings->boolTest = true;
+    settings->username = "EmreTech";
+    settings->favoriteWords.pushValue("Hello");
+    settings->favoriteWords.pushValue("Watermelon");
 
     settings->boolTest.save();
     settings->username.save();
+    settings->favoriteWords.save();
 
     return true;
 }
@@ -44,9 +45,14 @@ bool StorageFileDemo::onReadDataButtonPressed(brls::View* view)
 {
     settings->readFromFile("boolTest", settings->boolTest);
     settings->readFromFile("username", settings->username);
+    settings->readFromFile("favoriteWords", settings->favoriteWords);
 
     brls::Logger::info("Read from file: boolTest: {}", settings->boolTest.getValue());
     brls::Logger::info("Read from file: username: {}", settings->username.getValue());
+
+    brls::Logger::debug("favoriteWords size: {}", settings->favoriteWords.size());
+    for (size_t i{0}; i < settings->favoriteWords.size(); i++)
+        brls::Logger::info("Read from file: favoriteWords: {}", settings->favoriteWords.getValue(i));
    
     return true;
 }

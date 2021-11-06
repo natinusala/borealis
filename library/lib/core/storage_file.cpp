@@ -18,6 +18,9 @@
 #include <borealis/core/application.hpp>
 #include <borealis/core/assets.hpp>
 
+#include <filesystem>
+#include <fstream>
+
 namespace brls
 {
 
@@ -41,6 +44,26 @@ std::string StringStorageObject::getTypeName()
     return "String";
 }
 
+std::string IntListStorageObject::getTypeName()
+{
+    return "Int";
+}
+
+std::string FloatListStorageObject::getTypeName()
+{
+    return "Float";
+}
+
+std::string BoolListStorageObject::getTypeName()
+{
+    return "Bool";
+}
+
+std::string StringListStorageObject::getTypeName()
+{
+    return "String";
+}
+
 bool StorageFile::init(std::string filename, std::string appname)
 {
     if (inited)
@@ -58,13 +81,26 @@ bool StorageFile::init(std::string filename, std::string appname)
     this->filename = filename + ".xml";
     config_path = folder + this->filename;
 
+    if (std::filesystem::exists(config_path))
+    {
+        inited = true;
+        return true;
+    }
+
     std::ofstream file;
     file.open(config_path, std::ios::out|std::ios::app);
-    file.close();
-    Logger::debug("Successfully made file at {}!", config_path);
+    if (file.good())
+    {
+        file.close();
+        inited = true;
 
-    inited = true;
-    return true;
+        Logger::debug("Successfully made file at {}!", config_path);
+        return true;
+    }
+
+    file.close();
+    Logger::error("StorageFile: Failed to create StorageFile with the name {}.", filename);
+    return false;
 }
 
 } // namespace brls

@@ -23,4 +23,6 @@ struct SettingsFile : public brls::StorageFile
 
     BRLS_STORAGE_BOOL(boolTest, "boolTest");
     BRLS_STORAGE_STRING(username, "username");
+
+    BRLS_STORAGE_STRING_LIST(favoriteWords, "favoriteWords");
 };
