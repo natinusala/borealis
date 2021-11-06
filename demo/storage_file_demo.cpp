@@ -43,6 +43,8 @@ bool StorageFileDemo::onWriteDataButtonPressed(brls::View* view)
 
 bool StorageFileDemo::onReadDataButtonPressed(brls::View* view)
 {
+    settings->favoriteWords.getVector().clear();
+
     settings->readFromFile("boolTest", settings->boolTest);
     settings->readFromFile("username", settings->username);
     settings->readFromFile("favoriteWords", settings->favoriteWords);
