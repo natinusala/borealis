@@ -49,6 +49,11 @@ class Application
     static void usei18n(bool val);
 
     /**
+     * Returns if this application is using i18n or not.
+     */
+    static bool getUsingi18n();
+
+    /**
      * Inits the borealis application.
      * Returns true if it succeeded, false otherwise.
      */

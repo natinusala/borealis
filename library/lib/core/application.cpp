@@ -59,6 +59,11 @@ void Application::usei18n(bool val)
     Application::usingi18n = val;
 }
 
+bool Application::getUsingi18n()
+{
+    return Application::usingi18n;
+}
+
 bool Application::init()
 {
     // Init platform
@@ -75,14 +80,13 @@ bool Application::init()
     // Init i18n
     if (Application::usingi18n)
     {
-        Logger::info("i18n has been enabled. Initing translations...");
+        Logger::info("i18n has been enabled. Initializing translations...");
         i18nChecker();
         loadTranslations();
     }
     else
     {
-        Logger::info("i18n has been disabled. Initing only internal translations...");
-        Application::getLocale() = LOCALE_DEFAULT;
+        Logger::info("i18n has been disabled. Initializing only internal translations...");
         loadInternal(); // Load internal translations (required for built-in views)
     }
 

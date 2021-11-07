@@ -14,6 +14,7 @@
     limitations under the License.
 */
 
+#include <borealis/core/application.hpp>
 #include <borealis/core/i18n.hpp>
 #include <borealis/core/logger.hpp>
 #include <borealis/platforms/glfw/glfw_platform.hpp>
@@ -53,17 +54,24 @@ GLFWPlatform::GLFWPlatform()
     this->fontLoader  = new GLFWFontLoader();
     this->audioPlayer = new NullAudioPlayer();
 
-    // Get platform's locale (taken from a comment here: https://stackoverflow.com/questions/32931458/getting-the-system-language-in-c-or-c/32931505#32931505)
-    setlocale(LC_ALL, "");
-    this->locale = std::string(setlocale(LC_ALL, NULL));
-
-    // Split the default encoding and change the _ to - in locale (taken from my own testing on macOS Big Sur 11.0.1)
-    this->locale = this->locale.substr(0, this->locale.find('.'));
-    this->locale.replace(this->locale.find('_'), 1, "-");
-
-    if ( std::find(LOCALE_LIST.begin(), LOCALE_LIST.end(), this->locale) == LOCALE_LIST.end() )
+    if (Application::getUsingi18n())
     {
-        Logger::warning("Detected incompatible locale {}. Using default locale (en-US)...", this->locale);
+        // Get platform's locale (taken from a comment here: https://stackoverflow.com/questions/32931458/getting-the-system-language-in-c-or-c/32931505#32931505)
+        setlocale(LC_ALL, "");
+        this->locale = std::string(setlocale(LC_ALL, NULL));
+
+        // Split the default encoding and change the _ to - in locale (taken from my own testing on macOS Big Sur 11.0.1)
+        this->locale = this->locale.substr(0, this->locale.find('.'));
+        this->locale.replace(this->locale.find('_'), 1, "-");
+
+        if ( std::find(LOCALE_LIST.begin(), LOCALE_LIST.end(), this->locale) == LOCALE_LIST.end() )
+        {
+            Logger::warning("Detected incompatible locale {}. Using default locale (en-US)...", this->locale);
+            this->locale = LOCALE_DEFAULT;
+        }
+    }
+    else
+    {
         this->locale = LOCALE_DEFAULT;
     }
 }
