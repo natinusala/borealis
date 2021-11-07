@@ -21,21 +21,13 @@
 #include <borealis/core/assets.hpp>
 #include <borealis/core/i18n.hpp>
 #include <filesystem>
-
-#ifdef __SWITCH__
+#include <algorithm>
 #include <unordered_map>
-#else
-#include <folly/container/F14Map.h>
-#endif
 
 namespace brls
 {
 
-#ifdef __SWITCH__
 typedef std::unordered_map<std::string, std::string> locales;
-#else
-typedef folly::F14FastMap<std::string, std::string> locales;
-#endif
 
 // For Internal text
 const std::string internalXML = R"xml(
@@ -89,51 +81,45 @@ bool is_valid_locale_directory(const std::filesystem::directory_entry& entry)
     localeFolder             = localeFolder.substr(localeFolder.rfind(pathSeperator) + 1);
 
     if (localeFolder != "i18n")
-    {
-        for (const auto& e : LOCALE_LIST)
-            if (e == localeFolder)
-                return true;
-    }
+       return std::find(LOCALE_LIST.begin(), LOCALE_LIST.end(), localeFolder) != LOCALE_LIST.end();
     else
         return true;
 
     return false;
 }
 
-std::vector<std::string>& i18nChecker()
+void i18nChecker()
 {
-    static std::vector<std::string> warnings;
-
     std::string path = BRLS_ASSET("i18n");
 
     if (!std::filesystem::exists(path))
     {
         Logger::error("Detected an invalid i18n setup. Directory {} doesn't exist.", path);
-        return warnings;
+        return;
     }
     else if (!std::filesystem::is_directory(path))
     {
         Logger::error("Detected an invalid i18n setup. {} isn't a directory.", path);
-        return warnings;
+        return;
     }
 
     if (!std::filesystem::exists(BRLS_ASSET("i18n/en-US")))
-        warnings.push_back("Detected no default locale directory. Directory " + BRLS_ASSET("i18n/en-US") + " doesn't exist.");
+        Logger::warning("Detected no default locale directory. Directory {} doesn't exist.", BRLS_ASSET("i18n/en-US"));
     else if (!std::filesystem::is_directory(BRLS_ASSET("i18n/en-US")))
-        warnings.push_back("Detected no default locale directory. Found file " + BRLS_ASSET("i18n/en-US") + " instead.");
+        Logger::warning("Detected no default locale directory. Found file {} instead.", BRLS_ASSET("i18n/en-US"));
 
     for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(path))
     {
         if (entry.is_directory())
         {
             if (!is_valid_locale_directory(entry))
-                warnings.push_back("Detected a stray directory. Directory " + entry.path().string() + " does not match any locales");
+                Logger::warning("Detected a stray directory. Directory {} does not match any locales.", entry.path().string());
             continue;
         }
 
         if (!(entry.path().filename().extension().string() == ".xml"))
         {
-            warnings.push_back(std::string("Detected a stray file. File ") + entry.path().string() + " without extension .xml found.");
+            Logger::warning("Detected a stray file. File {} without extension .xml found.", entry.path().string());
             continue;
         }
 
@@ -144,19 +130,17 @@ std::vector<std::string>& i18nChecker()
 
         if (error == tinyxml2::XML_ERROR_EMPTY_DOCUMENT)
         {
-            warnings.push_back(std::string("Detected a stray XML file ") + current_path + ". Empty XML document found.");
+            Logger::warning("Detected a stray XML file {}. Empty XML document found.", current_path);
             continue;
         }
 
         tinyxml2::XMLElement* root = doc.RootElement();
         if (std::strcmp(root->Name(), "brls:i18nDoc") != 0)
         {
-            warnings.push_back(std::string("Detected a stray XML file. Root element with name \"") + root->Name() + std::string("\" found in file ") + current_path + ".");
+            Logger::warning("Detected a stray XML file. Root element with name \"{0}\" found in file {1}.", root->Name(), current_path);
             continue;
         }
     }
-
-    return warnings;
 }
 
 static void loadLocale(std::string locale, locales& target)
@@ -204,7 +188,7 @@ static void loadLocale(std::string locale, locales& target)
             continue;
 
         // Iterate over all XML elements in the file
-        std::string path_2 = name.substr(0, name.find("."));
+        std::string path_2 = entry.path().filename().stem().string();
         getTextFromElements(root, path_2, target);
     }
 }

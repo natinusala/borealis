@@ -57,20 +57,6 @@ borealis_files = files(
     'lib/extern/yoga/src/yoga/YGStyle.cpp',
     'lib/extern/yoga/src/yoga/YGValue.cpp',
     'lib/extern/yoga/src/yoga/Yoga.cpp',
-
-    'lib/extern/folly/folly/hash/SpookyHashV2.cpp',
-    'lib/extern/folly/folly/lang/CString.cpp',
-    'lib/extern/folly/folly/detail/RangeCommon.cpp',
-    'lib/extern/folly/folly/detail/RangeSse42.cpp',
-    'lib/extern/folly/folly/lang/SafeAssert.cpp',
-    'lib/extern/folly/folly/portability/Malloc.cpp',
-    'lib/extern/folly/folly/memory/detail/MallocImpl.cpp', 
-    'lib/extern/folly/folly/hash/SpookyHashV1.cpp', 
-    'lib/extern/folly/folly/lang/Assume.cpp', 
-    'lib/extern/folly/folly/portability/Builtins.cpp', 
-    'lib/extern/folly/folly/container/detail/F14Table.cpp',
-    'lib/extern/folly/folly/ScopeGuard.cpp',
-    'lib/extern/folly/folly/lang/ToAscii.cpp',
 )
 
 borealis_include = include_directories(
@@ -81,8 +67,6 @@ borealis_include = include_directories(
     'include/borealis/extern/nanovg-gl',
     'lib/extern/yoga/src',
     'lib/extern/tweeny/include',
-    'lib/extern/folly',
-    'lib/extern/boost-preprocessor/include',
 )
 
 borealis_dependencies = [ dep_glfw3, dep_glm, ]

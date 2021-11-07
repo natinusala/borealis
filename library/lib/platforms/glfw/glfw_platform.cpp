@@ -18,6 +18,7 @@
 #include <borealis/core/logger.hpp>
 #include <borealis/platforms/glfw/glfw_platform.hpp>
 #include <locale>
+#include <algorithm>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -58,22 +59,10 @@ GLFWPlatform::GLFWPlatform()
 
     // Split the default encoding and change the _ to - in locale (taken from my own testing on macOS Big Sur 11.0.1)
     this->locale = this->locale.substr(0, this->locale.find('.'));
-    for (char& c : this->locale)
-        if (c == '_')
-            c = '-';
+    this->locale.replace(this->locale.find('_'), 1, "-");
 
-    // We check if the extracted locale is usuable
-    bool is_usable_locale = false;
-
-    for (const auto& e : LOCALE_LIST) // Loop through all elements in the LOCALE_LIST
-        if (e == this->locale)
-        {
-            is_usable_locale = true;
-            break;
-        }
-
-    if (!is_usable_locale)
-    { // If it is not, we use the default locale instead
+    if ( std::find(LOCALE_LIST.begin(), LOCALE_LIST.end(), this->locale) == LOCALE_LIST.end() )
+    {
         Logger::warning("Detected incompatible locale {}. Using default locale (en-US)...", this->locale);
         this->locale = LOCALE_DEFAULT;
     }
