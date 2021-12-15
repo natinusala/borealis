@@ -185,7 +185,8 @@
                     height="auto"
                     axis="row"
                     alignItems="center"
-                    justifyContent="spaceEvenly">
+                    justifyContent="spaceEvenly"
+                    marginBottom="30px" >
 
                     <CaptionedImage
                         width="auto"
@@ -206,6 +207,22 @@
                         scalingType="crop"
                         caption="@i18n/demo/components/images_cropped"
                         focusUp="image_upscaled" />
+
+                </brls:Box>
+
+                <brls:Box
+                    width="auto"
+                    height="auto"
+                    axis="row"
+                    alignItems="center"
+                    justifyContent="spaceEvenly" >
+
+                    <RandomRGBAImage
+                        width="auto"
+                        height="auto"
+                        imageWidth="400px"
+                        imageHeight="75px"
+                        scalingType="stretch" />
 
                 </brls:Box>
 

@@ -96,6 +96,23 @@ class Image : public View
     void setImageFromFile(std::string path);
 
     /**
+     * Sets the image from a memory buffer. The data read has to be
+     * the same as if the image would've been read from a file.
+     * 
+     * See NanoVG documentation and the Image class documentation for the
+     * list of supported image formats.
+     */
+    void setImageFromMemory(const unsigned char* data, int numData);
+
+    /**
+     * Sets the image from a memory buffer. The data should be following the
+     * R8G8B8A8 pixel format.
+     * 
+     * See the example implementation dynamic_image in the demo.
+     */
+    void setImageFromRGBA(const unsigned char* data, int width, int height);
+
+    /**
      * Sets the scaling type for this image.
      *
      * Default is FIT.
