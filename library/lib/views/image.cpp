@@ -290,7 +290,7 @@ void Image::setImageFromMemory(const unsigned char* data, int numData)
 
     // Load the new texture
     int flags     = this->getImageFlags();
-    this->texture = nvgCreateImageMem(vg, flags, data, numData);
+    this->texture = nvgCreateImageMem(vg, flags, (unsigned char*)data, numData);
 
     if (this->texture == 0)
         fatal("Cannot load image from memory");
