@@ -102,7 +102,7 @@ class Image : public View
      * See NanoVG documentation and the Image class documentation for the
      * list of supported image formats.
      */
-    void setImageFromMemory(unsigned char* data, int numData);
+    void setImageFromMemory(const unsigned char* data, int numData);
 
     /**
      * Sets the image from a memory buffer. The data should be following the

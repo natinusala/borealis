@@ -280,7 +280,7 @@ void Image::setImageFromFile(std::string path)
     this->invalidate();
 }
 
-void Image::setImageFromMemory(unsigned char* data, int numData)
+void Image::setImageFromMemory(const unsigned char* data, int numData)
 {
     NVGcontext* vg = Application::getNVGContext();
 
