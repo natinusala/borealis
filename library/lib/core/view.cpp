@@ -54,9 +54,7 @@ View::View()
     this->registerCommonAttributes();
 
     // Default values
-    Theme theme = Application::getTheme();
-
-    this->highlightCornerRadius = theme.getMetric("brls/highlight/corner_radius", Application::getPlatform()->getThemeVariant());
+    this->highlightCornerRadius = Application::getStyle()["brls/highlight/corner_radius"];
 }
 
 static int shakeAnimation(float t, float a) // a = amplitude
@@ -101,6 +99,7 @@ void View::frame(FrameContext* ctx)
         return;
 
     Theme theme    = Application::getTheme();
+    Style style    = Style(theme);
     Theme oldTheme = *ctx->theme;
 
     nvgSave(ctx->vg);
@@ -129,7 +128,7 @@ void View::frame(FrameContext* ctx)
 
         // Draw highlight background
         if (this->highlightAlpha > 0.0f && !this->hideHighlightBackground)
-            this->drawHighlight(ctx->vg, &ctx->theme, this->highlightAlpha, style, true);
+            this->drawHighlight(ctx->vg, *ctx->theme, this->highlightAlpha, style, true);
 
         // Draw click animation
         if (this->clickAlpha > 0.0f)
@@ -147,7 +146,7 @@ void View::frame(FrameContext* ctx)
 
         // Draw highlight
         if (this->highlightAlpha > 0.0f)
-            this->drawHighlight(ctx->vg, &ctx->theme, this->highlightAlpha, style, false);
+            this->drawHighlight(ctx->vg, *ctx->theme, this->highlightAlpha, style, false);
 
         if (this->wireframeEnabled)
             this->drawWireframe(ctx, x, y, width, height);
@@ -196,8 +195,8 @@ void View::playClickAnimation(bool reverse)
 
 void View::drawClickAnimation(NVGcontext* vg, FrameContext* ctx, float x, float y, float width, float height)
 {
-    Theme theme    = ctx->theme;
-    NVGcolor color = theme.getColor("brls/click_pulse", Application::getPlatform()->getThemeVariant());
+    Theme theme    = *ctx->theme;
+    NVGcolor color = theme["brls/click_pulse"];
 
     color.a *= this->clickAlpha;
 
@@ -471,7 +470,7 @@ void View::drawHighlight(NVGcontext* vg, Theme theme, float alpha, Style style, 
     if (background)
     {
         // Background
-        NVGcolor highlightBackgroundColor = theme.getColor("brls/highlight/background", Application::getPlatform()->getThemeVariant());
+        NVGcolor highlightBackgroundColor = theme["brls/highlight/background"];
         nvgFillColor(vg, RGBAf(highlightBackgroundColor.r, highlightBackgroundColor.g, highlightBackgroundColor.b, this->highlightAlpha));
         nvgBeginPath(vg);
         nvgRoundedRect(vg, x, y, width, height, cornerRadius);
@@ -500,14 +499,14 @@ void View::drawHighlight(NVGcontext* vg, Theme theme, float alpha, Style style, 
         float gradientX, gradientY, color;
         getHighlightAnimation(&gradientX, &gradientY, &color);
 
-        NVGcolor highlightColor1 = theme.getColor("brls/highlight/color1", Application::getPlatform()->getThemeVariant());
+        NVGcolor highlightColor1 = theme["brls/highlight/color1"];
 
         NVGcolor pulsationColor = RGBAf((color * highlightColor1.r) + (1 - color) * highlightColor1.r,
             (color * highlightColor1.g) + (1 - color) * highlightColor1.g,
             (color * highlightColor1.b) + (1 - color) * highlightColor1.b,
             alpha);
 
-        NVGcolor borderColor = theme.getColor("brls/highlight/color2", Application::getPlatform()->getThemeVariant());
+        NVGcolor borderColor = theme["brls/highlight/color2"];
         borderColor.a        = 0.5f * alpha * this->getAlpha();
 
         float strokeWidth = style["brls/highlight/stroke_width"];
@@ -563,7 +562,7 @@ void View::drawBackground(NVGcontext* vg, FrameContext* ctx, Style style)
         case ViewBackground::SIDEBAR:
         {
             float backdropHeight  = style["brls/sidebar/border_height"];
-            NVGcolor sidebarColor = theme.getColor("brls/sidebar/background", Application::getPlatform()->getThemeVariant());
+            NVGcolor sidebarColor = theme["brls/sidebar/background"];
 
             // Solid color
             nvgBeginPath(vg);
@@ -589,7 +588,7 @@ void View::drawBackground(NVGcontext* vg, FrameContext* ctx, Style style)
         }
         case ViewBackground::BACKDROP:
         {
-            nvgFillColor(vg, a(theme.getColor("brls/backdrop", Application::getPlatform()->getThemeVariant())));
+            nvgFillColor(vg, a(theme["brls/backdrop"]));
             nvgBeginPath(vg);
             nvgRect(vg, x, y, width, height);
             nvgFill(vg);
@@ -1385,7 +1384,7 @@ bool View::applyXMLAttribute(std::string name, std::string value)
     {
         // Parse the style name
         std::string styleName = value.substr(7); // length of "@style/"
-        float value           = Application::getTheme().getMetric(styleName, Application::getPlatform()->getThemeVariant()); // will throw logic_error if the metric doesn't exist
+        float value           = Application::getTheme().getMetric(styleName); // will throw logic_error if the metric doesn't exist
 
         if (this->floatAttributes.count(name) > 0)
         {
@@ -1447,7 +1446,7 @@ bool View::applyXMLAttribute(std::string name, std::string value)
     {
         // Parse the color name
         std::string colorName = value.substr(7); // length of "@theme/"
-        NVGcolor value        = Application::getTheme().getColor(colorName, Application::getPlatform()->getThemeVariant()); // will throw logic_error if the color doesn't exist
+        NVGcolor value        = Application::getTheme()[colorName]; // will throw logic_error if the color doesn't exist
 
         if (this->colorAttributes.count(name) > 0)
         {

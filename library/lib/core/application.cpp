@@ -59,6 +59,7 @@ bool Application::init()
     // Init platform
     Application::platform = Platform::createPlatform();
     Application::theme = new Theme("default");
+    Application::style = new Style(*Application::theme);
 
     if (!Application::platform)
     {

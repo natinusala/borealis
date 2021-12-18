@@ -17,6 +17,7 @@
 */
 
 #include <borealis/core/style.hpp>
+#include <borealis/core/theme.hpp>
 #include <borealis/core/util.hpp>
 #include <stdexcept>
 
@@ -103,50 +104,13 @@ static StyleValues styleValues = {
     { "brls/shadow/offset", 10.0f },
 };
 */
-static Style style(&styleValues);
 
-Style getStyle()
+Style::Style(Theme theme) : parentTheme(&theme)
+{}
+
+float Style::operator[](const std::string name)
 {
-    return style;
-}
-
-StyleValues::StyleValues(std::initializer_list<std::pair<std::string, float>> list)
-{
-    for (std::pair<std::string, float> metric : list)
-        this->values.insert(metric);
-}
-
-void StyleValues::addMetric(std::string name, float metric)
-{
-    this->values.insert(std::make_pair(name, metric));
-}
-
-float StyleValues::getMetric(std::string name)
-{
-    if (this->values.count(name) == 0)
-        fatal("Unknown style metric \"" + name + "\"");
-
-    return this->values[name];
-}
-
-Style::Style(StyleValues* values)
-    : values(values)
-{
-}
-
-float Style::getMetric(std::string name)
-{
-    return this->values->getMetric(name);
-}
-
-void Style::addMetric(std::string name, float metric)
-{
-    return this->values->addMetric(name, metric);
-}
-
-float Style::operator[](std::string name)
-{
-    return this->getMetric(name);
+    return parentTheme->getMetric(name);
 }
 
 /*

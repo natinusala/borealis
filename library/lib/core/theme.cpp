@@ -16,6 +16,7 @@
 */
 
 #include <borealis/core/theme.hpp>
+#include <borealis/core/application.hpp>
 #include <borealis/core/logger.hpp>
 #include <stdexcept>
 #include <algorithm>
@@ -161,11 +162,9 @@ NVGcolor processColorValue(const std::string val)
             return nvgRGBA(r, g, b, a);
         }
     }
-    else
-    {
-        Logger::error("Theme: invalid color value");
-        return nvgRGBA(0, 0, 0, 0);
-    }
+    
+    Logger::error("Theme: invalid color value");
+    return nvgRGBA(0, 0, 0, 0);
 }
 
 float processMetricValue(const std::string val)
@@ -273,6 +272,23 @@ NVGcolor Theme::getColor(const std::string path, ThemeVariant variant)
         themeVar = "dark";
 
     return colors[themeVar + "/" + path];
+}
+
+float Theme::getMetric(const std::string path)
+{
+    ThemeVariant var = Application::getThemeVariant();
+    return getMetric(path, var);
+}
+
+NVGcolor Theme::getColor(const std::string path)
+{
+    ThemeVariant var = Application::getThemeVariant();
+    return getColor(path, var);
+}
+
+NVGcolor Theme::operator[](const std::string name)
+{
+    return getColor(name);
 }
 
 } // namespace brls

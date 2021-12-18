@@ -25,32 +25,19 @@
 namespace brls
 {
 
-class StyleValues
+struct Theme;
+
+// Wrapper to grab metrics from a theme
+// KEPT FOR BACKWARDS COMPATIBILITY
+struct Style
 {
-  public:
-    StyleValues(std::initializer_list<std::pair<std::string, float>> list);
+    Style(Theme theme);
+    
+    // Shortcut for Theme.getMetric(name)
+    float operator[](const std::string name);
 
-    void addMetric(std::string name, float value);
-    float getMetric(std::string name);
-
-  private:
-    std::unordered_map<std::string, float> values;
+    private:
+    Theme *parentTheme;
 };
-
-// Simple wrapper around StyleValues for the array operator
-class Style
-{
-  public:
-    Style(StyleValues* values);
-    float operator[](std::string name);
-
-    void addMetric(std::string name, float value);
-    float getMetric(std::string name);
-
-  private:
-    StyleValues* values;
-};
-
-Style getStyle();
 
 } // namespace brls
