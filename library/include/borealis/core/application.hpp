@@ -195,6 +195,7 @@ class Application
     inline static bool quitRequested = false;
 
     inline static Platform* platform = nullptr;
+    inline static Theme* theme = nullptr;
 
     inline static std::string title;
 

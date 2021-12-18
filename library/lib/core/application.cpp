@@ -58,6 +58,7 @@ bool Application::init()
 {
     // Init platform
     Application::platform = Platform::createPlatform();
+    Application::theme = new Theme("default");
 
     if (!Application::platform)
     {
@@ -375,10 +376,10 @@ void Application::frame()
     frameContext.pixelRatio = (float)Application::windowWidth / (float)Application::windowHeight;
     frameContext.vg         = Application::getNVGContext();
     frameContext.fontStash  = &Application::fontStash;
-    frameContext.theme      = Application::getTheme();
+    frameContext.theme      = Application::theme;
 
     // Begin frame and clear
-    NVGcolor backgroundColor = frameContext.theme["brls/background"];
+    NVGcolor backgroundColor = frameContext.theme->getColor("brls/background", Application::getPlatform()->getThemeVariant());
     videoContext->beginFrame();
     videoContext->clear(backgroundColor);
 
@@ -634,10 +635,7 @@ void Application::clear()
 
 Theme Application::getTheme()
 {
-    if (Application::getThemeVariant() == ThemeVariant::LIGHT)
-        return getLightTheme();
-    else
-        return getDarkTheme();
+    return *theme;
 }
 
 ThemeVariant Application::getThemeVariant()

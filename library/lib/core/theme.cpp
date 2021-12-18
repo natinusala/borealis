@@ -16,12 +16,14 @@
 */
 
 #include <borealis/core/theme.hpp>
-#include <borealis/core/util.hpp>
+#include <borealis/core/logger.hpp>
 #include <stdexcept>
+#include <algorithm>
+#include <cctype>
 
 namespace brls
 {
-
+/*
 static ThemeValues lightThemeValues = {
     // Generic values
     { "brls/background", nvgRGB(235, 235, 235) },
@@ -107,57 +109,170 @@ static ThemeValues darkThemeValues = {
     { "brls/button/enabled_border_color", nvgRGB(255, 255, 255) },
     { "brls/button/disabled_border_color", nvgRGB(255, 255, 255) },
 };
+*/
 
-static Theme lightTheme(&lightThemeValues);
-static Theme darkTheme(&darkThemeValues);
+Theme::Theme(std::string name) : name{name}
+{}
 
-ThemeValues::ThemeValues(std::initializer_list<std::pair<std::string, NVGcolor>> list)
+bool validThemeVariant(const std::string themeVariant)
 {
-    for (std::pair<std::string, NVGcolor> color : list)
-        this->values.insert(color);
+    std::string themeVariantLowercase = themeVariant;
+    std::transform(themeVariantLowercase.begin(), themeVariantLowercase.end(), 
+    themeVariantLowercase.begin(), [](unsigned char c){ return std::tolower(c); });
+
+    if (themeVariantLowercase == "dark" || themeVariantLowercase == "light")
+        return true;
+    return false;
 }
 
-void ThemeValues::addColor(std::string name, NVGcolor color)
+bool startsWith(const std::string& data, const std::string& prefix)
 {
-    this->values.insert(std::make_pair(name, color));
+    return data.rfind(prefix, 0) == 0;
 }
 
-NVGcolor ThemeValues::getColor(std::string name)
+NVGcolor processColorValue(const std::string val)
 {
-    if (this->values.count(name) == 0)
-        fatal("Unknown theme value \"" + name + "\"");
+    if (startsWith(val, "#"))
+    {
+        if (val.size() == 6 + 1)
+        {
+            unsigned char r, g, b;
+            int result = sscanf(val.c_str(), "#%02hhx%02hhx%02hhx", &r, &g, &b);
 
-    return this->values[name];
+            if (result != 3)
+            {
+                Logger::error("Theme: failed to extract hexadecimal color value");
+                return nvgRGB(0, 0, 0);
+            }
+
+            return nvgRGB(r, g, b);
+        }
+        else if (val.size() == 8 + 1)
+        {
+            unsigned char r, g, b, a;
+            int result = sscanf(val.c_str(), "#%02hhx%02hhx%02hhx%02hhx", &r, &g, &b, &a);
+
+            if (result != 4)
+            {
+                Logger::error("Theme: failed to extract hexadecimal color value");
+                return nvgRGBA(0, 0, 0, 0);
+            }
+
+            return nvgRGBA(r, g, b, a);
+        }
+    }
+    else
+    {
+        Logger::error("Theme: invalid color value");
+        return nvgRGBA(0, 0, 0, 0);
+    }
 }
 
-Theme::Theme(ThemeValues* values)
-    : values(values)
+float processMetricValue(const std::string val)
 {
+    try
+    {
+        return std::stof(val);
+    }
+    catch (const std::invalid_argument& e)
+    {
+        Logger::error("Theme: invalid metric value");
+        return 0.0f;
+    }
+    
 }
 
-NVGcolor Theme::getColor(std::string name)
+void processValues(tinyxml2::XMLElement *currElem,
+                    const std::string prefix,
+                    const std::string themeVar,
+                    std::unordered_map<std::string, NVGcolor> &colors,
+                    std::unordered_map<std::string, float> &metrics)
 {
-    return this->values->getColor(name);
+    for (tinyxml2::XMLElement *e = currElem->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+    {
+        std::string elemName = std::string(e->Name());
+        std::string name = e->Attribute("name");
+        std::string value = e->Attribute("value");
+
+        if (elemName == "brls:Color")
+            colors[themeVar + "/" + name] = processColorValue(value);
+        else if (elemName == "brls:Metric")
+            metrics[themeVar + "/" + name] = processMetricValue(value);
+        else
+            continue;
+    }
 }
 
-void Theme::addColor(std::string name, NVGcolor color)
+void Theme::inflateFromXMLElement(tinyxml2::XMLElement *element)
 {
-    return this->values->addColor(name, color);
+    if (element == nullptr)
+    {
+        Logger::error("Theme: NULL root element. This means the XML file is blank (hasn't been written to yet), or the XML file is broken.");
+        return;
+    }
+
+    if (std::strcmp(element->Attribute("theme"), name.c_str()) != 0)
+    {
+        Logger::error("Theme: read stylesheet that has different theme name than current theme");
+        return;
+    }
+
+    std::string prefix = std::string(element->Attribute("prefix"));
+
+    //tinyxml2::XMLElement *element = nullptr;
+    for (tinyxml2::XMLElement *e = element->FirstChildElement("brls:ThemeVariant"); e != NULL; e = e->NextSiblingElement("brls:ThemeVariant"))
+    {
+        std::string currThemeVariant = e->Attribute("name");
+        if (!validThemeVariant(currThemeVariant))
+            continue;
+
+        std::transform(currThemeVariant.begin(), currThemeVariant.end(), 
+        currThemeVariant.begin(), [](unsigned char c){ return std::tolower(c); });
+
+        processValues(e, prefix, currThemeVariant, colors, metrics);
+    }
 }
 
-NVGcolor Theme::operator[](std::string name)
+void Theme::inflateFromXMLString(const std::string xml)
 {
-    return this->getColor(name);
+    tinyxml2::XMLDocument doc;
+    tinyxml2::XMLError errorCode = doc.Parse(xml.c_str());
+
+    if (errorCode == tinyxml2::XML_SUCCESS)
+        return inflateFromXMLElement(doc.RootElement());
+    
+    Logger::error("TinyXML2 could not parse the XML string. Error code {}.", std::to_string(errorCode));
+    Logger::error("More details: {}", doc.ErrorStr());
 }
 
-Theme getLightTheme()
+void Theme::inflateFromXMLFile(const std::string path)
 {
-    return lightTheme;
+    tinyxml2::XMLDocument doc;
+    tinyxml2::XMLError errorCode = doc.LoadFile(path.c_str());
+
+    if (errorCode == tinyxml2::XML_SUCCESS)
+        return inflateFromXMLElement(doc.RootElement());
+    
+    Logger::error("TinyXML2 could not open the file. Error code {}.", std::to_string(errorCode));
+    Logger::error("More details: {}", doc.ErrorStr());
 }
 
-Theme getDarkTheme()
+float Theme::getMetric(const std::string path, ThemeVariant variant)
 {
-    return darkTheme;
+    std::string themeVar = "light";
+    if (variant == ThemeVariant::DARK)
+        themeVar = "dark";
+
+    return metrics[themeVar + "/" + path];
+}
+
+NVGcolor Theme::getColor(const std::string path, ThemeVariant variant)
+{
+    std::string themeVar = "light";
+    if (variant == ThemeVariant::DARK)
+        themeVar = "dark";
+
+    return colors[themeVar + "/" + path];
 }
 
 } // namespace brls

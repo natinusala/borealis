@@ -22,7 +22,7 @@
 
 namespace brls
 {
-
+/*
 static StyleValues styleValues = {
     // Animations
     { "brls/animations/show", 250.0f },
@@ -102,7 +102,7 @@ static StyleValues styleValues = {
     { "brls/shadow/opacity", 63.75f },
     { "brls/shadow/offset", 10.0f },
 };
-
+*/
 static Style style(&styleValues);
 
 Style getStyle()
