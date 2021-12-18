@@ -1,5 +1,6 @@
 /*
     Copyright 2020-2021 natinusala
+    Copyright 2021 EmreTech
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -20,6 +21,7 @@
 
 #include <borealis/core/logger.hpp>
 #include <string>
+#include <vector>
 
 namespace brls
 {
@@ -45,10 +47,32 @@ const std::string LOCALE_ES_419  = "es-419";
 
 const std::string LOCALE_DEFAULT = LOCALE_EN_US;
 
+const std::vector<std::string> LOCALE_LIST = { // Vector to compare all compatiable locales with a value to see if it's valid
+    LOCALE_JA, LOCALE_EN_US, LOCALE_EN_GB, LOCALE_FR, LOCALE_FR_CA,
+    LOCALE_DE, LOCALE_IT, LOCALE_ES, LOCALE_ZH_CN, LOCALE_ZH_HANS, LOCALE_ZH_HANT, LOCALE_ZH_TW,
+    LOCALE_Ko, LOCALE_NL, LOCALE_PT, LOCALE_PT_BR, LOCALE_RU, LOCALE_ES_419
+};
+
+const char pathSeperator = // To check if a directory in the i18n folder is valid
+#ifdef _WIN32
+    '\\';
+#else
+    '/';
+#endif
+
 namespace internal
 {
-    std::string getRawStr(std::string stringName);
+    std::string getRawStr(std::string stringName, bool internal = false);
 } // namespace internal
+
+/**
+ * Checks the i18n folder for stray directories, files, and
+ * XML files (ones that aren't i18n XML Files). Returns a vector containing
+ * all the warnings.
+ */
+void i18nChecker();
+
+void loadInternal();
 
 /**
  * Returns the translation for the given string,
@@ -71,7 +95,7 @@ std::string getStr(std::string stringName, Args&&... args)
 }
 
 /**
- * Loads all translations of the current system locale + default locale
+ * Loads all translations of the current system locale + default locale + internal translations
  * Must be called before trying to get a translation!
  */
 void loadTranslations();
@@ -84,5 +108,12 @@ inline namespace literals
      * Shortcut to brls::getStr(stringName)
      */
     std::string operator"" _i18n(const char* str, size_t len);
+
+    /**
+     * Returns the internal translation for the given string, without
+     * injecting any parameters
+     * Shortcut to brls::internal::getRawStr(stringName, true)
+     */
+    std::string operator"" _internal(const char* str, size_t len);
 } // namespace literals
 } // namespace brls

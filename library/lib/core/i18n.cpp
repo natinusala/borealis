@@ -1,5 +1,6 @@
 /*
     Copyright 2020-2021 natinusala
+    Copyright 2021 EmreTech
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -14,115 +15,242 @@
     limitations under the License.
 */
 
+#include <tinyxml2/tinyxml2.h>
+
 #include <borealis/core/application.hpp>
 #include <borealis/core/assets.hpp>
 #include <borealis/core/i18n.hpp>
 #include <filesystem>
-#include <fstream>
-#include <nlohmann/json.hpp>
-#include <string>
+#include <algorithm>
+#include <unordered_map>
 
 namespace brls
 {
 
-static nlohmann::json defaultLocale = {};
-static nlohmann::json currentLocale = {};
+typedef std::unordered_map<std::string, std::string> locales;
 
-static bool endsWith(const std::string& str, const std::string& suffix)
+// For Internal text
+const std::string internalXML = R"xml(
+    <brls:i18nDoc>
+       <brls:List name="hints">
+           <brls:String name="ok">OK</brls:String>
+           <brls:String name="back">Back</brls:String>
+           <brls:String name="exit">Exit</brls:String>
+       </brls:List>
+       <brls:List name="crash_frame">
+           <brls:String name="button">OK</brls:String>
+       </brls:List>
+       <brls:List name="thumbnail_sidebar">
+           <brls:String name="save">Save</brls:String>
+       </brls:List>
+    </brls:i18nDoc>)xml";
+
+static locales xmlDefaultLocale; // For default locale (en-US)
+static locales xmlCurrentLocale; // For current locale found by platform
+
+void getTextFromElements(tinyxml2::XMLElement* root, std::string existing_path, locales& target)
 {
-    // if I wanted to write my own endsWith I would have made borealis in PHP
-    return str.size() >= suffix.size() && 0 == str.compare(str.size() - suffix.size(), suffix.size(), suffix);
+    if (!root)
+    { // Checks if root is nullptr
+        Logger::error("Detected a possible empty XML file. Root element provided is nullptr."); // If it is, return an error message and return
+        return;
+    }
+
+    for (tinyxml2::XMLElement* e2 = root->FirstChildElement(); e2 != NULL; e2 = e2->NextSiblingElement()) // Loops through all XML Elements until it equals null
+    {
+        std::string path = existing_path + std::string("/") + e2->Attribute("name");
+        if (std::strcmp(e2->Name(), "brls:List") == 0) // If the XML Element is a brls:List,
+            getTextFromElements(e2, path, target); // we use a recursive strategy to grab all elements.
+        else if (std::strcmp(e2->Name(), "brls:String") == 0) // Otherwise, if the XML Element is a brls:String,
+        {
+            tinyxml2::XMLText* textFromElem = e2->FirstChild()->ToText(); // we query the text,
+            target[path]                    = textFromElem->Value(); // and add a map element to the provided unordered map.
+        }
+        else // Otherwise, if the element is unknown,
+        {
+            // we give an error message and continue looping
+            Logger::warning("Found unknown element in i18n file. Element name is {}. Continuing...", e2->Name());
+            continue;
+        } // TODO: Find out why invalid elements with text give a segementation fault
+    }
 }
 
-static void loadLocale(std::string locale, nlohmann::json* target)
+bool is_valid_locale_directory(const std::filesystem::directory_entry& entry)
+{
+    std::string localeFolder = entry.path().string();
+    localeFolder             = localeFolder.substr(localeFolder.rfind(pathSeperator) + 1);
+
+    if (localeFolder != "i18n")
+       return std::find(LOCALE_LIST.begin(), LOCALE_LIST.end(), localeFolder) != LOCALE_LIST.end();
+    else
+        return true;
+
+    return false;
+}
+
+void i18nChecker()
+{
+    std::string path = BRLS_ASSET("i18n");
+
+    if (!std::filesystem::exists(path))
+    {
+        Logger::error("Detected an invalid i18n setup. Directory {} doesn't exist.", path);
+        return;
+    }
+    else if (!std::filesystem::is_directory(path))
+    {
+        Logger::error("Detected an invalid i18n setup. {} isn't a directory.", path);
+        return;
+    }
+
+    if (!std::filesystem::exists(BRLS_ASSET("i18n/en-US")))
+        Logger::warning("Detected no default locale directory. Directory {} doesn't exist.", BRLS_ASSET("i18n/en-US"));
+    else if (!std::filesystem::is_directory(BRLS_ASSET("i18n/en-US")))
+        Logger::warning("Detected no default locale directory. Found file {} instead.", BRLS_ASSET("i18n/en-US"));
+
+    for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(path))
+    {
+        if (entry.is_directory())
+        {
+            if (!is_valid_locale_directory(entry))
+                Logger::warning("Detected a stray directory. Directory {} does not match any locales.", entry.path().string());
+            continue;
+        }
+
+        if (!(entry.path().filename().extension().string() == ".xml"))
+        {
+            Logger::warning("Detected a stray file. File {} without extension .xml found.", entry.path().string());
+            continue;
+        }
+
+        std::string current_path = entry.path().string();
+
+        tinyxml2::XMLDocument doc;
+        tinyxml2::XMLError error = doc.LoadFile(current_path.c_str());
+
+        if (error == tinyxml2::XML_ERROR_EMPTY_DOCUMENT)
+        {
+            Logger::warning("Detected a stray XML file {}. Empty XML document found.", current_path);
+            continue;
+        }
+
+        tinyxml2::XMLElement* root = doc.RootElement();
+        if (std::strcmp(root->Name(), "brls:i18nDoc") != 0)
+        {
+            Logger::warning("Detected a stray XML file. Root element with name \"{0}\" found in file {1}.", root->Name(), current_path);
+            continue;
+        }
+    }
+}
+
+static void loadLocale(std::string locale, locales& target)
 {
     std::string localePath = BRLS_ASSET("i18n/" + locale);
 
-    if (!std::filesystem::exists(localePath))
+    if (!std::filesystem::exists(localePath)) // If the localePath above doesn't exist,
     {
-        Logger::error("Cannot load locale {}: directory {} doesn't exist", locale, localePath);
+        Logger::error("Cannot load locale {}: directory {} doesn't exist", locale, localePath); // we give an error message and return.
         return;
     }
-    else if (!std::filesystem::is_directory(localePath))
+    else if (!std::filesystem::is_directory(localePath)) // Otherwise, if the localePath points to a non-directory,
     {
-        Logger::error("Cannot load locale {}: {} isn't a directory", locale, localePath);
+        Logger::error("Cannot load locale {}: {} isn't a directory", locale, localePath); // we give an error message and return.
         return;
     }
 
-    // Iterate over all JSON files in the directory
+    // Iterate over all XML files in the directory
     for (const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator(localePath))
     {
-        if (entry.is_directory())
+        if (entry.is_directory()) // If the entry is a directory, we continue.
             continue;
 
-        std::string name = entry.path().filename().string();
+        std::string name      = entry.path().filename().string();
+        std::string extension = entry.path().filename().extension().string();
 
-        if (!endsWith(name, ".json"))
+        if (!(extension == ".xml")) // If the entry's extension does not equal .xml, we continue.
             continue;
 
         std::string path = entry.path().string();
 
-        nlohmann::json strings;
+        // If the above checks pass, we define a XMLDocument and attempt to load the file
+        tinyxml2::XMLDocument doc;
+        tinyxml2::XMLError error = doc.LoadFile(path.c_str());
 
-        std::ifstream jsonStream;
-        jsonStream.open(path);
-
-        try
+        if (error != tinyxml2::XML_SUCCESS) // If the error variable does not equal XML_SUCCESS (0),
         {
-            jsonStream >> strings;
-        }
-        catch (const std::exception& e)
-        {
-            Logger::error("Error while loading \"{}\": {}", path, e.what());
+            Logger::error("Cannot load file {} found in locale {}: error code {}", entry.path().filename().string(), locale, std::to_string(error)); // we give an error message and return.
+            Logger::error("More details: {}", doc.ErrorStr());
+            continue;
         }
 
-        jsonStream.close();
+        tinyxml2::XMLElement* root = doc.RootElement(); // We grab the root element
+        if (std::strcmp(root->Name(), "brls:i18nDoc") != 0) // and check if the root element name equals brls:i18nDoc.
+            continue;
 
-        (*target)[name.substr(0, name.length() - 5)] = strings;
+        // Iterate over all XML elements in the file
+        std::string path_2 = entry.path().filename().stem().string();
+        getTextFromElements(root, path_2, target);
     }
+}
+
+void loadInternal()
+{
+    // We define a XMLDocument and attempt to load the file
+    tinyxml2::XMLDocument doc;
+    tinyxml2::XMLError error = doc.Parse(internalXML.c_str());
+
+    if (error != tinyxml2::XML_SUCCESS) // If the error variable does not equal XML_SUCCESS (0),
+    {
+        Logger::error("Cannot load internal XML: error code {}", std::to_string(error)); // we give an error message and return.
+        Logger::error("More details: {}", doc.ErrorStr());
+        return;
+    }
+
+    tinyxml2::XMLElement* root = doc.RootElement(); // We grab the root element (no need for the brls:i18nDoc check)
+
+    // Iterate over all XML elements in the file
+    getTextFromElements(root, "brls", xmlDefaultLocale);
 }
 
 void loadTranslations()
 {
-    loadLocale(LOCALE_DEFAULT, &defaultLocale);
+    // Load internal text first
+    loadInternal();
+
+    // Then load text for default locale (en-US)
+    loadLocale(LOCALE_DEFAULT, xmlDefaultLocale);
 
     std::string currentLocaleName = Application::getLocale();
+    // If current locale doesn't equal default locale (en-US), try loading current locale.
+    // If the locale doesn't exist, it falls back to the default one.
     if (currentLocaleName != LOCALE_DEFAULT)
-        loadLocale(currentLocaleName, &currentLocale);
+        loadLocale(currentLocaleName, xmlCurrentLocale);
 }
 
 namespace internal
 {
-    std::string getRawStr(std::string stringName)
+    std::string getRawStr(std::string stringName, bool internal)
     {
-        nlohmann::json::json_pointer pointer;
-
-        try
-        {
-            pointer = nlohmann::json::json_pointer("/" + stringName);
-        }
-        catch (const std::exception& e)
-        {
-            Logger::error("Error while getting string \"{}\": {}", stringName, e.what());
-            return stringName;
-        }
+        std::string currentLocaleName = Application::getLocale();
 
         // First look for translated string in current locale
-        try
+        if (currentLocaleName != LOCALE_DEFAULT)
         {
-            return currentLocale[pointer].get<std::string>();
-        }
-        catch (...)
-        {
+            for (auto& [path, value] : xmlCurrentLocale)
+            {
+                if (stringName == path)
+                    return value;
+            }
         }
 
-        // Then look for default locale
-        try
+        // Then look for default locale or internal translation (is contained in default locale by default)
+        else if (currentLocaleName == LOCALE_DEFAULT || internal)
         {
-            return defaultLocale[pointer].get<std::string>();
-        }
-        catch (...)
-        {
+            for (auto& [path, value] : xmlDefaultLocale)
+            {
+                if (stringName == path)
+                    return value;
+            }
         }
 
         // Fallback to returning the string name
@@ -137,6 +265,10 @@ inline namespace literals
         return internal::getRawStr(std::string(str, len));
     }
 
+    std::string operator"" _internal(const char* str, size_t len)
+    {
+        return internal::getRawStr(std::string(str, len), true);
+    }
 } // namespace literals
 
 } // namespace brls

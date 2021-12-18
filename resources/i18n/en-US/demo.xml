@@ -1,0 +1,42 @@
+<brls:i18nDoc>
+	<brls:String name="title">Borealis Demo App</brls:String>
+	<brls:List name="tabs">
+		<brls:String name="components">Basic components</brls:String>
+		<brls:String name="layout">Layout and alignment</brls:String>
+		<brls:String name="recycling">Recycling lists</brls:String>
+		<brls:String name="popups">Popups, notifications and dialogs</brls:String>
+		<brls:String name="hos_layout">Horizon layouts</brls:String>
+		<brls:String name="misc_layouts">Misc. layouts</brls:String>
+		<brls:String name="misc_components">Misc. components</brls:String>
+		<brls:String name="misc_tools">Misc. dev tools</brls:String>
+		<brls:String name="about">About borealis</brls:String>
+	</brls:List>
+	<brls:String name="welcome">Welcome to the borealis demo! Feel free to explore and discover what the library can do.</brls:String>
+	<brls:List name="components">
+		<brls:String name="buttons_header">Buttons</brls:String>
+		<brls:String name="button_primary">Primary button</brls:String>
+		<brls:String name="button_highlight">&#57660;  Highlight button</brls:String>
+		<brls:String name="button_wrapping">Default button with wrapping text</brls:String>
+		<brls:String name="button_bordered">Bordered button</brls:String>
+		<brls:String name="button_borderless">Borderless button</brls:String>
+		<brls:String name="labels_header">Labels</brls:String>
+		<brls:String name="regular_label">This is a label. By default, they will automatically wrap and expand their height, should the remaining vertical space allow it. Otherwise, they will be truncated, like some of the tabs of the sidebar.</brls:String>
+		<brls:String name="label_left">This label is left-aligned</brls:String>
+		<brls:String name="label_center">This label is center-aligned</brls:String>
+		<brls:String name="label_right">This label is right-aligned</brls:String>
+		<brls:String name="images_header_title">Images</brls:String>
+		<brls:String name="images_header_subtitle">Focus them to see the scaling method</brls:String>
+		<brls:String name="images_downscaled">Downscaled</brls:String>
+		<brls:String name="images_original">Original</brls:String>
+		<brls:String name="images_upscaled">Upscaled</brls:String>
+		<brls:String name="images_stretched">Stretched</brls:String>
+		<brls:String name="images_cropped">Cropped</brls:String>
+	</brls:List>
+	<brls:List name="about">
+		<brls:String name="title">borealis</brls:String>
+		<brls:String name="description">A hardware accelerated, controller and TV oriented UI library for PC and Nintendo Switch (libnx).</brls:String>
+		<brls:String name="github">Find it on github.com/natinusala/borealis</brls:String>
+		<brls:String name="licence">Licensed under Apache 2.0</brls:String>
+		<brls:String name="logo_credit">Logo by @MeganRoshelle</brls:String>
+	</brls:List>
+</brls:i18nDoc>

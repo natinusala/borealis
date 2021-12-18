@@ -16,6 +16,7 @@
 
 #include <switch.h>
 
+#include <borealis/core/application.hpp>
 #include <borealis/core/i18n.hpp>
 #include <borealis/core/logger.hpp>
 #include <borealis/platforms/switch/switch_platform.hpp>
@@ -55,16 +56,23 @@ SwitchPlatform::SwitchPlatform()
     // Get locale
     uint64_t languageCode = 0;
 
-    Result rc = setGetSystemLanguage(&languageCode);
-
-    if (R_SUCCEEDED(rc))
+    if (Application::getUsingi18n())
     {
-        char* languageName = (char*)&languageCode;
-        this->locale       = std::string(languageName);
+        Result rc = setGetSystemLanguage(&languageCode);
+
+        if (R_SUCCEEDED(rc))
+        {
+            char* languageName = (char*)&languageCode;
+            this->locale       = std::string(languageName);
+        }
+        else
+        {
+            Logger::error("switch: unable to get system language (error {:#x}), using the default one: {1}", rc, LOCALE_DEFAULT);
+            this->locale = LOCALE_DEFAULT;
+        }
     }
     else
     {
-        Logger::error("switch: unable to get system language (error {:#x}), using the default one: {1}", rc, LOCALE_DEFAULT);
         this->locale = LOCALE_DEFAULT;
     }
 }
