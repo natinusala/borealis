@@ -15,6 +15,7 @@
     limitations under the License.
 */
 
+#include <borealis/core/application.hpp>
 #include <borealis/core/logger.hpp>
 #include <borealis/core/util.hpp>
 #include <borealis/views/applet_frame.hpp>
@@ -96,8 +97,35 @@ const std::string appletFrameXML = R"xml(
     </brls:Box>
 )xml";
 
+const std::string appletFrameThemeXML = R"xml(
+    <brls:Stylesheet theme="brls/default" prefix="brls/applet_frame">
+        <brls:ThemeVariant name="light">
+            <brls:Color name="separator" value="rgb(45,45,45)"/>
+        </brls:ThemeVariant>
+
+        <brls:ThemeVariant name="dark">
+            <brls:Color name="separator" value="rgb(255,255,255)"/>
+        </brls:ThemeVariant>
+
+        <brls:Metric name="padding_sides" value="30.0"/>
+
+        <brls:Metric name="header_height" value="88.0"/>
+        <brls:Metric name="header_padding_top_bottom" value="15.0"/>
+        <brls:Metric name="header_padding_sides" value="35.0"/>
+        <brls:Metric name="header_image_title_spacing" value="18.0"/>
+        <brls:Metric name="header_title_font_size" value="28.0"/>
+        <brls:Metric name="header_title_top_offset" value="7.0"/>
+
+        <brls:Metric name="footer_height" value="73.0"/>
+        <brls:Metric name="footer_padding_top_bottom" value="20.0"/>
+        <brls:Metric name="footer_padding_sides" value="25.0"/>
+    </brls:Stylesheet>
+)xml";
+
 AppletFrame::AppletFrame()
 {
+    Application::getTheme().inflateFromXMLString(appletFrameThemeXML);
+
     this->inflateFromXMLString(appletFrameXML);
 
     this->registerStringXMLAttribute("title", [this](std::string value) {

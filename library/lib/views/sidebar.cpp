@@ -55,9 +55,39 @@ const std::string sidebarItemXML = R"xml(
     </brls:Box>
 )xml";
 
+const std::string sidebarThemeXML = R"xml(
+    <brls:Stylesheet theme="brls/default" prefix="brls/sidebar">
+        <brls:ThemeVariant name="light">
+            <brls:Color name="background" value="rgb(240,240,240)"/>
+            <brls:Color name="active_item" value="rgb(49,79,235)"/>
+            <brls:Color name="separator" value="rgb(208,208,208)"/>
+        </brls:ThemeVariant>
+
+        <brls:ThemeVariant name="dark">
+            <brls:Color name="background" value="rgb(50,50,50)"/>
+            <brls:Color name="active_item" value="rgb(0,255,204)"/>
+            <brls:Color name="separator" value="rgb(81,81,81)"/>
+        </brls:ThemeVariant>
+
+        <brls:Metric name="border_height" value="16.0"/>
+        <brls:Metric name="padding_top" value="32.0"/>
+        <brls:Metric name="padding_bottom" value="47.0"/>
+        <brls:Metric name="padding_left" value="80.0"/>
+        <brls:Metric name="padding_right" value="30.0"/>
+        <brls:Metric name="item_height" value="70.0"/>
+        <brls:Metric name="item_accent_margin_top_bottom" value="9.0"/>
+        <brls:Metric name="item_accent_margin_sides" value="8.0"/>
+        <brls:Metric name="item_accent_rect_width" value="4.0"/>
+        <brls:Metric name="item_font_size" value="22.0"/>
+        <brls:Metric name="separator_height" value="30.0"/>
+    </brls:Stylesheet>
+)xml";
+
 SidebarItem::SidebarItem()
     : Box(Axis::ROW)
 {
+    Application::getTheme().inflateFromXMLString(sidebarThemeXML);
+
     this->inflateFromXMLString(sidebarItemXML);
 
     this->registerStringXMLAttribute("label", [this](std::string value) {

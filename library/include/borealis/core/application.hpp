@@ -101,7 +101,7 @@ class Application
         return *style;
     }
 
-    static Theme getTheme();
+    static Theme &getTheme();
     static ThemeVariant getThemeVariant();
 
     /**

@@ -2,6 +2,7 @@
     Copyright 2019-2020 natinusala
     Copyright 2019 WerWolv
     Copyright 2019 p-sam
+    Copyright 2021 EmreTech
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

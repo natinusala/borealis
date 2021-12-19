@@ -15,6 +15,7 @@
     limitations under the License.
 */
 
+#include <borealis/core/application.hpp>
 #include <borealis/views/header.hpp>
 
 namespace brls
@@ -56,8 +57,33 @@ const std::string headerXML = R"xml(
     </brls:Box>
 )xml";
 
+const std::string headerThemeXML = R"xml(
+    <brls:Stylesheet theme="brls/default" prefix="brls/header">
+        <brls:ThemeVariant name="light">
+            <brls:Color name="border" value="rgb(207,207,207)"/>
+            <brls:Color name="rectangle" value="rgb(127,127,127)"/>
+            <brls:Color name="subtitle" value="rgb(140,140,140)"/>
+        </brls:ThemeVariant>
+
+        <brls:ThemeVariant name="dark">
+            <brls:Color name="border" value="rgb(78,78,78)"/>
+            <brls:Color name="rectangle" value="rgb(160,160,160)"/>
+            <brls:Color name="subtitle" value="rgb(163,163,163)"/>
+        </brls:ThemeVariant>
+
+        <brls:Metric name="padding_top_bottom" value="11.0"/> 
+        <brls:Metric name="padding_right" value="11.0"/> 
+        <brls:Metric name="rectangle_width" value="5.0"/>
+        <brls:Metric name="rectangle_height" value="22.0"/> 
+        <brls:Metric name="rectangle_margin" value="10.0"/> 
+        <brls:Metric name="font_size" value="18.0"/> 
+    </brls:Stylesheet>
+)xml";
+
 Header::Header()
 {
+    Application::getTheme().inflateFromXMLString(headerThemeXML);
+
     this->inflateFromXMLString(headerXML);
 
     this->registerStringXMLAttribute("title", [this](std::string value) {

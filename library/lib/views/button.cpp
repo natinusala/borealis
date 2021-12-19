@@ -48,8 +48,57 @@ const std::string buttonXML = R"xml(
     </brls:Box>
 )xml";
 
+const std::string buttonThemeXML = R"xml(
+    <brls:Stylesheet theme="brls/default" prefix="brls/button">
+        <brls:ThemeVariant name="light">
+            <brls:Color name="primary_enabled_background" value="rgb(50,79,241)"/>
+            <brls:Color name="primary_disabled_background" value="rgb(201,201,209)"/>
+            <brls:Color name="primary_enabled_text" value="rgb(255,255,255)"/>
+            <brls:Color name="primary_disabled_text" value="rgb(220,220,228)"/>
+
+            <brls:Color name="default_enabled_background" value="rgb(255,255,255)"/>
+            <brls:Color name="default_disabled_background" value="rgb(255,255,255)"/>
+            <brls:Color name="default_enabled_text" value="rgb(45,45,45)"/>
+            <brls:Color name="default_disabled_text" value="rgb(45,45,45)"/>
+
+            <brls:Color name="highlight_enabled_text" value="rgb(49,79,235)"/>
+            <brls:Color name="highlight_disabled_text" value="rgb(49,79,235)"/>
+
+            <brls:Color name="enabled_border_color" value="rgb(45,45,45)"/>
+            <brls:Color name="disabled_border_color" value="rgb(45,45,45)"/>
+        </brls:ThemeVariant>
+
+        <brls:ThemeVariant name="dark">
+            <brls:Color name="primary_enabled_background" value="rgb(1,255,201)"/>
+            <brls:Color name="primary_disabled_background" value="rgb(83,87,86)"/>
+            <brls:Color name="primary_enabled_text" value="rgb(52,41,55)"/>
+            <brls:Color name="primary_disabled_text" value="rgb(71,75,74)"/>
+
+            <brls:Color name="default_enabled_background" value="rgb(80,80,80)"/>
+            <brls:Color name="default_disabled_background" value="rgb(80,80,80)"/>
+            <brls:Color name="default_enabled_text" value="rgb(255,255,255)"/>
+            <brls:Color name="default_disabled_text" value="rgb(255,255,255)"/>
+
+            <brls:Color name="highlight_enabled_text" value="rgb(7,247,198)"/>
+            <brls:Color name="highlight_disabled_text" value="rgb(7,247,198)"/>
+
+            <brls:Color name="enabled_border_color" value="rgb(255,255,255)"/>
+            <brls:Color name="disabled_border_color" value="rgb(255,255,255)"/>
+        </brls:ThemeVariant>
+
+        <brls:Metric name="padding_top_bottom" value="15.0"/>
+        <brls:Metric name="padding_sides" value="25.0"/>
+        <brls:Metric name="corner_radius" value="5.0"/>
+        <brls:Metric name="text_size" value="18.0"/>
+        <brls:Metric name="primary_highlight_padding" value="2.0"/>
+        <brls:Metric name="border_thickness" value="2.0"/>
+    </brls:Stylesheet>
+)xml";
+
 Button::Button()
 {
+    Application::getTheme().inflateFromXMLString(buttonThemeXML);
+
     this->inflateFromXMLString(buttonXML);
 
     this->forwardXMLAttribute("text", this->label);

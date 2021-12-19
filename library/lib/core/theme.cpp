@@ -1,6 +1,7 @@
 /*
     Copyright 2019 natinusala
     Copyright 2019 p-sam
+    Copyright 2021 EmreTech
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -18,6 +19,7 @@
 #include <borealis/core/theme.hpp>
 #include <borealis/core/application.hpp>
 #include <borealis/core/logger.hpp>
+#include <borealis/core/util.hpp>
 #include <stdexcept>
 #include <algorithm>
 #include <cctype>
@@ -26,31 +28,31 @@ namespace brls
 {
 /*
 static ThemeValues lightThemeValues = {
-    // Generic values
+    // Generic values Done
     { "brls/background", nvgRGB(235, 235, 235) },
     { "brls/text", nvgRGB(45, 45, 45) },
     { "brls/backdrop", nvgRGBA(0, 0, 0, 178) },
     { "brls/click_pulse", nvgRGBA(13, 182, 213, 38) }, // same as highlight color1 with different opacity
 
-    // Highlight
+    // Highlight Done
     { "brls/highlight/background", nvgRGB(252, 255, 248) },
     { "brls/highlight/color1", nvgRGB(13, 182, 213) },
     { "brls/highlight/color2", nvgRGB(80, 239, 217) },
 
-    // AppletFrame
+    // AppletFrame Done
     { "brls/applet_frame/separator", nvgRGB(45, 45, 45) },
 
-    // Sidebar
+    // Sidebar Done
     { "brls/sidebar/background", nvgRGB(240, 240, 240) },
     { "brls/sidebar/active_item", nvgRGB(49, 79, 235) },
     { "brls/sidebar/separator", nvgRGB(208, 208, 208) },
 
-    // Header
+    // Header Done
     { "brls/header/border", nvgRGB(207, 207, 207) },
     { "brls/header/rectangle", nvgRGB(127, 127, 127) },
     { "brls/header/subtitle", nvgRGB(140, 140, 140) },
 
-    // Button
+    // Button Done
     { "brls/button/primary_enabled_background", nvgRGB(50, 79, 241) },
     { "brls/button/primary_disabled_background", nvgRGB(201, 201, 209) },
     { "brls/button/primary_enabled_text", nvgRGB(255, 255, 255) },
@@ -133,8 +135,10 @@ bool startsWith(const std::string& data, const std::string& prefix)
 
 NVGcolor processColorValue(const std::string val)
 {
+    // Hexadecimal
     if (startsWith(val, "#"))
     {
+        // RGB
         if (val.size() == 6 + 1)
         {
             unsigned char r, g, b;
@@ -148,6 +152,7 @@ NVGcolor processColorValue(const std::string val)
 
             return nvgRGB(r, g, b);
         }
+        // RGBA
         else if (val.size() == 8 + 1)
         {
             unsigned char r, g, b, a;
@@ -162,7 +167,37 @@ NVGcolor processColorValue(const std::string val)
             return nvgRGBA(r, g, b, a);
         }
     }
-    
+    // RGBA "Function"
+    else if (startsWith(val, "rgba"))
+    {
+        unsigned char r, g, b, a;
+        int result = sscanf(val.c_str(), "rgba(%hhd,%hhd,%hhd,%hhd)", &r, &g, &b, &a);
+        //Logger::debug("R: {} G: {} B: {} A: {}", r, g, b, a);
+
+        if (result != 4)
+        {
+            Logger::error("Theme: failed to extract rgba color value");
+            return nvgRGBA(0, 0, 0, 0);
+        }
+
+        return nvgRGBA(r, g, b, a);
+    }
+    // RGB "Function"
+    else if (startsWith(val, "rgb"))
+    {
+        unsigned char r, g, b;
+        int result = sscanf(val.c_str(), "rgb(%hhd,%hhd,%hhd)", &r, &g, &b);
+        //Logger::debug("R: {} G: {} B: {}", r, g, b);
+
+        if (result != 3)
+        {
+            Logger::error("Theme: failed to extract rgb color value");
+            return nvgRGB(0, 0, 0);
+        }
+
+        return nvgRGB(r, g, b);
+    }
+
     Logger::error("Theme: invalid color value");
     return nvgRGBA(0, 0, 0, 0);
 }
@@ -181,26 +216,22 @@ float processMetricValue(const std::string val)
     
 }
 
+/*
 void processValues(tinyxml2::XMLElement *currElem,
                     const std::string prefix,
                     const std::string themeVar,
-                    std::unordered_map<std::string, NVGcolor> &colors,
-                    std::unordered_map<std::string, float> &metrics)
+                    std::unordered_map<std::string, NVGcolor> &colors)
 {
-    for (tinyxml2::XMLElement *e = currElem->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+    for (tinyxml2::XMLElement *e = currElem->FirstChildElement("brls:Color"); e != NULL; e = e->NextSiblingElement("brls:Color"))
     {
         std::string elemName = std::string(e->Name());
         std::string name = e->Attribute("name");
         std::string value = e->Attribute("value");
 
-        if (elemName == "brls:Color")
-            colors[themeVar + "/" + name] = processColorValue(value);
-        else if (elemName == "brls:Metric")
-            metrics[themeVar + "/" + name] = processMetricValue(value);
-        else
-            continue;
+        colors[themeVar + "/" + prefix + "/" + name] = processColorValue(value);
     }
 }
+*/
 
 void Theme::inflateFromXMLElement(tinyxml2::XMLElement *element)
 {
@@ -210,7 +241,7 @@ void Theme::inflateFromXMLElement(tinyxml2::XMLElement *element)
         return;
     }
 
-    if (std::strcmp(element->Attribute("theme"), name.c_str()) != 0)
+    if (std::strcmp(element->Attribute("theme"), this->name.c_str()) != 0)
     {
         Logger::error("Theme: read stylesheet that has different theme name than current theme");
         return;
@@ -221,14 +252,34 @@ void Theme::inflateFromXMLElement(tinyxml2::XMLElement *element)
     //tinyxml2::XMLElement *element = nullptr;
     for (tinyxml2::XMLElement *e = element->FirstChildElement("brls:ThemeVariant"); e != NULL; e = e->NextSiblingElement("brls:ThemeVariant"))
     {
-        std::string currThemeVariant = e->Attribute("name");
-        if (!validThemeVariant(currThemeVariant))
-            continue;
+        if (std::strcmp(e->Name(), "brls:ThemeVariant"))
+        {
+            std::string currThemeVariant = e->Attribute("name");
+            if (!validThemeVariant(currThemeVariant))
+                continue;
 
-        std::transform(currThemeVariant.begin(), currThemeVariant.end(), 
-        currThemeVariant.begin(), [](unsigned char c){ return std::tolower(c); });
+            std::transform(currThemeVariant.begin(), currThemeVariant.end(), 
+            currThemeVariant.begin(), [](unsigned char c){ return std::tolower(c); });
+        
+            //processValues(e, prefix, currThemeVariant, colors);
+            for (tinyxml2::XMLElement *eTwo = e->FirstChildElement("brls:Color"); eTwo != NULL; eTwo = eTwo->NextSiblingElement("brls:Color"))
+            {
+                std::string name = eTwo->Attribute("name");
+                std::string value = eTwo->Attribute("value");
 
-        processValues(e, prefix, currThemeVariant, colors, metrics);
+                colors[currThemeVariant + "/" + prefix + "/" + name] = processColorValue(value);
+            }
+        }
+        else if (std::strcmp(e->Name(), "brls:Metric"))
+        {
+            for (tinyxml2::XMLElement *eTwo = e->FirstChildElement("brls:Metric"); eTwo != NULL; eTwo = eTwo->NextSiblingElement("brls:Metric"))
+            {
+                std::string name = eTwo->Attribute("name");
+                std::string value = eTwo->Attribute("value");
+
+                metrics[prefix + "/" + name] = processMetricValue(value);
+            }
+        }
     }
 }
 
@@ -256,34 +307,44 @@ void Theme::inflateFromXMLFile(const std::string path)
     Logger::error("More details: {}", doc.ErrorStr());
 }
 
-float Theme::getMetric(const std::string path, ThemeVariant variant)
-{
-    std::string themeVar = "light";
-    if (variant == ThemeVariant::DARK)
-        themeVar = "dark";
-
-    return metrics[themeVar + "/" + path];
-}
-
 NVGcolor Theme::getColor(const std::string path, ThemeVariant variant)
 {
     std::string themeVar = "light";
     if (variant == ThemeVariant::DARK)
         themeVar = "dark";
 
-    return colors[themeVar + "/" + path];
-}
+    if (colors.count(themeVar + "/" + path) == 0)
+        fatal("Unknown theme value \"" + (themeVar + "/" + path) + "\"");
 
-float Theme::getMetric(const std::string path)
-{
-    ThemeVariant var = Application::getThemeVariant();
-    return getMetric(path, var);
+    return colors[themeVar + "/" + path];
 }
 
 NVGcolor Theme::getColor(const std::string path)
 {
     ThemeVariant var = Application::getThemeVariant();
     return getColor(path, var);
+}
+
+/*
+float Theme::getMetric(const std::string path, ThemeVariant variant)
+{
+    std::string themeVar = "light";
+    if (variant == ThemeVariant::DARK)
+        themeVar = "dark";
+
+    if (metrics.count(themeVar + "/" + path) == 0)
+        fatal("Unknown theme value \"" + (themeVar + "/" + path) + "\"");
+
+    return metrics[themeVar + "/" + path];
+}
+*/
+
+float Theme::getMetric(const std::string path)
+{
+    if (metrics.count(path) == 0)
+        fatal("Unknown theme value \"" + path + "\"");
+
+    return metrics[path];
 }
 
 NVGcolor Theme::operator[](const std::string name)

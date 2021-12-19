@@ -41,7 +41,7 @@ struct Theme
     void inflateFromXMLString(const std::string xml);
     void inflateFromXMLFile(const std::string path);
 
-    float getMetric(const std::string path, ThemeVariant variant);
+    //float getMetric(const std::string path, ThemeVariant variant);
     NVGcolor getColor(const std::string path, ThemeVariant variant);
     float getMetric(const std::string path);
     NVGcolor getColor(const std::string path);
