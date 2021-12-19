@@ -445,10 +445,10 @@ void Application::frame()
     frameContext.pixelRatio = (float)Application::windowWidth / (float)Application::windowHeight;
     frameContext.vg         = Application::getNVGContext();
     frameContext.fontStash  = &Application::fontStash;
-    frameContext.theme      = Application::theme;
+    frameContext.theme      = *Application::theme;
 
     // Begin frame and clear
-    NVGcolor backgroundColor = frameContext.theme->getColor("brls/background");
+    NVGcolor backgroundColor = frameContext.theme.getColor("brls/background");
     videoContext->beginFrame();
     videoContext->clear(backgroundColor);
 

@@ -106,12 +106,12 @@ static StyleValues styleValues = {
 };
 */
 
-Style::Style(Theme theme) : parentTheme(&theme)
+Style::Style(Theme &theme) : parentTheme(theme)
 {}
 
 float Style::operator[](const std::string name)
 {
-    return parentTheme->getMetric(name);
+    return parentTheme.getMetric(name);
 }
 
 /*

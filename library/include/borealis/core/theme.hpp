@@ -36,6 +36,7 @@ enum class ThemeVariant
 struct Theme
 {
     Theme(std::string name);
+    Theme() = default;
 
     void inflateFromXMLElement(tinyxml2::XMLElement *element);
     void inflateFromXMLString(const std::string xml);

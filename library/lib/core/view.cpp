@@ -100,13 +100,13 @@ void View::frame(FrameContext* ctx)
 
     Theme theme    = Application::getTheme();
     Style style    = Style(theme);
-    Theme oldTheme = *ctx->theme;
+    Theme oldTheme = ctx->theme;
 
     nvgSave(ctx->vg);
 
     // Theme override
     if (this->themeOverride)
-        ctx->theme = themeOverride;
+        ctx->theme = *themeOverride;
 
     float x      = this->getX();
     float y      = this->getY();
@@ -128,7 +128,7 @@ void View::frame(FrameContext* ctx)
 
         // Draw highlight background
         if (this->highlightAlpha > 0.0f && !this->hideHighlightBackground)
-            this->drawHighlight(ctx->vg, *ctx->theme, this->highlightAlpha, style, true);
+            this->drawHighlight(ctx->vg, ctx->theme, this->highlightAlpha, style, true);
 
         // Draw click animation
         if (this->clickAlpha > 0.0f)
@@ -146,7 +146,7 @@ void View::frame(FrameContext* ctx)
 
         // Draw highlight
         if (this->highlightAlpha > 0.0f)
-            this->drawHighlight(ctx->vg, *ctx->theme, this->highlightAlpha, style, false);
+            this->drawHighlight(ctx->vg, ctx->theme, this->highlightAlpha, style, false);
 
         if (this->wireframeEnabled)
             this->drawWireframe(ctx, x, y, width, height);
@@ -160,7 +160,7 @@ void View::frame(FrameContext* ctx)
 
     // Cleanup
     if (this->themeOverride)
-        ctx->theme = &oldTheme;
+        ctx->theme = oldTheme;
 
     nvgRestore(ctx->vg);
 }
@@ -195,7 +195,7 @@ void View::playClickAnimation(bool reverse)
 
 void View::drawClickAnimation(NVGcontext* vg, FrameContext* ctx, float x, float y, float width, float height)
 {
-    Theme theme    = *ctx->theme;
+    Theme theme    = ctx->theme;
     NVGcolor color = theme["brls/click_pulse"];
 
     color.a *= this->clickAlpha;
@@ -555,7 +555,7 @@ void View::drawBackground(NVGcontext* vg, FrameContext* ctx, Style style)
     float width  = this->getWidth();
     float height = this->getHeight();
 
-    Theme theme = *ctx->theme;
+    Theme theme = ctx->theme;
 
     switch (this->background)
     {

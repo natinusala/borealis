@@ -241,6 +241,12 @@ void Theme::inflateFromXMLElement(tinyxml2::XMLElement *element)
         return;
     }
 
+    if (std::strcmp(element->Name(), "brls:Stylesheet") != 0)
+    {
+        Logger::error("Theme: read stylesheet that has \"{}\" as a root element", element->Name());
+        return;
+    }
+
     if (std::strcmp(element->Attribute("theme"), this->name.c_str()) != 0)
     {
         Logger::error("Theme: read stylesheet that has different theme name than current theme");
@@ -250,10 +256,12 @@ void Theme::inflateFromXMLElement(tinyxml2::XMLElement *element)
     std::string prefix = std::string(element->Attribute("prefix"));
 
     //tinyxml2::XMLElement *element = nullptr;
-    for (tinyxml2::XMLElement *e = element->FirstChildElement("brls:ThemeVariant"); e != NULL; e = e->NextSiblingElement("brls:ThemeVariant"))
+    for (tinyxml2::XMLElement *e = element->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
     {
+        Logger::debug("Looping through elements");
         if (std::strcmp(e->Name(), "brls:ThemeVariant"))
         {
+            Logger::debug("Found brls:ThemeVariant");
             std::string currThemeVariant = e->Attribute("name");
             if (!validThemeVariant(currThemeVariant))
                 continue;
@@ -272,13 +280,13 @@ void Theme::inflateFromXMLElement(tinyxml2::XMLElement *element)
         }
         else if (std::strcmp(e->Name(), "brls:Metric"))
         {
-            for (tinyxml2::XMLElement *eTwo = e->FirstChildElement("brls:Metric"); eTwo != NULL; eTwo = eTwo->NextSiblingElement("brls:Metric"))
-            {
-                std::string name = eTwo->Attribute("name");
-                std::string value = eTwo->Attribute("value");
+            Logger::debug("Found brls:Metric");
+            // Crashes here?
+            std::string name = std::string(e->Attribute("name"));
+            std::string value = std::string(e->Attribute("value"));
 
-                metrics[prefix + "/" + name] = processMetricValue(value);
-            }
+            metrics[prefix + "/" + name] = processMetricValue(value);
+            //Logger::debug("{}", prefix + "/" + name);
         }
     }
 }

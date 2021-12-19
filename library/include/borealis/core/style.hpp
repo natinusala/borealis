@@ -32,13 +32,13 @@ struct Theme;
 // KEPT FOR BACKWARDS COMPATIBILITY
 struct Style
 {
-    Style(Theme theme);
+    Style(Theme &theme);
     
     // Shortcut for Theme.getMetric(name)
     float operator[](const std::string name);
 
     private:
-    Theme *parentTheme;
+    Theme &parentTheme;
 };
 
 } // namespace brls
