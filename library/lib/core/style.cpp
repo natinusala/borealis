@@ -2,6 +2,7 @@
     Copyright 2019 natinusala
     Copyright 2019 WerWolv
     Copyright 2019 p-sam
+    Copyright 2021 EmreTech
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -17,14 +18,15 @@
 */
 
 #include <borealis/core/style.hpp>
+#include <borealis/core/theme.hpp>
 #include <borealis/core/util.hpp>
 #include <stdexcept>
 
 namespace brls
 {
-
+/*
 static StyleValues styleValues = {
-    // Animations
+    // Animations Done
     { "brls/animations/show", 250.0f },
     { "brls/animations/show_slide", 125.0f },
 
@@ -34,7 +36,7 @@ static StyleValues styleValues = {
     { "brls/animations/label_scrolling_timer", 1500.0f },
     { "brls/animations/label_scrolling_speed", 0.05f },
 
-    // Highlight
+    // Highlight Done
     { "brls/highlight/stroke_width", 5.0f },
     { "brls/highlight/corner_radius", 0.5f },
     { "brls/highlight/shadow_width", 2.0f },
@@ -42,7 +44,7 @@ static StyleValues styleValues = {
     { "brls/highlight/shadow_feather", 10.0f },
     { "brls/highlight/shadow_opacity", 128.0f },
 
-    // AppletFrame
+    // AppletFrame Done
     { "brls/applet_frame/padding_sides", 30.0f },
 
     { "brls/applet_frame/header_height", 88.0f },
@@ -56,12 +58,12 @@ static StyleValues styleValues = {
     { "brls/applet_frame/footer_padding_top_bottom", 20.0f },
     { "brls/applet_frame/footer_padding_sides", 25.0f },
 
-    // TabFrame
+    // TabFrame Done
     { "brls/tab_frame/sidebar_width", 410.0f },
     { "brls/tab_frame/content_padding_top_bottom", 42.0f }, // unused by the library, here for users
     { "brls/tab_frame/content_padding_sides", 60.0f }, // unused by the library, here for users
 
-    // Sidebar
+    // Sidebar Done
     { "brls/sidebar/border_height", 16.0f },
     { "brls/sidebar/padding_top", 32.0f },
     { "brls/sidebar/padding_bottom", 47.0f },
@@ -74,13 +76,13 @@ static StyleValues styleValues = {
     { "brls/sidebar/item_font_size", 22.0f },
     { "brls/sidebar/separator_height", 30.0f },
 
-    // Label
+    // Label Done
     { "brls/label/default_font_size", 20.0f },
     { "brls/label/default_line_height", 1.65f },
     { "brls/label/scrolling_animation_spacing", 50.0f },
     { "brls/label/highlight_padding", 2.0f },
 
-    // Header
+    // Header Done
     { "brls/header/padding_top_bottom", 11.0f },
     { "brls/header/padding_right", 11.0f },
     { "brls/header/rectangle_width", 5.0f },
@@ -88,7 +90,7 @@ static StyleValues styleValues = {
     { "brls/header/rectangle_margin", 10.0f },
     { "brls/header/font_size", 18.0f },
 
-    // Button
+    // Button Done
     { "brls/button/padding_top_bottom", 15.0f },
     { "brls/button/padding_sides", 25.0f },
     { "brls/button/corner_radius", 5.0f },
@@ -96,57 +98,20 @@ static StyleValues styleValues = {
     { "brls/button/primary_highlight_padding", 2.0f },
     { "brls/button/border_thickness", 2.0f },
 
-    // Generic shadow
+    // Generic shadow Done
     { "brls/shadow/width", 2.0f },
     { "brls/shadow/feather", 10.0f },
     { "brls/shadow/opacity", 63.75f },
     { "brls/shadow/offset", 10.0f },
 };
+*/
 
-static Style style(&styleValues);
+Style::Style(Theme &theme) : parentTheme(theme)
+{}
 
-Style getStyle()
+float Style::operator[](const std::string name)
 {
-    return style;
-}
-
-StyleValues::StyleValues(std::initializer_list<std::pair<std::string, float>> list)
-{
-    for (std::pair<std::string, float> metric : list)
-        this->values.insert(metric);
-}
-
-void StyleValues::addMetric(std::string name, float metric)
-{
-    this->values.insert(std::make_pair(name, metric));
-}
-
-float StyleValues::getMetric(std::string name)
-{
-    if (this->values.count(name) == 0)
-        fatal("Unknown style metric \"" + name + "\"");
-
-    return this->values[name];
-}
-
-Style::Style(StyleValues* values)
-    : values(values)
-{
-}
-
-float Style::getMetric(std::string name)
-{
-    return this->values->getMetric(name);
-}
-
-void Style::addMetric(std::string name, float metric)
-{
-    return this->values->addMetric(name, metric);
-}
-
-float Style::operator[](std::string name)
-{
-    return this->getMetric(name);
+    return parentTheme.getMetric(name);
 }
 
 /*

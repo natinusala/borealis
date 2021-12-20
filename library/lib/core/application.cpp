@@ -54,10 +54,80 @@ constexpr uint32_t ORIGINAL_WINDOW_HEIGHT = 720;
 namespace brls
 {
 
+const std::string generalThemeXML = R"xml(
+    <brls:Stylesheet theme="brls/default" prefix="brls">
+        <brls:ThemeVariant name="light">
+            <brls:Color name="background" value="rgb(235,235,235)"/>
+            <brls:Color name="text" value="rgb(45,45,45)"/> 
+            <brls:Color name="backdrop" value="rgba(0,0,0,178)"/> 
+            <brls:Color name="click_pulse" value="rgba(13,182,213,38)"/> 
+        </brls:ThemeVariant>
+
+        <brls:ThemeVariant name="dark">
+            <brls:Color name="background" value="rgb(45,45,45)"/> 
+            <brls:Color name="text" value="rgb(255,255,255)"/> 
+            <brls:Color name="backdrop" value="rgba(0,0,0,178)"/> 
+            <brls:Color name="click_pulse" value="rgba(25,138,198,38)"/> 
+        </brls:ThemeVariant>
+    </brls:Stylesheet>
+)xml";
+
+const std::string highlightThemeXML = R"xml(
+    <brls:Stylesheet theme="brls/default" prefix="brls/highlight">
+        <brls:ThemeVariant name="light">
+            <brls:Color name="background" value="rgb(252,255,248)"/>
+            <brls:Color name="color1" value="rgb(13,182,213)"/>
+            <brls:Color name="color2" value="rgb(80,239,217)"/>
+        </brls:ThemeVariant>
+
+        <brls:ThemeVariant name="dark">
+            <brls:Color name="background" value="rgb(31,34,39)"/>
+            <brls:Color name="color1" value="rgb(25,138,198)"/>
+            <brls:Color name="color2" value="rgb(137,241,242)"/>
+        </brls:ThemeVariant>
+
+        <brls:Metric name="stroke_width" value="5.0"/>
+        <brls:Metric name="corner_radius" value="0.5"/>
+        <brls:Metric name="shadow_width" value="2.0"/>
+        <brls:Metric name="shadow_offset" value="10.0"/>
+        <brls:Metric name="shadow_feather" value="10.0"/>
+        <brls:Metric name="shadow_opacity" value="128.0"/>
+    </brls:Stylesheet>
+)xml";
+
+const std::string animationThemeXML = R"xml(
+    <brls:Stylesheet theme="brls/default" prefix="brls/animations">
+        <brls:Metric name="show" value="250.0"/>
+        <brls:Metric name="show_slide" value="125.0"/>
+
+        <brls:Metric name="highlight" value="100.0"/>
+        <brls:Metric name="highlight_shake" value="15.0"/>
+
+        <brls:Metric name="label_scrolling_timer" value="1500.0"/>
+        <brls:Metric name="label_scrolling_speed" value="0.05"/>
+    </brls:Stylesheet>
+)xml";
+
+const std::string shadowThemeXML = R"xml(
+    <brls:Stylesheet theme="brls/default" prefix="brls/shadow">
+        <brls:Metric name="width" value="2.0"/>
+        <brls:Metric name="feather" value="10.0"/>
+        <brls:Metric name="opacity" value="63.75"/>
+        <brls:Metric name="offset" value="10.0"/>
+    </brls:Stylesheet>
+)xml";
+
 bool Application::init()
 {
     // Init platform
     Application::platform = Platform::createPlatform();
+    Application::theme = new Theme("brls/default");
+    Application::style = new Style(*Application::theme);
+
+    Application::theme->inflateFromXMLString(generalThemeXML);
+    Application::theme->inflateFromXMLString(highlightThemeXML);
+    Application::theme->inflateFromXMLString(animationThemeXML);
+    Application::theme->inflateFromXMLString(shadowThemeXML);
 
     if (!Application::platform)
     {
@@ -375,10 +445,10 @@ void Application::frame()
     frameContext.pixelRatio = (float)Application::windowWidth / (float)Application::windowHeight;
     frameContext.vg         = Application::getNVGContext();
     frameContext.fontStash  = &Application::fontStash;
-    frameContext.theme      = Application::getTheme();
+    frameContext.theme      = *Application::theme;
 
     // Begin frame and clear
-    NVGcolor backgroundColor = frameContext.theme["brls/background"];
+    NVGcolor backgroundColor = frameContext.theme.getColor("brls/background");
     videoContext->beginFrame();
     videoContext->clear(backgroundColor);
 
@@ -632,12 +702,9 @@ void Application::clear()
     Application::activitiesStack.clear();
 }
 
-Theme Application::getTheme()
+Theme &Application::getTheme()
 {
-    if (Application::getThemeVariant() == ThemeVariant::LIGHT)
-        return getLightTheme();
-    else
-        return getDarkTheme();
+    return *theme;
 }
 
 ThemeVariant Application::getThemeVariant()

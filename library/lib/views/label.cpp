@@ -164,10 +164,20 @@ static YGSize labelMeasureFunc(YGNodeRef node, float width, YGMeasureMode widthM
     return size;
 }
 
+const std::string labelThemeXML = R"xml(
+    <brls:Stylesheet theme="brls/default" prefix="brls/label">
+        <brls:Metric name="default_font_size" value="20.0"/>
+        <brls:Metric name="default_line_height" value="1.65"/>
+        <brls:Metric name="scrolling_animation_spacing" value="50.0"/>
+        <brls:Metric name="highlight_padding" value="2.0"/>
+    </brls:Stylesheet>
+)xml";
+
 Label::Label()
 {
     Style style = Application::getStyle();
-    Theme theme = Application::getTheme();
+    Theme &theme = Application::getTheme();
+    theme.inflateFromXMLString(labelThemeXML);
 
     // Default attributes
     this->font       = Application::getFont(FONT_REGULAR);

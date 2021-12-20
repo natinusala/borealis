@@ -54,9 +54,7 @@ View::View()
     this->registerCommonAttributes();
 
     // Default values
-    Style style = Application::getStyle();
-
-    this->highlightCornerRadius = style["brls/highlight/corner_radius"];
+    this->highlightCornerRadius = Application::getStyle()["brls/highlight/corner_radius"];
 }
 
 static int shakeAnimation(float t, float a) // a = amplitude
@@ -100,7 +98,8 @@ void View::frame(FrameContext* ctx)
     if (this->visibility != Visibility::VISIBLE)
         return;
 
-    Style style    = Application::getStyle();
+    Theme theme    = Application::getTheme();
+    Style style    = Style(theme);
     Theme oldTheme = ctx->theme;
 
     nvgSave(ctx->vg);
@@ -1385,7 +1384,7 @@ bool View::applyXMLAttribute(std::string name, std::string value)
     {
         // Parse the style name
         std::string styleName = value.substr(7); // length of "@style/"
-        float value           = Application::getStyle()[styleName]; // will throw logic_error if the metric doesn't exist
+        float value           = Application::getTheme().getMetric(styleName); // will throw logic_error if the metric doesn't exist
 
         if (this->floatAttributes.count(name) > 0)
         {

@@ -98,10 +98,10 @@ class Application
 
     inline static Style getStyle()
     {
-        return brls::getStyle();
+        return *style;
     }
 
-    static Theme getTheme();
+    static Theme &getTheme();
     static ThemeVariant getThemeVariant();
 
     /**
@@ -195,6 +195,8 @@ class Application
     inline static bool quitRequested = false;
 
     inline static Platform* platform = nullptr;
+    inline static Theme* theme = nullptr;
+    inline static Style* style = nullptr;
 
     inline static std::string title;
 

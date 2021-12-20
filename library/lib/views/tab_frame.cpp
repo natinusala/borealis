@@ -16,6 +16,7 @@
     limitations under the License.
 */
 
+#include <borealis/core/application.hpp>
 #include <borealis/core/logger.hpp>
 #include <borealis/core/util.hpp>
 #include <borealis/views/tab_frame.hpp>
@@ -37,11 +38,21 @@ const std::string tabFrameContentXML = R"xml(
     </brls:Box>
 )xml";
 
+const std::string tabFrameThemeXML = R"xml(
+    <brls:Stylesheet theme="brls/default" prefix="brls/tab_frame">
+        <brls:Metric name="sidebar_width" value="410.0"/>
+        <brls:Metric name="content_padding_top_bottom" value="42.0"/>
+        <brls:Metric name="content_padding_sides" value="60.0"/>
+    </brls:Stylesheet>
+)xml";
+
 namespace brls
 {
 
 TabFrame::TabFrame()
 {
+    Application::getTheme().inflateFromXMLString(tabFrameThemeXML);
+
     View* contentView = View::createFromXMLString(tabFrameContentXML);
     this->setContentView(contentView);
 }

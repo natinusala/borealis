@@ -1,6 +1,7 @@
 /*
     Copyright 2019-2020 natinusala
     Copyright 2019 p-sam
+    Copyright 2021 EmreTech
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -18,8 +19,8 @@
 #pragma once
 
 #include <nanovg.h>
+#include <tinyxml2.h>
 
-#include <initializer_list>
 #include <string>
 #include <unordered_map>
 
@@ -32,33 +33,34 @@ enum class ThemeVariant
     DARK
 };
 
-class ThemeValues
+struct Theme
 {
-  public:
-    ThemeValues(std::initializer_list<std::pair<std::string, NVGcolor>> list);
+    Theme(std::string name);
+    Theme() = default;
 
-    void addColor(std::string name, NVGcolor color);
-    NVGcolor getColor(std::string name);
+    void inflateFromXMLElement(tinyxml2::XMLElement *element);
+    void inflateFromXMLString(const std::string xml);
+    void inflateFromXMLFile(const std::string path);
 
-  private:
-    std::unordered_map<std::string, NVGcolor> values;
+    //float getMetric(const std::string path, ThemeVariant variant);
+
+    NVGcolor getColor(const std::string path, ThemeVariant variant);
+    float getMetric(const std::string path);
+    NVGcolor getColor(const std::string path);
+
+    // Shortcut for getColor(name)
+    NVGcolor operator[](const std::string name);
+
+    void getAllMetricKeys(const std::string prefix);
+
+    private:
+    // Each color/metric has a key of their theme variant + prefix
+    // An example: "dark/brls/sidebar/background"
+
+    std::unordered_map<std::string, NVGcolor> colors;
+    std::unordered_map<std::string, float> metrics;
+
+    std::string name;
 };
-
-// Simple wrapper around ThemeValues for the array operator
-class Theme
-{
-  public:
-    Theme(ThemeValues* values);
-    NVGcolor operator[](std::string name);
-
-    void addColor(std::string name, NVGcolor color);
-    NVGcolor getColor(std::string name);
-
-  private:
-    ThemeValues* values;
-};
-
-Theme getLightTheme();
-Theme getDarkTheme();
 
 } // namespace brls
