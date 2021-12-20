@@ -165,7 +165,7 @@ static YGSize labelMeasureFunc(YGNodeRef node, float width, YGMeasureMode widthM
 }
 
 const std::string labelThemeXML = R"xml(
-    <brls:Stylesheet theme="brls/default" prefix="brls/header">
+    <brls:Stylesheet theme="brls/default" prefix="brls/label">
         <brls:Metric name="default_font_size" value="20.0"/>
         <brls:Metric name="default_line_height" value="1.65"/>
         <brls:Metric name="scrolling_animation_spacing" value="50.0"/>

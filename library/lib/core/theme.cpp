@@ -258,10 +258,8 @@ void Theme::inflateFromXMLElement(tinyxml2::XMLElement *element)
     //tinyxml2::XMLElement *element = nullptr;
     for (tinyxml2::XMLElement *e = element->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
     {
-        Logger::debug("Looping through elements");
-        if (std::strcmp(e->Name(), "brls:ThemeVariant"))
+        if (std::strcmp(e->Name(), "brls:ThemeVariant") == 0)
         {
-            Logger::debug("Found brls:ThemeVariant");
             std::string currThemeVariant = e->Attribute("name");
             if (!validThemeVariant(currThemeVariant))
                 continue;
@@ -278,15 +276,13 @@ void Theme::inflateFromXMLElement(tinyxml2::XMLElement *element)
                 colors[currThemeVariant + "/" + prefix + "/" + name] = processColorValue(value);
             }
         }
-        else if (std::strcmp(e->Name(), "brls:Metric"))
+        else if (std::strcmp(e->Name(), "brls:Metric") == 0)
         {
-            Logger::debug("Found brls:Metric");
-            // Crashes here?
             std::string name = std::string(e->Attribute("name"));
             std::string value = std::string(e->Attribute("value"));
 
             metrics[prefix + "/" + name] = processMetricValue(value);
-            //Logger::debug("{}", prefix + "/" + name);
+            Logger::debug("{}/{}", prefix, name);
         }
     }
 }
