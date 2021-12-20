@@ -43,12 +43,15 @@ struct Theme
     void inflateFromXMLFile(const std::string path);
 
     //float getMetric(const std::string path, ThemeVariant variant);
+
     NVGcolor getColor(const std::string path, ThemeVariant variant);
     float getMetric(const std::string path);
     NVGcolor getColor(const std::string path);
 
     // Shortcut for getColor(name)
     NVGcolor operator[](const std::string name);
+
+    void getAllMetricKeys(const std::string prefix);
 
     private:
     // Each color/metric has a key of their theme variant + prefix

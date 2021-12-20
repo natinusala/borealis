@@ -176,7 +176,7 @@ const std::string labelThemeXML = R"xml(
 Label::Label()
 {
     Style style = Application::getStyle();
-    Theme theme = Application::getTheme();
+    Theme &theme = Application::getTheme();
     theme.inflateFromXMLString(labelThemeXML);
 
     // Default attributes

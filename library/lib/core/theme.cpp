@@ -282,7 +282,7 @@ void Theme::inflateFromXMLElement(tinyxml2::XMLElement *element)
             std::string value = std::string(e->Attribute("value"));
 
             metrics[prefix + "/" + name] = processMetricValue(value);
-            Logger::debug("{}/{}", prefix, name);
+            //Logger::debug("{}/{}", prefix, name);
         }
     }
 }
@@ -354,6 +354,18 @@ float Theme::getMetric(const std::string path)
 NVGcolor Theme::operator[](const std::string name)
 {
     return getColor(name);
+}
+
+void Theme::getAllMetricKeys(const std::string prefix)
+{
+    for (const auto &e : metrics)
+    {
+        Logger::debug("Metric with name {}: {}", e.first, e.second);
+        if (startsWith(e.first, prefix))
+        {
+            Logger::debug("Metric under {} prefix: {}", prefix, e.second);
+        }
+    }
 }
 
 } // namespace brls

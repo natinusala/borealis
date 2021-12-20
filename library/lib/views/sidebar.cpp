@@ -86,8 +86,6 @@ const std::string sidebarThemeXML = R"xml(
 SidebarItem::SidebarItem()
     : Box(Axis::ROW)
 {
-    Application::getTheme().inflateFromXMLString(sidebarThemeXML);
-
     this->inflateFromXMLString(sidebarItemXML);
 
     this->registerStringXMLAttribute("label", [this](std::string value) {
@@ -160,6 +158,7 @@ void SidebarItem::setLabel(std::string label)
 
 Sidebar::Sidebar()
 {
+    Application::getTheme().inflateFromXMLString(sidebarThemeXML);
     Style style = Application::getStyle();
 
     this->setScrollingBehavior(ScrollingBehavior::CENTERED);

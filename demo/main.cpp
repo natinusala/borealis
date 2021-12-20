@@ -72,6 +72,29 @@ int main(int argc, char* argv[])
     brls::getStyle().addMetric("about/description_margin", 50);
     */
 
+    const std::string captionedImageThemeXML = R"xml(
+        <brls:Stylesheet theme="brls/default" prefix="captioned_image">
+            <brls:ThemeVariant name="light">
+                <brls:Color name="caption" value="rgb(2,176,183)"/>
+            </brls:ThemeVariant>
+
+            <brls:ThemeVariant name="dark">
+                <brls:Color name="caption" value="rgb(51,186,227)"/>
+            </brls:ThemeVariant>
+        </brls:Stylesheet>
+    )xml";
+
+    const std::string aboutThemeXML = R"xml(
+        <brls:Stylesheet theme="brls/default" prefix="about">
+            <brls:Metric name="padding_top_bottom" value="50.0"/>
+            <brls:Metric name="padding_sides" value="75.0"/>
+            <brls:Metric name="description_margin" value="50.0"/>
+        </brls:Stylesheet>
+    )xml";
+
+    brls::Application::getTheme().inflateFromXMLString(captionedImageThemeXML);
+    brls::Application::getTheme().inflateFromXMLString(aboutThemeXML);
+
     // Create and push the main activity to the stack
     brls::Application::pushActivity(new MainActivity());
 
