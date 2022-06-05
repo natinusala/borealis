@@ -1,6 +1,7 @@
 .*/
 build/
 build.nx/
+config/
 *~
 *.bak
 *.nro
@@ -9,3 +10,4 @@ build.nx/
 .vscode
 builddir
 *.dksh
+.DS_Store

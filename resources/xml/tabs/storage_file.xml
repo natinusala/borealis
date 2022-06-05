@@ -1,0 +1,50 @@
+<brls:Box
+    width="auto"
+    height="auto"> 
+    
+    <brls:Box
+        width="auto"
+        height="auto"
+        axis="column"
+        paddingLeft="@style/brls/tab_frame/content_padding_sides"
+        paddingRight="@style/brls/tab_frame/content_padding_sides"
+        paddingTop="@style/brls/tab_frame/content_padding_top_bottom"
+        paddingBottom="@style/brls/tab_frame/content_padding_top_bottom">    
+
+        <!-- Yes, I know there isn't any i18n text, but I'm too lazy to include it. -->
+
+        <brls:Box
+            width="auto"
+            height="auto"
+            axis="column">
+
+            <brls:Button
+                width="auto"
+                height="auto"
+                style="primary"
+                shrink="1.0"
+                marginBottom="30px"
+                text="Write data to file"
+                id="writeData"/>
+
+            <brls:Button
+                width="auto"
+                height="auto"
+                style="primary"
+                shrink="1.0"
+                marginBottom="30px"
+                text="Read data from file"
+                id="readData"/>
+
+        </brls:Box>
+
+        <brls:Label
+            id="verboseText"
+            width="auto"
+            height="auto"
+            text=""
+            marginTop="50px" />
+
+    </brls:Box>
+
+</brls:Box>
