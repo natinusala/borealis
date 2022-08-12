@@ -27,73 +27,89 @@ namespace brls
 
 void SwitchFontLoader::loadFonts()
 {
-    PlFontData font;
     Result rc;
+    PlFontData fonts[PlSharedFontType_Total];
+    PlFontData* fontsSorted[PlSharedFontType_Total];
+    std::string locale = Application::getLocale();
 
-    // Standard
-    rc = plGetSharedFontByType(&font, PlSharedFontType_Standard);
+    bool useStandardOnly = false;
+    // Compile-time flag
+    #ifdef SW_STANDARD_FONT_ONLY
+        bool useStandardOnly = true;
+        Logger::warning("switch: saving RAM: use standard shared font only!");
+    #endif
+
+    // todo: plGetSharedFont must use (u64)languageCode, conflict with suggested use of (std::string)locale
+    uint64_t languageCode = 0;
+    rc = setGetSystemLanguage(&languageCode);
     if (R_SUCCEEDED(rc))
-        Application::loadFontFromMemory(FONT_STANDARD_REGULAR, font.address, font.size, false);
-    else
-        Logger::error("switch: could not load Standard shared font: {:#x}", rc);
-
     {
-        // Detect if non applet
-        bool isFullFallback = false;
-        AppletType at = appletGetAppletType();
-        if (at == AppletType_Application || at == AppletType_SystemApplication) // title takeover
+        int total_fonts=0;
+        rc = plGetSharedFont(languageCode, fonts, PlSharedFontType_Total, &total_fonts);
+        if (R_SUCCEEDED(rc))
         {
-            isFullFallback = true;
-            Logger::info("switch: non applet mode, all shared font will be loaded!");
-        } else {
-            Logger::info("switch: applet mode, only shared font for current locale will be loaded!");
+            for (int i=0; i<PlSharedFontType_Total; i++) {
+                fontsSorted[fonts[i].type] = &fonts[i];
+            }
         }
-        std::string locale = Application::getLocale();
+        else
+            Logger::error("switch: could not load multi shared font: {:#x}", rc);
 
-        if (locale == LOCALE_ZH_CN || locale == LOCALE_ZH_HANS || isFullFallback)
+        // Standard
+        Application::loadFontFromMemory(FONT_HOS_STANDARD,
+            fontsSorted[PlSharedFontType_Standard]->address,
+            fontsSorted[PlSharedFontType_Standard]->size, false);
+
+        if (!useStandardOnly)
         {
-            // S.Chinese
-            rc = plGetSharedFontByType(&font, PlSharedFontType_ChineseSimplified);
-            if (R_SUCCEEDED(rc))
-                Application::loadFontFromMemory(FONT_SCHINESE_REGULAR, font.address, font.size, false);
-            else
-                Logger::error("switch: could not load S.Chinese shared font: {:#x}", rc);
+            bool isFullFallback = false;
+            // Detect if non applet
+            AppletType at = appletGetAppletType();
+            if (at == AppletType_Application || at == AppletType_SystemApplication) // title takeover
+                isFullFallback = true;
+            
+            // Compile-time flag
+            #ifdef SW_DISABLE_FONT_FALLBACK
+                isFullFallback = false;
+                Logger::warning("switch: saving RAM: full font fallback is disabled!");
+            #endif
 
-            // Ext S.Chinese
-            rc = plGetSharedFontByType(&font, PlSharedFontType_ExtChineseSimplified);
-            if (R_SUCCEEDED(rc))
-                Application::loadFontFromMemory(FONT_SCHINESE_EXTEND, font.address, font.size, false);
+            if (isFullFallback)
+                Logger::info("switch: non applet mode, all shared fonts will be loaded!");
             else
-                Logger::error("switch: could not load Ext. S.Chinese shared font: {:#x}", rc);
-        }
+                Logger::info("switch: applet mode or disabling fallback, only shared font for current locale will be loaded.");
 
-        if (locale == LOCALE_ZH_TW || locale == LOCALE_ZH_HANT || isFullFallback)
-        {
-            // T.Chinese
-            rc = plGetSharedFontByType(&font, PlSharedFontType_ChineseTraditional);
-            if (R_SUCCEEDED(rc))
-                Application::loadFontFromMemory(FONT_TCHINESE_REGULAR, font.address, font.size, false);
-            else
-                Logger::error("switch: could not load T.Chinese shared font: {:#x}", rc);
-        }
+            if (locale == LOCALE_ZH_CN || locale == LOCALE_ZH_HANS || isFullFallback)
+            {
+                // S.Chinese
+                Application::loadFontFromMemory(FONT_HOS_SCHINESE,
+                    fontsSorted[PlSharedFontType_ChineseSimplified]->address,
+                    fontsSorted[PlSharedFontType_ChineseSimplified]->size, false);
+                // Ext S.Chinese
+                Application::loadFontFromMemory(FONT_HOS_SCHINESE_EXTEND,
+                    fontsSorted[PlSharedFontType_ExtChineseSimplified]->address,
+                    fontsSorted[PlSharedFontType_ExtChineseSimplified]->size, false);
+            }
 
-        if (locale == LOCALE_KO || isFullFallback)
-        {
-            // Korean
-            rc = plGetSharedFontByType(&font, PlSharedFontType_KO);
-            if (R_SUCCEEDED(rc))
-                Application::loadFontFromMemory(FONT_KOREAN_REGULAR, font.address, font.size, false);
-            else
-                Logger::error("switch: could not load Korean shared font: {:#x}", rc);
+            if (locale == LOCALE_ZH_TW || locale == LOCALE_ZH_HANT || isFullFallback)
+                // T.Chinese
+                Application::loadFontFromMemory(FONT_HOS_TCHINESE,
+                    fontsSorted[PlSharedFontType_ChineseTraditional]->address,
+                    fontsSorted[PlSharedFontType_ChineseTraditional]->size, false);
+
+            if (locale == LOCALE_KO || isFullFallback)
+                // Korean
+                Application::loadFontFromMemory(FONT_HOS_KOREAN,
+                    fontsSorted[PlSharedFontType_KO]->address,
+                    fontsSorted[PlSharedFontType_KO]->size, false);
         }
     }
+    else if (R_FAILED(rc))
+        Logger::error("switch: shared font loading stopped - could not load languageCode: {:#x}", rc);
 
-    // Extented (symbols)
-    rc = plGetSharedFontByType(&font, PlSharedFontType_NintendoExt);
-    if (R_SUCCEEDED(rc))
-        Application::loadFontFromMemory(FONT_SWITCH_ICONS, font.address, font.size, false);
-    else
-        Logger::error("switch: could not load Extented shared font: {:#x}", rc);
+    Application::loadFontFromMemory(FONT_SWITCH_ICONS,
+        fontsSorted[PlSharedFontType_NintendoExt]->address,
+        fontsSorted[PlSharedFontType_NintendoExt]->size, false); 
 
     // Material icons
     if (!this->loadMaterialFromResources())

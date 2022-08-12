@@ -25,13 +25,13 @@ namespace brls
 static constexpr const int FONT_INVALID = -1;
 
 static const std::string FONT_REGULAR          = "regular"; // regular font (Borealis default font)
-static const std::string FONT_STANDARD_REGULAR = "standard"; // regular Standard (Latin/Japanese) font
-static const std::string FONT_SCHINESE_REGULAR = "schinese"; // regular S.Chinese font
-static const std::string FONT_SCHINESE_EXTEND  = "extschinese"; // extended S.Chinese font
-static const std::string FONT_TCHINESE_REGULAR = "tchinese"; // regular T.Chinese font
-static const std::string FONT_KOREAN_REGULAR   = "korean"; // regular Korean font
+static const std::string FONT_HOS_STANDARD = "switch_standard"; // Switch Standard (Latin/Japanese) shared font
+static const std::string FONT_HOS_SCHINESE = "switch_schinese"; // Switch S.Chinese shared font
+static const std::string FONT_HOS_SCHINESE_EXTEND  = "switch_extschinese"; // Switch extended S.Chinese shared font
+static const std::string FONT_HOS_TCHINESE = "switch_tchinese"; // Switch T.Chinese shared font
+static const std::string FONT_HOS_KOREAN   = "switch_korean"; // Switch Korean shared font
 static const std::string FONT_MATERIAL_ICONS   = "material"; // Material icons font
-static const std::string FONT_SWITCH_ICONS     = "switch"; // Switch icons font (see the HOS shared symbols font for an example)
+static const std::string FONT_SWITCH_ICONS     = "switch_icons"; // Switch icons font (see the HOS shared symbols font for an example)
 
 typedef std::unordered_map<std::string, int> FontStash;
 
