@@ -121,79 +121,41 @@ void Application::createWindow(std::string windowTitle)
     std::string locale = Application::getLocale();
     int regular = Application::getFont(FONT_REGULAR);
 
-    // when defined font stash exists, determine regular font and try to build fallback chain, all fallback failures won't be logged
-    if (regular == FONT_INVALID)
+    // switch only: when defined font stash exists, try to find available font stash,
+    // build fallback chain and switch regular font, all fallback failures won't be logged
+    if (Application::platform->getName() == "Switch" && regular == FONT_INVALID)
     {
-        Logger::info("No borealis regular font loaded, checking the rest of font stash");
-        int switchIcons = Application::getFont(FONT_SWITCH_ICONS);
-        if (!switchIcons)
-            Logger::warning("Switch icons font was not loaded, icons will not be displayed");
+        Logger::info("switch: no borealis regular font loaded, checking the rest of font stash");
 
-        std::string fallbackBase = "";
-        int standard = Application::getFont(FONT_HOS_STANDARD);
-        int extschinese = Application::getFont(FONT_HOS_SCHINESE_EXTEND);
-        int schinese = Application::getFont(FONT_HOS_SCHINESE_EXTEND);
-        int tchinese = Application::getFont(FONT_HOS_TCHINESE);
-        int korean = Application::getFont(FONT_HOS_KOREAN);
+        // get fallback order
+        SharedFontFallbackOrder fallbackOrder {};
+        Application::platform->getFontLoader()->loadSharedFontFallbackOrder(&fallbackOrder); // orderCount == HOSSharedFontType_Total
 
-        // build-once fallback chain - also check against locale to avoid another bunch of `if`
-        if ( fallbackBase == "" && extschinese != FONT_INVALID && (locale == LOCALE_ZH_CN || locale == LOCALE_ZH_HANS) )
+        // determine first available font stash as regular font
+        int firstFont = 0;
+        for (int i=firstFont; regular == FONT_INVALID && i<HOSSharedFontType_Total; i++)
         {
-            fallbackBase = LOCALE_ZH_HANS;
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_SCHINESE_EXTEND);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_SCHINESE);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_TCHINESE);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_KOREAN);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_STANDARD);
+            firstFont = i;
+            regular = Application::getFont(HOSSharedFontMap.at(fallbackOrder.at(firstFont)));
         }
-        // fail-safe chain of S.Chinese
-        if ( fallbackBase == "" && schinese != FONT_INVALID && (locale == LOCALE_ZH_CN || locale == LOCALE_ZH_HANS) )
+        if (regular != FONT_INVALID)
         {
-            fallbackBase = LOCALE_ZH_HANS;
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_SCHINESE);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_SCHINESE_EXTEND);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_TCHINESE);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_KOREAN);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_STANDARD);
-        }
-        if ( fallbackBase == "" && tchinese != FONT_INVALID && (locale == LOCALE_ZH_TW || locale == LOCALE_ZH_HANT) )
-        {
-            fallbackBase = LOCALE_ZH_HANT;
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_TCHINESE);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_SCHINESE_EXTEND);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_SCHINESE);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_KOREAN);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_STANDARD);
-        }
-        if (fallbackBase == "" &&  korean != FONT_INVALID && locale == LOCALE_KO)
-        {
-            fallbackBase = LOCALE_KO;
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_KOREAN);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_SCHINESE);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_SCHINESE_EXTEND);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_TCHINESE);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_STANDARD);
-        }
-        // 
-        if (fallbackBase == "" && standard != FONT_INVALID)
-        {
-            fallbackBase = FONT_HOS_STANDARD;
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_STANDARD);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_SCHINESE_EXTEND);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_SCHINESE);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_TCHINESE);
-            Application::addFontFallback(FONT_SWITCH_ICONS, FONT_HOS_KOREAN);
-        }
-        if (fallbackBase != "")
-        {
-            Logger::info("Built fallback chain for {:s}", fallbackBase);
-            Application::fontStash[FONT_REGULAR] = Application::getFont(FONT_SWITCH_ICONS);
-            regular = Application::getFont(FONT_REGULAR);   // refresh for next check
+            Logger::debug("regular font switched to: {:s}", HOSSharedFontMap.at(fallbackOrder.at(firstFont)));
+            // build fallback chain to regular font (switch icons)
+            for (int i=firstFont+1; i<HOSSharedFontType_Total; i++)
+                Application::addFontFallback(HOSSharedFontMap.at(fallbackOrder.at(firstFont)), HOSSharedFontMap.at(fallbackOrder.at(i)));
+
+            // redirect regular font stash
+            Application::fontStash[FONT_REGULAR] = regular;
         }
     }
 
     if (regular != FONT_INVALID)
     {
+        // Switch icons - duplicate
+        // bool switchIcons = Application::addFontFallback(FONT_REGULAR, FONT_SWITCH_ICONS);
+        // if (!switchIcons)
+        //     Logger::warning("Switch icons font was not loaded, icons will not be displayed");
         // Material icons
         bool materialIcons = Application::addFontFallback(FONT_REGULAR, FONT_MATERIAL_ICONS);
         if (!materialIcons)
