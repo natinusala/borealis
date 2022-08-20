@@ -118,23 +118,47 @@ void Application::createWindow(std::string windowTitle)
     // Load fonts and setup fallbacks
     Application::platform->getFontLoader()->loadFonts();
 
+    std::string locale = Application::getLocale();
     int regular = Application::getFont(FONT_REGULAR);
+
+    // switch only: when defined font stash exists, try to find available font stash,
+    // build fallback chain and switch regular font, all fallback failures won't be logged
+    if (Application::platform->getName() == "Switch" && regular == FONT_INVALID)
+    {
+        Logger::info("switch: no borealis regular font loaded, checking the rest of font stash");
+
+        // get fallback order
+        SharedFontFallbackOrder fallbackOrder {};
+        Application::platform->getFontLoader()->loadSharedFontFallbackOrder(&fallbackOrder); // orderCount == HOSSharedFontType_Total
+
+        // determine first available font stash as regular font
+        int firstFont = 0;
+        for (int i=firstFont; regular == FONT_INVALID && i<HOSSharedFontType_Total; i++)
+        {
+            firstFont = i;
+            regular = Application::getFont(HOSSharedFontMap.at(fallbackOrder.at(firstFont)));
+        }
+        if (regular != FONT_INVALID)
+        {
+            Logger::debug("regular font switched to: {:s}", HOSSharedFontMap.at(fallbackOrder.at(firstFont)));
+            // build fallback chain to regular font (switch icons)
+            for (int i=firstFont+1; i<HOSSharedFontType_Total; i++)
+                Application::addFontFallback(HOSSharedFontMap.at(fallbackOrder.at(firstFont)), HOSSharedFontMap.at(fallbackOrder.at(i)));
+
+            // redirect regular font stash
+            Application::fontStash[FONT_REGULAR] = regular;
+        }
+    }
+
     if (regular != FONT_INVALID)
     {
-        NVGcontext* vg = Application::getNVGContext();
-
-        // Switch icons
-        int switchIcons = Application::getFont(FONT_SWITCH_ICONS);
-        if (switchIcons != FONT_INVALID)
-            nvgAddFallbackFontId(vg, regular, switchIcons);
-        else
-            Logger::warning("Switch icons font was not loaded, icons will not be displayed");
-
+        // Switch icons - duplicate
+        // bool switchIcons = Application::addFontFallback(FONT_REGULAR, FONT_SWITCH_ICONS);
+        // if (!switchIcons)
+        //     Logger::warning("Switch icons font was not loaded, icons will not be displayed");
         // Material icons
-        int materialIcons = Application::getFont(FONT_MATERIAL_ICONS);
-        if (materialIcons != FONT_INVALID)
-            nvgAddFallbackFontId(vg, regular, materialIcons);
-        else
+        bool materialIcons = Application::addFontFallback(FONT_REGULAR, FONT_MATERIAL_ICONS);
+        if (!materialIcons)
             Logger::warning("Material icons font was not loaded, icons will not be displayed");
     }
     else
@@ -676,6 +700,22 @@ bool Application::loadFontFromMemory(std::string fontName, void* address, size_t
 
     Application::fontStash[fontName] = handle;
     return true;
+}
+
+bool Application::addFontFallback(std::string baseFontName, std::string fallbackFontName)
+{
+    NVGcontext* vg = Application::getNVGContext();
+    int baseFont = Application::getFont(baseFontName);
+    if (baseFont != FONT_INVALID)
+    {
+        int fallbackFont = Application::getFont(fallbackFontName);
+        if (fallbackFont != FONT_INVALID)
+        {
+            nvgAddFallbackFontId(vg, baseFont, fallbackFont);
+            return true;
+        }
+    }
+    return false;
 }
 
 void Application::crash(std::string text)

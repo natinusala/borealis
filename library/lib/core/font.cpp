@@ -49,4 +49,15 @@ bool FontLoader::loadMaterialFromResources()
     return this->loadFontFromFile(FONT_MATERIAL_ICONS, MATERIAL_ICONS_PATH);
 }
 
+bool FontLoader::loadSharedFontFallbackOrder(SharedFontFallbackOrder* order_list, int order_list_count)
+{
+    // stub
+    Logger::warning("stub loadSharedFontFallbackOrder");
+    for (int i=0; i<order_list_count; i++)
+    {
+        order_list->push_back(i);
+    }
+    return true;
+}
+
 } // namespace brls

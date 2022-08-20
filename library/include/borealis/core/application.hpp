@@ -117,6 +117,12 @@ class Application
     static bool loadFontFromMemory(std::string fontName, void* data, size_t size, bool freeData);
 
     /**
+     * Wrapper for adding font fallback with nvgAddFallbackFontId.
+     * Returns true if both font stash exists and the operation succeeded.
+     */
+    static bool addFontFallback(std::string baseFontName, std::string fallbackFontName);
+
+    /**
      * Returns the nanovg handle to the given font name, or FONT_INVALID if
      * no such font is currently loaded.
      */
