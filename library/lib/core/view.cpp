@@ -821,7 +821,7 @@ float View::getMarginRight()
 
 float View::getMarginLeft()
 {
-    return ntz(YGNodeStyleGetMargin(this->ygNode, YGEdgeRight).value);
+    return ntz(YGNodeStyleGetMargin(this->ygNode, YGEdgeLeft).value);
 }
 
 void View::setMarginBottom(float bottom)
